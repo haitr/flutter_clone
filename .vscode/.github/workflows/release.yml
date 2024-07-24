@@ -1,0 +1,56 @@
+name: Release Clone
+
+on:
+  push:
+    tags:
+      - "clone/v*.*.*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get tag name
+        id: get_tag
+        run: echo ::set-output name=TAG_NAME::${GITHUB_REF#refs/tags/clone/}
+
+      - name: Create new release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.get_tag.outputs.TAG_NAME }}
+          release_name: Release ${{ steps.get_tag.outputs.TAG_NAME }}
+          draft: false
+          prerelease: false
+
+      - name: Compress repository
+        run: |
+          cd clone
+          zip -r latest.zip .
+          tar -czvf latest.tar.gz .
+          tar -czvf ${{ steps.get_tag.outputs.TAG_NAME }}.tar.gz .
+
+      - name: Upload Latest (ZIP)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./clone/latest.zip
+          asset_name: latest.zip
+          asset_content_type: application/zip
+
+      - name: Upload Release Assets (Latest and Tagged)
+        uses: actions/upload-multiple-releases@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          assets: |
+            ./clone/latest.tar.gz:latest.tar.gz:application/gzip
+            ./clone/${{ steps.get_tag.outputs.TAG_NAME }}.tar.gz:${{ steps.get_tag.outputs.TAG_NAME }}.tar.gz:application/gzip

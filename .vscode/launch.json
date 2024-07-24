@@ -1,0 +1,89 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "[root]Prepare",
+            "cwd": "clone/prepare",
+            "request": "launch",
+            "type": "dart",
+            "program": "bin/prepare.dart",
+            "args": [
+                "--output",
+                "../dependencies",
+            ],
+        },
+        {
+            "name": "[root]Clone",
+            "cwd": "clone",
+            "request": "launch",
+            "type": "dart",
+            "program": "bin/generate.dart",
+        },
+        {
+            "name": "[rxflutter] Counter example",
+            "cwd": "packages/rxflutter/example/counter",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart"
+        },
+        {
+            "name": "[rxflutter] API example",
+            "cwd": "packages/rxflutter/example/api_search",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart"
+        },
+        {
+            "name": "[rxflutter] Cart example",
+            "cwd": "packages/rxflutter/example/cart",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart"
+        },
+        {
+            "name": "[rxflutterify] Counter example",
+            "cwd": "packages/rxflutterify/example/counter",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart"
+        },
+        {
+            "name": "[rxflutterify] API example",
+            "cwd": "packages/rxflutterify/example/api_search",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart"
+        },
+        {
+            "name": "[rxflutterify] Cart example",
+            "cwd": "packages/rxflutterify/example/cart",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart"
+        },
+        {
+            "name": "[riverpod_widget] Counter example",
+            "cwd": "packages/riverpod_widget/example/counter",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart"
+        },
+        {
+            "name": "[riverpod_widget] API example",
+            "cwd": "packages/riverpod_widget/example/api_search",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart"
+        },
+        {
+            "name": "[riverpod_widget] Cart example",
+            "cwd": "packages/riverpod_widget/example/cart",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart"
+        }
+    ]
+}

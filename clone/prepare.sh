@@ -1,0 +1,1 @@
+dart run prepare/bin/prepare.dart

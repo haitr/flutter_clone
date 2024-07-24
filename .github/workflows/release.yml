@@ -1,0 +1,71 @@
+name: Release Clone
+
+on:
+  push:
+    tags:
+      - "clone/v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get tag name
+        id: get_tag
+        # Get the tag name without the 'clone/' prefix
+        run: echo "TAG_NAME=${GITHUB_REF#refs/tags/clone/}" >> $GITHUB_ENV
+
+      - name: Compress repository
+        run: |
+          zip -r latest.zip ./clone
+          tar --ignore-failed-read -czvf latest.tar.gz ./clone
+          tar --ignore-failed-read -czvf ${{ env.TAG_NAME }}.tar.gz ./clone
+
+      - name: Create Tagged Release
+        id: create_tagged_release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG_NAME }}
+          name: Clone ${{ env.TAG_NAME }}
+          draft: false
+          prerelease: false
+          body: "Release notes for Clone ${{ env.TAG_NAME }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Tagged assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG_NAME }}
+          files: |
+            ${{ env.TAG_NAME }}.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Or Update Latest Release
+        id: create_latest_release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: clone_latest
+          name: Latest release
+          draft: false
+          prerelease: false
+          body: "Release notes for latest version"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: clone_latest
+          files: |
+            latest.zip
+            latest.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
