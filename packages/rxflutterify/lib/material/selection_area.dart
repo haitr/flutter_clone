@@ -9,8 +9,7 @@ import '../wrapper.dart';
 
 final class SelectionArea extends Wrapper {
   @Goto(_i1.SelectionArea.new)
-  SelectionArea(
-    $ $config, {
+  SelectionArea({
     _i2.Key? key,
     _i3.FocusNode? focusNode,
     _i3.TextSelectionControls? selectionControls,
@@ -18,24 +17,49 @@ final class SelectionArea extends Wrapper {
     _i3.TextMagnifierConfiguration? magnifierConfiguration,
     _i2.ValueChanged<_i4.SelectedContent?>? onSelectionChanged,
     required _i3.Widget child,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with focusNode
+    Stream<_i3.FocusNode?>? $focusNode,
+    // Associate with selectionControls
+    Stream<_i3.TextSelectionControls?>? $selectionControls,
+    // Associate with contextMenuBuilder
+    Stream<_i3.SelectableRegionContextMenuBuilder?>? $contextMenuBuilder,
+    // Associate with magnifierConfiguration
+    Stream<_i3.TextMagnifierConfiguration?>? $magnifierConfiguration,
+    // Associate with onSelectionChanged
+    Stream<_i2.ValueChanged<_i4.SelectedContent?>?>? $onSelectionChanged,
+    // Associate with child
+    Stream<_i3.Widget>? $child,
   }) : super(
-          Argument({
-            #key: key,
-            #focusNode: focusNode,
-            #selectionControls: selectionControls,
-            #contextMenuBuilder: contextMenuBuilder,
-            #magnifierConfiguration: magnifierConfiguration,
-            #onSelectionChanged: onSelectionChanged,
-            #child: child,
-          }),
+          Argument(
+            {
+              'key': key,
+              'focusNode': focusNode,
+              'selectionControls': selectionControls,
+              'contextMenuBuilder': contextMenuBuilder,
+              'magnifierConfiguration': magnifierConfiguration,
+              'onSelectionChanged': onSelectionChanged,
+              'child': child,
+            },
+            stream: {
+              'key': $key,
+              'focusNode': $focusNode,
+              'selectionControls': $selectionControls,
+              'contextMenuBuilder': $contextMenuBuilder,
+              'magnifierConfiguration': $magnifierConfiguration,
+              'onSelectionChanged': $onSelectionChanged,
+              'child': $child,
+            },
+          ),
           builder: (args) => _i1.SelectionArea(
-            key: args(#key),
-            focusNode: args(#focusNode),
-            selectionControls: args(#selectionControls),
-            contextMenuBuilder: args(#contextMenuBuilder),
-            magnifierConfiguration: args(#magnifierConfiguration),
-            onSelectionChanged: args(#onSelectionChanged),
-            child: args(#child),
+            key: args('key'),
+            focusNode: args('focusNode'),
+            selectionControls: args('selectionControls'),
+            contextMenuBuilder: args('contextMenuBuilder'),
+            magnifierConfiguration: args('magnifierConfiguration'),
+            onSelectionChanged: args('onSelectionChanged'),
+            child: args('child'),
           ),
         );
 

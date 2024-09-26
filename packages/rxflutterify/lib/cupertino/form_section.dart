@@ -11,8 +11,7 @@ import '../wrapper.dart';
 
 final class CupertinoFormSection extends Wrapper {
   @Goto(_i1.CupertinoFormSection.new)
-  CupertinoFormSection(
-    $ $config, {
+  CupertinoFormSection({
     _i2.Key? key,
     required List<_i3.Widget> children,
     _i3.Widget? header,
@@ -21,32 +20,59 @@ final class CupertinoFormSection extends Wrapper {
     ui.Color backgroundColor = _i1.CupertinoColors.systemGroupedBackground,
     _i4.BoxDecoration? decoration,
     ui.Clip clipBehavior = ui.Clip.none,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with children
+    Stream<List<_i3.Widget>>? $children,
+    // Associate with header
+    Stream<_i3.Widget?>? $header,
+    // Associate with footer
+    Stream<_i3.Widget?>? $footer,
+    // Associate with margin
+    Stream<_i4.EdgeInsetsGeometry>? $margin,
+    // Associate with backgroundColor
+    Stream<ui.Color>? $backgroundColor,
+    // Associate with decoration
+    Stream<_i4.BoxDecoration?>? $decoration,
+    // Associate with clipBehavior
+    Stream<ui.Clip>? $clipBehavior,
   }) : super(
-          Argument({
-            #key: key,
-            #children: children,
-            #header: header,
-            #footer: footer,
-            #margin: margin,
-            #backgroundColor: backgroundColor,
-            #decoration: decoration,
-            #clipBehavior: clipBehavior,
-          }),
+          Argument(
+            {
+              'key': key,
+              'children': children,
+              'header': header,
+              'footer': footer,
+              'margin': margin,
+              'backgroundColor': backgroundColor,
+              'decoration': decoration,
+              'clipBehavior': clipBehavior,
+            },
+            stream: {
+              'key': $key,
+              'children': $children,
+              'header': $header,
+              'footer': $footer,
+              'margin': $margin,
+              'backgroundColor': $backgroundColor,
+              'decoration': $decoration,
+              'clipBehavior': $clipBehavior,
+            },
+          ),
           builder: (args) => _i1.CupertinoFormSection(
-            key: args(#key),
-            children: args(#children),
-            header: args(#header),
-            footer: args(#footer),
-            margin: args(#margin),
-            backgroundColor: args(#backgroundColor),
-            decoration: args(#decoration),
-            clipBehavior: args(#clipBehavior),
+            key: args('key'),
+            children: args('children'),
+            header: args('header'),
+            footer: args('footer'),
+            margin: args('margin'),
+            backgroundColor: args('backgroundColor'),
+            decoration: args('decoration'),
+            clipBehavior: args('clipBehavior'),
           ),
         );
 
   @Goto(_i1.CupertinoFormSection.insetGrouped)
-  CupertinoFormSection.insetGrouped(
-    $ $config, {
+  CupertinoFormSection.insetGrouped({
     _i2.Key? key,
     required List<_i3.Widget> children,
     _i3.Widget? header,
@@ -55,26 +81,54 @@ final class CupertinoFormSection extends Wrapper {
     ui.Color backgroundColor = _i1.CupertinoColors.systemGroupedBackground,
     _i4.BoxDecoration? decoration,
     ui.Clip clipBehavior = ui.Clip.none,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with children
+    Stream<List<_i3.Widget>>? $children,
+    // Associate with header
+    Stream<_i3.Widget?>? $header,
+    // Associate with footer
+    Stream<_i3.Widget?>? $footer,
+    // Associate with margin
+    Stream<_i4.EdgeInsetsGeometry>? $margin,
+    // Associate with backgroundColor
+    Stream<ui.Color>? $backgroundColor,
+    // Associate with decoration
+    Stream<_i4.BoxDecoration?>? $decoration,
+    // Associate with clipBehavior
+    Stream<ui.Clip>? $clipBehavior,
   }) : super(
-          Argument({
-            #key: key,
-            #children: children,
-            #header: header,
-            #footer: footer,
-            #margin: margin,
-            #backgroundColor: backgroundColor,
-            #decoration: decoration,
-            #clipBehavior: clipBehavior,
-          }),
+          Argument(
+            {
+              'key': key,
+              'children': children,
+              'header': header,
+              'footer': footer,
+              'margin': margin,
+              'backgroundColor': backgroundColor,
+              'decoration': decoration,
+              'clipBehavior': clipBehavior,
+            },
+            stream: {
+              'key': $key,
+              'children': $children,
+              'header': $header,
+              'footer': $footer,
+              'margin': $margin,
+              'backgroundColor': $backgroundColor,
+              'decoration': $decoration,
+              'clipBehavior': $clipBehavior,
+            },
+          ),
           builder: (args) => _i1.CupertinoFormSection.insetGrouped(
-            key: args(#key),
-            children: args(#children),
-            header: args(#header),
-            footer: args(#footer),
-            margin: args(#margin),
-            backgroundColor: args(#backgroundColor),
-            decoration: args(#decoration),
-            clipBehavior: args(#clipBehavior),
+            key: args('key'),
+            children: args('children'),
+            header: args('header'),
+            footer: args('footer'),
+            margin: args('margin'),
+            backgroundColor: args('backgroundColor'),
+            decoration: args('decoration'),
+            clipBehavior: args('clipBehavior'),
           ),
         );
 }

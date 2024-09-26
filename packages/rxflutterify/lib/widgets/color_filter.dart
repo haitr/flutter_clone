@@ -9,21 +9,33 @@ import '../wrapper.dart';
 
 final class ColorFiltered extends Wrapper {
   @Goto(_i1.ColorFiltered.new)
-  ColorFiltered(
-    $ $config, {
+  ColorFiltered({
     required ui.ColorFilter colorFilter,
     _i1.Widget? child,
     _i2.Key? key,
+    // Associate with colorFilter
+    Stream<ui.ColorFilter>? $colorFilter,
+    // Associate with child
+    Stream<_i1.Widget?>? $child,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
   }) : super(
-          Argument({
-            #colorFilter: colorFilter,
-            #child: child,
-            #key: key,
-          }),
+          Argument(
+            {
+              'colorFilter': colorFilter,
+              'child': child,
+              'key': key,
+            },
+            stream: {
+              'colorFilter': $colorFilter,
+              'child': $child,
+              'key': $key,
+            },
+          ),
           builder: (args) => _i1.ColorFiltered(
-            colorFilter: args(#colorFilter),
-            child: args(#child),
-            key: args(#key),
+            colorFilter: args('colorFilter'),
+            child: args('child'),
+            key: args('key'),
           ),
         );
 }

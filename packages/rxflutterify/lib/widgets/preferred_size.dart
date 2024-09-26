@@ -9,21 +9,33 @@ import '../wrapper.dart';
 
 final class PreferredSize extends Wrapper {
   @Goto(_i1.PreferredSize.new)
-  PreferredSize(
-    $ $config, {
+  PreferredSize({
     _i2.Key? key,
     required ui.Size preferredSize,
     required _i1.Widget child,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with preferredSize
+    Stream<ui.Size>? $preferredSize,
+    // Associate with child
+    Stream<_i1.Widget>? $child,
   }) : super(
-          Argument({
-            #key: key,
-            #preferredSize: preferredSize,
-            #child: child,
-          }),
+          Argument(
+            {
+              'key': key,
+              'preferredSize': preferredSize,
+              'child': child,
+            },
+            stream: {
+              'key': $key,
+              'preferredSize': $preferredSize,
+              'child': $child,
+            },
+          ),
           builder: (args) => _i1.PreferredSize(
-            key: args(#key),
-            preferredSize: args(#preferredSize),
-            child: args(#child),
+            key: args('key'),
+            preferredSize: args('preferredSize'),
+            child: args('child'),
           ),
         );
 }

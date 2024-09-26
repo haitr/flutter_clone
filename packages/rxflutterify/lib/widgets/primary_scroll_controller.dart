@@ -8,43 +8,70 @@ import '../wrapper.dart';
 
 final class PrimaryScrollController extends Wrapper {
   @Goto(_i1.PrimaryScrollController.new)
-  PrimaryScrollController(
-    $ $config, {
+  PrimaryScrollController({
     _i2.Key? key,
     required _i1.ScrollController controller,
     Set<_i2.TargetPlatform> automaticallyInheritForPlatforms = _kMobilePlatforms,
     _i3.Axis? scrollDirection = _i3.Axis.vertical,
     required _i1.Widget child,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with controller
+    Stream<_i1.ScrollController>? $controller,
+    // Associate with automaticallyInheritForPlatforms
+    Stream<Set<_i2.TargetPlatform>>? $automaticallyInheritForPlatforms,
+    // Associate with scrollDirection
+    Stream<_i3.Axis?>? $scrollDirection,
+    // Associate with child
+    Stream<_i1.Widget>? $child,
   }) : super(
-          Argument({
-            #key: key,
-            #controller: controller,
-            #automaticallyInheritForPlatforms: automaticallyInheritForPlatforms,
-            #scrollDirection: scrollDirection,
-            #child: child,
-          }),
+          Argument(
+            {
+              'key': key,
+              'controller': controller,
+              'automaticallyInheritForPlatforms': automaticallyInheritForPlatforms,
+              'scrollDirection': scrollDirection,
+              'child': child,
+            },
+            stream: {
+              'key': $key,
+              'controller': $controller,
+              'automaticallyInheritForPlatforms': $automaticallyInheritForPlatforms,
+              'scrollDirection': $scrollDirection,
+              'child': $child,
+            },
+          ),
           builder: (args) => _i1.PrimaryScrollController(
-            key: args(#key),
-            controller: args(#controller),
-            automaticallyInheritForPlatforms: args(#automaticallyInheritForPlatforms),
-            scrollDirection: args(#scrollDirection),
-            child: args(#child),
+            key: args('key'),
+            controller: args('controller'),
+            automaticallyInheritForPlatforms: args('automaticallyInheritForPlatforms'),
+            scrollDirection: args('scrollDirection'),
+            child: args('child'),
           ),
         );
 
   @Goto(_i1.PrimaryScrollController.none)
-  PrimaryScrollController.none(
-    $ $config, {
+  PrimaryScrollController.none({
     _i2.Key? key,
     required _i1.Widget child,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with child
+    Stream<_i1.Widget>? $child,
   }) : super(
-          Argument({
-            #key: key,
-            #child: child,
-          }),
+          Argument(
+            {
+              'key': key,
+              'child': child,
+            },
+            stream: {
+              'key': $key,
+              'child': $child,
+            },
+          ),
           builder: (args) => _i1.PrimaryScrollController.none(
-            key: args(#key),
-            child: args(#child),
+            key: args('key'),
+            child: args('child'),
           ),
         );
 }

@@ -2,7 +2,7 @@
 
 [![pub package](https://img.shields.io/pub/v/riverpod_widget.svg?label=riverpod_widget&color=blue)](https://pub.dartlang.org/packages/riverpod_widget)
 
-A Flutter framework that allows all widgets to automatically rebuild when corresponding providers notified, making state management easier and more efficient.
+A library built on top of Flutter that allows all widgets to automatically rebuild when corresponding providers notified, making state management easier and more efficient.
 
 ## Motivations
 
@@ -46,7 +46,7 @@ More detail in [*Usage*](#usage) section.
 
 ```yaml
 dependencies:
-  riverpod_widget: ^0.0.1
+  riverpod_widget: ^0.0.1+1
 ```
 
 If the latest version of this package is incompatible with your Flutter version, please refer to the *Version Mapping* section below. There, you'll find instructions on how to use a specific version that matches your Flutter environment.
@@ -62,20 +62,18 @@ dependencies:
       ref: riverpod_widget/v0.0.1
 ```
 
-#### Version Compatibility
+### Version Compatibility
 
 | pub | ref (verison) | ref (Flutter version) | Flutter version |
 | -- | -- | -- | -- |
-| 0.0.1 | riverpod_widget/v0.0.1 | riverpod_widget/flutter/v3.22 | 3.22.x |
+| 0.0.1+1 | riverpod_widget/v0.0.1 | riverpod_widget/flutter/v3.22 | 3.22.x |
 | 0.0.2 | riverpod_widget/v0.0.2 | riverpod_widget/flutter/v3.24 | 3.24.x |
 
-### Usage
-
-Find more examples in the [examples](./example) directory.
+## Usage
 
 The `riverpod_widget` package simplifies the process of binding Providers to Flutter Widgets. By calling the `bind` method to bind any argument to a `Provider`, you can easily make them reactive.
 
-#### Quick start
+### Quick start
 
 In order to make a Widget reactive:
 
@@ -144,7 +142,7 @@ $Column(
 )
 ```
 
-#### Custom Widget
+### Custom Widget
 
 To make a custom widget reactive, enclose it within a Wrapper and ensure proper argument mapping.
 Be sure to place an instance of $ as the first parameter of the constructor.
@@ -190,7 +188,11 @@ class $MyWidget extends MyWidget {
 
 More detail in [custom widget](./example/cart/lib/widget.dart).
 
-#### License
+## Example
+
+Find more examples in the [examples](./example) directory.
+
+## License
 
 This project is licensed under the MIT License.
 

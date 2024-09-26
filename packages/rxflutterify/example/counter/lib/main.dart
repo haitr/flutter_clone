@@ -47,15 +47,15 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          // $.all,
+        child: $Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text('You have pushed the button this many times:'),
             $Text(
-              $.all,
-              "0".bind(#data, _counter.map((event) => "$event")),
-              style: (null as TextStyle?).bind(#style, _style),
+              "0",
+              $data: _counter.map((event) => "$event"),
+              style: _style.value,
+              $style: _style,
             ),
           ],
         ),

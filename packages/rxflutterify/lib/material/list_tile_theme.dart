@@ -12,8 +12,7 @@ import '../wrapper.dart';
 
 final class ListTileTheme extends Wrapper {
   @Goto(_i1.ListTileTheme.new)
-  ListTileTheme(
-    $ $config, {
+  ListTileTheme({
     _i2.Key? key,
     _i1.ListTileThemeData? data,
     bool? dense,
@@ -31,44 +30,99 @@ final class ListTileTheme extends Wrapper {
     double? minVerticalPadding,
     double? minLeadingWidth,
     required _i4.Widget child,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with data
+    Stream<_i1.ListTileThemeData?>? $data,
+    // Associate with dense
+    Stream<bool?>? $dense,
+    // Associate with shape
+    Stream<_i3.ShapeBorder?>? $shape,
+    // Associate with style
+    Stream<_i1.ListTileStyle?>? $style,
+    // Associate with selectedColor
+    Stream<ui.Color?>? $selectedColor,
+    // Associate with iconColor
+    Stream<ui.Color?>? $iconColor,
+    // Associate with textColor
+    Stream<ui.Color?>? $textColor,
+    // Associate with contentPadding
+    Stream<_i3.EdgeInsetsGeometry?>? $contentPadding,
+    // Associate with tileColor
+    Stream<ui.Color?>? $tileColor,
+    // Associate with selectedTileColor
+    Stream<ui.Color?>? $selectedTileColor,
+    // Associate with enableFeedback
+    Stream<bool?>? $enableFeedback,
+    // Associate with mouseCursor
+    Stream<_i4.WidgetStateProperty<_i5.MouseCursor?>?>? $mouseCursor,
+    // Associate with horizontalTitleGap
+    Stream<double?>? $horizontalTitleGap,
+    // Associate with minVerticalPadding
+    Stream<double?>? $minVerticalPadding,
+    // Associate with minLeadingWidth
+    Stream<double?>? $minLeadingWidth,
+    // Associate with child
+    Stream<_i4.Widget>? $child,
   }) : super(
-          Argument({
-            #key: key,
-            #data: data,
-            #dense: dense,
-            #shape: shape,
-            #style: style,
-            #selectedColor: selectedColor,
-            #iconColor: iconColor,
-            #textColor: textColor,
-            #contentPadding: contentPadding,
-            #tileColor: tileColor,
-            #selectedTileColor: selectedTileColor,
-            #enableFeedback: enableFeedback,
-            #mouseCursor: mouseCursor,
-            #horizontalTitleGap: horizontalTitleGap,
-            #minVerticalPadding: minVerticalPadding,
-            #minLeadingWidth: minLeadingWidth,
-            #child: child,
-          }),
+          Argument(
+            {
+              'key': key,
+              'data': data,
+              'dense': dense,
+              'shape': shape,
+              'style': style,
+              'selectedColor': selectedColor,
+              'iconColor': iconColor,
+              'textColor': textColor,
+              'contentPadding': contentPadding,
+              'tileColor': tileColor,
+              'selectedTileColor': selectedTileColor,
+              'enableFeedback': enableFeedback,
+              'mouseCursor': mouseCursor,
+              'horizontalTitleGap': horizontalTitleGap,
+              'minVerticalPadding': minVerticalPadding,
+              'minLeadingWidth': minLeadingWidth,
+              'child': child,
+            },
+            stream: {
+              'key': $key,
+              'data': $data,
+              'dense': $dense,
+              'shape': $shape,
+              'style': $style,
+              'selectedColor': $selectedColor,
+              'iconColor': $iconColor,
+              'textColor': $textColor,
+              'contentPadding': $contentPadding,
+              'tileColor': $tileColor,
+              'selectedTileColor': $selectedTileColor,
+              'enableFeedback': $enableFeedback,
+              'mouseCursor': $mouseCursor,
+              'horizontalTitleGap': $horizontalTitleGap,
+              'minVerticalPadding': $minVerticalPadding,
+              'minLeadingWidth': $minLeadingWidth,
+              'child': $child,
+            },
+          ),
           builder: (args) => _i1.ListTileTheme(
-            key: args(#key),
-            data: args(#data),
-            dense: args(#dense),
-            shape: args(#shape),
-            style: args(#style),
-            selectedColor: args(#selectedColor),
-            iconColor: args(#iconColor),
-            textColor: args(#textColor),
-            contentPadding: args(#contentPadding),
-            tileColor: args(#tileColor),
-            selectedTileColor: args(#selectedTileColor),
-            enableFeedback: args(#enableFeedback),
-            mouseCursor: args(#mouseCursor),
-            horizontalTitleGap: args(#horizontalTitleGap),
-            minVerticalPadding: args(#minVerticalPadding),
-            minLeadingWidth: args(#minLeadingWidth),
-            child: args(#child),
+            key: args('key'),
+            data: args('data'),
+            dense: args('dense'),
+            shape: args('shape'),
+            style: args('style'),
+            selectedColor: args('selectedColor'),
+            iconColor: args('iconColor'),
+            textColor: args('textColor'),
+            contentPadding: args('contentPadding'),
+            tileColor: args('tileColor'),
+            selectedTileColor: args('selectedTileColor'),
+            enableFeedback: args('enableFeedback'),
+            mouseCursor: args('mouseCursor'),
+            horizontalTitleGap: args('horizontalTitleGap'),
+            minVerticalPadding: args('minVerticalPadding'),
+            minLeadingWidth: args('minLeadingWidth'),
+            child: args('child'),
           ),
         );
 }

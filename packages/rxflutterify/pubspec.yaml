@@ -1,11 +1,15 @@
 name: rxflutterify
-
-description: "A new Flutter package project."
+description: >
+  A library built on top of Flutter that allows all widgets to automatically rebuild when their input streams emit events,
+  making state management easier and more efficient.
 version: 0.0.1
+homepage: https://github.com/haitr/flutter_clone
+repository: https://github.com/haitr/flutter_clone/
+issue_tracker: https://github.com/haitr/flutter_clone/issues
 
 environment:
   sdk: ">=3.4.0 <4.0.0"
-  flutter: ">=1.17.0"
+  flutter: ">=3.22.0"
 
 dependencies:
   flutter:

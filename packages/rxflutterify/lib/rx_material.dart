@@ -133,7 +133,7 @@ import 'material/tooltip_visibility.dart';
 import 'material/user_accounts_drawer_header.dart';
 
 export 'package:rxdart/rxdart.dart';
-export 'wrapper.dart' show ReactableObjectExt, ListenableExt, BindExt, Wrapper, $;
+export 'wrapper.dart' show ReactableObjectExt, ListenableExt, Wrapper;
 
 typedef $LicensePage = LicensePage;
 typedef $AboutDialog = AboutDialog;

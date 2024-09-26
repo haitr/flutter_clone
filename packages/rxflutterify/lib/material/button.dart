@@ -13,8 +13,7 @@ import '../wrapper.dart';
 
 final class RawMaterialButton extends Wrapper {
   @Goto(_i1.RawMaterialButton.new)
-  RawMaterialButton(
-    $ $config, {
+  RawMaterialButton({
     _i2.Key? key,
     required ui.VoidCallback? onPressed,
     ui.VoidCallback? onLongPress,
@@ -45,64 +44,149 @@ final class RawMaterialButton extends Wrapper {
     _i1.MaterialTapTargetSize? materialTapTargetSize,
     _i6.Widget? child,
     bool enableFeedback = true,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with onPressed
+    Stream<ui.VoidCallback?>? $onPressed,
+    // Associate with onLongPress
+    Stream<ui.VoidCallback?>? $onLongPress,
+    // Associate with onHighlightChanged
+    Stream<_i2.ValueChanged<bool>?>? $onHighlightChanged,
+    // Associate with mouseCursor
+    Stream<_i3.MouseCursor?>? $mouseCursor,
+    // Associate with textStyle
+    Stream<_i4.TextStyle?>? $textStyle,
+    // Associate with fillColor
+    Stream<ui.Color?>? $fillColor,
+    // Associate with focusColor
+    Stream<ui.Color?>? $focusColor,
+    // Associate with hoverColor
+    Stream<ui.Color?>? $hoverColor,
+    // Associate with highlightColor
+    Stream<ui.Color?>? $highlightColor,
+    // Associate with splashColor
+    Stream<ui.Color?>? $splashColor,
+    // Associate with elevation
+    Stream<double>? $elevation,
+    // Associate with focusElevation
+    Stream<double>? $focusElevation,
+    // Associate with hoverElevation
+    Stream<double>? $hoverElevation,
+    // Associate with highlightElevation
+    Stream<double>? $highlightElevation,
+    // Associate with disabledElevation
+    Stream<double>? $disabledElevation,
+    // Associate with padding
+    Stream<_i4.EdgeInsetsGeometry>? $padding,
+    // Associate with visualDensity
+    Stream<_i1.VisualDensity>? $visualDensity,
+    // Associate with constraints
+    Stream<_i5.BoxConstraints>? $constraints,
+    // Associate with shape
+    Stream<_i4.ShapeBorder>? $shape,
+    // Associate with animationDuration
+    Stream<Duration>? $animationDuration,
+    // Associate with clipBehavior
+    Stream<ui.Clip>? $clipBehavior,
+    // Associate with focusNode
+    Stream<_i6.FocusNode?>? $focusNode,
+    // Associate with autofocus
+    Stream<bool>? $autofocus,
+    // Associate with materialTapTargetSize
+    Stream<_i1.MaterialTapTargetSize?>? $materialTapTargetSize,
+    // Associate with child
+    Stream<_i6.Widget?>? $child,
+    // Associate with enableFeedback
+    Stream<bool>? $enableFeedback,
   }) : super(
-          Argument({
-            #key: key,
-            #onPressed: onPressed,
-            #onLongPress: onLongPress,
-            #onHighlightChanged: onHighlightChanged,
-            #mouseCursor: mouseCursor,
-            #textStyle: textStyle,
-            #fillColor: fillColor,
-            #focusColor: focusColor,
-            #hoverColor: hoverColor,
-            #highlightColor: highlightColor,
-            #splashColor: splashColor,
-            #elevation: elevation,
-            #focusElevation: focusElevation,
-            #hoverElevation: hoverElevation,
-            #highlightElevation: highlightElevation,
-            #disabledElevation: disabledElevation,
-            #padding: padding,
-            #visualDensity: visualDensity,
-            #constraints: constraints,
-            #shape: shape,
-            #animationDuration: animationDuration,
-            #clipBehavior: clipBehavior,
-            #focusNode: focusNode,
-            #autofocus: autofocus,
-            #materialTapTargetSize: materialTapTargetSize,
-            #child: child,
-            #enableFeedback: enableFeedback,
-          }),
+          Argument(
+            {
+              'key': key,
+              'onPressed': onPressed,
+              'onLongPress': onLongPress,
+              'onHighlightChanged': onHighlightChanged,
+              'mouseCursor': mouseCursor,
+              'textStyle': textStyle,
+              'fillColor': fillColor,
+              'focusColor': focusColor,
+              'hoverColor': hoverColor,
+              'highlightColor': highlightColor,
+              'splashColor': splashColor,
+              'elevation': elevation,
+              'focusElevation': focusElevation,
+              'hoverElevation': hoverElevation,
+              'highlightElevation': highlightElevation,
+              'disabledElevation': disabledElevation,
+              'padding': padding,
+              'visualDensity': visualDensity,
+              'constraints': constraints,
+              'shape': shape,
+              'animationDuration': animationDuration,
+              'clipBehavior': clipBehavior,
+              'focusNode': focusNode,
+              'autofocus': autofocus,
+              'materialTapTargetSize': materialTapTargetSize,
+              'child': child,
+              'enableFeedback': enableFeedback,
+            },
+            stream: {
+              'key': $key,
+              'onPressed': $onPressed,
+              'onLongPress': $onLongPress,
+              'onHighlightChanged': $onHighlightChanged,
+              'mouseCursor': $mouseCursor,
+              'textStyle': $textStyle,
+              'fillColor': $fillColor,
+              'focusColor': $focusColor,
+              'hoverColor': $hoverColor,
+              'highlightColor': $highlightColor,
+              'splashColor': $splashColor,
+              'elevation': $elevation,
+              'focusElevation': $focusElevation,
+              'hoverElevation': $hoverElevation,
+              'highlightElevation': $highlightElevation,
+              'disabledElevation': $disabledElevation,
+              'padding': $padding,
+              'visualDensity': $visualDensity,
+              'constraints': $constraints,
+              'shape': $shape,
+              'animationDuration': $animationDuration,
+              'clipBehavior': $clipBehavior,
+              'focusNode': $focusNode,
+              'autofocus': $autofocus,
+              'materialTapTargetSize': $materialTapTargetSize,
+              'child': $child,
+              'enableFeedback': $enableFeedback,
+            },
+          ),
           builder: (args) => _i1.RawMaterialButton(
-            key: args(#key),
-            onPressed: args(#onPressed),
-            onLongPress: args(#onLongPress),
-            onHighlightChanged: args(#onHighlightChanged),
-            mouseCursor: args(#mouseCursor),
-            textStyle: args(#textStyle),
-            fillColor: args(#fillColor),
-            focusColor: args(#focusColor),
-            hoverColor: args(#hoverColor),
-            highlightColor: args(#highlightColor),
-            splashColor: args(#splashColor),
-            elevation: args(#elevation),
-            focusElevation: args(#focusElevation),
-            hoverElevation: args(#hoverElevation),
-            highlightElevation: args(#highlightElevation),
-            disabledElevation: args(#disabledElevation),
-            padding: args(#padding),
-            visualDensity: args(#visualDensity),
-            constraints: args(#constraints),
-            shape: args(#shape),
-            animationDuration: args(#animationDuration),
-            clipBehavior: args(#clipBehavior),
-            focusNode: args(#focusNode),
-            autofocus: args(#autofocus),
-            materialTapTargetSize: args(#materialTapTargetSize),
-            child: args(#child),
-            enableFeedback: args(#enableFeedback),
+            key: args('key'),
+            onPressed: args('onPressed'),
+            onLongPress: args('onLongPress'),
+            onHighlightChanged: args('onHighlightChanged'),
+            mouseCursor: args('mouseCursor'),
+            textStyle: args('textStyle'),
+            fillColor: args('fillColor'),
+            focusColor: args('focusColor'),
+            hoverColor: args('hoverColor'),
+            highlightColor: args('highlightColor'),
+            splashColor: args('splashColor'),
+            elevation: args('elevation'),
+            focusElevation: args('focusElevation'),
+            hoverElevation: args('hoverElevation'),
+            highlightElevation: args('highlightElevation'),
+            disabledElevation: args('disabledElevation'),
+            padding: args('padding'),
+            visualDensity: args('visualDensity'),
+            constraints: args('constraints'),
+            shape: args('shape'),
+            animationDuration: args('animationDuration'),
+            clipBehavior: args('clipBehavior'),
+            focusNode: args('focusNode'),
+            autofocus: args('autofocus'),
+            materialTapTargetSize: args('materialTapTargetSize'),
+            child: args('child'),
+            enableFeedback: args('enableFeedback'),
           ),
         );
 }

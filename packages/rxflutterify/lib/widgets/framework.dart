@@ -8,26 +8,39 @@ import '../wrapper.dart';
 final class ErrorWidget extends Wrapper {
   @Goto(_i1.ErrorWidget.new)
   ErrorWidget(
-    $ $config,
-    Object exception,
-  ) : super(
-          Argument({#exception: exception}),
-          builder: (args) => _i1.ErrorWidget(args(#exception)),
+    Object exception, {
+    // Associate with exception
+    Stream<Object>? $exception,
+  }) : super(
+          Argument(
+            {'exception': exception},
+            stream: {'exception': $exception},
+          ),
+          builder: (args) => _i1.ErrorWidget(args('exception')),
         );
 
   @Goto(_i1.ErrorWidget.withDetails)
-  ErrorWidget.withDetails(
-    $ $config, {
+  ErrorWidget.withDetails({
     String message = '',
     _i2.FlutterError? error,
+    // Associate with message
+    Stream<String>? $message,
+    // Associate with error
+    Stream<_i2.FlutterError?>? $error,
   }) : super(
-          Argument({
-            #message: message,
-            #error: error,
-          }),
+          Argument(
+            {
+              'message': message,
+              'error': error,
+            },
+            stream: {
+              'message': $message,
+              'error': $error,
+            },
+          ),
           builder: (args) => _i1.ErrorWidget.withDetails(
-            message: args(#message),
-            error: args(#error),
+            message: args('message'),
+            error: args('error'),
           ),
         );
 }

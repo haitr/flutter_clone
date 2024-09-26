@@ -333,7 +333,7 @@ class ClassBuildingSession {
                 return;
               }
               if (packageName == 'vector_math') {
-                builder.url = 'package:vector_math/vector_math_64.dart';
+                builder.url = 'package:flutter/rendering.dart';
                 return;
               }
             }

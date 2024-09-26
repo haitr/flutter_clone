@@ -8,21 +8,35 @@ import '../wrapper.dart';
 
 final class LayoutBuilder extends Wrapper {
   @Goto(_i1.LayoutBuilder.new)
-  LayoutBuilder(
-    $ $config, {
+  LayoutBuilder({
     _i2.Key? key,
     required _i1.Widget Function(
       _i1.BuildContext,
       _i3.BoxConstraints,
     ) builder,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with builder
+    Stream<
+            _i1.Widget Function(
+              _i1.BuildContext,
+              _i3.BoxConstraints,
+            )>?
+        $builder,
   }) : super(
-          Argument({
-            #key: key,
-            #builder: builder,
-          }),
+          Argument(
+            {
+              'key': key,
+              'builder': builder,
+            },
+            stream: {
+              'key': $key,
+              'builder': $builder,
+            },
+          ),
           builder: (args) => _i1.LayoutBuilder(
-            key: args(#key),
-            builder: args(#builder),
+            key: args('key'),
+            builder: args('builder'),
           ),
         );
 }

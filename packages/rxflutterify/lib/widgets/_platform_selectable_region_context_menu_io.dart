@@ -7,18 +7,27 @@ import '../wrapper.dart';
 
 final class PlatformSelectableRegionContextMenu extends Wrapper {
   @Goto(_i1.PlatformSelectableRegionContextMenu.new)
-  PlatformSelectableRegionContextMenu(
-    $ $config, {
+  PlatformSelectableRegionContextMenu({
     required _i1.Widget child,
     _i2.Key? key,
+    // Associate with child
+    Stream<_i1.Widget>? $child,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
   }) : super(
-          Argument({
-            #child: child,
-            #key: key,
-          }),
+          Argument(
+            {
+              'child': child,
+              'key': key,
+            },
+            stream: {
+              'child': $child,
+              'key': $key,
+            },
+          ),
           builder: (args) => _i1.PlatformSelectableRegionContextMenu(
-            child: args(#child),
-            key: args(#key),
+            child: args('child'),
+            key: args('key'),
           ),
         );
 }

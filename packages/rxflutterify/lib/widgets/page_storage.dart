@@ -7,21 +7,33 @@ import '../wrapper.dart';
 
 final class PageStorage extends Wrapper {
   @Goto(_i1.PageStorage.new)
-  PageStorage(
-    $ $config, {
+  PageStorage({
     _i2.Key? key,
     required _i1.PageStorageBucket bucket,
     required _i1.Widget child,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with bucket
+    Stream<_i1.PageStorageBucket>? $bucket,
+    // Associate with child
+    Stream<_i1.Widget>? $child,
   }) : super(
-          Argument({
-            #key: key,
-            #bucket: bucket,
-            #child: child,
-          }),
+          Argument(
+            {
+              'key': key,
+              'bucket': bucket,
+              'child': child,
+            },
+            stream: {
+              'key': $key,
+              'bucket': $bucket,
+              'child': $child,
+            },
+          ),
           builder: (args) => _i1.PageStorage(
-            key: args(#key),
-            bucket: args(#bucket),
-            child: args(#child),
+            key: args('key'),
+            bucket: args('bucket'),
+            child: args('child'),
           ),
         );
 }

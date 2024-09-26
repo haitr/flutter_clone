@@ -8,21 +8,33 @@ import '../wrapper.dart';
 
 final class TooltipVisibility extends Wrapper {
   @Goto(_i1.TooltipVisibility.new)
-  TooltipVisibility(
-    $ $config, {
+  TooltipVisibility({
     _i2.Key? key,
     required bool visible,
     required _i3.Widget child,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with visible
+    Stream<bool>? $visible,
+    // Associate with child
+    Stream<_i3.Widget>? $child,
   }) : super(
-          Argument({
-            #key: key,
-            #visible: visible,
-            #child: child,
-          }),
+          Argument(
+            {
+              'key': key,
+              'visible': visible,
+              'child': child,
+            },
+            stream: {
+              'key': $key,
+              'visible': $visible,
+              'child': $child,
+            },
+          ),
           builder: (args) => _i1.TooltipVisibility(
-            key: args(#key),
-            visible: args(#visible),
-            child: args(#child),
+            key: args('key'),
+            visible: args('visible'),
+            child: args('child'),
           ),
         );
 }

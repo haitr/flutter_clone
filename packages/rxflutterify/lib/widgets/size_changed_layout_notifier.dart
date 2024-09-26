@@ -7,18 +7,27 @@ import '../wrapper.dart';
 
 final class SizeChangedLayoutNotifier extends Wrapper {
   @Goto(_i1.SizeChangedLayoutNotifier.new)
-  SizeChangedLayoutNotifier(
-    $ $config, {
+  SizeChangedLayoutNotifier({
     _i2.Key? key,
     _i1.Widget? child,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with child
+    Stream<_i1.Widget?>? $child,
   }) : super(
-          Argument({
-            #key: key,
-            #child: child,
-          }),
+          Argument(
+            {
+              'key': key,
+              'child': child,
+            },
+            stream: {
+              'key': $key,
+              'child': $child,
+            },
+          ),
           builder: (args) => _i1.SizeChangedLayoutNotifier(
-            key: args(#key),
-            child: args(#child),
+            key: args('key'),
+            child: args('child'),
           ),
         );
 }

@@ -7,21 +7,33 @@ import '../wrapper.dart';
 
 final class ScrollConfiguration extends Wrapper {
   @Goto(_i1.ScrollConfiguration.new)
-  ScrollConfiguration(
-    $ $config, {
+  ScrollConfiguration({
     _i2.Key? key,
     required _i1.ScrollBehavior behavior,
     required _i1.Widget child,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with behavior
+    Stream<_i1.ScrollBehavior>? $behavior,
+    // Associate with child
+    Stream<_i1.Widget>? $child,
   }) : super(
-          Argument({
-            #key: key,
-            #behavior: behavior,
-            #child: child,
-          }),
+          Argument(
+            {
+              'key': key,
+              'behavior': behavior,
+              'child': child,
+            },
+            stream: {
+              'key': $key,
+              'behavior': $behavior,
+              'child': $child,
+            },
+          ),
           builder: (args) => _i1.ScrollConfiguration(
-            key: args(#key),
-            behavior: args(#behavior),
-            child: args(#child),
+            key: args('key'),
+            behavior: args('behavior'),
+            child: args('child'),
           ),
         );
 }

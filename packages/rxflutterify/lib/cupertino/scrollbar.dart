@@ -10,8 +10,7 @@ import '../wrapper.dart';
 
 final class CupertinoScrollbar extends Wrapper {
   @Goto(_i1.CupertinoScrollbar.new)
-  CupertinoScrollbar(
-    $ $config, {
+  CupertinoScrollbar({
     _i2.Key? key,
     required _i3.Widget child,
     _i3.ScrollController? controller,
@@ -22,30 +21,64 @@ final class CupertinoScrollbar extends Wrapper {
     ui.Radius radiusWhileDragging = _i1.CupertinoScrollbar.defaultRadiusWhileDragging,
     _i3.ScrollNotificationPredicate? notificationPredicate,
     _i3.ScrollbarOrientation? scrollbarOrientation,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with child
+    Stream<_i3.Widget>? $child,
+    // Associate with controller
+    Stream<_i3.ScrollController?>? $controller,
+    // Associate with thumbVisibility
+    Stream<bool?>? $thumbVisibility,
+    // Associate with thickness
+    Stream<double>? $thickness,
+    // Associate with thicknessWhileDragging
+    Stream<double>? $thicknessWhileDragging,
+    // Associate with radius
+    Stream<ui.Radius>? $radius,
+    // Associate with radiusWhileDragging
+    Stream<ui.Radius>? $radiusWhileDragging,
+    // Associate with notificationPredicate
+    Stream<_i3.ScrollNotificationPredicate?>? $notificationPredicate,
+    // Associate with scrollbarOrientation
+    Stream<_i3.ScrollbarOrientation?>? $scrollbarOrientation,
   }) : super(
-          Argument({
-            #key: key,
-            #child: child,
-            #controller: controller,
-            #thumbVisibility: thumbVisibility,
-            #thickness: thickness,
-            #thicknessWhileDragging: thicknessWhileDragging,
-            #radius: radius,
-            #radiusWhileDragging: radiusWhileDragging,
-            #notificationPredicate: notificationPredicate,
-            #scrollbarOrientation: scrollbarOrientation,
-          }),
+          Argument(
+            {
+              'key': key,
+              'child': child,
+              'controller': controller,
+              'thumbVisibility': thumbVisibility,
+              'thickness': thickness,
+              'thicknessWhileDragging': thicknessWhileDragging,
+              'radius': radius,
+              'radiusWhileDragging': radiusWhileDragging,
+              'notificationPredicate': notificationPredicate,
+              'scrollbarOrientation': scrollbarOrientation,
+            },
+            stream: {
+              'key': $key,
+              'child': $child,
+              'controller': $controller,
+              'thumbVisibility': $thumbVisibility,
+              'thickness': $thickness,
+              'thicknessWhileDragging': $thicknessWhileDragging,
+              'radius': $radius,
+              'radiusWhileDragging': $radiusWhileDragging,
+              'notificationPredicate': $notificationPredicate,
+              'scrollbarOrientation': $scrollbarOrientation,
+            },
+          ),
           builder: (args) => _i1.CupertinoScrollbar(
-            key: args(#key),
-            child: args(#child),
-            controller: args(#controller),
-            thumbVisibility: args(#thumbVisibility),
-            thickness: args(#thickness),
-            thicknessWhileDragging: args(#thicknessWhileDragging),
-            radius: args(#radius),
-            radiusWhileDragging: args(#radiusWhileDragging),
-            notificationPredicate: args(#notificationPredicate),
-            scrollbarOrientation: args(#scrollbarOrientation),
+            key: args('key'),
+            child: args('child'),
+            controller: args('controller'),
+            thumbVisibility: args('thumbVisibility'),
+            thickness: args('thickness'),
+            thicknessWhileDragging: args('thicknessWhileDragging'),
+            radius: args('radius'),
+            radiusWhileDragging: args('radiusWhileDragging'),
+            notificationPredicate: args('notificationPredicate'),
+            scrollbarOrientation: args('scrollbarOrientation'),
           ),
         );
 }

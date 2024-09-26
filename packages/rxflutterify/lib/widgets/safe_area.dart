@@ -8,8 +8,7 @@ import '../wrapper.dart';
 
 final class SliverSafeArea extends Wrapper {
   @Goto(_i1.SliverSafeArea.new)
-  SliverSafeArea(
-    $ $config, {
+  SliverSafeArea({
     _i2.Key? key,
     bool left = true,
     bool top = true,
@@ -17,32 +16,56 @@ final class SliverSafeArea extends Wrapper {
     bool bottom = true,
     _i3.EdgeInsets minimum = _i3.EdgeInsets.zero,
     required _i1.Widget sliver,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with left
+    Stream<bool>? $left,
+    // Associate with top
+    Stream<bool>? $top,
+    // Associate with right
+    Stream<bool>? $right,
+    // Associate with bottom
+    Stream<bool>? $bottom,
+    // Associate with minimum
+    Stream<_i3.EdgeInsets>? $minimum,
+    // Associate with sliver
+    Stream<_i1.Widget>? $sliver,
   }) : super(
-          Argument({
-            #key: key,
-            #left: left,
-            #top: top,
-            #right: right,
-            #bottom: bottom,
-            #minimum: minimum,
-            #sliver: sliver,
-          }),
+          Argument(
+            {
+              'key': key,
+              'left': left,
+              'top': top,
+              'right': right,
+              'bottom': bottom,
+              'minimum': minimum,
+              'sliver': sliver,
+            },
+            stream: {
+              'key': $key,
+              'left': $left,
+              'top': $top,
+              'right': $right,
+              'bottom': $bottom,
+              'minimum': $minimum,
+              'sliver': $sliver,
+            },
+          ),
           builder: (args) => _i1.SliverSafeArea(
-            key: args(#key),
-            left: args(#left),
-            top: args(#top),
-            right: args(#right),
-            bottom: args(#bottom),
-            minimum: args(#minimum),
-            sliver: args(#sliver),
+            key: args('key'),
+            left: args('left'),
+            top: args('top'),
+            right: args('right'),
+            bottom: args('bottom'),
+            minimum: args('minimum'),
+            sliver: args('sliver'),
           ),
         );
 }
 
 final class SafeArea extends Wrapper {
   @Goto(_i1.SafeArea.new)
-  SafeArea(
-    $ $config, {
+  SafeArea({
     _i2.Key? key,
     bool left = true,
     bool top = true,
@@ -51,26 +74,54 @@ final class SafeArea extends Wrapper {
     _i3.EdgeInsets minimum = _i3.EdgeInsets.zero,
     bool maintainBottomViewPadding = false,
     required _i1.Widget child,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with left
+    Stream<bool>? $left,
+    // Associate with top
+    Stream<bool>? $top,
+    // Associate with right
+    Stream<bool>? $right,
+    // Associate with bottom
+    Stream<bool>? $bottom,
+    // Associate with minimum
+    Stream<_i3.EdgeInsets>? $minimum,
+    // Associate with maintainBottomViewPadding
+    Stream<bool>? $maintainBottomViewPadding,
+    // Associate with child
+    Stream<_i1.Widget>? $child,
   }) : super(
-          Argument({
-            #key: key,
-            #left: left,
-            #top: top,
-            #right: right,
-            #bottom: bottom,
-            #minimum: minimum,
-            #maintainBottomViewPadding: maintainBottomViewPadding,
-            #child: child,
-          }),
+          Argument(
+            {
+              'key': key,
+              'left': left,
+              'top': top,
+              'right': right,
+              'bottom': bottom,
+              'minimum': minimum,
+              'maintainBottomViewPadding': maintainBottomViewPadding,
+              'child': child,
+            },
+            stream: {
+              'key': $key,
+              'left': $left,
+              'top': $top,
+              'right': $right,
+              'bottom': $bottom,
+              'minimum': $minimum,
+              'maintainBottomViewPadding': $maintainBottomViewPadding,
+              'child': $child,
+            },
+          ),
           builder: (args) => _i1.SafeArea(
-            key: args(#key),
-            left: args(#left),
-            top: args(#top),
-            right: args(#right),
-            bottom: args(#bottom),
-            minimum: args(#minimum),
-            maintainBottomViewPadding: args(#maintainBottomViewPadding),
-            child: args(#child),
+            key: args('key'),
+            left: args('left'),
+            top: args('top'),
+            right: args('right'),
+            bottom: args('bottom'),
+            minimum: args('minimum'),
+            maintainBottomViewPadding: args('maintainBottomViewPadding'),
+            child: args('child'),
           ),
         );
 }

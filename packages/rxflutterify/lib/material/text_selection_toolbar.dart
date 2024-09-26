@@ -11,27 +11,45 @@ import '../wrapper.dart';
 
 final class TextSelectionToolbar extends Wrapper {
   @Goto(_i1.TextSelectionToolbar.new)
-  TextSelectionToolbar(
-    $ $config, {
+  TextSelectionToolbar({
     _i2.Key? key,
     required ui.Offset anchorAbove,
     required ui.Offset anchorBelow,
     _i3.ToolbarBuilder toolbarBuilder = _defaultToolbarBuilder,
     required List<_i3.Widget> children,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with anchorAbove
+    Stream<ui.Offset>? $anchorAbove,
+    // Associate with anchorBelow
+    Stream<ui.Offset>? $anchorBelow,
+    // Associate with toolbarBuilder
+    Stream<_i3.ToolbarBuilder>? $toolbarBuilder,
+    // Associate with children
+    Stream<List<_i3.Widget>>? $children,
   }) : super(
-          Argument({
-            #key: key,
-            #anchorAbove: anchorAbove,
-            #anchorBelow: anchorBelow,
-            #toolbarBuilder: toolbarBuilder,
-            #children: children,
-          }),
+          Argument(
+            {
+              'key': key,
+              'anchorAbove': anchorAbove,
+              'anchorBelow': anchorBelow,
+              'toolbarBuilder': toolbarBuilder,
+              'children': children,
+            },
+            stream: {
+              'key': $key,
+              'anchorAbove': $anchorAbove,
+              'anchorBelow': $anchorBelow,
+              'toolbarBuilder': $toolbarBuilder,
+              'children': $children,
+            },
+          ),
           builder: (args) => _i1.TextSelectionToolbar(
-            key: args(#key),
-            anchorAbove: args(#anchorAbove),
-            anchorBelow: args(#anchorBelow),
-            toolbarBuilder: args(#toolbarBuilder),
-            children: args(#children),
+            key: args('key'),
+            anchorAbove: args('anchorAbove'),
+            anchorBelow: args('anchorBelow'),
+            toolbarBuilder: args('toolbarBuilder'),
+            children: args('children'),
           ),
         );
 

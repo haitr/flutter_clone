@@ -1,8 +1,8 @@
+import 'package:cart/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:rxflutterify/rx_widgets.dart';
 
 import 'viewmodel.dart';
-import 'widget.dart';
 
 class CheckoutPage extends StatefulWidget {
   const CheckoutPage({
@@ -27,14 +27,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Checkout'),
+        title: const Text('[rxflutterify] Checkout'),
       ),
       body: SafeArea(
         child: $ListView.builder(
-          $.all,
           padding: const EdgeInsets.all(8),
-          itemCount:
-              0.bind(#itemCount, viewModel.output.cart.products.map((event) => event.length)),
+          itemCount: viewModel.output.cart.products.value.length,
+          $itemCount: viewModel.output.cart.products.map((event) => event.length),
           itemBuilder: (context, index) {
             final product = viewModel.output.cart.products.value[index];
             final productInCart = viewModel.output.cart.getProductInCart(product)!;
@@ -47,14 +46,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   $Builder(
-                    $.all,
-                    builder: ((context) => const SizedBox.shrink() as Widget).bind(
-                        #builder,
-                        productInCart.map((event) => (_) => Quantity(
-                            quantity: event,
-                            color: Colors.black,
-                            decrease: () => viewModel.output.cart.decrease(product),
-                            increase: () => viewModel.output.cart.increase(product)))),
+                    builder: (context) => const SizedBox.shrink(),
+                    $builder: productInCart.map((event) => (_) => Quantity(
+                        quantity: event,
+                        color: Colors.black,
+                        decrease: () => viewModel.output.cart.decrease(product),
+                        increase: () => viewModel.output.cart.increase(product))),
                   ),
                 ],
               ),

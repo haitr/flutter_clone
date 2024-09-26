@@ -2,14 +2,13 @@ library rxflutterify; // ignore_for_file: no_leading_underscores_for_library_pre
 
 import 'dart:ui' as ui;
 
-import 'package:flutter/animation.dart' as _i8;
+import 'package:flutter/animation.dart' as _i7;
 import 'package:flutter/foundation.dart' as _i2;
 import 'package:flutter/painting.dart' as _i5;
 import 'package:flutter/rendering.dart' as _i4;
-import 'package:flutter/semantics.dart' as _i7;
+import 'package:flutter/semantics.dart' as _i6;
 import 'package:flutter/services.dart' as _i3;
 import 'package:flutter/widgets.dart' as _i1;
-import 'package:vector_math/vector_math_64.dart' as _i6;
 
 import '../wrapper.dart';
 
@@ -559,7 +558,7 @@ final class Transform extends Wrapper {
   Transform(
     $ $config, {
     _i2.Key? key,
-    required _i6.Matrix4 transform,
+    required _i4.Matrix4 transform,
     ui.Offset? origin,
     _i5.AlignmentGeometry? alignment,
     bool transformHitTests = true,
@@ -1057,21 +1056,21 @@ final class Semantics extends Wrapper {
     int? currentValueLength,
     String? identifier,
     String? label,
-    _i7.AttributedString? attributedLabel,
+    _i6.AttributedString? attributedLabel,
     String? value,
-    _i7.AttributedString? attributedValue,
+    _i6.AttributedString? attributedValue,
     String? increasedValue,
-    _i7.AttributedString? attributedIncreasedValue,
+    _i6.AttributedString? attributedIncreasedValue,
     String? decreasedValue,
-    _i7.AttributedString? attributedDecreasedValue,
+    _i6.AttributedString? attributedDecreasedValue,
     String? hint,
-    _i7.AttributedString? attributedHint,
+    _i6.AttributedString? attributedHint,
     String? tooltip,
     String? onTapHint,
     String? onLongPressHint,
     ui.TextDirection? textDirection,
-    _i7.SemanticsSortKey? sortKey,
-    _i7.SemanticsTag? tagForChildren,
+    _i6.SemanticsSortKey? sortKey,
+    _i6.SemanticsTag? tagForChildren,
     ui.VoidCallback? onTap,
     ui.VoidCallback? onLongPress,
     ui.VoidCallback? onScrollLeft,
@@ -1084,13 +1083,13 @@ final class Semantics extends Wrapper {
     ui.VoidCallback? onCut,
     ui.VoidCallback? onPaste,
     ui.VoidCallback? onDismiss,
-    _i7.MoveCursorHandler? onMoveCursorForwardByCharacter,
-    _i7.MoveCursorHandler? onMoveCursorBackwardByCharacter,
-    _i7.SetSelectionHandler? onSetSelection,
-    _i7.SetTextHandler? onSetText,
+    _i6.MoveCursorHandler? onMoveCursorForwardByCharacter,
+    _i6.MoveCursorHandler? onMoveCursorBackwardByCharacter,
+    _i6.SetSelectionHandler? onSetSelection,
+    _i6.SetTextHandler? onSetText,
     ui.VoidCallback? onDidGainAccessibilityFocus,
     ui.VoidCallback? onDidLoseAccessibilityFocus,
-    Map<_i7.CustomSemanticsAction, ui.VoidCallback>? customSemanticsActions,
+    Map<_i6.CustomSemanticsAction, ui.VoidCallback>? customSemanticsActions,
   }) : super(
           Argument({
             #key: key,
@@ -1241,7 +1240,7 @@ final class Semantics extends Wrapper {
     bool explicitChildNodes = false,
     bool excludeSemantics = false,
     bool blockUserActions = false,
-    required _i7.SemanticsProperties properties,
+    required _i6.SemanticsProperties properties,
   }) : super(
           Argument({
             #key: key,
@@ -2326,7 +2325,7 @@ final class RawImage extends Wrapper {
     double? height,
     double scale = 1.0,
     ui.Color? color,
-    _i8.Animation<double>? opacity,
+    _i7.Animation<double>? opacity,
     ui.BlendMode? colorBlendMode,
     _i5.BoxFit? fit,
     _i5.AlignmentGeometry alignment = _i5.Alignment.center,

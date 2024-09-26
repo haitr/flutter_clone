@@ -7,7 +7,6 @@ import 'package:flutter/foundation.dart' as _i2;
 import 'package:flutter/painting.dart' as _i3;
 import 'package:flutter/rendering.dart' as _i5;
 import 'package:flutter/widgets.dart' as _i1;
-import 'package:vector_math/vector_math_64.dart' as _i6;
 
 import '../wrapper.dart';
 
@@ -97,7 +96,7 @@ final class AnimatedContainer extends Wrapper {
     double? height,
     _i5.BoxConstraints? constraints,
     _i3.EdgeInsetsGeometry? margin,
-    _i6.Matrix4? transform,
+    _i5.Matrix4? transform,
     _i3.AlignmentGeometry? transformAlignment,
     _i1.Widget? child,
     ui.Clip clipBehavior = ui.Clip.none,
@@ -142,39 +141,6 @@ final class AnimatedContainer extends Wrapper {
             curve: args(#curve),
             duration: args(#duration),
             onEnd: args(#onEnd),
-          ),
-        );
-}
-
-final class SliverAnimatedOpacity extends Wrapper {
-  @Goto(_i1.SliverAnimatedOpacity.new)
-  SliverAnimatedOpacity(
-    $ $config, {
-    _i2.Key? key,
-    _i1.Widget? sliver,
-    required double opacity,
-    _i4.Curve curve = _i4.Curves.linear,
-    required Duration duration,
-    ui.VoidCallback? onEnd,
-    bool alwaysIncludeSemantics = false,
-  }) : super(
-          Argument({
-            #key: key,
-            #sliver: sliver,
-            #opacity: opacity,
-            #curve: curve,
-            #duration: duration,
-            #onEnd: onEnd,
-            #alwaysIncludeSemantics: alwaysIncludeSemantics,
-          }),
-          builder: (args) => _i1.SliverAnimatedOpacity(
-            key: args(#key),
-            sliver: args(#sliver),
-            opacity: args(#opacity),
-            curve: args(#curve),
-            duration: args(#duration),
-            onEnd: args(#onEnd),
-            alwaysIncludeSemantics: args(#alwaysIncludeSemantics),
           ),
         );
 }
@@ -226,6 +192,39 @@ final class AnimatedPhysicalModel extends Wrapper {
             curve: args(#curve),
             duration: args(#duration),
             onEnd: args(#onEnd),
+          ),
+        );
+}
+
+final class SliverAnimatedOpacity extends Wrapper {
+  @Goto(_i1.SliverAnimatedOpacity.new)
+  SliverAnimatedOpacity(
+    $ $config, {
+    _i2.Key? key,
+    _i1.Widget? sliver,
+    required double opacity,
+    _i4.Curve curve = _i4.Curves.linear,
+    required Duration duration,
+    ui.VoidCallback? onEnd,
+    bool alwaysIncludeSemantics = false,
+  }) : super(
+          Argument({
+            #key: key,
+            #sliver: sliver,
+            #opacity: opacity,
+            #curve: curve,
+            #duration: duration,
+            #onEnd: onEnd,
+            #alwaysIncludeSemantics: alwaysIncludeSemantics,
+          }),
+          builder: (args) => _i1.SliverAnimatedOpacity(
+            key: args(#key),
+            sliver: args(#sliver),
+            opacity: args(#opacity),
+            curve: args(#curve),
+            duration: args(#duration),
+            onEnd: args(#onEnd),
+            alwaysIncludeSemantics: args(#alwaysIncludeSemantics),
           ),
         );
 }

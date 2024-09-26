@@ -10,8 +10,7 @@ import '../wrapper.dart';
 
 final class ExpansionPanelList extends Wrapper {
   @Goto(_i1.ExpansionPanelList.new)
-  ExpansionPanelList(
-    $ $config, {
+  ExpansionPanelList({
     _i2.Key? key,
     List<_i1.ExpansionPanel> children = const [],
     _i1.ExpansionPanelCallback? expansionCallback,
@@ -21,34 +20,64 @@ final class ExpansionPanelList extends Wrapper {
     double elevation = 2,
     ui.Color? expandIconColor,
     double materialGapSize = 16.0,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with children
+    Stream<List<_i1.ExpansionPanel>>? $children,
+    // Associate with expansionCallback
+    Stream<_i1.ExpansionPanelCallback?>? $expansionCallback,
+    // Associate with animationDuration
+    Stream<Duration>? $animationDuration,
+    // Associate with expandedHeaderPadding
+    Stream<_i3.EdgeInsets>? $expandedHeaderPadding,
+    // Associate with dividerColor
+    Stream<ui.Color?>? $dividerColor,
+    // Associate with elevation
+    Stream<double>? $elevation,
+    // Associate with expandIconColor
+    Stream<ui.Color?>? $expandIconColor,
+    // Associate with materialGapSize
+    Stream<double>? $materialGapSize,
   }) : super(
-          Argument({
-            #key: key,
-            #children: children,
-            #expansionCallback: expansionCallback,
-            #animationDuration: animationDuration,
-            #expandedHeaderPadding: expandedHeaderPadding,
-            #dividerColor: dividerColor,
-            #elevation: elevation,
-            #expandIconColor: expandIconColor,
-            #materialGapSize: materialGapSize,
-          }),
+          Argument(
+            {
+              'key': key,
+              'children': children,
+              'expansionCallback': expansionCallback,
+              'animationDuration': animationDuration,
+              'expandedHeaderPadding': expandedHeaderPadding,
+              'dividerColor': dividerColor,
+              'elevation': elevation,
+              'expandIconColor': expandIconColor,
+              'materialGapSize': materialGapSize,
+            },
+            stream: {
+              'key': $key,
+              'children': $children,
+              'expansionCallback': $expansionCallback,
+              'animationDuration': $animationDuration,
+              'expandedHeaderPadding': $expandedHeaderPadding,
+              'dividerColor': $dividerColor,
+              'elevation': $elevation,
+              'expandIconColor': $expandIconColor,
+              'materialGapSize': $materialGapSize,
+            },
+          ),
           builder: (args) => _i1.ExpansionPanelList(
-            key: args(#key),
-            children: args(#children),
-            expansionCallback: args(#expansionCallback),
-            animationDuration: args(#animationDuration),
-            expandedHeaderPadding: args(#expandedHeaderPadding),
-            dividerColor: args(#dividerColor),
-            elevation: args(#elevation),
-            expandIconColor: args(#expandIconColor),
-            materialGapSize: args(#materialGapSize),
+            key: args('key'),
+            children: args('children'),
+            expansionCallback: args('expansionCallback'),
+            animationDuration: args('animationDuration'),
+            expandedHeaderPadding: args('expandedHeaderPadding'),
+            dividerColor: args('dividerColor'),
+            elevation: args('elevation'),
+            expandIconColor: args('expandIconColor'),
+            materialGapSize: args('materialGapSize'),
           ),
         );
 
   @Goto(_i1.ExpansionPanelList.radio)
-  ExpansionPanelList.radio(
-    $ $config, {
+  ExpansionPanelList.radio({
     _i2.Key? key,
     List<_i1.ExpansionPanel> children = const [],
     _i1.ExpansionPanelCallback? expansionCallback,
@@ -59,30 +88,64 @@ final class ExpansionPanelList extends Wrapper {
     double elevation = 2,
     ui.Color? expandIconColor,
     double materialGapSize = 16.0,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with children
+    Stream<List<_i1.ExpansionPanel>>? $children,
+    // Associate with expansionCallback
+    Stream<_i1.ExpansionPanelCallback?>? $expansionCallback,
+    // Associate with animationDuration
+    Stream<Duration>? $animationDuration,
+    // Associate with initialOpenPanelValue
+    Stream<Object?>? $initialOpenPanelValue,
+    // Associate with expandedHeaderPadding
+    Stream<_i3.EdgeInsets>? $expandedHeaderPadding,
+    // Associate with dividerColor
+    Stream<ui.Color?>? $dividerColor,
+    // Associate with elevation
+    Stream<double>? $elevation,
+    // Associate with expandIconColor
+    Stream<ui.Color?>? $expandIconColor,
+    // Associate with materialGapSize
+    Stream<double>? $materialGapSize,
   }) : super(
-          Argument({
-            #key: key,
-            #children: children,
-            #expansionCallback: expansionCallback,
-            #animationDuration: animationDuration,
-            #initialOpenPanelValue: initialOpenPanelValue,
-            #expandedHeaderPadding: expandedHeaderPadding,
-            #dividerColor: dividerColor,
-            #elevation: elevation,
-            #expandIconColor: expandIconColor,
-            #materialGapSize: materialGapSize,
-          }),
+          Argument(
+            {
+              'key': key,
+              'children': children,
+              'expansionCallback': expansionCallback,
+              'animationDuration': animationDuration,
+              'initialOpenPanelValue': initialOpenPanelValue,
+              'expandedHeaderPadding': expandedHeaderPadding,
+              'dividerColor': dividerColor,
+              'elevation': elevation,
+              'expandIconColor': expandIconColor,
+              'materialGapSize': materialGapSize,
+            },
+            stream: {
+              'key': $key,
+              'children': $children,
+              'expansionCallback': $expansionCallback,
+              'animationDuration': $animationDuration,
+              'initialOpenPanelValue': $initialOpenPanelValue,
+              'expandedHeaderPadding': $expandedHeaderPadding,
+              'dividerColor': $dividerColor,
+              'elevation': $elevation,
+              'expandIconColor': $expandIconColor,
+              'materialGapSize': $materialGapSize,
+            },
+          ),
           builder: (args) => _i1.ExpansionPanelList.radio(
-            key: args(#key),
-            children: args(#children),
-            expansionCallback: args(#expansionCallback),
-            animationDuration: args(#animationDuration),
-            initialOpenPanelValue: args(#initialOpenPanelValue),
-            expandedHeaderPadding: args(#expandedHeaderPadding),
-            dividerColor: args(#dividerColor),
-            elevation: args(#elevation),
-            expandIconColor: args(#expandIconColor),
-            materialGapSize: args(#materialGapSize),
+            key: args('key'),
+            children: args('children'),
+            expansionCallback: args('expansionCallback'),
+            animationDuration: args('animationDuration'),
+            initialOpenPanelValue: args('initialOpenPanelValue'),
+            expandedHeaderPadding: args('expandedHeaderPadding'),
+            dividerColor: args('dividerColor'),
+            elevation: args('elevation'),
+            expandIconColor: args('expandIconColor'),
+            materialGapSize: args('materialGapSize'),
           ),
         );
 }

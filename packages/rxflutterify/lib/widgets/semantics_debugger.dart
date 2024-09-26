@@ -10,8 +10,7 @@ import '../wrapper.dart';
 
 final class SemanticsDebugger extends Wrapper {
   @Goto(_i1.SemanticsDebugger.new)
-  SemanticsDebugger(
-    $ $config, {
+  SemanticsDebugger({
     _i2.Key? key,
     required _i1.Widget child,
     _i3.TextStyle labelStyle = const _i3.TextStyle(
@@ -19,16 +18,29 @@ final class SemanticsDebugger extends Wrapper {
       fontSize: 10.0,
       height: 0.8,
     ),
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with child
+    Stream<_i1.Widget>? $child,
+    // Associate with labelStyle
+    Stream<_i3.TextStyle>? $labelStyle,
   }) : super(
-          Argument({
-            #key: key,
-            #child: child,
-            #labelStyle: labelStyle,
-          }),
+          Argument(
+            {
+              'key': key,
+              'child': child,
+              'labelStyle': labelStyle,
+            },
+            stream: {
+              'key': $key,
+              'child': $child,
+              'labelStyle': $labelStyle,
+            },
+          ),
           builder: (args) => _i1.SemanticsDebugger(
-            key: args(#key),
-            child: args(#child),
-            labelStyle: args(#labelStyle),
+            key: args('key'),
+            child: args('child'),
+            labelStyle: args('labelStyle'),
           ),
         );
 }

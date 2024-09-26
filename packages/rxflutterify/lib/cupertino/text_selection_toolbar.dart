@@ -13,27 +13,45 @@ import '../wrapper.dart';
 
 final class CupertinoTextSelectionToolbar extends Wrapper {
   @Goto(_i1.CupertinoTextSelectionToolbar.new)
-  CupertinoTextSelectionToolbar(
-    $ $config, {
+  CupertinoTextSelectionToolbar({
     _i3.Key? key,
     required ui.Offset anchorAbove,
     required ui.Offset anchorBelow,
     required List<_i2.Widget> children,
     _i1.CupertinoToolbarBuilder toolbarBuilder = _defaultToolbarBuilder,
+    // Associate with key
+    Stream<_i3.Key?>? $key,
+    // Associate with anchorAbove
+    Stream<ui.Offset>? $anchorAbove,
+    // Associate with anchorBelow
+    Stream<ui.Offset>? $anchorBelow,
+    // Associate with children
+    Stream<List<_i2.Widget>>? $children,
+    // Associate with toolbarBuilder
+    Stream<_i1.CupertinoToolbarBuilder>? $toolbarBuilder,
   }) : super(
-          Argument({
-            #key: key,
-            #anchorAbove: anchorAbove,
-            #anchorBelow: anchorBelow,
-            #children: children,
-            #toolbarBuilder: toolbarBuilder,
-          }),
+          Argument(
+            {
+              'key': key,
+              'anchorAbove': anchorAbove,
+              'anchorBelow': anchorBelow,
+              'children': children,
+              'toolbarBuilder': toolbarBuilder,
+            },
+            stream: {
+              'key': $key,
+              'anchorAbove': $anchorAbove,
+              'anchorBelow': $anchorBelow,
+              'children': $children,
+              'toolbarBuilder': $toolbarBuilder,
+            },
+          ),
           builder: (args) => _i1.CupertinoTextSelectionToolbar(
-            key: args(#key),
-            anchorAbove: args(#anchorAbove),
-            anchorBelow: args(#anchorBelow),
-            children: args(#children),
-            toolbarBuilder: args(#toolbarBuilder),
+            key: args('key'),
+            anchorAbove: args('anchorAbove'),
+            anchorBelow: args('anchorBelow'),
+            children: args('children'),
+            toolbarBuilder: args('toolbarBuilder'),
           ),
         );
 

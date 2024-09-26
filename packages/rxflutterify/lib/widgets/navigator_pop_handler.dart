@@ -9,24 +9,39 @@ import '../wrapper.dart';
 
 final class NavigatorPopHandler extends Wrapper {
   @Goto(_i1.NavigatorPopHandler.new)
-  NavigatorPopHandler(
-    $ $config, {
+  NavigatorPopHandler({
     _i2.Key? key,
     ui.VoidCallback? onPop,
     bool enabled = true,
     required _i1.Widget child,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with onPop
+    Stream<ui.VoidCallback?>? $onPop,
+    // Associate with enabled
+    Stream<bool>? $enabled,
+    // Associate with child
+    Stream<_i1.Widget>? $child,
   }) : super(
-          Argument({
-            #key: key,
-            #onPop: onPop,
-            #enabled: enabled,
-            #child: child,
-          }),
+          Argument(
+            {
+              'key': key,
+              'onPop': onPop,
+              'enabled': enabled,
+              'child': child,
+            },
+            stream: {
+              'key': $key,
+              'onPop': $onPop,
+              'enabled': $enabled,
+              'child': $child,
+            },
+          ),
           builder: (args) => _i1.NavigatorPopHandler(
-            key: args(#key),
-            onPop: args(#onPop),
-            enabled: args(#enabled),
-            child: args(#child),
+            key: args('key'),
+            onPop: args('onPop'),
+            enabled: args('enabled'),
+            child: args('child'),
           ),
         );
 }

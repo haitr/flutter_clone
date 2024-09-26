@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart' as _i2;
 import 'package:flutter/painting.dart' as _i3;
 import 'package:flutter/rendering.dart' as _i4;
 import 'package:flutter/widgets.dart' as _i1;
-import 'package:vector_math/vector_math_64.dart' as _i5;
 
 import '../wrapper.dart';
 
@@ -24,7 +23,7 @@ final class Container extends Wrapper {
     double? height,
     _i4.BoxConstraints? constraints,
     _i3.EdgeInsetsGeometry? margin,
-    _i5.Matrix4? transform,
+    _i4.Matrix4? transform,
     _i3.AlignmentGeometry? transformAlignment,
     _i1.Widget? child,
     ui.Clip clipBehavior = ui.Clip.none,

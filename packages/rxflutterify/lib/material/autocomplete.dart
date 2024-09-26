@@ -11,8 +11,7 @@ import '../wrapper.dart';
 
 final class Autocomplete<T extends Object> extends Wrapper {
   @Goto(_i1.Autocomplete.new)
-  Autocomplete(
-    $ $config, {
+  Autocomplete({
     _i2.Key? key,
     required _i3.AutocompleteOptionsBuilder<T> optionsBuilder,
     _i3.AutocompleteOptionToString<T> displayStringForOption = _i3.RawAutocomplete.defaultStringForOption,
@@ -22,28 +21,59 @@ final class Autocomplete<T extends Object> extends Wrapper {
     _i3.AutocompleteOptionsViewBuilder<T>? optionsViewBuilder,
     _i3.OptionsViewOpenDirection optionsViewOpenDirection = _i3.OptionsViewOpenDirection.down,
     _i4.TextEditingValue? initialValue,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with optionsBuilder
+    Stream<_i3.AutocompleteOptionsBuilder<T>>? $optionsBuilder,
+    // Associate with displayStringForOption
+    Stream<_i3.AutocompleteOptionToString<T>>? $displayStringForOption,
+    // Associate with fieldViewBuilder
+    Stream<_i3.AutocompleteFieldViewBuilder>? $fieldViewBuilder,
+    // Associate with onSelected
+    Stream<_i3.AutocompleteOnSelected<T>?>? $onSelected,
+    // Associate with optionsMaxHeight
+    Stream<double>? $optionsMaxHeight,
+    // Associate with optionsViewBuilder
+    Stream<_i3.AutocompleteOptionsViewBuilder<T>?>? $optionsViewBuilder,
+    // Associate with optionsViewOpenDirection
+    Stream<_i3.OptionsViewOpenDirection>? $optionsViewOpenDirection,
+    // Associate with initialValue
+    Stream<_i4.TextEditingValue?>? $initialValue,
   }) : super(
-          Argument({
-            #key: key,
-            #optionsBuilder: optionsBuilder,
-            #displayStringForOption: displayStringForOption,
-            #fieldViewBuilder: fieldViewBuilder,
-            #onSelected: onSelected,
-            #optionsMaxHeight: optionsMaxHeight,
-            #optionsViewBuilder: optionsViewBuilder,
-            #optionsViewOpenDirection: optionsViewOpenDirection,
-            #initialValue: initialValue,
-          }),
+          Argument(
+            {
+              'key': key,
+              'optionsBuilder': optionsBuilder,
+              'displayStringForOption': displayStringForOption,
+              'fieldViewBuilder': fieldViewBuilder,
+              'onSelected': onSelected,
+              'optionsMaxHeight': optionsMaxHeight,
+              'optionsViewBuilder': optionsViewBuilder,
+              'optionsViewOpenDirection': optionsViewOpenDirection,
+              'initialValue': initialValue,
+            },
+            stream: {
+              'key': $key,
+              'optionsBuilder': $optionsBuilder,
+              'displayStringForOption': $displayStringForOption,
+              'fieldViewBuilder': $fieldViewBuilder,
+              'onSelected': $onSelected,
+              'optionsMaxHeight': $optionsMaxHeight,
+              'optionsViewBuilder': $optionsViewBuilder,
+              'optionsViewOpenDirection': $optionsViewOpenDirection,
+              'initialValue': $initialValue,
+            },
+          ),
           builder: (args) => _i1.Autocomplete<T>(
-            key: args(#key),
-            optionsBuilder: args(#optionsBuilder),
-            displayStringForOption: args(#displayStringForOption),
-            fieldViewBuilder: args(#fieldViewBuilder),
-            onSelected: args(#onSelected),
-            optionsMaxHeight: args(#optionsMaxHeight),
-            optionsViewBuilder: args(#optionsViewBuilder),
-            optionsViewOpenDirection: args(#optionsViewOpenDirection),
-            initialValue: args(#initialValue),
+            key: args('key'),
+            optionsBuilder: args('optionsBuilder'),
+            displayStringForOption: args('displayStringForOption'),
+            fieldViewBuilder: args('fieldViewBuilder'),
+            onSelected: args('onSelected'),
+            optionsMaxHeight: args('optionsMaxHeight'),
+            optionsViewBuilder: args('optionsViewBuilder'),
+            optionsViewOpenDirection: args('optionsViewOpenDirection'),
+            initialValue: args('initialValue'),
           ),
         );
 

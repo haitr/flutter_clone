@@ -8,8 +8,7 @@ import '../wrapper.dart';
 
 final class CupertinoTabView extends Wrapper {
   @Goto(_i1.CupertinoTabView.new)
-  CupertinoTabView(
-    $ $config, {
+  CupertinoTabView({
     _i2.Key? key,
     _i3.WidgetBuilder? builder,
     _i3.GlobalKey<_i3.NavigatorState>? navigatorKey,
@@ -19,28 +18,59 @@ final class CupertinoTabView extends Wrapper {
     _i3.RouteFactory? onUnknownRoute,
     List<_i3.NavigatorObserver> navigatorObservers = const [],
     String? restorationScopeId,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with builder
+    Stream<_i3.WidgetBuilder?>? $builder,
+    // Associate with navigatorKey
+    Stream<_i3.GlobalKey<_i3.NavigatorState>?>? $navigatorKey,
+    // Associate with defaultTitle
+    Stream<String?>? $defaultTitle,
+    // Associate with routes
+    Stream<Map<String, _i3.WidgetBuilder>?>? $routes,
+    // Associate with onGenerateRoute
+    Stream<_i3.RouteFactory?>? $onGenerateRoute,
+    // Associate with onUnknownRoute
+    Stream<_i3.RouteFactory?>? $onUnknownRoute,
+    // Associate with navigatorObservers
+    Stream<List<_i3.NavigatorObserver>>? $navigatorObservers,
+    // Associate with restorationScopeId
+    Stream<String?>? $restorationScopeId,
   }) : super(
-          Argument({
-            #key: key,
-            #builder: builder,
-            #navigatorKey: navigatorKey,
-            #defaultTitle: defaultTitle,
-            #routes: routes,
-            #onGenerateRoute: onGenerateRoute,
-            #onUnknownRoute: onUnknownRoute,
-            #navigatorObservers: navigatorObservers,
-            #restorationScopeId: restorationScopeId,
-          }),
+          Argument(
+            {
+              'key': key,
+              'builder': builder,
+              'navigatorKey': navigatorKey,
+              'defaultTitle': defaultTitle,
+              'routes': routes,
+              'onGenerateRoute': onGenerateRoute,
+              'onUnknownRoute': onUnknownRoute,
+              'navigatorObservers': navigatorObservers,
+              'restorationScopeId': restorationScopeId,
+            },
+            stream: {
+              'key': $key,
+              'builder': $builder,
+              'navigatorKey': $navigatorKey,
+              'defaultTitle': $defaultTitle,
+              'routes': $routes,
+              'onGenerateRoute': $onGenerateRoute,
+              'onUnknownRoute': $onUnknownRoute,
+              'navigatorObservers': $navigatorObservers,
+              'restorationScopeId': $restorationScopeId,
+            },
+          ),
           builder: (args) => _i1.CupertinoTabView(
-            key: args(#key),
-            builder: args(#builder),
-            navigatorKey: args(#navigatorKey),
-            defaultTitle: args(#defaultTitle),
-            routes: args(#routes),
-            onGenerateRoute: args(#onGenerateRoute),
-            onUnknownRoute: args(#onUnknownRoute),
-            navigatorObservers: args(#navigatorObservers),
-            restorationScopeId: args(#restorationScopeId),
+            key: args('key'),
+            builder: args('builder'),
+            navigatorKey: args('navigatorKey'),
+            defaultTitle: args('defaultTitle'),
+            routes: args('routes'),
+            onGenerateRoute: args('onGenerateRoute'),
+            onUnknownRoute: args('onUnknownRoute'),
+            navigatorObservers: args('navigatorObservers'),
+            restorationScopeId: args('restorationScopeId'),
           ),
         );
 }

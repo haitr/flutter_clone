@@ -7,27 +7,45 @@ import '../wrapper.dart';
 
 final class CupertinoSliverRefreshControl extends Wrapper {
   @Goto(_i1.CupertinoSliverRefreshControl.new)
-  CupertinoSliverRefreshControl(
-    $ $config, {
+  CupertinoSliverRefreshControl({
     _i2.Key? key,
     double refreshTriggerPullDistance = _defaultRefreshTriggerPullDistance,
     double refreshIndicatorExtent = _defaultRefreshIndicatorExtent,
     _i1.RefreshControlIndicatorBuilder? builder = _i1.CupertinoSliverRefreshControl.buildRefreshIndicator,
     _i1.RefreshCallback? onRefresh,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with refreshTriggerPullDistance
+    Stream<double>? $refreshTriggerPullDistance,
+    // Associate with refreshIndicatorExtent
+    Stream<double>? $refreshIndicatorExtent,
+    // Associate with builder
+    Stream<_i1.RefreshControlIndicatorBuilder?>? $builder,
+    // Associate with onRefresh
+    Stream<_i1.RefreshCallback?>? $onRefresh,
   }) : super(
-          Argument({
-            #key: key,
-            #refreshTriggerPullDistance: refreshTriggerPullDistance,
-            #refreshIndicatorExtent: refreshIndicatorExtent,
-            #builder: builder,
-            #onRefresh: onRefresh,
-          }),
+          Argument(
+            {
+              'key': key,
+              'refreshTriggerPullDistance': refreshTriggerPullDistance,
+              'refreshIndicatorExtent': refreshIndicatorExtent,
+              'builder': builder,
+              'onRefresh': onRefresh,
+            },
+            stream: {
+              'key': $key,
+              'refreshTriggerPullDistance': $refreshTriggerPullDistance,
+              'refreshIndicatorExtent': $refreshIndicatorExtent,
+              'builder': $builder,
+              'onRefresh': $onRefresh,
+            },
+          ),
           builder: (args) => _i1.CupertinoSliverRefreshControl(
-            key: args(#key),
-            refreshTriggerPullDistance: args(#refreshTriggerPullDistance),
-            refreshIndicatorExtent: args(#refreshIndicatorExtent),
-            builder: args(#builder),
-            onRefresh: args(#onRefresh),
+            key: args('key'),
+            refreshTriggerPullDistance: args('refreshTriggerPullDistance'),
+            refreshIndicatorExtent: args('refreshIndicatorExtent'),
+            builder: args('builder'),
+            onRefresh: args('onRefresh'),
           ),
         );
 

@@ -11,8 +11,7 @@ import '../wrapper.dart';
 
 final class InputDecorator extends Wrapper {
   @Goto(_i1.InputDecorator.new)
-  InputDecorator(
-    $ $config, {
+  InputDecorator({
     _i2.Key? key,
     required _i1.InputDecoration decoration,
     _i3.TextStyle? baseStyle,
@@ -23,30 +22,64 @@ final class InputDecorator extends Wrapper {
     bool expands = false,
     bool isEmpty = false,
     _i4.Widget? child,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with decoration
+    Stream<_i1.InputDecoration>? $decoration,
+    // Associate with baseStyle
+    Stream<_i3.TextStyle?>? $baseStyle,
+    // Associate with textAlign
+    Stream<ui.TextAlign?>? $textAlign,
+    // Associate with textAlignVertical
+    Stream<_i3.TextAlignVertical?>? $textAlignVertical,
+    // Associate with isFocused
+    Stream<bool>? $isFocused,
+    // Associate with isHovering
+    Stream<bool>? $isHovering,
+    // Associate with expands
+    Stream<bool>? $expands,
+    // Associate with isEmpty
+    Stream<bool>? $isEmpty,
+    // Associate with child
+    Stream<_i4.Widget?>? $child,
   }) : super(
-          Argument({
-            #key: key,
-            #decoration: decoration,
-            #baseStyle: baseStyle,
-            #textAlign: textAlign,
-            #textAlignVertical: textAlignVertical,
-            #isFocused: isFocused,
-            #isHovering: isHovering,
-            #expands: expands,
-            #isEmpty: isEmpty,
-            #child: child,
-          }),
+          Argument(
+            {
+              'key': key,
+              'decoration': decoration,
+              'baseStyle': baseStyle,
+              'textAlign': textAlign,
+              'textAlignVertical': textAlignVertical,
+              'isFocused': isFocused,
+              'isHovering': isHovering,
+              'expands': expands,
+              'isEmpty': isEmpty,
+              'child': child,
+            },
+            stream: {
+              'key': $key,
+              'decoration': $decoration,
+              'baseStyle': $baseStyle,
+              'textAlign': $textAlign,
+              'textAlignVertical': $textAlignVertical,
+              'isFocused': $isFocused,
+              'isHovering': $isHovering,
+              'expands': $expands,
+              'isEmpty': $isEmpty,
+              'child': $child,
+            },
+          ),
           builder: (args) => _i1.InputDecorator(
-            key: args(#key),
-            decoration: args(#decoration),
-            baseStyle: args(#baseStyle),
-            textAlign: args(#textAlign),
-            textAlignVertical: args(#textAlignVertical),
-            isFocused: args(#isFocused),
-            isHovering: args(#isHovering),
-            expands: args(#expands),
-            isEmpty: args(#isEmpty),
-            child: args(#child),
+            key: args('key'),
+            decoration: args('decoration'),
+            baseStyle: args('baseStyle'),
+            textAlign: args('textAlign'),
+            textAlignVertical: args('textAlignVertical'),
+            isFocused: args('isFocused'),
+            isHovering: args('isHovering'),
+            expands: args('expands'),
+            isEmpty: args('isEmpty'),
+            child: args('child'),
           ),
         );
 }

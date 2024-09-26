@@ -7,21 +7,33 @@ import '../wrapper.dart';
 
 final class IconTheme extends Wrapper {
   @Goto(_i1.IconTheme.new)
-  IconTheme(
-    $ $config, {
+  IconTheme({
     _i2.Key? key,
     required _i1.IconThemeData data,
     required _i1.Widget child,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with data
+    Stream<_i1.IconThemeData>? $data,
+    // Associate with child
+    Stream<_i1.Widget>? $child,
   }) : super(
-          Argument({
-            #key: key,
-            #data: data,
-            #child: child,
-          }),
+          Argument(
+            {
+              'key': key,
+              'data': data,
+              'child': child,
+            },
+            stream: {
+              'key': $key,
+              'data': $data,
+              'child': $child,
+            },
+          ),
           builder: (args) => _i1.IconTheme(
-            key: args(#key),
-            data: args(#data),
-            child: args(#child),
+            key: args('key'),
+            data: args('data'),
+            child: args('child'),
           ),
         );
 }

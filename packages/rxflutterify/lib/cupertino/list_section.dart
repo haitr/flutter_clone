@@ -11,8 +11,7 @@ import '../wrapper.dart';
 
 final class CupertinoListSection extends Wrapper {
   @Goto(_i1.CupertinoListSection.new)
-  CupertinoListSection(
-    $ $config, {
+  CupertinoListSection({
     _i2.Key? key,
     List<_i3.Widget>? children,
     _i3.Widget? header,
@@ -26,42 +25,84 @@ final class CupertinoListSection extends Wrapper {
     double? topMargin = _kMarginTop,
     bool hasLeading = true,
     ui.Color? separatorColor,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with children
+    Stream<List<_i3.Widget>?>? $children,
+    // Associate with header
+    Stream<_i3.Widget?>? $header,
+    // Associate with footer
+    Stream<_i3.Widget?>? $footer,
+    // Associate with margin
+    Stream<_i4.EdgeInsetsGeometry>? $margin,
+    // Associate with backgroundColor
+    Stream<ui.Color>? $backgroundColor,
+    // Associate with decoration
+    Stream<_i4.BoxDecoration?>? $decoration,
+    // Associate with clipBehavior
+    Stream<ui.Clip>? $clipBehavior,
+    // Associate with dividerMargin
+    Stream<double>? $dividerMargin,
+    // Associate with additionalDividerMargin
+    Stream<double?>? $additionalDividerMargin,
+    // Associate with topMargin
+    Stream<double?>? $topMargin,
+    // Associate with hasLeading
+    Stream<bool>? $hasLeading,
+    // Associate with separatorColor
+    Stream<ui.Color?>? $separatorColor,
   }) : super(
-          Argument({
-            #key: key,
-            #children: children,
-            #header: header,
-            #footer: footer,
-            #margin: margin,
-            #backgroundColor: backgroundColor,
-            #decoration: decoration,
-            #clipBehavior: clipBehavior,
-            #dividerMargin: dividerMargin,
-            #additionalDividerMargin: additionalDividerMargin,
-            #topMargin: topMargin,
-            #hasLeading: hasLeading,
-            #separatorColor: separatorColor,
-          }),
+          Argument(
+            {
+              'key': key,
+              'children': children,
+              'header': header,
+              'footer': footer,
+              'margin': margin,
+              'backgroundColor': backgroundColor,
+              'decoration': decoration,
+              'clipBehavior': clipBehavior,
+              'dividerMargin': dividerMargin,
+              'additionalDividerMargin': additionalDividerMargin,
+              'topMargin': topMargin,
+              'hasLeading': hasLeading,
+              'separatorColor': separatorColor,
+            },
+            stream: {
+              'key': $key,
+              'children': $children,
+              'header': $header,
+              'footer': $footer,
+              'margin': $margin,
+              'backgroundColor': $backgroundColor,
+              'decoration': $decoration,
+              'clipBehavior': $clipBehavior,
+              'dividerMargin': $dividerMargin,
+              'additionalDividerMargin': $additionalDividerMargin,
+              'topMargin': $topMargin,
+              'hasLeading': $hasLeading,
+              'separatorColor': $separatorColor,
+            },
+          ),
           builder: (args) => _i1.CupertinoListSection(
-            key: args(#key),
-            children: args(#children),
-            header: args(#header),
-            footer: args(#footer),
-            margin: args(#margin),
-            backgroundColor: args(#backgroundColor),
-            decoration: args(#decoration),
-            clipBehavior: args(#clipBehavior),
-            dividerMargin: args(#dividerMargin),
-            additionalDividerMargin: args(#additionalDividerMargin),
-            topMargin: args(#topMargin),
-            hasLeading: args(#hasLeading),
-            separatorColor: args(#separatorColor),
+            key: args('key'),
+            children: args('children'),
+            header: args('header'),
+            footer: args('footer'),
+            margin: args('margin'),
+            backgroundColor: args('backgroundColor'),
+            decoration: args('decoration'),
+            clipBehavior: args('clipBehavior'),
+            dividerMargin: args('dividerMargin'),
+            additionalDividerMargin: args('additionalDividerMargin'),
+            topMargin: args('topMargin'),
+            hasLeading: args('hasLeading'),
+            separatorColor: args('separatorColor'),
           ),
         );
 
   @Goto(_i1.CupertinoListSection.insetGrouped)
-  CupertinoListSection.insetGrouped(
-    $ $config, {
+  CupertinoListSection.insetGrouped({
     _i2.Key? key,
     List<_i3.Widget>? children,
     _i3.Widget? header,
@@ -75,36 +116,79 @@ final class CupertinoListSection extends Wrapper {
     double? topMargin,
     bool hasLeading = true,
     ui.Color? separatorColor,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with children
+    Stream<List<_i3.Widget>?>? $children,
+    // Associate with header
+    Stream<_i3.Widget?>? $header,
+    // Associate with footer
+    Stream<_i3.Widget?>? $footer,
+    // Associate with margin
+    Stream<_i4.EdgeInsetsGeometry?>? $margin,
+    // Associate with backgroundColor
+    Stream<ui.Color>? $backgroundColor,
+    // Associate with decoration
+    Stream<_i4.BoxDecoration?>? $decoration,
+    // Associate with clipBehavior
+    Stream<ui.Clip>? $clipBehavior,
+    // Associate with dividerMargin
+    Stream<double>? $dividerMargin,
+    // Associate with additionalDividerMargin
+    Stream<double?>? $additionalDividerMargin,
+    // Associate with topMargin
+    Stream<double?>? $topMargin,
+    // Associate with hasLeading
+    Stream<bool>? $hasLeading,
+    // Associate with separatorColor
+    Stream<ui.Color?>? $separatorColor,
   }) : super(
-          Argument({
-            #key: key,
-            #children: children,
-            #header: header,
-            #footer: footer,
-            #margin: margin,
-            #backgroundColor: backgroundColor,
-            #decoration: decoration,
-            #clipBehavior: clipBehavior,
-            #dividerMargin: dividerMargin,
-            #additionalDividerMargin: additionalDividerMargin,
-            #topMargin: topMargin,
-            #hasLeading: hasLeading,
-            #separatorColor: separatorColor,
-          }),
+          Argument(
+            {
+              'key': key,
+              'children': children,
+              'header': header,
+              'footer': footer,
+              'margin': margin,
+              'backgroundColor': backgroundColor,
+              'decoration': decoration,
+              'clipBehavior': clipBehavior,
+              'dividerMargin': dividerMargin,
+              'additionalDividerMargin': additionalDividerMargin,
+              'topMargin': topMargin,
+              'hasLeading': hasLeading,
+              'separatorColor': separatorColor,
+            },
+            stream: {
+              'key': $key,
+              'children': $children,
+              'header': $header,
+              'footer': $footer,
+              'margin': $margin,
+              'backgroundColor': $backgroundColor,
+              'decoration': $decoration,
+              'clipBehavior': $clipBehavior,
+              'dividerMargin': $dividerMargin,
+              'additionalDividerMargin': $additionalDividerMargin,
+              'topMargin': $topMargin,
+              'hasLeading': $hasLeading,
+              'separatorColor': $separatorColor,
+            },
+          ),
           builder: (args) => _i1.CupertinoListSection.insetGrouped(
-            key: args(#key),
-            children: args(#children),
-            header: args(#header),
-            footer: args(#footer),
-            margin: args(#margin),
-            backgroundColor: args(#backgroundColor),
-            decoration: args(#decoration),
-            clipBehavior: args(#clipBehavior),
-            dividerMargin: args(#dividerMargin),
-            additionalDividerMargin: args(#additionalDividerMargin),
-            topMargin: args(#topMargin),
-            hasLeading: args(#hasLeading),
-            separatorColor: args(#separatorColor),
+            key: args('key'),
+            children: args('children'),
+            header: args('header'),
+            footer: args('footer'),
+            margin: args('margin'),
+            backgroundColor: args('backgroundColor'),
+            decoration: args('decoration'),
+            clipBehavior: args('clipBehavior'),
+            dividerMargin: args('dividerMargin'),
+            additionalDividerMargin: args('additionalDividerMargin'),
+            topMargin: args('topMargin'),
+            hasLeading: args('hasLeading'),
+            separatorColor: args('separatorColor'),
           ),
         );
 }

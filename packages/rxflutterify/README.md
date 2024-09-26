@@ -1,8 +1,8 @@
 # RxFlutterify
 
-[![pub package](https://img.shields.io/pub/v/rxflutterify.svg?label=rxflutterify&color=blue)](https://pub.dartlang.org/packages/rxflutterify)
+[![pub package](https://img.shields.io/pub/v/rxflutterify.svg?label=rxflutter&color=blue)](https://pub.dartlang.org/packages/rxflutterify)
 
-A Flutter framework that allows all widgets to automatically rebuild when their input streams emit events, making state management easier and more efficient.
+A library built on top of Flutter that allows all widgets to automatically rebuild when their input streams emit events, making state management easier and more efficient.
 
 ## Motivations
 
@@ -14,7 +14,7 @@ As app developers, we often gather requirements from customers, which include va
 
 ### Simplifying Data Binding with Streams
 
-With RxFlutterify, the data binding process becomes significantly easier and more time-saving by leveraging streams. By simply adding a `$` in front of your Flutter widgets, you can effortlessly bind them to streams, allowing for automatic updates whenever new data is emitted.
+With `rxflutterify`, the data binding process becomes significantly easier and more time-saving by leveraging streams. By simply adding a `$` in front of your Flutter widgets, you can effortlessly bind them to streams, allowing for automatic updates whenever new data is emitted.
 
 ***Disclaimer**: this package is a part of my [flutter_clone](https://github.com/haitr/flutter_clone) project. Feel free to explore it if you're interested in creating exceptional packages on top of Flutter.*
 
@@ -27,7 +27,7 @@ Text('A string');
 Change it into `$Text` widget
 ```dart
 // Assume that we had a variable called stringStream as type Stream<String>;
-$Text($.all, 'A string'.bind(#data, stringStream));
+$Text('A string', $data: stringStream);
 ```
 
 More detail in [*Usage*](#usage) section.
@@ -62,47 +62,26 @@ dependencies:
       ref: rxflutterify/v0.0.1
 ```
 
-#### Version Compatibility
+### Version Compatibility
 
 | pub | ref (verison) | ref (Flutter version) | Flutter version |
 | -- | -- | -- | -- |
 | 0.0.1 | rxflutterify/v0.0.1 | rxflutterify/flutter/v3.22 | 3.22.x |
 | 0.0.2 | rxflutterify/v0.0.2 | rxflutterify/flutter/v3.24 | 3.24.x |
 
-### Usage
+## Usage
 
 Find more examples in the [examples](./example) directory.
 
-The rxflutterify package simplifies the process of binding Streams to Flutter Widgets. By calling the `bind` method to bind any argument to a `Stream`, you can easily make them reactive.
+The `rxflutterify` package simplifies the process of binding Streams to Flutter Widgets. By adding a simple `$` prefix to your existing Widgets, you can easily make them reactive.
 
-#### Quick start
+### Quick start
 
 In order to make a Widget reactive:
 
 1. Add a `$` prefix to the Widget name.
-
-2. Add the react-type parameter as the first argument.
-
-| react-type | description |
-| -- | -- |
-| `$.all` | react on every emitted event |
-| `$.none` | skip all events |
-
-Currently, only `$.all` and `$.none` is supported; additional types will be added later.
-
-3. Bind arguments with corresponding `Stream`:
-To bind any argument to a Stream, utilize the bind method, where the first parameter is a Symbol that represents the name of the corresponding parameter.
-For example:
-
-```dart
-Text('a string'.bind(#data, stringStream));
-```
-
-```dart
-Container(color: Colors.blue.bind(#color, colorStream));
-```
-
-*Note*: `bind` method only run while declaring widget, not in `build` phase.
+2. For positional parameters that you want to make reactive, use the parameter name prefixed with `$`.
+3. For named parameters, simply add a `$` prefix to the parameter name.
 
 Assuming that there was a Text or a Column in your sketch:
 
@@ -124,69 +103,21 @@ As reactive:
 
 ```dart
 $Text(
-  $.all,
-  'Hello, World!'.bind(#data, greetingStream), 
-  style: TextStyle(fontSize: 20).bind(#style, textStyleStream),
+  'Hello, World!', 
+  style: TextStyle(fontSize: 20),
+  $data: greetingStream,
+  $style: textStyleStream,
 )
 ```
-In the Text widget, there is a positional String parameter called `data`, so we need to use #data for the input stream.
+In Text, positional String parameter named `data` so we have to use `$data` for input stream.
 
 ```dart
 $Column(
-  $.all,
-  mainAxisAlignment: MainAxisAlignment.center.bind(
-    #mainAxisAlignment,
-    alignmentStream,
-  ),
+  mainAxisAlignment: MainAxisAlignment.center,
+  $mainAxisAlignment: alignmentStream
   children: [/* ... */],
 )
 ```
-
-#### Custom Widget
-
-To make a custom widget reactive, enclose it within a Wrapper and ensure proper argument mapping.
-Be sure to place an instance of $ as the first parameter of the constructor.
-
-For example:
-
-```dart
-class MyWidget extends StatelessWidget {
-  final String? field1;
-  final int field2;
-  MyWidget({
-    super.key,
-    this.field1,
-    required this.field2,
-  });
-  // ...
-}
-```
-
-```dart
-class $MyWidget extends MyWidget {
-  const $MyWidget(
-    $ $config, {
-    super.key,
-    super.field1,
-    required super.field2,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrapper(
-        Argument({
-          #field1: field1,
-          #field2: field2,
-        }),
-        builder: (args) => MyWidget(
-              field1: args(#field1),
-              field2: args(#field2),
-            ));
-  }
-}
-```
-
-More detail in [custom widget](./example/cart/lib/widget.dart).
 
 *Note*: in order to make a stream easier:
 
@@ -196,9 +127,11 @@ Stream<String> stringStream = 'init text'.react;
 
 *Dev Note*: Despite using [rxdart](https://github.com/ReactiveX/rxdart), it is significantly easier to manage `Stream` operations with various `Stream` operators, you also craft your own Dart Stream.
 
+## Example
+
 Find more examples in the [examples](./example) directory.
 
-#### License
+## License
 
 This project is licensed under the MIT License.
 

@@ -8,61 +8,97 @@ import '../wrapper.dart';
 
 final class SelectionRegistrarScope extends Wrapper {
   @Goto(_i1.SelectionRegistrarScope.new)
-  SelectionRegistrarScope(
-    $ $config, {
+  SelectionRegistrarScope({
     _i2.Key? key,
     required _i3.SelectionRegistrar registrar,
     required _i1.Widget child,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with registrar
+    Stream<_i3.SelectionRegistrar>? $registrar,
+    // Associate with child
+    Stream<_i1.Widget>? $child,
   }) : super(
-          Argument({
-            #key: key,
-            #registrar: registrar,
-            #child: child,
-          }),
+          Argument(
+            {
+              'key': key,
+              'registrar': registrar,
+              'child': child,
+            },
+            stream: {
+              'key': $key,
+              'registrar': $registrar,
+              'child': $child,
+            },
+          ),
           builder: (args) => _i1.SelectionRegistrarScope(
-            key: args(#key),
-            registrar: args(#registrar),
-            child: args(#child),
+            key: args('key'),
+            registrar: args('registrar'),
+            child: args('child'),
           ),
         );
 }
 
 final class SelectionContainer extends Wrapper {
   @Goto(_i1.SelectionContainer.new)
-  SelectionContainer(
-    $ $config, {
+  SelectionContainer({
     _i2.Key? key,
     _i3.SelectionRegistrar? registrar,
     required _i1.SelectionContainerDelegate delegate,
     required _i1.Widget child,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with registrar
+    Stream<_i3.SelectionRegistrar?>? $registrar,
+    // Associate with delegate
+    Stream<_i1.SelectionContainerDelegate>? $delegate,
+    // Associate with child
+    Stream<_i1.Widget>? $child,
   }) : super(
-          Argument({
-            #key: key,
-            #registrar: registrar,
-            #delegate: delegate,
-            #child: child,
-          }),
+          Argument(
+            {
+              'key': key,
+              'registrar': registrar,
+              'delegate': delegate,
+              'child': child,
+            },
+            stream: {
+              'key': $key,
+              'registrar': $registrar,
+              'delegate': $delegate,
+              'child': $child,
+            },
+          ),
           builder: (args) => _i1.SelectionContainer(
-            key: args(#key),
-            registrar: args(#registrar),
-            delegate: args(#delegate),
-            child: args(#child),
+            key: args('key'),
+            registrar: args('registrar'),
+            delegate: args('delegate'),
+            child: args('child'),
           ),
         );
 
   @Goto(_i1.SelectionContainer.disabled)
-  SelectionContainer.disabled(
-    $ $config, {
+  SelectionContainer.disabled({
     _i2.Key? key,
     required _i1.Widget child,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with child
+    Stream<_i1.Widget>? $child,
   }) : super(
-          Argument({
-            #key: key,
-            #child: child,
-          }),
+          Argument(
+            {
+              'key': key,
+              'child': child,
+            },
+            stream: {
+              'key': $key,
+              'child': $child,
+            },
+          ),
           builder: (args) => _i1.SelectionContainer.disabled(
-            key: args(#key),
-            child: args(#child),
+            key: args('key'),
+            child: args('child'),
           ),
         );
 }

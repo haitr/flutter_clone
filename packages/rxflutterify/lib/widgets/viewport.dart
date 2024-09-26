@@ -11,38 +11,58 @@ import '../wrapper.dart';
 
 final class ShrinkWrappingViewport extends Wrapper {
   @Goto(_i1.ShrinkWrappingViewport.new)
-  ShrinkWrappingViewport(
-    $ $config, {
+  ShrinkWrappingViewport({
     _i2.Key? key,
     _i3.AxisDirection axisDirection = _i3.AxisDirection.down,
     _i3.AxisDirection? crossAxisDirection,
     required _i4.ViewportOffset offset,
     ui.Clip clipBehavior = ui.Clip.hardEdge,
     List<_i1.Widget> slivers = const [],
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with axisDirection
+    Stream<_i3.AxisDirection>? $axisDirection,
+    // Associate with crossAxisDirection
+    Stream<_i3.AxisDirection?>? $crossAxisDirection,
+    // Associate with offset
+    Stream<_i4.ViewportOffset>? $offset,
+    // Associate with clipBehavior
+    Stream<ui.Clip>? $clipBehavior,
+    // Associate with slivers
+    Stream<List<_i1.Widget>>? $slivers,
   }) : super(
-          Argument({
-            #key: key,
-            #axisDirection: axisDirection,
-            #crossAxisDirection: crossAxisDirection,
-            #offset: offset,
-            #clipBehavior: clipBehavior,
-            #slivers: slivers,
-          }),
+          Argument(
+            {
+              'key': key,
+              'axisDirection': axisDirection,
+              'crossAxisDirection': crossAxisDirection,
+              'offset': offset,
+              'clipBehavior': clipBehavior,
+              'slivers': slivers,
+            },
+            stream: {
+              'key': $key,
+              'axisDirection': $axisDirection,
+              'crossAxisDirection': $crossAxisDirection,
+              'offset': $offset,
+              'clipBehavior': $clipBehavior,
+              'slivers': $slivers,
+            },
+          ),
           builder: (args) => _i1.ShrinkWrappingViewport(
-            key: args(#key),
-            axisDirection: args(#axisDirection),
-            crossAxisDirection: args(#crossAxisDirection),
-            offset: args(#offset),
-            clipBehavior: args(#clipBehavior),
-            slivers: args(#slivers),
+            key: args('key'),
+            axisDirection: args('axisDirection'),
+            crossAxisDirection: args('crossAxisDirection'),
+            offset: args('offset'),
+            clipBehavior: args('clipBehavior'),
+            slivers: args('slivers'),
           ),
         );
 }
 
 final class Viewport extends Wrapper {
   @Goto(_i1.Viewport.new)
-  Viewport(
-    $ $config, {
+  Viewport({
     _i2.Key? key,
     _i3.AxisDirection axisDirection = _i3.AxisDirection.down,
     _i3.AxisDirection? crossAxisDirection,
@@ -53,30 +73,64 @@ final class Viewport extends Wrapper {
     _i4.CacheExtentStyle cacheExtentStyle = _i4.CacheExtentStyle.pixel,
     ui.Clip clipBehavior = ui.Clip.hardEdge,
     List<_i1.Widget> slivers = const [],
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with axisDirection
+    Stream<_i3.AxisDirection>? $axisDirection,
+    // Associate with crossAxisDirection
+    Stream<_i3.AxisDirection?>? $crossAxisDirection,
+    // Associate with anchor
+    Stream<double>? $anchor,
+    // Associate with offset
+    Stream<_i4.ViewportOffset>? $offset,
+    // Associate with center
+    Stream<_i2.Key?>? $center,
+    // Associate with cacheExtent
+    Stream<double?>? $cacheExtent,
+    // Associate with cacheExtentStyle
+    Stream<_i4.CacheExtentStyle>? $cacheExtentStyle,
+    // Associate with clipBehavior
+    Stream<ui.Clip>? $clipBehavior,
+    // Associate with slivers
+    Stream<List<_i1.Widget>>? $slivers,
   }) : super(
-          Argument({
-            #key: key,
-            #axisDirection: axisDirection,
-            #crossAxisDirection: crossAxisDirection,
-            #anchor: anchor,
-            #offset: offset,
-            #center: center,
-            #cacheExtent: cacheExtent,
-            #cacheExtentStyle: cacheExtentStyle,
-            #clipBehavior: clipBehavior,
-            #slivers: slivers,
-          }),
+          Argument(
+            {
+              'key': key,
+              'axisDirection': axisDirection,
+              'crossAxisDirection': crossAxisDirection,
+              'anchor': anchor,
+              'offset': offset,
+              'center': center,
+              'cacheExtent': cacheExtent,
+              'cacheExtentStyle': cacheExtentStyle,
+              'clipBehavior': clipBehavior,
+              'slivers': slivers,
+            },
+            stream: {
+              'key': $key,
+              'axisDirection': $axisDirection,
+              'crossAxisDirection': $crossAxisDirection,
+              'anchor': $anchor,
+              'offset': $offset,
+              'center': $center,
+              'cacheExtent': $cacheExtent,
+              'cacheExtentStyle': $cacheExtentStyle,
+              'clipBehavior': $clipBehavior,
+              'slivers': $slivers,
+            },
+          ),
           builder: (args) => _i1.Viewport(
-            key: args(#key),
-            axisDirection: args(#axisDirection),
-            crossAxisDirection: args(#crossAxisDirection),
-            anchor: args(#anchor),
-            offset: args(#offset),
-            center: args(#center),
-            cacheExtent: args(#cacheExtent),
-            cacheExtentStyle: args(#cacheExtentStyle),
-            clipBehavior: args(#clipBehavior),
-            slivers: args(#slivers),
+            key: args('key'),
+            axisDirection: args('axisDirection'),
+            crossAxisDirection: args('crossAxisDirection'),
+            anchor: args('anchor'),
+            offset: args('offset'),
+            center: args('center'),
+            cacheExtent: args('cacheExtent'),
+            cacheExtentStyle: args('cacheExtentStyle'),
+            clipBehavior: args('clipBehavior'),
+            slivers: args('slivers'),
           ),
         );
 }

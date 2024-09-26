@@ -9,8 +9,7 @@ import '../wrapper.dart';
 
 final class AnimatedCrossFade extends Wrapper {
   @Goto(_i1.AnimatedCrossFade.new)
-  AnimatedCrossFade(
-    $ $config, {
+  AnimatedCrossFade({
     _i2.Key? key,
     required _i1.Widget firstChild,
     required _i1.Widget secondChild,
@@ -23,34 +22,74 @@ final class AnimatedCrossFade extends Wrapper {
     Duration? reverseDuration,
     _i1.AnimatedCrossFadeBuilder layoutBuilder = _i1.AnimatedCrossFade.defaultLayoutBuilder,
     bool excludeBottomFocus = true,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with firstChild
+    Stream<_i1.Widget>? $firstChild,
+    // Associate with secondChild
+    Stream<_i1.Widget>? $secondChild,
+    // Associate with firstCurve
+    Stream<_i3.Curve>? $firstCurve,
+    // Associate with secondCurve
+    Stream<_i3.Curve>? $secondCurve,
+    // Associate with sizeCurve
+    Stream<_i3.Curve>? $sizeCurve,
+    // Associate with alignment
+    Stream<_i4.AlignmentGeometry>? $alignment,
+    // Associate with crossFadeState
+    Stream<_i1.CrossFadeState>? $crossFadeState,
+    // Associate with duration
+    Stream<Duration>? $duration,
+    // Associate with reverseDuration
+    Stream<Duration?>? $reverseDuration,
+    // Associate with layoutBuilder
+    Stream<_i1.AnimatedCrossFadeBuilder>? $layoutBuilder,
+    // Associate with excludeBottomFocus
+    Stream<bool>? $excludeBottomFocus,
   }) : super(
-          Argument({
-            #key: key,
-            #firstChild: firstChild,
-            #secondChild: secondChild,
-            #firstCurve: firstCurve,
-            #secondCurve: secondCurve,
-            #sizeCurve: sizeCurve,
-            #alignment: alignment,
-            #crossFadeState: crossFadeState,
-            #duration: duration,
-            #reverseDuration: reverseDuration,
-            #layoutBuilder: layoutBuilder,
-            #excludeBottomFocus: excludeBottomFocus,
-          }),
+          Argument(
+            {
+              'key': key,
+              'firstChild': firstChild,
+              'secondChild': secondChild,
+              'firstCurve': firstCurve,
+              'secondCurve': secondCurve,
+              'sizeCurve': sizeCurve,
+              'alignment': alignment,
+              'crossFadeState': crossFadeState,
+              'duration': duration,
+              'reverseDuration': reverseDuration,
+              'layoutBuilder': layoutBuilder,
+              'excludeBottomFocus': excludeBottomFocus,
+            },
+            stream: {
+              'key': $key,
+              'firstChild': $firstChild,
+              'secondChild': $secondChild,
+              'firstCurve': $firstCurve,
+              'secondCurve': $secondCurve,
+              'sizeCurve': $sizeCurve,
+              'alignment': $alignment,
+              'crossFadeState': $crossFadeState,
+              'duration': $duration,
+              'reverseDuration': $reverseDuration,
+              'layoutBuilder': $layoutBuilder,
+              'excludeBottomFocus': $excludeBottomFocus,
+            },
+          ),
           builder: (args) => _i1.AnimatedCrossFade(
-            key: args(#key),
-            firstChild: args(#firstChild),
-            secondChild: args(#secondChild),
-            firstCurve: args(#firstCurve),
-            secondCurve: args(#secondCurve),
-            sizeCurve: args(#sizeCurve),
-            alignment: args(#alignment),
-            crossFadeState: args(#crossFadeState),
-            duration: args(#duration),
-            reverseDuration: args(#reverseDuration),
-            layoutBuilder: args(#layoutBuilder),
-            excludeBottomFocus: args(#excludeBottomFocus),
+            key: args('key'),
+            firstChild: args('firstChild'),
+            secondChild: args('secondChild'),
+            firstCurve: args('firstCurve'),
+            secondCurve: args('secondCurve'),
+            sizeCurve: args('sizeCurve'),
+            alignment: args('alignment'),
+            crossFadeState: args('crossFadeState'),
+            duration: args('duration'),
+            reverseDuration: args('reverseDuration'),
+            layoutBuilder: args('layoutBuilder'),
+            excludeBottomFocus: args('excludeBottomFocus'),
           ),
         );
 }

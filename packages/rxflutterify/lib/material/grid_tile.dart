@@ -8,24 +8,39 @@ import '../wrapper.dart';
 
 final class GridTile extends Wrapper {
   @Goto(_i1.GridTile.new)
-  GridTile(
-    $ $config, {
+  GridTile({
     _i2.Key? key,
     _i3.Widget? header,
     _i3.Widget? footer,
     required _i3.Widget child,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with header
+    Stream<_i3.Widget?>? $header,
+    // Associate with footer
+    Stream<_i3.Widget?>? $footer,
+    // Associate with child
+    Stream<_i3.Widget>? $child,
   }) : super(
-          Argument({
-            #key: key,
-            #header: header,
-            #footer: footer,
-            #child: child,
-          }),
+          Argument(
+            {
+              'key': key,
+              'header': header,
+              'footer': footer,
+              'child': child,
+            },
+            stream: {
+              'key': $key,
+              'header': $header,
+              'footer': $footer,
+              'child': $child,
+            },
+          ),
           builder: (args) => _i1.GridTile(
-            key: args(#key),
-            header: args(#header),
-            footer: args(#footer),
-            child: args(#child),
+            key: args('key'),
+            header: args('header'),
+            footer: args('footer'),
+            child: args('child'),
           ),
         );
 }

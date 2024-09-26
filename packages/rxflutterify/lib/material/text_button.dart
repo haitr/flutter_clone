@@ -10,8 +10,7 @@ import '../wrapper.dart';
 
 final class TextButton extends Wrapper {
   @Goto(_i1.TextButton.new)
-  TextButton(
-    $ $config, {
+  TextButton({
     _i2.Key? key,
     required ui.VoidCallback? onPressed,
     ui.VoidCallback? onLongPress,
@@ -25,42 +24,84 @@ final class TextButton extends Wrapper {
     bool? isSemanticButton = true,
     required _i3.Widget child,
     _i1.IconAlignment iconAlignment = _i1.IconAlignment.start,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with onPressed
+    Stream<ui.VoidCallback?>? $onPressed,
+    // Associate with onLongPress
+    Stream<ui.VoidCallback?>? $onLongPress,
+    // Associate with onHover
+    Stream<_i2.ValueChanged<bool>?>? $onHover,
+    // Associate with onFocusChange
+    Stream<_i2.ValueChanged<bool>?>? $onFocusChange,
+    // Associate with style
+    Stream<_i1.ButtonStyle?>? $style,
+    // Associate with focusNode
+    Stream<_i3.FocusNode?>? $focusNode,
+    // Associate with autofocus
+    Stream<bool>? $autofocus,
+    // Associate with clipBehavior
+    Stream<ui.Clip?>? $clipBehavior,
+    // Associate with statesController
+    Stream<_i3.WidgetStatesController?>? $statesController,
+    // Associate with isSemanticButton
+    Stream<bool?>? $isSemanticButton,
+    // Associate with child
+    Stream<_i3.Widget>? $child,
+    // Associate with iconAlignment
+    Stream<_i1.IconAlignment>? $iconAlignment,
   }) : super(
-          Argument({
-            #key: key,
-            #onPressed: onPressed,
-            #onLongPress: onLongPress,
-            #onHover: onHover,
-            #onFocusChange: onFocusChange,
-            #style: style,
-            #focusNode: focusNode,
-            #autofocus: autofocus,
-            #clipBehavior: clipBehavior,
-            #statesController: statesController,
-            #isSemanticButton: isSemanticButton,
-            #child: child,
-            #iconAlignment: iconAlignment,
-          }),
+          Argument(
+            {
+              'key': key,
+              'onPressed': onPressed,
+              'onLongPress': onLongPress,
+              'onHover': onHover,
+              'onFocusChange': onFocusChange,
+              'style': style,
+              'focusNode': focusNode,
+              'autofocus': autofocus,
+              'clipBehavior': clipBehavior,
+              'statesController': statesController,
+              'isSemanticButton': isSemanticButton,
+              'child': child,
+              'iconAlignment': iconAlignment,
+            },
+            stream: {
+              'key': $key,
+              'onPressed': $onPressed,
+              'onLongPress': $onLongPress,
+              'onHover': $onHover,
+              'onFocusChange': $onFocusChange,
+              'style': $style,
+              'focusNode': $focusNode,
+              'autofocus': $autofocus,
+              'clipBehavior': $clipBehavior,
+              'statesController': $statesController,
+              'isSemanticButton': $isSemanticButton,
+              'child': $child,
+              'iconAlignment': $iconAlignment,
+            },
+          ),
           builder: (args) => _i1.TextButton(
-            key: args(#key),
-            onPressed: args(#onPressed),
-            onLongPress: args(#onLongPress),
-            onHover: args(#onHover),
-            onFocusChange: args(#onFocusChange),
-            style: args(#style),
-            focusNode: args(#focusNode),
-            autofocus: args(#autofocus),
-            clipBehavior: args(#clipBehavior),
-            statesController: args(#statesController),
-            isSemanticButton: args(#isSemanticButton),
-            child: args(#child),
-            iconAlignment: args(#iconAlignment),
+            key: args('key'),
+            onPressed: args('onPressed'),
+            onLongPress: args('onLongPress'),
+            onHover: args('onHover'),
+            onFocusChange: args('onFocusChange'),
+            style: args('style'),
+            focusNode: args('focusNode'),
+            autofocus: args('autofocus'),
+            clipBehavior: args('clipBehavior'),
+            statesController: args('statesController'),
+            isSemanticButton: args('isSemanticButton'),
+            child: args('child'),
+            iconAlignment: args('iconAlignment'),
           ),
         );
 
   @Goto(_i1.TextButton.icon)
-  TextButton.icon(
-    $ $config, {
+  TextButton.icon({
     _i2.Key? key,
     required ui.VoidCallback? onPressed,
     ui.VoidCallback? onLongPress,
@@ -74,36 +115,79 @@ final class TextButton extends Wrapper {
     _i3.Widget? icon,
     required _i3.Widget label,
     _i1.IconAlignment iconAlignment = _i1.IconAlignment.start,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with onPressed
+    Stream<ui.VoidCallback?>? $onPressed,
+    // Associate with onLongPress
+    Stream<ui.VoidCallback?>? $onLongPress,
+    // Associate with onHover
+    Stream<_i2.ValueChanged<bool>?>? $onHover,
+    // Associate with onFocusChange
+    Stream<_i2.ValueChanged<bool>?>? $onFocusChange,
+    // Associate with style
+    Stream<_i1.ButtonStyle?>? $style,
+    // Associate with focusNode
+    Stream<_i3.FocusNode?>? $focusNode,
+    // Associate with autofocus
+    Stream<bool?>? $autofocus,
+    // Associate with clipBehavior
+    Stream<ui.Clip?>? $clipBehavior,
+    // Associate with statesController
+    Stream<_i3.WidgetStatesController?>? $statesController,
+    // Associate with icon
+    Stream<_i3.Widget?>? $icon,
+    // Associate with label
+    Stream<_i3.Widget>? $label,
+    // Associate with iconAlignment
+    Stream<_i1.IconAlignment>? $iconAlignment,
   }) : super(
-          Argument({
-            #key: key,
-            #onPressed: onPressed,
-            #onLongPress: onLongPress,
-            #onHover: onHover,
-            #onFocusChange: onFocusChange,
-            #style: style,
-            #focusNode: focusNode,
-            #autofocus: autofocus,
-            #clipBehavior: clipBehavior,
-            #statesController: statesController,
-            #icon: icon,
-            #label: label,
-            #iconAlignment: iconAlignment,
-          }),
+          Argument(
+            {
+              'key': key,
+              'onPressed': onPressed,
+              'onLongPress': onLongPress,
+              'onHover': onHover,
+              'onFocusChange': onFocusChange,
+              'style': style,
+              'focusNode': focusNode,
+              'autofocus': autofocus,
+              'clipBehavior': clipBehavior,
+              'statesController': statesController,
+              'icon': icon,
+              'label': label,
+              'iconAlignment': iconAlignment,
+            },
+            stream: {
+              'key': $key,
+              'onPressed': $onPressed,
+              'onLongPress': $onLongPress,
+              'onHover': $onHover,
+              'onFocusChange': $onFocusChange,
+              'style': $style,
+              'focusNode': $focusNode,
+              'autofocus': $autofocus,
+              'clipBehavior': $clipBehavior,
+              'statesController': $statesController,
+              'icon': $icon,
+              'label': $label,
+              'iconAlignment': $iconAlignment,
+            },
+          ),
           builder: (args) => _i1.TextButton.icon(
-            key: args(#key),
-            onPressed: args(#onPressed),
-            onLongPress: args(#onLongPress),
-            onHover: args(#onHover),
-            onFocusChange: args(#onFocusChange),
-            style: args(#style),
-            focusNode: args(#focusNode),
-            autofocus: args(#autofocus),
-            clipBehavior: args(#clipBehavior),
-            statesController: args(#statesController),
-            icon: args(#icon),
-            label: args(#label),
-            iconAlignment: args(#iconAlignment),
+            key: args('key'),
+            onPressed: args('onPressed'),
+            onLongPress: args('onLongPress'),
+            onHover: args('onHover'),
+            onFocusChange: args('onFocusChange'),
+            style: args('style'),
+            focusNode: args('focusNode'),
+            autofocus: args('autofocus'),
+            clipBehavior: args('clipBehavior'),
+            statesController: args('statesController'),
+            icon: args('icon'),
+            label: args('label'),
+            iconAlignment: args('iconAlignment'),
           ),
         );
 }

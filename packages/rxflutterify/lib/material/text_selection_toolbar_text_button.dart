@@ -11,27 +11,45 @@ import '../wrapper.dart';
 
 final class TextSelectionToolbarTextButton extends Wrapper {
   @Goto(_i1.TextSelectionToolbarTextButton.new)
-  TextSelectionToolbarTextButton(
-    $ $config, {
+  TextSelectionToolbarTextButton({
     _i2.Key? key,
     required _i3.Widget child,
     required _i4.EdgeInsets padding,
     ui.VoidCallback? onPressed,
     _i4.AlignmentGeometry? alignment,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with child
+    Stream<_i3.Widget>? $child,
+    // Associate with padding
+    Stream<_i4.EdgeInsets>? $padding,
+    // Associate with onPressed
+    Stream<ui.VoidCallback?>? $onPressed,
+    // Associate with alignment
+    Stream<_i4.AlignmentGeometry?>? $alignment,
   }) : super(
-          Argument({
-            #key: key,
-            #child: child,
-            #padding: padding,
-            #onPressed: onPressed,
-            #alignment: alignment,
-          }),
+          Argument(
+            {
+              'key': key,
+              'child': child,
+              'padding': padding,
+              'onPressed': onPressed,
+              'alignment': alignment,
+            },
+            stream: {
+              'key': $key,
+              'child': $child,
+              'padding': $padding,
+              'onPressed': $onPressed,
+              'alignment': $alignment,
+            },
+          ),
           builder: (args) => _i1.TextSelectionToolbarTextButton(
-            key: args(#key),
-            child: args(#child),
-            padding: args(#padding),
-            onPressed: args(#onPressed),
-            alignment: args(#alignment),
+            key: args('key'),
+            child: args('child'),
+            padding: args('padding'),
+            onPressed: args('onPressed'),
+            alignment: args('alignment'),
           ),
         );
 }

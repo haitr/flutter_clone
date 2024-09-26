@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rxflutterify/wrapper.dart';
 
 class Quantity extends StatelessWidget {
   final int quantity;
@@ -29,33 +28,5 @@ class Quantity extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-class $Quantity extends Quantity {
-  const $Quantity(
-    $ $config, {
-    super.key,
-    required super.quantity,
-    required super.increase,
-    required super.decrease,
-    required super.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrapper(
-        Argument({
-          #quantity: quantity,
-          #increase: increase,
-          #decrease: decrease,
-          #color: color,
-        }),
-        builder: (args) => Quantity(
-              quantity: args(#quantity),
-              increase: args(#increase),
-              decrease: args(#decrease),
-              color: args(#color),
-            ));
   }
 }

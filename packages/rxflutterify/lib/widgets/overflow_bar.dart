@@ -11,8 +11,7 @@ import '../wrapper.dart';
 
 final class OverflowBar extends Wrapper {
   @Goto(_i1.OverflowBar.new)
-  OverflowBar(
-    $ $config, {
+  OverflowBar({
     _i2.Key? key,
     double spacing = 0.0,
     _i3.MainAxisAlignment? alignment,
@@ -21,26 +20,54 @@ final class OverflowBar extends Wrapper {
     _i4.VerticalDirection overflowDirection = _i4.VerticalDirection.down,
     ui.TextDirection? textDirection,
     List<_i1.Widget> children = const [],
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with spacing
+    Stream<double>? $spacing,
+    // Associate with alignment
+    Stream<_i3.MainAxisAlignment?>? $alignment,
+    // Associate with overflowSpacing
+    Stream<double>? $overflowSpacing,
+    // Associate with overflowAlignment
+    Stream<_i1.OverflowBarAlignment>? $overflowAlignment,
+    // Associate with overflowDirection
+    Stream<_i4.VerticalDirection>? $overflowDirection,
+    // Associate with textDirection
+    Stream<ui.TextDirection?>? $textDirection,
+    // Associate with children
+    Stream<List<_i1.Widget>>? $children,
   }) : super(
-          Argument({
-            #key: key,
-            #spacing: spacing,
-            #alignment: alignment,
-            #overflowSpacing: overflowSpacing,
-            #overflowAlignment: overflowAlignment,
-            #overflowDirection: overflowDirection,
-            #textDirection: textDirection,
-            #children: children,
-          }),
+          Argument(
+            {
+              'key': key,
+              'spacing': spacing,
+              'alignment': alignment,
+              'overflowSpacing': overflowSpacing,
+              'overflowAlignment': overflowAlignment,
+              'overflowDirection': overflowDirection,
+              'textDirection': textDirection,
+              'children': children,
+            },
+            stream: {
+              'key': $key,
+              'spacing': $spacing,
+              'alignment': $alignment,
+              'overflowSpacing': $overflowSpacing,
+              'overflowAlignment': $overflowAlignment,
+              'overflowDirection': $overflowDirection,
+              'textDirection': $textDirection,
+              'children': $children,
+            },
+          ),
           builder: (args) => _i1.OverflowBar(
-            key: args(#key),
-            spacing: args(#spacing),
-            alignment: args(#alignment),
-            overflowSpacing: args(#overflowSpacing),
-            overflowAlignment: args(#overflowAlignment),
-            overflowDirection: args(#overflowDirection),
-            textDirection: args(#textDirection),
-            children: args(#children),
+            key: args('key'),
+            spacing: args('spacing'),
+            alignment: args('alignment'),
+            overflowSpacing: args('overflowSpacing'),
+            overflowAlignment: args('overflowAlignment'),
+            overflowDirection: args('overflowDirection'),
+            textDirection: args('textDirection'),
+            children: args('children'),
           ),
         );
 }

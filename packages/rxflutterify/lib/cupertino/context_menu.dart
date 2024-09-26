@@ -8,46 +8,76 @@ import '../wrapper.dart';
 
 final class CupertinoContextMenu extends Wrapper {
   @Goto(_i1.CupertinoContextMenu.new)
-  CupertinoContextMenu(
-    $ $config, {
+  CupertinoContextMenu({
     _i2.Key? key,
     required List<_i3.Widget> actions,
     required _i3.Widget child,
     bool enableHapticFeedback = false,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with actions
+    Stream<List<_i3.Widget>>? $actions,
+    // Associate with child
+    Stream<_i3.Widget>? $child,
+    // Associate with enableHapticFeedback
+    Stream<bool>? $enableHapticFeedback,
   }) : super(
-          Argument({
-            #key: key,
-            #actions: actions,
-            #child: child,
-            #enableHapticFeedback: enableHapticFeedback,
-          }),
+          Argument(
+            {
+              'key': key,
+              'actions': actions,
+              'child': child,
+              'enableHapticFeedback': enableHapticFeedback,
+            },
+            stream: {
+              'key': $key,
+              'actions': $actions,
+              'child': $child,
+              'enableHapticFeedback': $enableHapticFeedback,
+            },
+          ),
           builder: (args) => _i1.CupertinoContextMenu(
-            key: args(#key),
-            actions: args(#actions),
-            child: args(#child),
-            enableHapticFeedback: args(#enableHapticFeedback),
+            key: args('key'),
+            actions: args('actions'),
+            child: args('child'),
+            enableHapticFeedback: args('enableHapticFeedback'),
           ),
         );
 
   @Goto(_i1.CupertinoContextMenu.builder)
-  CupertinoContextMenu.builder(
-    $ $config, {
+  CupertinoContextMenu.builder({
     _i2.Key? key,
     required List<_i3.Widget> actions,
     required _i1.CupertinoContextMenuBuilder builder,
     bool enableHapticFeedback = false,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with actions
+    Stream<List<_i3.Widget>>? $actions,
+    // Associate with builder
+    Stream<_i1.CupertinoContextMenuBuilder>? $builder,
+    // Associate with enableHapticFeedback
+    Stream<bool>? $enableHapticFeedback,
   }) : super(
-          Argument({
-            #key: key,
-            #actions: actions,
-            #builder: builder,
-            #enableHapticFeedback: enableHapticFeedback,
-          }),
+          Argument(
+            {
+              'key': key,
+              'actions': actions,
+              'builder': builder,
+              'enableHapticFeedback': enableHapticFeedback,
+            },
+            stream: {
+              'key': $key,
+              'actions': $actions,
+              'builder': $builder,
+              'enableHapticFeedback': $enableHapticFeedback,
+            },
+          ),
           builder: (args) => _i1.CupertinoContextMenu.builder(
-            key: args(#key),
-            actions: args(#actions),
-            builder: args(#builder),
-            enableHapticFeedback: args(#enableHapticFeedback),
+            key: args('key'),
+            actions: args('actions'),
+            builder: args('builder'),
+            enableHapticFeedback: args('enableHapticFeedback'),
           ),
         );
 }

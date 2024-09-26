@@ -111,7 +111,7 @@ import 'widgets/widget_inspector.dart';
 import 'widgets/will_pop_scope.dart';
 
 export 'package:rxdart/rxdart.dart';
-export 'wrapper.dart' show ReactableObjectExt, ListenableExt, BindExt, Wrapper, $;
+export 'wrapper.dart' show ReactableObjectExt, ListenableExt, Wrapper;
 
 typedef $ErrorWidget = ErrorWidget;
 typedef $TickerMode = TickerMode;

@@ -9,24 +9,39 @@ import '../wrapper.dart';
 
 final class DecoratedSliver extends Wrapper {
   @Goto(_i1.DecoratedSliver.new)
-  DecoratedSliver(
-    $ $config, {
+  DecoratedSliver({
     _i2.Key? key,
     required _i3.Decoration decoration,
     _i4.DecorationPosition position = _i4.DecorationPosition.background,
     _i1.Widget? sliver,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with decoration
+    Stream<_i3.Decoration>? $decoration,
+    // Associate with position
+    Stream<_i4.DecorationPosition>? $position,
+    // Associate with sliver
+    Stream<_i1.Widget?>? $sliver,
   }) : super(
-          Argument({
-            #key: key,
-            #decoration: decoration,
-            #position: position,
-            #sliver: sliver,
-          }),
+          Argument(
+            {
+              'key': key,
+              'decoration': decoration,
+              'position': position,
+              'sliver': sliver,
+            },
+            stream: {
+              'key': $key,
+              'decoration': $decoration,
+              'position': $position,
+              'sliver': $sliver,
+            },
+          ),
           builder: (args) => _i1.DecoratedSliver(
-            key: args(#key),
-            decoration: args(#decoration),
-            position: args(#position),
-            sliver: args(#sliver),
+            key: args('key'),
+            decoration: args('decoration'),
+            position: args('position'),
+            sliver: args('sliver'),
           ),
         );
 }

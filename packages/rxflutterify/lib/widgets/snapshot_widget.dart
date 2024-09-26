@@ -10,30 +10,51 @@ import '../wrapper.dart';
 
 final class SnapshotWidget extends Wrapper {
   @Goto(_i1.SnapshotWidget.new)
-  SnapshotWidget(
-    $ $config, {
+  SnapshotWidget({
     _i2.Key? key,
     _i1.SnapshotMode mode = _i1.SnapshotMode.normal,
     _i1.SnapshotPainter painter = const _DefaultSnapshotPainter(),
     bool autoresize = false,
     required _i1.SnapshotController controller,
     required _i1.Widget? child,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with mode
+    Stream<_i1.SnapshotMode>? $mode,
+    // Associate with painter
+    Stream<_i1.SnapshotPainter>? $painter,
+    // Associate with autoresize
+    Stream<bool>? $autoresize,
+    // Associate with controller
+    Stream<_i1.SnapshotController>? $controller,
+    // Associate with child
+    Stream<_i1.Widget?>? $child,
   }) : super(
-          Argument({
-            #key: key,
-            #mode: mode,
-            #painter: painter,
-            #autoresize: autoresize,
-            #controller: controller,
-            #child: child,
-          }),
+          Argument(
+            {
+              'key': key,
+              'mode': mode,
+              'painter': painter,
+              'autoresize': autoresize,
+              'controller': controller,
+              'child': child,
+            },
+            stream: {
+              'key': $key,
+              'mode': $mode,
+              'painter': $painter,
+              'autoresize': $autoresize,
+              'controller': $controller,
+              'child': $child,
+            },
+          ),
           builder: (args) => _i1.SnapshotWidget(
-            key: args(#key),
-            mode: args(#mode),
-            painter: args(#painter),
-            autoresize: args(#autoresize),
-            controller: args(#controller),
-            child: args(#child),
+            key: args('key'),
+            mode: args('mode'),
+            painter: args('painter'),
+            autoresize: args('autoresize'),
+            controller: args('controller'),
+            child: args('child'),
           ),
         );
 }

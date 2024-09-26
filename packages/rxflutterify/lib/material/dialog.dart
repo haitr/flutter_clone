@@ -14,32 +14,46 @@ import '../wrapper.dart';
 
 final class SimpleDialogOption extends Wrapper {
   @Goto(_i1.SimpleDialogOption.new)
-  SimpleDialogOption(
-    $ $config, {
+  SimpleDialogOption({
     _i2.Key? key,
     ui.VoidCallback? onPressed,
     _i3.EdgeInsets? padding,
     _i4.Widget? child,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with onPressed
+    Stream<ui.VoidCallback?>? $onPressed,
+    // Associate with padding
+    Stream<_i3.EdgeInsets?>? $padding,
+    // Associate with child
+    Stream<_i4.Widget?>? $child,
   }) : super(
-          Argument({
-            #key: key,
-            #onPressed: onPressed,
-            #padding: padding,
-            #child: child,
-          }),
+          Argument(
+            {
+              'key': key,
+              'onPressed': onPressed,
+              'padding': padding,
+              'child': child,
+            },
+            stream: {
+              'key': $key,
+              'onPressed': $onPressed,
+              'padding': $padding,
+              'child': $child,
+            },
+          ),
           builder: (args) => _i1.SimpleDialogOption(
-            key: args(#key),
-            onPressed: args(#onPressed),
-            padding: args(#padding),
-            child: args(#child),
+            key: args('key'),
+            onPressed: args('onPressed'),
+            padding: args('padding'),
+            child: args('child'),
           ),
         );
 }
 
 final class Dialog extends Wrapper {
   @Goto(_i1.Dialog.new)
-  Dialog(
-    $ $config, {
+  Dialog({
     _i2.Key? key,
     ui.Color? backgroundColor,
     double? elevation,
@@ -52,67 +66,124 @@ final class Dialog extends Wrapper {
     _i3.ShapeBorder? shape,
     _i3.AlignmentGeometry? alignment,
     _i4.Widget? child,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with backgroundColor
+    Stream<ui.Color?>? $backgroundColor,
+    // Associate with elevation
+    Stream<double?>? $elevation,
+    // Associate with shadowColor
+    Stream<ui.Color?>? $shadowColor,
+    // Associate with surfaceTintColor
+    Stream<ui.Color?>? $surfaceTintColor,
+    // Associate with insetAnimationDuration
+    Stream<Duration>? $insetAnimationDuration,
+    // Associate with insetAnimationCurve
+    Stream<_i5.Curve>? $insetAnimationCurve,
+    // Associate with insetPadding
+    Stream<_i3.EdgeInsets?>? $insetPadding,
+    // Associate with clipBehavior
+    Stream<ui.Clip>? $clipBehavior,
+    // Associate with shape
+    Stream<_i3.ShapeBorder?>? $shape,
+    // Associate with alignment
+    Stream<_i3.AlignmentGeometry?>? $alignment,
+    // Associate with child
+    Stream<_i4.Widget?>? $child,
   }) : super(
-          Argument({
-            #key: key,
-            #backgroundColor: backgroundColor,
-            #elevation: elevation,
-            #shadowColor: shadowColor,
-            #surfaceTintColor: surfaceTintColor,
-            #insetAnimationDuration: insetAnimationDuration,
-            #insetAnimationCurve: insetAnimationCurve,
-            #insetPadding: insetPadding,
-            #clipBehavior: clipBehavior,
-            #shape: shape,
-            #alignment: alignment,
-            #child: child,
-          }),
+          Argument(
+            {
+              'key': key,
+              'backgroundColor': backgroundColor,
+              'elevation': elevation,
+              'shadowColor': shadowColor,
+              'surfaceTintColor': surfaceTintColor,
+              'insetAnimationDuration': insetAnimationDuration,
+              'insetAnimationCurve': insetAnimationCurve,
+              'insetPadding': insetPadding,
+              'clipBehavior': clipBehavior,
+              'shape': shape,
+              'alignment': alignment,
+              'child': child,
+            },
+            stream: {
+              'key': $key,
+              'backgroundColor': $backgroundColor,
+              'elevation': $elevation,
+              'shadowColor': $shadowColor,
+              'surfaceTintColor': $surfaceTintColor,
+              'insetAnimationDuration': $insetAnimationDuration,
+              'insetAnimationCurve': $insetAnimationCurve,
+              'insetPadding': $insetPadding,
+              'clipBehavior': $clipBehavior,
+              'shape': $shape,
+              'alignment': $alignment,
+              'child': $child,
+            },
+          ),
           builder: (args) => _i1.Dialog(
-            key: args(#key),
-            backgroundColor: args(#backgroundColor),
-            elevation: args(#elevation),
-            shadowColor: args(#shadowColor),
-            surfaceTintColor: args(#surfaceTintColor),
-            insetAnimationDuration: args(#insetAnimationDuration),
-            insetAnimationCurve: args(#insetAnimationCurve),
-            insetPadding: args(#insetPadding),
-            clipBehavior: args(#clipBehavior),
-            shape: args(#shape),
-            alignment: args(#alignment),
-            child: args(#child),
+            key: args('key'),
+            backgroundColor: args('backgroundColor'),
+            elevation: args('elevation'),
+            shadowColor: args('shadowColor'),
+            surfaceTintColor: args('surfaceTintColor'),
+            insetAnimationDuration: args('insetAnimationDuration'),
+            insetAnimationCurve: args('insetAnimationCurve'),
+            insetPadding: args('insetPadding'),
+            clipBehavior: args('clipBehavior'),
+            shape: args('shape'),
+            alignment: args('alignment'),
+            child: args('child'),
           ),
         );
 
   @Goto(_i1.Dialog.fullscreen)
-  Dialog.fullscreen(
-    $ $config, {
+  Dialog.fullscreen({
     _i2.Key? key,
     ui.Color? backgroundColor,
     Duration insetAnimationDuration = Duration.zero,
     _i5.Curve insetAnimationCurve = _i5.Curves.decelerate,
     _i4.Widget? child,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with backgroundColor
+    Stream<ui.Color?>? $backgroundColor,
+    // Associate with insetAnimationDuration
+    Stream<Duration>? $insetAnimationDuration,
+    // Associate with insetAnimationCurve
+    Stream<_i5.Curve>? $insetAnimationCurve,
+    // Associate with child
+    Stream<_i4.Widget?>? $child,
   }) : super(
-          Argument({
-            #key: key,
-            #backgroundColor: backgroundColor,
-            #insetAnimationDuration: insetAnimationDuration,
-            #insetAnimationCurve: insetAnimationCurve,
-            #child: child,
-          }),
+          Argument(
+            {
+              'key': key,
+              'backgroundColor': backgroundColor,
+              'insetAnimationDuration': insetAnimationDuration,
+              'insetAnimationCurve': insetAnimationCurve,
+              'child': child,
+            },
+            stream: {
+              'key': $key,
+              'backgroundColor': $backgroundColor,
+              'insetAnimationDuration': $insetAnimationDuration,
+              'insetAnimationCurve': $insetAnimationCurve,
+              'child': $child,
+            },
+          ),
           builder: (args) => _i1.Dialog.fullscreen(
-            key: args(#key),
-            backgroundColor: args(#backgroundColor),
-            insetAnimationDuration: args(#insetAnimationDuration),
-            insetAnimationCurve: args(#insetAnimationCurve),
-            child: args(#child),
+            key: args('key'),
+            backgroundColor: args('backgroundColor'),
+            insetAnimationDuration: args('insetAnimationDuration'),
+            insetAnimationCurve: args('insetAnimationCurve'),
+            child: args('child'),
           ),
         );
 }
 
 final class SimpleDialog extends Wrapper {
   @Goto(_i1.SimpleDialog.new)
-  SimpleDialog(
-    $ $config, {
+  SimpleDialog({
     _i2.Key? key,
     _i4.Widget? title,
     _i3.EdgeInsetsGeometry titlePadding = const _i3.EdgeInsets.fromLTRB(
@@ -138,48 +209,96 @@ final class SimpleDialog extends Wrapper {
     ui.Clip clipBehavior = ui.Clip.none,
     _i3.ShapeBorder? shape,
     _i3.AlignmentGeometry? alignment,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with title
+    Stream<_i4.Widget?>? $title,
+    // Associate with titlePadding
+    Stream<_i3.EdgeInsetsGeometry>? $titlePadding,
+    // Associate with titleTextStyle
+    Stream<_i3.TextStyle?>? $titleTextStyle,
+    // Associate with children
+    Stream<List<_i4.Widget>?>? $children,
+    // Associate with contentPadding
+    Stream<_i3.EdgeInsetsGeometry>? $contentPadding,
+    // Associate with backgroundColor
+    Stream<ui.Color?>? $backgroundColor,
+    // Associate with elevation
+    Stream<double?>? $elevation,
+    // Associate with shadowColor
+    Stream<ui.Color?>? $shadowColor,
+    // Associate with surfaceTintColor
+    Stream<ui.Color?>? $surfaceTintColor,
+    // Associate with semanticLabel
+    Stream<String?>? $semanticLabel,
+    // Associate with insetPadding
+    Stream<_i3.EdgeInsets?>? $insetPadding,
+    // Associate with clipBehavior
+    Stream<ui.Clip>? $clipBehavior,
+    // Associate with shape
+    Stream<_i3.ShapeBorder?>? $shape,
+    // Associate with alignment
+    Stream<_i3.AlignmentGeometry?>? $alignment,
   }) : super(
-          Argument({
-            #key: key,
-            #title: title,
-            #titlePadding: titlePadding,
-            #titleTextStyle: titleTextStyle,
-            #children: children,
-            #contentPadding: contentPadding,
-            #backgroundColor: backgroundColor,
-            #elevation: elevation,
-            #shadowColor: shadowColor,
-            #surfaceTintColor: surfaceTintColor,
-            #semanticLabel: semanticLabel,
-            #insetPadding: insetPadding,
-            #clipBehavior: clipBehavior,
-            #shape: shape,
-            #alignment: alignment,
-          }),
+          Argument(
+            {
+              'key': key,
+              'title': title,
+              'titlePadding': titlePadding,
+              'titleTextStyle': titleTextStyle,
+              'children': children,
+              'contentPadding': contentPadding,
+              'backgroundColor': backgroundColor,
+              'elevation': elevation,
+              'shadowColor': shadowColor,
+              'surfaceTintColor': surfaceTintColor,
+              'semanticLabel': semanticLabel,
+              'insetPadding': insetPadding,
+              'clipBehavior': clipBehavior,
+              'shape': shape,
+              'alignment': alignment,
+            },
+            stream: {
+              'key': $key,
+              'title': $title,
+              'titlePadding': $titlePadding,
+              'titleTextStyle': $titleTextStyle,
+              'children': $children,
+              'contentPadding': $contentPadding,
+              'backgroundColor': $backgroundColor,
+              'elevation': $elevation,
+              'shadowColor': $shadowColor,
+              'surfaceTintColor': $surfaceTintColor,
+              'semanticLabel': $semanticLabel,
+              'insetPadding': $insetPadding,
+              'clipBehavior': $clipBehavior,
+              'shape': $shape,
+              'alignment': $alignment,
+            },
+          ),
           builder: (args) => _i1.SimpleDialog(
-            key: args(#key),
-            title: args(#title),
-            titlePadding: args(#titlePadding),
-            titleTextStyle: args(#titleTextStyle),
-            children: args(#children),
-            contentPadding: args(#contentPadding),
-            backgroundColor: args(#backgroundColor),
-            elevation: args(#elevation),
-            shadowColor: args(#shadowColor),
-            surfaceTintColor: args(#surfaceTintColor),
-            semanticLabel: args(#semanticLabel),
-            insetPadding: args(#insetPadding),
-            clipBehavior: args(#clipBehavior),
-            shape: args(#shape),
-            alignment: args(#alignment),
+            key: args('key'),
+            title: args('title'),
+            titlePadding: args('titlePadding'),
+            titleTextStyle: args('titleTextStyle'),
+            children: args('children'),
+            contentPadding: args('contentPadding'),
+            backgroundColor: args('backgroundColor'),
+            elevation: args('elevation'),
+            shadowColor: args('shadowColor'),
+            surfaceTintColor: args('surfaceTintColor'),
+            semanticLabel: args('semanticLabel'),
+            insetPadding: args('insetPadding'),
+            clipBehavior: args('clipBehavior'),
+            shape: args('shape'),
+            alignment: args('alignment'),
           ),
         );
 }
 
 final class AlertDialog extends Wrapper {
   @Goto(_i1.AlertDialog.new)
-  AlertDialog(
-    $ $config, {
+  AlertDialog({
     _i2.Key? key,
     _i4.Widget? icon,
     _i3.EdgeInsetsGeometry? iconPadding,
@@ -207,70 +326,154 @@ final class AlertDialog extends Wrapper {
     _i3.ShapeBorder? shape,
     _i3.AlignmentGeometry? alignment,
     bool scrollable = false,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with icon
+    Stream<_i4.Widget?>? $icon,
+    // Associate with iconPadding
+    Stream<_i3.EdgeInsetsGeometry?>? $iconPadding,
+    // Associate with iconColor
+    Stream<ui.Color?>? $iconColor,
+    // Associate with title
+    Stream<_i4.Widget?>? $title,
+    // Associate with titlePadding
+    Stream<_i3.EdgeInsetsGeometry?>? $titlePadding,
+    // Associate with titleTextStyle
+    Stream<_i3.TextStyle?>? $titleTextStyle,
+    // Associate with content
+    Stream<_i4.Widget?>? $content,
+    // Associate with contentPadding
+    Stream<_i3.EdgeInsetsGeometry?>? $contentPadding,
+    // Associate with contentTextStyle
+    Stream<_i3.TextStyle?>? $contentTextStyle,
+    // Associate with actions
+    Stream<List<_i4.Widget>?>? $actions,
+    // Associate with actionsPadding
+    Stream<_i3.EdgeInsetsGeometry?>? $actionsPadding,
+    // Associate with actionsAlignment
+    Stream<_i6.MainAxisAlignment?>? $actionsAlignment,
+    // Associate with actionsOverflowAlignment
+    Stream<_i4.OverflowBarAlignment?>? $actionsOverflowAlignment,
+    // Associate with actionsOverflowDirection
+    Stream<_i3.VerticalDirection?>? $actionsOverflowDirection,
+    // Associate with actionsOverflowButtonSpacing
+    Stream<double?>? $actionsOverflowButtonSpacing,
+    // Associate with buttonPadding
+    Stream<_i3.EdgeInsetsGeometry?>? $buttonPadding,
+    // Associate with backgroundColor
+    Stream<ui.Color?>? $backgroundColor,
+    // Associate with elevation
+    Stream<double?>? $elevation,
+    // Associate with shadowColor
+    Stream<ui.Color?>? $shadowColor,
+    // Associate with surfaceTintColor
+    Stream<ui.Color?>? $surfaceTintColor,
+    // Associate with semanticLabel
+    Stream<String?>? $semanticLabel,
+    // Associate with insetPadding
+    Stream<_i3.EdgeInsets?>? $insetPadding,
+    // Associate with clipBehavior
+    Stream<ui.Clip>? $clipBehavior,
+    // Associate with shape
+    Stream<_i3.ShapeBorder?>? $shape,
+    // Associate with alignment
+    Stream<_i3.AlignmentGeometry?>? $alignment,
+    // Associate with scrollable
+    Stream<bool>? $scrollable,
   }) : super(
-          Argument({
-            #key: key,
-            #icon: icon,
-            #iconPadding: iconPadding,
-            #iconColor: iconColor,
-            #title: title,
-            #titlePadding: titlePadding,
-            #titleTextStyle: titleTextStyle,
-            #content: content,
-            #contentPadding: contentPadding,
-            #contentTextStyle: contentTextStyle,
-            #actions: actions,
-            #actionsPadding: actionsPadding,
-            #actionsAlignment: actionsAlignment,
-            #actionsOverflowAlignment: actionsOverflowAlignment,
-            #actionsOverflowDirection: actionsOverflowDirection,
-            #actionsOverflowButtonSpacing: actionsOverflowButtonSpacing,
-            #buttonPadding: buttonPadding,
-            #backgroundColor: backgroundColor,
-            #elevation: elevation,
-            #shadowColor: shadowColor,
-            #surfaceTintColor: surfaceTintColor,
-            #semanticLabel: semanticLabel,
-            #insetPadding: insetPadding,
-            #clipBehavior: clipBehavior,
-            #shape: shape,
-            #alignment: alignment,
-            #scrollable: scrollable,
-          }),
+          Argument(
+            {
+              'key': key,
+              'icon': icon,
+              'iconPadding': iconPadding,
+              'iconColor': iconColor,
+              'title': title,
+              'titlePadding': titlePadding,
+              'titleTextStyle': titleTextStyle,
+              'content': content,
+              'contentPadding': contentPadding,
+              'contentTextStyle': contentTextStyle,
+              'actions': actions,
+              'actionsPadding': actionsPadding,
+              'actionsAlignment': actionsAlignment,
+              'actionsOverflowAlignment': actionsOverflowAlignment,
+              'actionsOverflowDirection': actionsOverflowDirection,
+              'actionsOverflowButtonSpacing': actionsOverflowButtonSpacing,
+              'buttonPadding': buttonPadding,
+              'backgroundColor': backgroundColor,
+              'elevation': elevation,
+              'shadowColor': shadowColor,
+              'surfaceTintColor': surfaceTintColor,
+              'semanticLabel': semanticLabel,
+              'insetPadding': insetPadding,
+              'clipBehavior': clipBehavior,
+              'shape': shape,
+              'alignment': alignment,
+              'scrollable': scrollable,
+            },
+            stream: {
+              'key': $key,
+              'icon': $icon,
+              'iconPadding': $iconPadding,
+              'iconColor': $iconColor,
+              'title': $title,
+              'titlePadding': $titlePadding,
+              'titleTextStyle': $titleTextStyle,
+              'content': $content,
+              'contentPadding': $contentPadding,
+              'contentTextStyle': $contentTextStyle,
+              'actions': $actions,
+              'actionsPadding': $actionsPadding,
+              'actionsAlignment': $actionsAlignment,
+              'actionsOverflowAlignment': $actionsOverflowAlignment,
+              'actionsOverflowDirection': $actionsOverflowDirection,
+              'actionsOverflowButtonSpacing': $actionsOverflowButtonSpacing,
+              'buttonPadding': $buttonPadding,
+              'backgroundColor': $backgroundColor,
+              'elevation': $elevation,
+              'shadowColor': $shadowColor,
+              'surfaceTintColor': $surfaceTintColor,
+              'semanticLabel': $semanticLabel,
+              'insetPadding': $insetPadding,
+              'clipBehavior': $clipBehavior,
+              'shape': $shape,
+              'alignment': $alignment,
+              'scrollable': $scrollable,
+            },
+          ),
           builder: (args) => _i1.AlertDialog(
-            key: args(#key),
-            icon: args(#icon),
-            iconPadding: args(#iconPadding),
-            iconColor: args(#iconColor),
-            title: args(#title),
-            titlePadding: args(#titlePadding),
-            titleTextStyle: args(#titleTextStyle),
-            content: args(#content),
-            contentPadding: args(#contentPadding),
-            contentTextStyle: args(#contentTextStyle),
-            actions: args(#actions),
-            actionsPadding: args(#actionsPadding),
-            actionsAlignment: args(#actionsAlignment),
-            actionsOverflowAlignment: args(#actionsOverflowAlignment),
-            actionsOverflowDirection: args(#actionsOverflowDirection),
-            actionsOverflowButtonSpacing: args(#actionsOverflowButtonSpacing),
-            buttonPadding: args(#buttonPadding),
-            backgroundColor: args(#backgroundColor),
-            elevation: args(#elevation),
-            shadowColor: args(#shadowColor),
-            surfaceTintColor: args(#surfaceTintColor),
-            semanticLabel: args(#semanticLabel),
-            insetPadding: args(#insetPadding),
-            clipBehavior: args(#clipBehavior),
-            shape: args(#shape),
-            alignment: args(#alignment),
-            scrollable: args(#scrollable),
+            key: args('key'),
+            icon: args('icon'),
+            iconPadding: args('iconPadding'),
+            iconColor: args('iconColor'),
+            title: args('title'),
+            titlePadding: args('titlePadding'),
+            titleTextStyle: args('titleTextStyle'),
+            content: args('content'),
+            contentPadding: args('contentPadding'),
+            contentTextStyle: args('contentTextStyle'),
+            actions: args('actions'),
+            actionsPadding: args('actionsPadding'),
+            actionsAlignment: args('actionsAlignment'),
+            actionsOverflowAlignment: args('actionsOverflowAlignment'),
+            actionsOverflowDirection: args('actionsOverflowDirection'),
+            actionsOverflowButtonSpacing: args('actionsOverflowButtonSpacing'),
+            buttonPadding: args('buttonPadding'),
+            backgroundColor: args('backgroundColor'),
+            elevation: args('elevation'),
+            shadowColor: args('shadowColor'),
+            surfaceTintColor: args('surfaceTintColor'),
+            semanticLabel: args('semanticLabel'),
+            insetPadding: args('insetPadding'),
+            clipBehavior: args('clipBehavior'),
+            shape: args('shape'),
+            alignment: args('alignment'),
+            scrollable: args('scrollable'),
           ),
         );
 
   @Goto(_i1.AlertDialog.adaptive)
-  AlertDialog.adaptive(
-    $ $config, {
+  AlertDialog.adaptive({
     _i2.Key? key,
     _i4.Widget? icon,
     _i3.EdgeInsetsGeometry? iconPadding,
@@ -302,72 +505,169 @@ final class AlertDialog extends Wrapper {
     _i4.ScrollController? actionScrollController,
     Duration insetAnimationDuration = const Duration(milliseconds: 100),
     _i5.Curve insetAnimationCurve = _i5.Curves.decelerate,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with icon
+    Stream<_i4.Widget?>? $icon,
+    // Associate with iconPadding
+    Stream<_i3.EdgeInsetsGeometry?>? $iconPadding,
+    // Associate with iconColor
+    Stream<ui.Color?>? $iconColor,
+    // Associate with title
+    Stream<_i4.Widget?>? $title,
+    // Associate with titlePadding
+    Stream<_i3.EdgeInsetsGeometry?>? $titlePadding,
+    // Associate with titleTextStyle
+    Stream<_i3.TextStyle?>? $titleTextStyle,
+    // Associate with content
+    Stream<_i4.Widget?>? $content,
+    // Associate with contentPadding
+    Stream<_i3.EdgeInsetsGeometry?>? $contentPadding,
+    // Associate with contentTextStyle
+    Stream<_i3.TextStyle?>? $contentTextStyle,
+    // Associate with actions
+    Stream<List<_i4.Widget>?>? $actions,
+    // Associate with actionsPadding
+    Stream<_i3.EdgeInsetsGeometry?>? $actionsPadding,
+    // Associate with actionsAlignment
+    Stream<_i6.MainAxisAlignment?>? $actionsAlignment,
+    // Associate with actionsOverflowAlignment
+    Stream<_i4.OverflowBarAlignment?>? $actionsOverflowAlignment,
+    // Associate with actionsOverflowDirection
+    Stream<_i3.VerticalDirection?>? $actionsOverflowDirection,
+    // Associate with actionsOverflowButtonSpacing
+    Stream<double?>? $actionsOverflowButtonSpacing,
+    // Associate with buttonPadding
+    Stream<_i3.EdgeInsetsGeometry?>? $buttonPadding,
+    // Associate with backgroundColor
+    Stream<ui.Color?>? $backgroundColor,
+    // Associate with elevation
+    Stream<double?>? $elevation,
+    // Associate with shadowColor
+    Stream<ui.Color?>? $shadowColor,
+    // Associate with surfaceTintColor
+    Stream<ui.Color?>? $surfaceTintColor,
+    // Associate with semanticLabel
+    Stream<String?>? $semanticLabel,
+    // Associate with insetPadding
+    Stream<_i3.EdgeInsets?>? $insetPadding,
+    // Associate with clipBehavior
+    Stream<ui.Clip>? $clipBehavior,
+    // Associate with shape
+    Stream<_i3.ShapeBorder?>? $shape,
+    // Associate with alignment
+    Stream<_i3.AlignmentGeometry?>? $alignment,
+    // Associate with scrollable
+    Stream<bool>? $scrollable,
+    // Associate with scrollController
+    Stream<_i4.ScrollController?>? $scrollController,
+    // Associate with actionScrollController
+    Stream<_i4.ScrollController?>? $actionScrollController,
+    // Associate with insetAnimationDuration
+    Stream<Duration>? $insetAnimationDuration,
+    // Associate with insetAnimationCurve
+    Stream<_i5.Curve>? $insetAnimationCurve,
   }) : super(
-          Argument({
-            #key: key,
-            #icon: icon,
-            #iconPadding: iconPadding,
-            #iconColor: iconColor,
-            #title: title,
-            #titlePadding: titlePadding,
-            #titleTextStyle: titleTextStyle,
-            #content: content,
-            #contentPadding: contentPadding,
-            #contentTextStyle: contentTextStyle,
-            #actions: actions,
-            #actionsPadding: actionsPadding,
-            #actionsAlignment: actionsAlignment,
-            #actionsOverflowAlignment: actionsOverflowAlignment,
-            #actionsOverflowDirection: actionsOverflowDirection,
-            #actionsOverflowButtonSpacing: actionsOverflowButtonSpacing,
-            #buttonPadding: buttonPadding,
-            #backgroundColor: backgroundColor,
-            #elevation: elevation,
-            #shadowColor: shadowColor,
-            #surfaceTintColor: surfaceTintColor,
-            #semanticLabel: semanticLabel,
-            #insetPadding: insetPadding,
-            #clipBehavior: clipBehavior,
-            #shape: shape,
-            #alignment: alignment,
-            #scrollable: scrollable,
-            #scrollController: scrollController,
-            #actionScrollController: actionScrollController,
-            #insetAnimationDuration: insetAnimationDuration,
-            #insetAnimationCurve: insetAnimationCurve,
-          }),
+          Argument(
+            {
+              'key': key,
+              'icon': icon,
+              'iconPadding': iconPadding,
+              'iconColor': iconColor,
+              'title': title,
+              'titlePadding': titlePadding,
+              'titleTextStyle': titleTextStyle,
+              'content': content,
+              'contentPadding': contentPadding,
+              'contentTextStyle': contentTextStyle,
+              'actions': actions,
+              'actionsPadding': actionsPadding,
+              'actionsAlignment': actionsAlignment,
+              'actionsOverflowAlignment': actionsOverflowAlignment,
+              'actionsOverflowDirection': actionsOverflowDirection,
+              'actionsOverflowButtonSpacing': actionsOverflowButtonSpacing,
+              'buttonPadding': buttonPadding,
+              'backgroundColor': backgroundColor,
+              'elevation': elevation,
+              'shadowColor': shadowColor,
+              'surfaceTintColor': surfaceTintColor,
+              'semanticLabel': semanticLabel,
+              'insetPadding': insetPadding,
+              'clipBehavior': clipBehavior,
+              'shape': shape,
+              'alignment': alignment,
+              'scrollable': scrollable,
+              'scrollController': scrollController,
+              'actionScrollController': actionScrollController,
+              'insetAnimationDuration': insetAnimationDuration,
+              'insetAnimationCurve': insetAnimationCurve,
+            },
+            stream: {
+              'key': $key,
+              'icon': $icon,
+              'iconPadding': $iconPadding,
+              'iconColor': $iconColor,
+              'title': $title,
+              'titlePadding': $titlePadding,
+              'titleTextStyle': $titleTextStyle,
+              'content': $content,
+              'contentPadding': $contentPadding,
+              'contentTextStyle': $contentTextStyle,
+              'actions': $actions,
+              'actionsPadding': $actionsPadding,
+              'actionsAlignment': $actionsAlignment,
+              'actionsOverflowAlignment': $actionsOverflowAlignment,
+              'actionsOverflowDirection': $actionsOverflowDirection,
+              'actionsOverflowButtonSpacing': $actionsOverflowButtonSpacing,
+              'buttonPadding': $buttonPadding,
+              'backgroundColor': $backgroundColor,
+              'elevation': $elevation,
+              'shadowColor': $shadowColor,
+              'surfaceTintColor': $surfaceTintColor,
+              'semanticLabel': $semanticLabel,
+              'insetPadding': $insetPadding,
+              'clipBehavior': $clipBehavior,
+              'shape': $shape,
+              'alignment': $alignment,
+              'scrollable': $scrollable,
+              'scrollController': $scrollController,
+              'actionScrollController': $actionScrollController,
+              'insetAnimationDuration': $insetAnimationDuration,
+              'insetAnimationCurve': $insetAnimationCurve,
+            },
+          ),
           builder: (args) => _AdaptiveAlertDialog(
-            key: args(#key),
-            icon: args(#icon),
-            iconPadding: args(#iconPadding),
-            iconColor: args(#iconColor),
-            title: args(#title),
-            titlePadding: args(#titlePadding),
-            titleTextStyle: args(#titleTextStyle),
-            content: args(#content),
-            contentPadding: args(#contentPadding),
-            contentTextStyle: args(#contentTextStyle),
-            actions: args(#actions),
-            actionsPadding: args(#actionsPadding),
-            actionsAlignment: args(#actionsAlignment),
-            actionsOverflowAlignment: args(#actionsOverflowAlignment),
-            actionsOverflowDirection: args(#actionsOverflowDirection),
-            actionsOverflowButtonSpacing: args(#actionsOverflowButtonSpacing),
-            buttonPadding: args(#buttonPadding),
-            backgroundColor: args(#backgroundColor),
-            elevation: args(#elevation),
-            shadowColor: args(#shadowColor),
-            surfaceTintColor: args(#surfaceTintColor),
-            semanticLabel: args(#semanticLabel),
-            insetPadding: args(#insetPadding),
-            clipBehavior: args(#clipBehavior),
-            shape: args(#shape),
-            alignment: args(#alignment),
-            scrollable: args(#scrollable),
-            scrollController: args(#scrollController),
-            actionScrollController: args(#actionScrollController),
-            insetAnimationDuration: args(#insetAnimationDuration),
-            insetAnimationCurve: args(#insetAnimationCurve),
+            key: args('key'),
+            icon: args('icon'),
+            iconPadding: args('iconPadding'),
+            iconColor: args('iconColor'),
+            title: args('title'),
+            titlePadding: args('titlePadding'),
+            titleTextStyle: args('titleTextStyle'),
+            content: args('content'),
+            contentPadding: args('contentPadding'),
+            contentTextStyle: args('contentTextStyle'),
+            actions: args('actions'),
+            actionsPadding: args('actionsPadding'),
+            actionsAlignment: args('actionsAlignment'),
+            actionsOverflowAlignment: args('actionsOverflowAlignment'),
+            actionsOverflowDirection: args('actionsOverflowDirection'),
+            actionsOverflowButtonSpacing: args('actionsOverflowButtonSpacing'),
+            buttonPadding: args('buttonPadding'),
+            backgroundColor: args('backgroundColor'),
+            elevation: args('elevation'),
+            shadowColor: args('shadowColor'),
+            surfaceTintColor: args('surfaceTintColor'),
+            semanticLabel: args('semanticLabel'),
+            insetPadding: args('insetPadding'),
+            clipBehavior: args('clipBehavior'),
+            shape: args('shape'),
+            alignment: args('alignment'),
+            scrollable: args('scrollable'),
+            scrollController: args('scrollController'),
+            actionScrollController: args('actionScrollController'),
+            insetAnimationDuration: args('insetAnimationDuration'),
+            insetAnimationCurve: args('insetAnimationCurve'),
           ),
         );
 }

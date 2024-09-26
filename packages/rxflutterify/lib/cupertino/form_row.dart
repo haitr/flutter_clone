@@ -9,30 +9,51 @@ import '../wrapper.dart';
 
 final class CupertinoFormRow extends Wrapper {
   @Goto(_i1.CupertinoFormRow.new)
-  CupertinoFormRow(
-    $ $config, {
+  CupertinoFormRow({
     _i2.Key? key,
     required _i3.Widget child,
     _i3.Widget? prefix,
     _i4.EdgeInsetsGeometry? padding,
     _i3.Widget? helper,
     _i3.Widget? error,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with child
+    Stream<_i3.Widget>? $child,
+    // Associate with prefix
+    Stream<_i3.Widget?>? $prefix,
+    // Associate with padding
+    Stream<_i4.EdgeInsetsGeometry?>? $padding,
+    // Associate with helper
+    Stream<_i3.Widget?>? $helper,
+    // Associate with error
+    Stream<_i3.Widget?>? $error,
   }) : super(
-          Argument({
-            #key: key,
-            #child: child,
-            #prefix: prefix,
-            #padding: padding,
-            #helper: helper,
-            #error: error,
-          }),
+          Argument(
+            {
+              'key': key,
+              'child': child,
+              'prefix': prefix,
+              'padding': padding,
+              'helper': helper,
+              'error': error,
+            },
+            stream: {
+              'key': $key,
+              'child': $child,
+              'prefix': $prefix,
+              'padding': $padding,
+              'helper': $helper,
+              'error': $error,
+            },
+          ),
           builder: (args) => _i1.CupertinoFormRow(
-            key: args(#key),
-            child: args(#child),
-            prefix: args(#prefix),
-            padding: args(#padding),
-            helper: args(#helper),
-            error: args(#error),
+            key: args('key'),
+            child: args('child'),
+            prefix: args('prefix'),
+            padding: args('padding'),
+            helper: args('helper'),
+            error: args('error'),
           ),
         );
 }

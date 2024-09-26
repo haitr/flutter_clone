@@ -7,21 +7,33 @@ import '../wrapper.dart';
 
 final class TickerMode extends Wrapper {
   @Goto(_i1.TickerMode.new)
-  TickerMode(
-    $ $config, {
+  TickerMode({
     _i2.Key? key,
     required bool enabled,
     required _i1.Widget child,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with enabled
+    Stream<bool>? $enabled,
+    // Associate with child
+    Stream<_i1.Widget>? $child,
   }) : super(
-          Argument({
-            #key: key,
-            #enabled: enabled,
-            #child: child,
-          }),
+          Argument(
+            {
+              'key': key,
+              'enabled': enabled,
+              'child': child,
+            },
+            stream: {
+              'key': $key,
+              'enabled': $enabled,
+              'child': $child,
+            },
+          ),
           builder: (args) => _i1.TickerMode(
-            key: args(#key),
-            enabled: args(#enabled),
-            child: args(#child),
+            key: args('key'),
+            enabled: args('enabled'),
+            child: args('child'),
           ),
         );
 }

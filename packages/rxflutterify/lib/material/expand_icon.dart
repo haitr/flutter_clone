@@ -10,8 +10,7 @@ import '../wrapper.dart';
 
 final class ExpandIcon extends Wrapper {
   @Goto(_i1.ExpandIcon.new)
-  ExpandIcon(
-    $ $config, {
+  ExpandIcon({
     _i2.Key? key,
     bool isExpanded = false,
     double size = 24.0,
@@ -20,26 +19,54 @@ final class ExpandIcon extends Wrapper {
     ui.Color? color,
     ui.Color? disabledColor,
     ui.Color? expandedColor,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with isExpanded
+    Stream<bool>? $isExpanded,
+    // Associate with size
+    Stream<double>? $size,
+    // Associate with onPressed
+    Stream<_i2.ValueChanged<bool>?>? $onPressed,
+    // Associate with padding
+    Stream<_i3.EdgeInsetsGeometry>? $padding,
+    // Associate with color
+    Stream<ui.Color?>? $color,
+    // Associate with disabledColor
+    Stream<ui.Color?>? $disabledColor,
+    // Associate with expandedColor
+    Stream<ui.Color?>? $expandedColor,
   }) : super(
-          Argument({
-            #key: key,
-            #isExpanded: isExpanded,
-            #size: size,
-            #onPressed: onPressed,
-            #padding: padding,
-            #color: color,
-            #disabledColor: disabledColor,
-            #expandedColor: expandedColor,
-          }),
+          Argument(
+            {
+              'key': key,
+              'isExpanded': isExpanded,
+              'size': size,
+              'onPressed': onPressed,
+              'padding': padding,
+              'color': color,
+              'disabledColor': disabledColor,
+              'expandedColor': expandedColor,
+            },
+            stream: {
+              'key': $key,
+              'isExpanded': $isExpanded,
+              'size': $size,
+              'onPressed': $onPressed,
+              'padding': $padding,
+              'color': $color,
+              'disabledColor': $disabledColor,
+              'expandedColor': $expandedColor,
+            },
+          ),
           builder: (args) => _i1.ExpandIcon(
-            key: args(#key),
-            isExpanded: args(#isExpanded),
-            size: args(#size),
-            onPressed: args(#onPressed),
-            padding: args(#padding),
-            color: args(#color),
-            disabledColor: args(#disabledColor),
-            expandedColor: args(#expandedColor),
+            key: args('key'),
+            isExpanded: args('isExpanded'),
+            size: args('size'),
+            onPressed: args('onPressed'),
+            padding: args('padding'),
+            color: args('color'),
+            disabledColor: args('disabledColor'),
+            expandedColor: args('expandedColor'),
           ),
         );
 }

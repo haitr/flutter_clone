@@ -14,8 +14,7 @@ import '../wrapper.dart';
 
 final class PopupMenuButton<T> extends Wrapper {
   @Goto(_i1.PopupMenuButton.new)
-  PopupMenuButton(
-    $ $config, {
+  PopupMenuButton({
     _i2.Key? key,
     required _i1.PopupMenuItemBuilder<T> itemBuilder,
     T? initialValue,
@@ -44,74 +43,161 @@ final class PopupMenuButton<T> extends Wrapper {
     _i6.AnimationStyle? popUpAnimationStyle,
     _i4.RouteSettings? routeSettings,
     _i1.ButtonStyle? style,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with itemBuilder
+    Stream<_i1.PopupMenuItemBuilder<T>>? $itemBuilder,
+    // Associate with initialValue
+    Stream<T?>? $initialValue,
+    // Associate with onOpened
+    Stream<ui.VoidCallback?>? $onOpened,
+    // Associate with onSelected
+    Stream<_i1.PopupMenuItemSelected<T>?>? $onSelected,
+    // Associate with onCanceled
+    Stream<_i1.PopupMenuCanceled?>? $onCanceled,
+    // Associate with tooltip
+    Stream<String?>? $tooltip,
+    // Associate with elevation
+    Stream<double?>? $elevation,
+    // Associate with shadowColor
+    Stream<ui.Color?>? $shadowColor,
+    // Associate with surfaceTintColor
+    Stream<ui.Color?>? $surfaceTintColor,
+    // Associate with padding
+    Stream<_i3.EdgeInsetsGeometry>? $padding,
+    // Associate with child
+    Stream<_i4.Widget?>? $child,
+    // Associate with splashRadius
+    Stream<double?>? $splashRadius,
+    // Associate with icon
+    Stream<_i4.Widget?>? $icon,
+    // Associate with iconSize
+    Stream<double?>? $iconSize,
+    // Associate with offset
+    Stream<ui.Offset>? $offset,
+    // Associate with enabled
+    Stream<bool>? $enabled,
+    // Associate with shape
+    Stream<_i3.ShapeBorder?>? $shape,
+    // Associate with color
+    Stream<ui.Color?>? $color,
+    // Associate with iconColor
+    Stream<ui.Color?>? $iconColor,
+    // Associate with enableFeedback
+    Stream<bool?>? $enableFeedback,
+    // Associate with constraints
+    Stream<_i5.BoxConstraints?>? $constraints,
+    // Associate with position
+    Stream<_i1.PopupMenuPosition?>? $position,
+    // Associate with clipBehavior
+    Stream<ui.Clip>? $clipBehavior,
+    // Associate with useRootNavigator
+    Stream<bool>? $useRootNavigator,
+    // Associate with popUpAnimationStyle
+    Stream<_i6.AnimationStyle?>? $popUpAnimationStyle,
+    // Associate with routeSettings
+    Stream<_i4.RouteSettings?>? $routeSettings,
+    // Associate with style
+    Stream<_i1.ButtonStyle?>? $style,
   }) : super(
-          Argument({
-            #key: key,
-            #itemBuilder: itemBuilder,
-            #initialValue: initialValue,
-            #onOpened: onOpened,
-            #onSelected: onSelected,
-            #onCanceled: onCanceled,
-            #tooltip: tooltip,
-            #elevation: elevation,
-            #shadowColor: shadowColor,
-            #surfaceTintColor: surfaceTintColor,
-            #padding: padding,
-            #child: child,
-            #splashRadius: splashRadius,
-            #icon: icon,
-            #iconSize: iconSize,
-            #offset: offset,
-            #enabled: enabled,
-            #shape: shape,
-            #color: color,
-            #iconColor: iconColor,
-            #enableFeedback: enableFeedback,
-            #constraints: constraints,
-            #position: position,
-            #clipBehavior: clipBehavior,
-            #useRootNavigator: useRootNavigator,
-            #popUpAnimationStyle: popUpAnimationStyle,
-            #routeSettings: routeSettings,
-            #style: style,
-          }),
+          Argument(
+            {
+              'key': key,
+              'itemBuilder': itemBuilder,
+              'initialValue': initialValue,
+              'onOpened': onOpened,
+              'onSelected': onSelected,
+              'onCanceled': onCanceled,
+              'tooltip': tooltip,
+              'elevation': elevation,
+              'shadowColor': shadowColor,
+              'surfaceTintColor': surfaceTintColor,
+              'padding': padding,
+              'child': child,
+              'splashRadius': splashRadius,
+              'icon': icon,
+              'iconSize': iconSize,
+              'offset': offset,
+              'enabled': enabled,
+              'shape': shape,
+              'color': color,
+              'iconColor': iconColor,
+              'enableFeedback': enableFeedback,
+              'constraints': constraints,
+              'position': position,
+              'clipBehavior': clipBehavior,
+              'useRootNavigator': useRootNavigator,
+              'popUpAnimationStyle': popUpAnimationStyle,
+              'routeSettings': routeSettings,
+              'style': style,
+            },
+            stream: {
+              'key': $key,
+              'itemBuilder': $itemBuilder,
+              'initialValue': $initialValue,
+              'onOpened': $onOpened,
+              'onSelected': $onSelected,
+              'onCanceled': $onCanceled,
+              'tooltip': $tooltip,
+              'elevation': $elevation,
+              'shadowColor': $shadowColor,
+              'surfaceTintColor': $surfaceTintColor,
+              'padding': $padding,
+              'child': $child,
+              'splashRadius': $splashRadius,
+              'icon': $icon,
+              'iconSize': $iconSize,
+              'offset': $offset,
+              'enabled': $enabled,
+              'shape': $shape,
+              'color': $color,
+              'iconColor': $iconColor,
+              'enableFeedback': $enableFeedback,
+              'constraints': $constraints,
+              'position': $position,
+              'clipBehavior': $clipBehavior,
+              'useRootNavigator': $useRootNavigator,
+              'popUpAnimationStyle': $popUpAnimationStyle,
+              'routeSettings': $routeSettings,
+              'style': $style,
+            },
+          ),
           builder: (args) => _i1.PopupMenuButton<T>(
-            key: args(#key),
-            itemBuilder: args(#itemBuilder),
-            initialValue: args(#initialValue),
-            onOpened: args(#onOpened),
-            onSelected: args(#onSelected),
-            onCanceled: args(#onCanceled),
-            tooltip: args(#tooltip),
-            elevation: args(#elevation),
-            shadowColor: args(#shadowColor),
-            surfaceTintColor: args(#surfaceTintColor),
-            padding: args(#padding),
-            child: args(#child),
-            splashRadius: args(#splashRadius),
-            icon: args(#icon),
-            iconSize: args(#iconSize),
-            offset: args(#offset),
-            enabled: args(#enabled),
-            shape: args(#shape),
-            color: args(#color),
-            iconColor: args(#iconColor),
-            enableFeedback: args(#enableFeedback),
-            constraints: args(#constraints),
-            position: args(#position),
-            clipBehavior: args(#clipBehavior),
-            useRootNavigator: args(#useRootNavigator),
-            popUpAnimationStyle: args(#popUpAnimationStyle),
-            routeSettings: args(#routeSettings),
-            style: args(#style),
+            key: args('key'),
+            itemBuilder: args('itemBuilder'),
+            initialValue: args('initialValue'),
+            onOpened: args('onOpened'),
+            onSelected: args('onSelected'),
+            onCanceled: args('onCanceled'),
+            tooltip: args('tooltip'),
+            elevation: args('elevation'),
+            shadowColor: args('shadowColor'),
+            surfaceTintColor: args('surfaceTintColor'),
+            padding: args('padding'),
+            child: args('child'),
+            splashRadius: args('splashRadius'),
+            icon: args('icon'),
+            iconSize: args('iconSize'),
+            offset: args('offset'),
+            enabled: args('enabled'),
+            shape: args('shape'),
+            color: args('color'),
+            iconColor: args('iconColor'),
+            enableFeedback: args('enableFeedback'),
+            constraints: args('constraints'),
+            position: args('position'),
+            clipBehavior: args('clipBehavior'),
+            useRootNavigator: args('useRootNavigator'),
+            popUpAnimationStyle: args('popUpAnimationStyle'),
+            routeSettings: args('routeSettings'),
+            style: args('style'),
           ),
         );
 }
 
 final class PopupMenuItem<T> extends Wrapper {
   @Goto(_i1.PopupMenuItem.new)
-  PopupMenuItem(
-    $ $config, {
+  PopupMenuItem({
     _i2.Key? key,
     T? value,
     ui.VoidCallback? onTap,
@@ -122,38 +208,71 @@ final class PopupMenuItem<T> extends Wrapper {
     _i4.WidgetStateProperty<_i3.TextStyle?>? labelTextStyle,
     _i7.MouseCursor? mouseCursor,
     required _i4.Widget? child,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with value
+    Stream<T?>? $value,
+    // Associate with onTap
+    Stream<ui.VoidCallback?>? $onTap,
+    // Associate with enabled
+    Stream<bool>? $enabled,
+    // Associate with height
+    Stream<double>? $height,
+    // Associate with padding
+    Stream<_i3.EdgeInsets?>? $padding,
+    // Associate with textStyle
+    Stream<_i3.TextStyle?>? $textStyle,
+    // Associate with labelTextStyle
+    Stream<_i4.WidgetStateProperty<_i3.TextStyle?>?>? $labelTextStyle,
+    // Associate with mouseCursor
+    Stream<_i7.MouseCursor?>? $mouseCursor,
+    // Associate with child
+    Stream<_i4.Widget?>? $child,
   }) : super(
-          Argument({
-            #key: key,
-            #value: value,
-            #onTap: onTap,
-            #enabled: enabled,
-            #height: height,
-            #padding: padding,
-            #textStyle: textStyle,
-            #labelTextStyle: labelTextStyle,
-            #mouseCursor: mouseCursor,
-            #child: child,
-          }),
+          Argument(
+            {
+              'key': key,
+              'value': value,
+              'onTap': onTap,
+              'enabled': enabled,
+              'height': height,
+              'padding': padding,
+              'textStyle': textStyle,
+              'labelTextStyle': labelTextStyle,
+              'mouseCursor': mouseCursor,
+              'child': child,
+            },
+            stream: {
+              'key': $key,
+              'value': $value,
+              'onTap': $onTap,
+              'enabled': $enabled,
+              'height': $height,
+              'padding': $padding,
+              'textStyle': $textStyle,
+              'labelTextStyle': $labelTextStyle,
+              'mouseCursor': $mouseCursor,
+              'child': $child,
+            },
+          ),
           builder: (args) => _i1.PopupMenuItem<T>(
-            key: args(#key),
-            value: args(#value),
-            onTap: args(#onTap),
-            enabled: args(#enabled),
-            height: args(#height),
-            padding: args(#padding),
-            textStyle: args(#textStyle),
-            labelTextStyle: args(#labelTextStyle),
-            mouseCursor: args(#mouseCursor),
-            child: args(#child),
+            key: args('key'),
+            value: args('value'),
+            onTap: args('onTap'),
+            enabled: args('enabled'),
+            height: args('height'),
+            padding: args('padding'),
+            textStyle: args('textStyle'),
+            labelTextStyle: args('labelTextStyle'),
+            mouseCursor: args('mouseCursor'),
+            child: args('child'),
           ),
         );
 }
 
 final class CheckedPopupMenuItem<T> extends Wrapper {
   @Goto(_i1.CheckedPopupMenuItem.new)
-  CheckedPopupMenuItem(
-    $ $config, {
+  CheckedPopupMenuItem({
     _i2.Key? key,
     T? value,
     bool checked = false,
@@ -164,48 +283,91 @@ final class CheckedPopupMenuItem<T> extends Wrapper {
     _i7.MouseCursor? mouseCursor,
     _i4.Widget? child,
     ui.VoidCallback? onTap,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with value
+    Stream<T?>? $value,
+    // Associate with checked
+    Stream<bool>? $checked,
+    // Associate with enabled
+    Stream<bool>? $enabled,
+    // Associate with padding
+    Stream<_i3.EdgeInsets?>? $padding,
+    // Associate with height
+    Stream<double>? $height,
+    // Associate with labelTextStyle
+    Stream<_i4.WidgetStateProperty<_i3.TextStyle?>?>? $labelTextStyle,
+    // Associate with mouseCursor
+    Stream<_i7.MouseCursor?>? $mouseCursor,
+    // Associate with child
+    Stream<_i4.Widget?>? $child,
+    // Associate with onTap
+    Stream<ui.VoidCallback?>? $onTap,
   }) : super(
-          Argument({
-            #key: key,
-            #value: value,
-            #checked: checked,
-            #enabled: enabled,
-            #padding: padding,
-            #height: height,
-            #labelTextStyle: labelTextStyle,
-            #mouseCursor: mouseCursor,
-            #child: child,
-            #onTap: onTap,
-          }),
+          Argument(
+            {
+              'key': key,
+              'value': value,
+              'checked': checked,
+              'enabled': enabled,
+              'padding': padding,
+              'height': height,
+              'labelTextStyle': labelTextStyle,
+              'mouseCursor': mouseCursor,
+              'child': child,
+              'onTap': onTap,
+            },
+            stream: {
+              'key': $key,
+              'value': $value,
+              'checked': $checked,
+              'enabled': $enabled,
+              'padding': $padding,
+              'height': $height,
+              'labelTextStyle': $labelTextStyle,
+              'mouseCursor': $mouseCursor,
+              'child': $child,
+              'onTap': $onTap,
+            },
+          ),
           builder: (args) => _i1.CheckedPopupMenuItem<T>(
-            key: args(#key),
-            value: args(#value),
-            checked: args(#checked),
-            enabled: args(#enabled),
-            padding: args(#padding),
-            height: args(#height),
-            labelTextStyle: args(#labelTextStyle),
-            mouseCursor: args(#mouseCursor),
-            child: args(#child),
-            onTap: args(#onTap),
+            key: args('key'),
+            value: args('value'),
+            checked: args('checked'),
+            enabled: args('enabled'),
+            padding: args('padding'),
+            height: args('height'),
+            labelTextStyle: args('labelTextStyle'),
+            mouseCursor: args('mouseCursor'),
+            child: args('child'),
+            onTap: args('onTap'),
           ),
         );
 }
 
 final class PopupMenuDivider extends Wrapper {
   @Goto(_i1.PopupMenuDivider.new)
-  PopupMenuDivider(
-    $ $config, {
+  PopupMenuDivider({
     _i2.Key? key,
     double height = _kMenuDividerHeight,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with height
+    Stream<double>? $height,
   }) : super(
-          Argument({
-            #key: key,
-            #height: height,
-          }),
+          Argument(
+            {
+              'key': key,
+              'height': height,
+            },
+            stream: {
+              'key': $key,
+              'height': $height,
+            },
+          ),
           builder: (args) => _i1.PopupMenuDivider(
-            key: args(#key),
-            height: args(#height),
+            key: args('key'),
+            height: args('height'),
           ),
         );
 }

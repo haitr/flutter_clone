@@ -10,8 +10,7 @@ import '../wrapper.dart';
 
 final class Scrollbar extends Wrapper {
   @Goto(_i1.Scrollbar.new)
-  Scrollbar(
-    $ $config, {
+  Scrollbar({
     _i2.Key? key,
     required _i3.Widget child,
     _i3.ScrollController? controller,
@@ -22,30 +21,64 @@ final class Scrollbar extends Wrapper {
     _i3.ScrollNotificationPredicate? notificationPredicate,
     bool? interactive,
     _i3.ScrollbarOrientation? scrollbarOrientation,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with child
+    Stream<_i3.Widget>? $child,
+    // Associate with controller
+    Stream<_i3.ScrollController?>? $controller,
+    // Associate with thumbVisibility
+    Stream<bool?>? $thumbVisibility,
+    // Associate with trackVisibility
+    Stream<bool?>? $trackVisibility,
+    // Associate with thickness
+    Stream<double?>? $thickness,
+    // Associate with radius
+    Stream<ui.Radius?>? $radius,
+    // Associate with notificationPredicate
+    Stream<_i3.ScrollNotificationPredicate?>? $notificationPredicate,
+    // Associate with interactive
+    Stream<bool?>? $interactive,
+    // Associate with scrollbarOrientation
+    Stream<_i3.ScrollbarOrientation?>? $scrollbarOrientation,
   }) : super(
-          Argument({
-            #key: key,
-            #child: child,
-            #controller: controller,
-            #thumbVisibility: thumbVisibility,
-            #trackVisibility: trackVisibility,
-            #thickness: thickness,
-            #radius: radius,
-            #notificationPredicate: notificationPredicate,
-            #interactive: interactive,
-            #scrollbarOrientation: scrollbarOrientation,
-          }),
+          Argument(
+            {
+              'key': key,
+              'child': child,
+              'controller': controller,
+              'thumbVisibility': thumbVisibility,
+              'trackVisibility': trackVisibility,
+              'thickness': thickness,
+              'radius': radius,
+              'notificationPredicate': notificationPredicate,
+              'interactive': interactive,
+              'scrollbarOrientation': scrollbarOrientation,
+            },
+            stream: {
+              'key': $key,
+              'child': $child,
+              'controller': $controller,
+              'thumbVisibility': $thumbVisibility,
+              'trackVisibility': $trackVisibility,
+              'thickness': $thickness,
+              'radius': $radius,
+              'notificationPredicate': $notificationPredicate,
+              'interactive': $interactive,
+              'scrollbarOrientation': $scrollbarOrientation,
+            },
+          ),
           builder: (args) => _i1.Scrollbar(
-            key: args(#key),
-            child: args(#child),
-            controller: args(#controller),
-            thumbVisibility: args(#thumbVisibility),
-            trackVisibility: args(#trackVisibility),
-            thickness: args(#thickness),
-            radius: args(#radius),
-            notificationPredicate: args(#notificationPredicate),
-            interactive: args(#interactive),
-            scrollbarOrientation: args(#scrollbarOrientation),
+            key: args('key'),
+            child: args('child'),
+            controller: args('controller'),
+            thumbVisibility: args('thumbVisibility'),
+            trackVisibility: args('trackVisibility'),
+            thickness: args('thickness'),
+            radius: args('radius'),
+            notificationPredicate: args('notificationPredicate'),
+            interactive: args('interactive'),
+            scrollbarOrientation: args('scrollbarOrientation'),
           ),
         );
 }

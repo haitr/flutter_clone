@@ -139,6 +139,7 @@ class ProviderScopeBuilder extends StatelessWidget {
   Widget build(BuildContext context) => ProviderScope(
         key: key,
         observers: observers,
+        // ignore: deprecated_member_use_from_same_package
         parent: parent,
         overrides: overrides,
         child: Consumer(builder: builder),

@@ -9,24 +9,39 @@ import '../wrapper.dart';
 
 final class ImageFiltered extends Wrapper {
   @Goto(_i1.ImageFiltered.new)
-  ImageFiltered(
-    $ $config, {
+  ImageFiltered({
     _i2.Key? key,
     required ui.ImageFilter imageFilter,
     _i1.Widget? child,
     bool enabled = true,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with imageFilter
+    Stream<ui.ImageFilter>? $imageFilter,
+    // Associate with child
+    Stream<_i1.Widget?>? $child,
+    // Associate with enabled
+    Stream<bool>? $enabled,
   }) : super(
-          Argument({
-            #key: key,
-            #imageFilter: imageFilter,
-            #child: child,
-            #enabled: enabled,
-          }),
+          Argument(
+            {
+              'key': key,
+              'imageFilter': imageFilter,
+              'child': child,
+              'enabled': enabled,
+            },
+            stream: {
+              'key': $key,
+              'imageFilter': $imageFilter,
+              'child': $child,
+              'enabled': $enabled,
+            },
+          ),
           builder: (args) => _i1.ImageFiltered(
-            key: args(#key),
-            imageFilter: args(#imageFilter),
-            child: args(#child),
-            enabled: args(#enabled),
+            key: args('key'),
+            imageFilter: args('imageFilter'),
+            child: args('child'),
+            enabled: args('enabled'),
           ),
         );
 }

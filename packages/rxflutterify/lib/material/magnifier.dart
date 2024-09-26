@@ -11,26 +11,34 @@ import '../wrapper.dart';
 
 final class TextMagnifier extends Wrapper {
   @Goto(_i1.TextMagnifier.new)
-  TextMagnifier(
-    $ $config, {
+  TextMagnifier({
     _i2.Key? key,
     required _i2.ValueNotifier<_i3.MagnifierInfo> magnifierInfo,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with magnifierInfo
+    Stream<_i2.ValueNotifier<_i3.MagnifierInfo>>? $magnifierInfo,
   }) : super(
-          Argument({
-            #key: key,
-            #magnifierInfo: magnifierInfo,
-          }),
+          Argument(
+            {
+              'key': key,
+              'magnifierInfo': magnifierInfo,
+            },
+            stream: {
+              'key': $key,
+              'magnifierInfo': $magnifierInfo,
+            },
+          ),
           builder: (args) => _i1.TextMagnifier(
-            key: args(#key),
-            magnifierInfo: args(#magnifierInfo),
+            key: args('key'),
+            magnifierInfo: args('magnifierInfo'),
           ),
         );
 }
 
 final class Magnifier extends Wrapper {
   @Goto(_i1.Magnifier.new)
-  Magnifier(
-    $ $config, {
+  Magnifier({
     _i2.Key? key,
     ui.Offset additionalFocalPointOffset = ui.Offset.zero,
     _i4.BorderRadius borderRadius = const _i4.BorderRadius.all(ui.Radius.circular(_borderRadius)),
@@ -57,22 +65,44 @@ final class Magnifier extends Wrapper {
       )
     ],
     ui.Size size = _i1.Magnifier.kDefaultMagnifierSize,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with additionalFocalPointOffset
+    Stream<ui.Offset>? $additionalFocalPointOffset,
+    // Associate with borderRadius
+    Stream<_i4.BorderRadius>? $borderRadius,
+    // Associate with filmColor
+    Stream<ui.Color>? $filmColor,
+    // Associate with shadows
+    Stream<List<_i4.BoxShadow>>? $shadows,
+    // Associate with size
+    Stream<ui.Size>? $size,
   }) : super(
-          Argument({
-            #key: key,
-            #additionalFocalPointOffset: additionalFocalPointOffset,
-            #borderRadius: borderRadius,
-            #filmColor: filmColor,
-            #shadows: shadows,
-            #size: size,
-          }),
+          Argument(
+            {
+              'key': key,
+              'additionalFocalPointOffset': additionalFocalPointOffset,
+              'borderRadius': borderRadius,
+              'filmColor': filmColor,
+              'shadows': shadows,
+              'size': size,
+            },
+            stream: {
+              'key': $key,
+              'additionalFocalPointOffset': $additionalFocalPointOffset,
+              'borderRadius': $borderRadius,
+              'filmColor': $filmColor,
+              'shadows': $shadows,
+              'size': $size,
+            },
+          ),
           builder: (args) => _i1.Magnifier(
-            key: args(#key),
-            additionalFocalPointOffset: args(#additionalFocalPointOffset),
-            borderRadius: args(#borderRadius),
-            filmColor: args(#filmColor),
-            shadows: args(#shadows),
-            size: args(#size),
+            key: args('key'),
+            additionalFocalPointOffset: args('additionalFocalPointOffset'),
+            borderRadius: args('borderRadius'),
+            filmColor: args('filmColor'),
+            shadows: args('shadows'),
+            size: args('size'),
           ),
         );
 

@@ -11,8 +11,7 @@ import '../wrapper.dart';
 
 final class BottomAppBar extends Wrapper {
   @Goto(_i1.BottomAppBar.new)
-  BottomAppBar(
-    $ $config, {
+  BottomAppBar({
     _i2.Key? key,
     ui.Color? color,
     double? elevation,
@@ -24,32 +23,69 @@ final class BottomAppBar extends Wrapper {
     ui.Color? surfaceTintColor,
     ui.Color? shadowColor,
     double? height,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with color
+    Stream<ui.Color?>? $color,
+    // Associate with elevation
+    Stream<double?>? $elevation,
+    // Associate with shape
+    Stream<_i3.NotchedShape?>? $shape,
+    // Associate with clipBehavior
+    Stream<ui.Clip>? $clipBehavior,
+    // Associate with notchMargin
+    Stream<double>? $notchMargin,
+    // Associate with child
+    Stream<_i4.Widget?>? $child,
+    // Associate with padding
+    Stream<_i3.EdgeInsetsGeometry?>? $padding,
+    // Associate with surfaceTintColor
+    Stream<ui.Color?>? $surfaceTintColor,
+    // Associate with shadowColor
+    Stream<ui.Color?>? $shadowColor,
+    // Associate with height
+    Stream<double?>? $height,
   }) : super(
-          Argument({
-            #key: key,
-            #color: color,
-            #elevation: elevation,
-            #shape: shape,
-            #clipBehavior: clipBehavior,
-            #notchMargin: notchMargin,
-            #child: child,
-            #padding: padding,
-            #surfaceTintColor: surfaceTintColor,
-            #shadowColor: shadowColor,
-            #height: height,
-          }),
+          Argument(
+            {
+              'key': key,
+              'color': color,
+              'elevation': elevation,
+              'shape': shape,
+              'clipBehavior': clipBehavior,
+              'notchMargin': notchMargin,
+              'child': child,
+              'padding': padding,
+              'surfaceTintColor': surfaceTintColor,
+              'shadowColor': shadowColor,
+              'height': height,
+            },
+            stream: {
+              'key': $key,
+              'color': $color,
+              'elevation': $elevation,
+              'shape': $shape,
+              'clipBehavior': $clipBehavior,
+              'notchMargin': $notchMargin,
+              'child': $child,
+              'padding': $padding,
+              'surfaceTintColor': $surfaceTintColor,
+              'shadowColor': $shadowColor,
+              'height': $height,
+            },
+          ),
           builder: (args) => _i1.BottomAppBar(
-            key: args(#key),
-            color: args(#color),
-            elevation: args(#elevation),
-            shape: args(#shape),
-            clipBehavior: args(#clipBehavior),
-            notchMargin: args(#notchMargin),
-            child: args(#child),
-            padding: args(#padding),
-            surfaceTintColor: args(#surfaceTintColor),
-            shadowColor: args(#shadowColor),
-            height: args(#height),
+            key: args('key'),
+            color: args('color'),
+            elevation: args('elevation'),
+            shape: args('shape'),
+            clipBehavior: args('clipBehavior'),
+            notchMargin: args('notchMargin'),
+            child: args('child'),
+            padding: args('padding'),
+            surfaceTintColor: args('surfaceTintColor'),
+            shadowColor: args('shadowColor'),
+            height: args('height'),
           ),
         );
 }

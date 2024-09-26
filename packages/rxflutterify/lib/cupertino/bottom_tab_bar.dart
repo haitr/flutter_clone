@@ -11,8 +11,7 @@ import '../wrapper.dart';
 
 final class CupertinoTabBar extends Wrapper {
   @Goto(_i1.CupertinoTabBar.new)
-  CupertinoTabBar(
-    $ $config, {
+  CupertinoTabBar({
     _i2.Key? key,
     required List<_i3.BottomNavigationBarItem> items,
     _i2.ValueChanged<int>? onTap,
@@ -27,30 +26,64 @@ final class CupertinoTabBar extends Wrapper {
       color: _kDefaultTabBarBorderColor,
       width: 0.0,
     )),
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with items
+    Stream<List<_i3.BottomNavigationBarItem>>? $items,
+    // Associate with onTap
+    Stream<_i2.ValueChanged<int>?>? $onTap,
+    // Associate with currentIndex
+    Stream<int>? $currentIndex,
+    // Associate with backgroundColor
+    Stream<ui.Color?>? $backgroundColor,
+    // Associate with activeColor
+    Stream<ui.Color?>? $activeColor,
+    // Associate with inactiveColor
+    Stream<ui.Color>? $inactiveColor,
+    // Associate with iconSize
+    Stream<double>? $iconSize,
+    // Associate with height
+    Stream<double>? $height,
+    // Associate with border
+    Stream<_i4.Border?>? $border,
   }) : super(
-          Argument({
-            #key: key,
-            #items: items,
-            #onTap: onTap,
-            #currentIndex: currentIndex,
-            #backgroundColor: backgroundColor,
-            #activeColor: activeColor,
-            #inactiveColor: inactiveColor,
-            #iconSize: iconSize,
-            #height: height,
-            #border: border,
-          }),
+          Argument(
+            {
+              'key': key,
+              'items': items,
+              'onTap': onTap,
+              'currentIndex': currentIndex,
+              'backgroundColor': backgroundColor,
+              'activeColor': activeColor,
+              'inactiveColor': inactiveColor,
+              'iconSize': iconSize,
+              'height': height,
+              'border': border,
+            },
+            stream: {
+              'key': $key,
+              'items': $items,
+              'onTap': $onTap,
+              'currentIndex': $currentIndex,
+              'backgroundColor': $backgroundColor,
+              'activeColor': $activeColor,
+              'inactiveColor': $inactiveColor,
+              'iconSize': $iconSize,
+              'height': $height,
+              'border': $border,
+            },
+          ),
           builder: (args) => _i1.CupertinoTabBar(
-            key: args(#key),
-            items: args(#items),
-            onTap: args(#onTap),
-            currentIndex: args(#currentIndex),
-            backgroundColor: args(#backgroundColor),
-            activeColor: args(#activeColor),
-            inactiveColor: args(#inactiveColor),
-            iconSize: args(#iconSize),
-            height: args(#height),
-            border: args(#border),
+            key: args('key'),
+            items: args('items'),
+            onTap: args('onTap'),
+            currentIndex: args('currentIndex'),
+            backgroundColor: args('backgroundColor'),
+            activeColor: args('activeColor'),
+            inactiveColor: args('inactiveColor'),
+            iconSize: args('iconSize'),
+            height: args('height'),
+            border: args('border'),
           ),
         );
 }

@@ -7,24 +7,39 @@ import '../wrapper.dart';
 
 final class SliverPersistentHeader extends Wrapper {
   @Goto(_i1.SliverPersistentHeader.new)
-  SliverPersistentHeader(
-    $ $config, {
+  SliverPersistentHeader({
     _i2.Key? key,
     required _i1.SliverPersistentHeaderDelegate delegate,
     bool pinned = false,
     bool floating = false,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with delegate
+    Stream<_i1.SliverPersistentHeaderDelegate>? $delegate,
+    // Associate with pinned
+    Stream<bool>? $pinned,
+    // Associate with floating
+    Stream<bool>? $floating,
   }) : super(
-          Argument({
-            #key: key,
-            #delegate: delegate,
-            #pinned: pinned,
-            #floating: floating,
-          }),
+          Argument(
+            {
+              'key': key,
+              'delegate': delegate,
+              'pinned': pinned,
+              'floating': floating,
+            },
+            stream: {
+              'key': $key,
+              'delegate': $delegate,
+              'pinned': $pinned,
+              'floating': $floating,
+            },
+          ),
           builder: (args) => _i1.SliverPersistentHeader(
-            key: args(#key),
-            delegate: args(#delegate),
-            pinned: args(#pinned),
-            floating: args(#floating),
+            key: args('key'),
+            delegate: args('delegate'),
+            pinned: args('pinned'),
+            floating: args('floating'),
           ),
         );
 }

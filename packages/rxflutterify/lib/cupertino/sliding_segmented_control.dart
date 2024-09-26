@@ -11,8 +11,7 @@ import '../wrapper.dart';
 
 final class CupertinoSlidingSegmentedControl<T> extends Wrapper {
   @Goto(_i1.CupertinoSlidingSegmentedControl.new)
-  CupertinoSlidingSegmentedControl(
-    $ $config, {
+  CupertinoSlidingSegmentedControl({
     _i2.Key? key,
     required Map<T, _i3.Widget> children,
     required _i2.ValueChanged<T?> onValueChanged,
@@ -20,24 +19,49 @@ final class CupertinoSlidingSegmentedControl<T> extends Wrapper {
     ui.Color thumbColor = _kThumbColor,
     _i4.EdgeInsetsGeometry padding = _kHorizontalItemPadding,
     ui.Color backgroundColor = _i1.CupertinoColors.tertiarySystemFill,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with children
+    Stream<Map<T, _i3.Widget>>? $children,
+    // Associate with onValueChanged
+    Stream<_i2.ValueChanged<T?>>? $onValueChanged,
+    // Associate with groupValue
+    Stream<T?>? $groupValue,
+    // Associate with thumbColor
+    Stream<ui.Color>? $thumbColor,
+    // Associate with padding
+    Stream<_i4.EdgeInsetsGeometry>? $padding,
+    // Associate with backgroundColor
+    Stream<ui.Color>? $backgroundColor,
   }) : super(
-          Argument({
-            #key: key,
-            #children: children,
-            #onValueChanged: onValueChanged,
-            #groupValue: groupValue,
-            #thumbColor: thumbColor,
-            #padding: padding,
-            #backgroundColor: backgroundColor,
-          }),
+          Argument(
+            {
+              'key': key,
+              'children': children,
+              'onValueChanged': onValueChanged,
+              'groupValue': groupValue,
+              'thumbColor': thumbColor,
+              'padding': padding,
+              'backgroundColor': backgroundColor,
+            },
+            stream: {
+              'key': $key,
+              'children': $children,
+              'onValueChanged': $onValueChanged,
+              'groupValue': $groupValue,
+              'thumbColor': $thumbColor,
+              'padding': $padding,
+              'backgroundColor': $backgroundColor,
+            },
+          ),
           builder: (args) => _i1.CupertinoSlidingSegmentedControl<T>(
-            key: args(#key),
-            children: args(#children),
-            onValueChanged: args(#onValueChanged),
-            groupValue: args(#groupValue),
-            thumbColor: args(#thumbColor),
-            padding: args(#padding),
-            backgroundColor: args(#backgroundColor),
+            key: args('key'),
+            children: args('children'),
+            onValueChanged: args('onValueChanged'),
+            groupValue: args('groupValue'),
+            thumbColor: args('thumbColor'),
+            padding: args('padding'),
+            backgroundColor: args('backgroundColor'),
           ),
         );
 }

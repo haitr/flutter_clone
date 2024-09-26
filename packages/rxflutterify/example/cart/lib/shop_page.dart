@@ -27,11 +27,10 @@ class _ShopPageState extends State<ShopPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Shop'),
+        title: const Text('[rxflutterify] Shop'),
       ),
       body: SafeArea(
         child: $GridView.builder(
-          $.all,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2, // Number of columns in the grid
             childAspectRatio: 1, // Width to height ratio of each item
@@ -39,7 +38,8 @@ class _ShopPageState extends State<ShopPage> {
             mainAxisSpacing: 4, // Spacing between rows
           ),
           padding: const EdgeInsets.all(8),
-          itemCount: 0.bind(#itemCount, viewModel.output.products.map((event) => event.length)),
+          itemCount: viewModel.output.products.value.length,
+          $itemCount: viewModel.output.products.map((event) => event.length),
           itemBuilder: (context, index) {
             final product = viewModel.output.products.value[index];
             final productInCart = viewModel.output.cart.getProductInCart(product)!;
@@ -51,14 +51,12 @@ class _ShopPageState extends State<ShopPage> {
                     top: 4,
                     right: 4,
                     child: $Builder(
-                      $.all,
-                      builder: ((context) => const SizedBox.shrink() as Widget).bind(
-                          #builder,
-                          productInCart.map((event) => (_) => Quantity(
-                              quantity: event,
-                              color: Colors.white,
-                              decrease: () => viewModel.output.cart.decrease(product),
-                              increase: () => viewModel.output.cart.increase(product)))),
+                      builder: (context) => const SizedBox.shrink(),
+                      $builder: productInCart.map((event) => (_) => Quantity(
+                          quantity: event,
+                          color: Colors.black,
+                          decrease: () => viewModel.output.cart.decrease(product),
+                          increase: () => viewModel.output.cart.increase(product))),
                     ),
                   ),
                   Align(
@@ -88,9 +86,8 @@ class _ShopPageState extends State<ShopPage> {
         ),
       ),
       floatingActionButton: $Badge(
-        $.all,
-        label: (const SizedBox.shrink() as Widget)
-            .bind(#label, viewModel.output.cart.total.map((event) => Text('$event'))),
+        label: const SizedBox.shrink(),
+        $label: viewModel.output.cart.total.map((event) => Text('$event')),
         child: IconButton.filled(
           onPressed: () => Navigator.push(
               context, MaterialPageRoute(builder: (context) => const CheckoutPage())),

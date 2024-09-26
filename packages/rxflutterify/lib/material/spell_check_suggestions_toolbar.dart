@@ -10,37 +10,58 @@ import '../wrapper.dart';
 
 final class SpellCheckSuggestionsToolbar extends Wrapper {
   @Goto(_i1.SpellCheckSuggestionsToolbar.new)
-  SpellCheckSuggestionsToolbar(
-    $ $config, {
+  SpellCheckSuggestionsToolbar({
     _i2.Key? key,
     required ui.Offset anchor,
     required List<_i3.ContextMenuButtonItem> buttonItems,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with anchor
+    Stream<ui.Offset>? $anchor,
+    // Associate with buttonItems
+    Stream<List<_i3.ContextMenuButtonItem>>? $buttonItems,
   }) : super(
-          Argument({
-            #key: key,
-            #anchor: anchor,
-            #buttonItems: buttonItems,
-          }),
+          Argument(
+            {
+              'key': key,
+              'anchor': anchor,
+              'buttonItems': buttonItems,
+            },
+            stream: {
+              'key': $key,
+              'anchor': $anchor,
+              'buttonItems': $buttonItems,
+            },
+          ),
           builder: (args) => _i1.SpellCheckSuggestionsToolbar(
-            key: args(#key),
-            anchor: args(#anchor),
-            buttonItems: args(#buttonItems),
+            key: args('key'),
+            anchor: args('anchor'),
+            buttonItems: args('buttonItems'),
           ),
         );
 
   @Goto(_i1.SpellCheckSuggestionsToolbar.editableText)
-  SpellCheckSuggestionsToolbar.editableText(
-    $ $config, {
+  SpellCheckSuggestionsToolbar.editableText({
     _i2.Key? key,
     required _i3.EditableTextState editableTextState,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with editableTextState
+    Stream<_i3.EditableTextState>? $editableTextState,
   }) : super(
-          Argument({
-            #key: key,
-            #editableTextState: editableTextState,
-          }),
+          Argument(
+            {
+              'key': key,
+              'editableTextState': editableTextState,
+            },
+            stream: {
+              'key': $key,
+              'editableTextState': $editableTextState,
+            },
+          ),
           builder: (args) => _i1.SpellCheckSuggestionsToolbar.editableText(
-            key: args(#key),
-            editableTextState: args(#editableTextState),
+            key: args('key'),
+            editableTextState: args('editableTextState'),
           ),
         );
 }

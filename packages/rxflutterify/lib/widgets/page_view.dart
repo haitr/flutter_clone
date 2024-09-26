@@ -11,8 +11,7 @@ import '../wrapper.dart';
 
 final class PageView extends Wrapper {
   @Goto(_i1.PageView.new)
-  PageView(
-    $ $config, {
+  PageView({
     _i2.Key? key,
     _i3.Axis scrollDirection = _i3.Axis.horizontal,
     bool reverse = false,
@@ -27,44 +26,89 @@ final class PageView extends Wrapper {
     ui.Clip clipBehavior = ui.Clip.hardEdge,
     _i1.ScrollBehavior? scrollBehavior,
     bool padEnds = true,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with scrollDirection
+    Stream<_i3.Axis>? $scrollDirection,
+    // Associate with reverse
+    Stream<bool>? $reverse,
+    // Associate with controller
+    Stream<_i1.PageController?>? $controller,
+    // Associate with physics
+    Stream<_i1.ScrollPhysics?>? $physics,
+    // Associate with pageSnapping
+    Stream<bool>? $pageSnapping,
+    // Associate with onPageChanged
+    Stream<_i2.ValueChanged<int>?>? $onPageChanged,
+    // Associate with children
+    Stream<List<_i1.Widget>>? $children,
+    // Associate with dragStartBehavior
+    Stream<_i4.DragStartBehavior>? $dragStartBehavior,
+    // Associate with allowImplicitScrolling
+    Stream<bool>? $allowImplicitScrolling,
+    // Associate with restorationId
+    Stream<String?>? $restorationId,
+    // Associate with clipBehavior
+    Stream<ui.Clip>? $clipBehavior,
+    // Associate with scrollBehavior
+    Stream<_i1.ScrollBehavior?>? $scrollBehavior,
+    // Associate with padEnds
+    Stream<bool>? $padEnds,
   }) : super(
-          Argument({
-            #key: key,
-            #scrollDirection: scrollDirection,
-            #reverse: reverse,
-            #controller: controller,
-            #physics: physics,
-            #pageSnapping: pageSnapping,
-            #onPageChanged: onPageChanged,
-            #children: children,
-            #dragStartBehavior: dragStartBehavior,
-            #allowImplicitScrolling: allowImplicitScrolling,
-            #restorationId: restorationId,
-            #clipBehavior: clipBehavior,
-            #scrollBehavior: scrollBehavior,
-            #padEnds: padEnds,
-          }),
+          Argument(
+            {
+              'key': key,
+              'scrollDirection': scrollDirection,
+              'reverse': reverse,
+              'controller': controller,
+              'physics': physics,
+              'pageSnapping': pageSnapping,
+              'onPageChanged': onPageChanged,
+              'children': children,
+              'dragStartBehavior': dragStartBehavior,
+              'allowImplicitScrolling': allowImplicitScrolling,
+              'restorationId': restorationId,
+              'clipBehavior': clipBehavior,
+              'scrollBehavior': scrollBehavior,
+              'padEnds': padEnds,
+            },
+            stream: {
+              'key': $key,
+              'scrollDirection': $scrollDirection,
+              'reverse': $reverse,
+              'controller': $controller,
+              'physics': $physics,
+              'pageSnapping': $pageSnapping,
+              'onPageChanged': $onPageChanged,
+              'children': $children,
+              'dragStartBehavior': $dragStartBehavior,
+              'allowImplicitScrolling': $allowImplicitScrolling,
+              'restorationId': $restorationId,
+              'clipBehavior': $clipBehavior,
+              'scrollBehavior': $scrollBehavior,
+              'padEnds': $padEnds,
+            },
+          ),
           builder: (args) => _i1.PageView(
-            key: args(#key),
-            scrollDirection: args(#scrollDirection),
-            reverse: args(#reverse),
-            controller: args(#controller),
-            physics: args(#physics),
-            pageSnapping: args(#pageSnapping),
-            onPageChanged: args(#onPageChanged),
-            children: args(#children),
-            dragStartBehavior: args(#dragStartBehavior),
-            allowImplicitScrolling: args(#allowImplicitScrolling),
-            restorationId: args(#restorationId),
-            clipBehavior: args(#clipBehavior),
-            scrollBehavior: args(#scrollBehavior),
-            padEnds: args(#padEnds),
+            key: args('key'),
+            scrollDirection: args('scrollDirection'),
+            reverse: args('reverse'),
+            controller: args('controller'),
+            physics: args('physics'),
+            pageSnapping: args('pageSnapping'),
+            onPageChanged: args('onPageChanged'),
+            children: args('children'),
+            dragStartBehavior: args('dragStartBehavior'),
+            allowImplicitScrolling: args('allowImplicitScrolling'),
+            restorationId: args('restorationId'),
+            clipBehavior: args('clipBehavior'),
+            scrollBehavior: args('scrollBehavior'),
+            padEnds: args('padEnds'),
           ),
         );
 
   @Goto(_i1.PageView.builder)
-  PageView.builder(
-    $ $config, {
+  PageView.builder({
     _i2.Key? key,
     _i3.Axis scrollDirection = _i3.Axis.horizontal,
     bool reverse = false,
@@ -81,48 +125,99 @@ final class PageView extends Wrapper {
     ui.Clip clipBehavior = ui.Clip.hardEdge,
     _i1.ScrollBehavior? scrollBehavior,
     bool padEnds = true,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with scrollDirection
+    Stream<_i3.Axis>? $scrollDirection,
+    // Associate with reverse
+    Stream<bool>? $reverse,
+    // Associate with controller
+    Stream<_i1.PageController?>? $controller,
+    // Associate with physics
+    Stream<_i1.ScrollPhysics?>? $physics,
+    // Associate with pageSnapping
+    Stream<bool>? $pageSnapping,
+    // Associate with onPageChanged
+    Stream<_i2.ValueChanged<int>?>? $onPageChanged,
+    // Associate with itemBuilder
+    Stream<_i1.NullableIndexedWidgetBuilder>? $itemBuilder,
+    // Associate with findChildIndexCallback
+    Stream<_i1.ChildIndexGetter?>? $findChildIndexCallback,
+    // Associate with itemCount
+    Stream<int?>? $itemCount,
+    // Associate with dragStartBehavior
+    Stream<_i4.DragStartBehavior>? $dragStartBehavior,
+    // Associate with allowImplicitScrolling
+    Stream<bool>? $allowImplicitScrolling,
+    // Associate with restorationId
+    Stream<String?>? $restorationId,
+    // Associate with clipBehavior
+    Stream<ui.Clip>? $clipBehavior,
+    // Associate with scrollBehavior
+    Stream<_i1.ScrollBehavior?>? $scrollBehavior,
+    // Associate with padEnds
+    Stream<bool>? $padEnds,
   }) : super(
-          Argument({
-            #key: key,
-            #scrollDirection: scrollDirection,
-            #reverse: reverse,
-            #controller: controller,
-            #physics: physics,
-            #pageSnapping: pageSnapping,
-            #onPageChanged: onPageChanged,
-            #itemBuilder: itemBuilder,
-            #findChildIndexCallback: findChildIndexCallback,
-            #itemCount: itemCount,
-            #dragStartBehavior: dragStartBehavior,
-            #allowImplicitScrolling: allowImplicitScrolling,
-            #restorationId: restorationId,
-            #clipBehavior: clipBehavior,
-            #scrollBehavior: scrollBehavior,
-            #padEnds: padEnds,
-          }),
+          Argument(
+            {
+              'key': key,
+              'scrollDirection': scrollDirection,
+              'reverse': reverse,
+              'controller': controller,
+              'physics': physics,
+              'pageSnapping': pageSnapping,
+              'onPageChanged': onPageChanged,
+              'itemBuilder': itemBuilder,
+              'findChildIndexCallback': findChildIndexCallback,
+              'itemCount': itemCount,
+              'dragStartBehavior': dragStartBehavior,
+              'allowImplicitScrolling': allowImplicitScrolling,
+              'restorationId': restorationId,
+              'clipBehavior': clipBehavior,
+              'scrollBehavior': scrollBehavior,
+              'padEnds': padEnds,
+            },
+            stream: {
+              'key': $key,
+              'scrollDirection': $scrollDirection,
+              'reverse': $reverse,
+              'controller': $controller,
+              'physics': $physics,
+              'pageSnapping': $pageSnapping,
+              'onPageChanged': $onPageChanged,
+              'itemBuilder': $itemBuilder,
+              'findChildIndexCallback': $findChildIndexCallback,
+              'itemCount': $itemCount,
+              'dragStartBehavior': $dragStartBehavior,
+              'allowImplicitScrolling': $allowImplicitScrolling,
+              'restorationId': $restorationId,
+              'clipBehavior': $clipBehavior,
+              'scrollBehavior': $scrollBehavior,
+              'padEnds': $padEnds,
+            },
+          ),
           builder: (args) => _i1.PageView.builder(
-            key: args(#key),
-            scrollDirection: args(#scrollDirection),
-            reverse: args(#reverse),
-            controller: args(#controller),
-            physics: args(#physics),
-            pageSnapping: args(#pageSnapping),
-            onPageChanged: args(#onPageChanged),
-            itemBuilder: args(#itemBuilder),
-            findChildIndexCallback: args(#findChildIndexCallback),
-            itemCount: args(#itemCount),
-            dragStartBehavior: args(#dragStartBehavior),
-            allowImplicitScrolling: args(#allowImplicitScrolling),
-            restorationId: args(#restorationId),
-            clipBehavior: args(#clipBehavior),
-            scrollBehavior: args(#scrollBehavior),
-            padEnds: args(#padEnds),
+            key: args('key'),
+            scrollDirection: args('scrollDirection'),
+            reverse: args('reverse'),
+            controller: args('controller'),
+            physics: args('physics'),
+            pageSnapping: args('pageSnapping'),
+            onPageChanged: args('onPageChanged'),
+            itemBuilder: args('itemBuilder'),
+            findChildIndexCallback: args('findChildIndexCallback'),
+            itemCount: args('itemCount'),
+            dragStartBehavior: args('dragStartBehavior'),
+            allowImplicitScrolling: args('allowImplicitScrolling'),
+            restorationId: args('restorationId'),
+            clipBehavior: args('clipBehavior'),
+            scrollBehavior: args('scrollBehavior'),
+            padEnds: args('padEnds'),
           ),
         );
 
   @Goto(_i1.PageView.custom)
-  PageView.custom(
-    $ $config, {
+  PageView.custom({
     _i2.Key? key,
     _i3.Axis scrollDirection = _i3.Axis.horizontal,
     bool reverse = false,
@@ -137,38 +232,84 @@ final class PageView extends Wrapper {
     ui.Clip clipBehavior = ui.Clip.hardEdge,
     _i1.ScrollBehavior? scrollBehavior,
     bool padEnds = true,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with scrollDirection
+    Stream<_i3.Axis>? $scrollDirection,
+    // Associate with reverse
+    Stream<bool>? $reverse,
+    // Associate with controller
+    Stream<_i1.PageController?>? $controller,
+    // Associate with physics
+    Stream<_i1.ScrollPhysics?>? $physics,
+    // Associate with pageSnapping
+    Stream<bool>? $pageSnapping,
+    // Associate with onPageChanged
+    Stream<_i2.ValueChanged<int>?>? $onPageChanged,
+    // Associate with childrenDelegate
+    Stream<_i1.SliverChildDelegate>? $childrenDelegate,
+    // Associate with dragStartBehavior
+    Stream<_i4.DragStartBehavior>? $dragStartBehavior,
+    // Associate with allowImplicitScrolling
+    Stream<bool>? $allowImplicitScrolling,
+    // Associate with restorationId
+    Stream<String?>? $restorationId,
+    // Associate with clipBehavior
+    Stream<ui.Clip>? $clipBehavior,
+    // Associate with scrollBehavior
+    Stream<_i1.ScrollBehavior?>? $scrollBehavior,
+    // Associate with padEnds
+    Stream<bool>? $padEnds,
   }) : super(
-          Argument({
-            #key: key,
-            #scrollDirection: scrollDirection,
-            #reverse: reverse,
-            #controller: controller,
-            #physics: physics,
-            #pageSnapping: pageSnapping,
-            #onPageChanged: onPageChanged,
-            #childrenDelegate: childrenDelegate,
-            #dragStartBehavior: dragStartBehavior,
-            #allowImplicitScrolling: allowImplicitScrolling,
-            #restorationId: restorationId,
-            #clipBehavior: clipBehavior,
-            #scrollBehavior: scrollBehavior,
-            #padEnds: padEnds,
-          }),
+          Argument(
+            {
+              'key': key,
+              'scrollDirection': scrollDirection,
+              'reverse': reverse,
+              'controller': controller,
+              'physics': physics,
+              'pageSnapping': pageSnapping,
+              'onPageChanged': onPageChanged,
+              'childrenDelegate': childrenDelegate,
+              'dragStartBehavior': dragStartBehavior,
+              'allowImplicitScrolling': allowImplicitScrolling,
+              'restorationId': restorationId,
+              'clipBehavior': clipBehavior,
+              'scrollBehavior': scrollBehavior,
+              'padEnds': padEnds,
+            },
+            stream: {
+              'key': $key,
+              'scrollDirection': $scrollDirection,
+              'reverse': $reverse,
+              'controller': $controller,
+              'physics': $physics,
+              'pageSnapping': $pageSnapping,
+              'onPageChanged': $onPageChanged,
+              'childrenDelegate': $childrenDelegate,
+              'dragStartBehavior': $dragStartBehavior,
+              'allowImplicitScrolling': $allowImplicitScrolling,
+              'restorationId': $restorationId,
+              'clipBehavior': $clipBehavior,
+              'scrollBehavior': $scrollBehavior,
+              'padEnds': $padEnds,
+            },
+          ),
           builder: (args) => _i1.PageView.custom(
-            key: args(#key),
-            scrollDirection: args(#scrollDirection),
-            reverse: args(#reverse),
-            controller: args(#controller),
-            physics: args(#physics),
-            pageSnapping: args(#pageSnapping),
-            onPageChanged: args(#onPageChanged),
-            childrenDelegate: args(#childrenDelegate),
-            dragStartBehavior: args(#dragStartBehavior),
-            allowImplicitScrolling: args(#allowImplicitScrolling),
-            restorationId: args(#restorationId),
-            clipBehavior: args(#clipBehavior),
-            scrollBehavior: args(#scrollBehavior),
-            padEnds: args(#padEnds),
+            key: args('key'),
+            scrollDirection: args('scrollDirection'),
+            reverse: args('reverse'),
+            controller: args('controller'),
+            physics: args('physics'),
+            pageSnapping: args('pageSnapping'),
+            onPageChanged: args('onPageChanged'),
+            childrenDelegate: args('childrenDelegate'),
+            dragStartBehavior: args('dragStartBehavior'),
+            allowImplicitScrolling: args('allowImplicitScrolling'),
+            restorationId: args('restorationId'),
+            clipBehavior: args('clipBehavior'),
+            scrollBehavior: args('scrollBehavior'),
+            padEnds: args('padEnds'),
           ),
         );
 }

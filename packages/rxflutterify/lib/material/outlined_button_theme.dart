@@ -8,21 +8,33 @@ import '../wrapper.dart';
 
 final class OutlinedButtonTheme extends Wrapper {
   @Goto(_i1.OutlinedButtonTheme.new)
-  OutlinedButtonTheme(
-    $ $config, {
+  OutlinedButtonTheme({
     _i2.Key? key,
     required _i1.OutlinedButtonThemeData data,
     required _i3.Widget child,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with data
+    Stream<_i1.OutlinedButtonThemeData>? $data,
+    // Associate with child
+    Stream<_i3.Widget>? $child,
   }) : super(
-          Argument({
-            #key: key,
-            #data: data,
-            #child: child,
-          }),
+          Argument(
+            {
+              'key': key,
+              'data': data,
+              'child': child,
+            },
+            stream: {
+              'key': $key,
+              'data': $data,
+              'child': $child,
+            },
+          ),
           builder: (args) => _i1.OutlinedButtonTheme(
-            key: args(#key),
-            data: args(#data),
-            child: args(#child),
+            key: args('key'),
+            data: args('data'),
+            child: args('child'),
           ),
         );
 }

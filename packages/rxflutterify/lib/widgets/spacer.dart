@@ -7,18 +7,27 @@ import '../wrapper.dart';
 
 final class Spacer extends Wrapper {
   @Goto(_i1.Spacer.new)
-  Spacer(
-    $ $config, {
+  Spacer({
     _i2.Key? key,
     int flex = 1,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with flex
+    Stream<int>? $flex,
   }) : super(
-          Argument({
-            #key: key,
-            #flex: flex,
-          }),
+          Argument(
+            {
+              'key': key,
+              'flex': flex,
+            },
+            stream: {
+              'key': $key,
+              'flex': $flex,
+            },
+          ),
           builder: (args) => _i1.Spacer(
-            key: args(#key),
-            flex: args(#flex),
+            key: args('key'),
+            flex: args('flex'),
           ),
         );
 }

@@ -11,8 +11,7 @@ import '../wrapper.dart';
 
 final class Dismissible extends Wrapper {
   @Goto(_i1.Dismissible.new)
-  Dismissible(
-    $ $config, {
+  Dismissible({
     required _i2.Key key,
     required _i1.Widget child,
     _i1.Widget? background,
@@ -28,40 +27,89 @@ final class Dismissible extends Wrapper {
     double crossAxisEndOffset = 0.0,
     _i3.DragStartBehavior dragStartBehavior = _i3.DragStartBehavior.start,
     _i4.HitTestBehavior behavior = _i4.HitTestBehavior.opaque,
+    // Associate with key
+    Stream<_i2.Key>? $key,
+    // Associate with child
+    Stream<_i1.Widget>? $child,
+    // Associate with background
+    Stream<_i1.Widget?>? $background,
+    // Associate with secondaryBackground
+    Stream<_i1.Widget?>? $secondaryBackground,
+    // Associate with confirmDismiss
+    Stream<_i1.ConfirmDismissCallback?>? $confirmDismiss,
+    // Associate with onResize
+    Stream<ui.VoidCallback?>? $onResize,
+    // Associate with onUpdate
+    Stream<_i1.DismissUpdateCallback?>? $onUpdate,
+    // Associate with onDismissed
+    Stream<_i1.DismissDirectionCallback?>? $onDismissed,
+    // Associate with direction
+    Stream<_i1.DismissDirection>? $direction,
+    // Associate with resizeDuration
+    Stream<Duration?>? $resizeDuration,
+    // Associate with dismissThresholds
+    Stream<Map<_i1.DismissDirection, double>>? $dismissThresholds,
+    // Associate with movementDuration
+    Stream<Duration>? $movementDuration,
+    // Associate with crossAxisEndOffset
+    Stream<double>? $crossAxisEndOffset,
+    // Associate with dragStartBehavior
+    Stream<_i3.DragStartBehavior>? $dragStartBehavior,
+    // Associate with behavior
+    Stream<_i4.HitTestBehavior>? $behavior,
   }) : super(
-          Argument({
-            #key: key,
-            #child: child,
-            #background: background,
-            #secondaryBackground: secondaryBackground,
-            #confirmDismiss: confirmDismiss,
-            #onResize: onResize,
-            #onUpdate: onUpdate,
-            #onDismissed: onDismissed,
-            #direction: direction,
-            #resizeDuration: resizeDuration,
-            #dismissThresholds: dismissThresholds,
-            #movementDuration: movementDuration,
-            #crossAxisEndOffset: crossAxisEndOffset,
-            #dragStartBehavior: dragStartBehavior,
-            #behavior: behavior,
-          }),
+          Argument(
+            {
+              'key': key,
+              'child': child,
+              'background': background,
+              'secondaryBackground': secondaryBackground,
+              'confirmDismiss': confirmDismiss,
+              'onResize': onResize,
+              'onUpdate': onUpdate,
+              'onDismissed': onDismissed,
+              'direction': direction,
+              'resizeDuration': resizeDuration,
+              'dismissThresholds': dismissThresholds,
+              'movementDuration': movementDuration,
+              'crossAxisEndOffset': crossAxisEndOffset,
+              'dragStartBehavior': dragStartBehavior,
+              'behavior': behavior,
+            },
+            stream: {
+              'key': $key,
+              'child': $child,
+              'background': $background,
+              'secondaryBackground': $secondaryBackground,
+              'confirmDismiss': $confirmDismiss,
+              'onResize': $onResize,
+              'onUpdate': $onUpdate,
+              'onDismissed': $onDismissed,
+              'direction': $direction,
+              'resizeDuration': $resizeDuration,
+              'dismissThresholds': $dismissThresholds,
+              'movementDuration': $movementDuration,
+              'crossAxisEndOffset': $crossAxisEndOffset,
+              'dragStartBehavior': $dragStartBehavior,
+              'behavior': $behavior,
+            },
+          ),
           builder: (args) => _i1.Dismissible(
-            key: args(#key),
-            child: args(#child),
-            background: args(#background),
-            secondaryBackground: args(#secondaryBackground),
-            confirmDismiss: args(#confirmDismiss),
-            onResize: args(#onResize),
-            onUpdate: args(#onUpdate),
-            onDismissed: args(#onDismissed),
-            direction: args(#direction),
-            resizeDuration: args(#resizeDuration),
-            dismissThresholds: args(#dismissThresholds),
-            movementDuration: args(#movementDuration),
-            crossAxisEndOffset: args(#crossAxisEndOffset),
-            dragStartBehavior: args(#dragStartBehavior),
-            behavior: args(#behavior),
+            key: args('key'),
+            child: args('child'),
+            background: args('background'),
+            secondaryBackground: args('secondaryBackground'),
+            confirmDismiss: args('confirmDismiss'),
+            onResize: args('onResize'),
+            onUpdate: args('onUpdate'),
+            onDismissed: args('onDismissed'),
+            direction: args('direction'),
+            resizeDuration: args('resizeDuration'),
+            dismissThresholds: args('dismissThresholds'),
+            movementDuration: args('movementDuration'),
+            crossAxisEndOffset: args('crossAxisEndOffset'),
+            dragStartBehavior: args('dragStartBehavior'),
+            behavior: args('behavior'),
           ),
         );
 }

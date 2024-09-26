@@ -10,21 +10,33 @@ import '../wrapper.dart';
 
 final class DefaultTextHeightBehavior extends Wrapper {
   @Goto(_i1.DefaultTextHeightBehavior.new)
-  DefaultTextHeightBehavior(
-    $ $config, {
+  DefaultTextHeightBehavior({
     _i2.Key? key,
     required ui.TextHeightBehavior textHeightBehavior,
     required _i1.Widget child,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with textHeightBehavior
+    Stream<ui.TextHeightBehavior>? $textHeightBehavior,
+    // Associate with child
+    Stream<_i1.Widget>? $child,
   }) : super(
-          Argument({
-            #key: key,
-            #textHeightBehavior: textHeightBehavior,
-            #child: child,
-          }),
+          Argument(
+            {
+              'key': key,
+              'textHeightBehavior': textHeightBehavior,
+              'child': child,
+            },
+            stream: {
+              'key': $key,
+              'textHeightBehavior': $textHeightBehavior,
+              'child': $child,
+            },
+          ),
           builder: (args) => _i1.DefaultTextHeightBehavior(
-            key: args(#key),
-            textHeightBehavior: args(#textHeightBehavior),
-            child: args(#child),
+            key: args('key'),
+            textHeightBehavior: args('textHeightBehavior'),
+            child: args('child'),
           ),
         );
 }
@@ -32,7 +44,6 @@ final class DefaultTextHeightBehavior extends Wrapper {
 final class Text extends Wrapper {
   @Goto(_i1.Text.new)
   Text(
-    $ $config,
     String data, {
     _i2.Key? key,
     _i3.TextStyle? style,
@@ -49,48 +60,99 @@ final class Text extends Wrapper {
     _i3.TextWidthBasis? textWidthBasis,
     ui.TextHeightBehavior? textHeightBehavior,
     ui.Color? selectionColor,
+    // Associate with data
+    Stream<String>? $data,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with style
+    Stream<_i3.TextStyle?>? $style,
+    // Associate with strutStyle
+    Stream<_i3.StrutStyle?>? $strutStyle,
+    // Associate with textAlign
+    Stream<ui.TextAlign?>? $textAlign,
+    // Associate with textDirection
+    Stream<ui.TextDirection?>? $textDirection,
+    // Associate with locale
+    Stream<ui.Locale?>? $locale,
+    // Associate with softWrap
+    Stream<bool?>? $softWrap,
+    // Associate with overflow
+    Stream<_i3.TextOverflow?>? $overflow,
+    // Associate with textScaleFactor
+    Stream<double?>? $textScaleFactor,
+    // Associate with textScaler
+    Stream<_i3.TextScaler?>? $textScaler,
+    // Associate with maxLines
+    Stream<int?>? $maxLines,
+    // Associate with semanticsLabel
+    Stream<String?>? $semanticsLabel,
+    // Associate with textWidthBasis
+    Stream<_i3.TextWidthBasis?>? $textWidthBasis,
+    // Associate with textHeightBehavior
+    Stream<ui.TextHeightBehavior?>? $textHeightBehavior,
+    // Associate with selectionColor
+    Stream<ui.Color?>? $selectionColor,
   }) : super(
-          Argument({
-            #data: data,
-            #key: key,
-            #style: style,
-            #strutStyle: strutStyle,
-            #textAlign: textAlign,
-            #textDirection: textDirection,
-            #locale: locale,
-            #softWrap: softWrap,
-            #overflow: overflow,
-            #textScaleFactor: textScaleFactor,
-            #textScaler: textScaler,
-            #maxLines: maxLines,
-            #semanticsLabel: semanticsLabel,
-            #textWidthBasis: textWidthBasis,
-            #textHeightBehavior: textHeightBehavior,
-            #selectionColor: selectionColor,
-          }),
+          Argument(
+            {
+              'data': data,
+              'key': key,
+              'style': style,
+              'strutStyle': strutStyle,
+              'textAlign': textAlign,
+              'textDirection': textDirection,
+              'locale': locale,
+              'softWrap': softWrap,
+              'overflow': overflow,
+              'textScaleFactor': textScaleFactor,
+              'textScaler': textScaler,
+              'maxLines': maxLines,
+              'semanticsLabel': semanticsLabel,
+              'textWidthBasis': textWidthBasis,
+              'textHeightBehavior': textHeightBehavior,
+              'selectionColor': selectionColor,
+            },
+            stream: {
+              'data': $data,
+              'key': $key,
+              'style': $style,
+              'strutStyle': $strutStyle,
+              'textAlign': $textAlign,
+              'textDirection': $textDirection,
+              'locale': $locale,
+              'softWrap': $softWrap,
+              'overflow': $overflow,
+              'textScaleFactor': $textScaleFactor,
+              'textScaler': $textScaler,
+              'maxLines': $maxLines,
+              'semanticsLabel': $semanticsLabel,
+              'textWidthBasis': $textWidthBasis,
+              'textHeightBehavior': $textHeightBehavior,
+              'selectionColor': $selectionColor,
+            },
+          ),
           builder: (args) => _i1.Text(
-            args(#data),
-            key: args(#key),
-            style: args(#style),
-            strutStyle: args(#strutStyle),
-            textAlign: args(#textAlign),
-            textDirection: args(#textDirection),
-            locale: args(#locale),
-            softWrap: args(#softWrap),
-            overflow: args(#overflow),
-            textScaleFactor: args(#textScaleFactor),
-            textScaler: args(#textScaler),
-            maxLines: args(#maxLines),
-            semanticsLabel: args(#semanticsLabel),
-            textWidthBasis: args(#textWidthBasis),
-            textHeightBehavior: args(#textHeightBehavior),
-            selectionColor: args(#selectionColor),
+            args('data'),
+            key: args('key'),
+            style: args('style'),
+            strutStyle: args('strutStyle'),
+            textAlign: args('textAlign'),
+            textDirection: args('textDirection'),
+            locale: args('locale'),
+            softWrap: args('softWrap'),
+            overflow: args('overflow'),
+            textScaleFactor: args('textScaleFactor'),
+            textScaler: args('textScaler'),
+            maxLines: args('maxLines'),
+            semanticsLabel: args('semanticsLabel'),
+            textWidthBasis: args('textWidthBasis'),
+            textHeightBehavior: args('textHeightBehavior'),
+            selectionColor: args('selectionColor'),
           ),
         );
 
   @Goto(_i1.Text.rich)
   Text.rich(
-    $ $config,
     _i3.InlineSpan textSpan, {
     _i2.Key? key,
     _i3.TextStyle? style,
@@ -107,50 +169,101 @@ final class Text extends Wrapper {
     _i3.TextWidthBasis? textWidthBasis,
     ui.TextHeightBehavior? textHeightBehavior,
     ui.Color? selectionColor,
+    // Associate with textSpan
+    Stream<_i3.InlineSpan>? $textSpan,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with style
+    Stream<_i3.TextStyle?>? $style,
+    // Associate with strutStyle
+    Stream<_i3.StrutStyle?>? $strutStyle,
+    // Associate with textAlign
+    Stream<ui.TextAlign?>? $textAlign,
+    // Associate with textDirection
+    Stream<ui.TextDirection?>? $textDirection,
+    // Associate with locale
+    Stream<ui.Locale?>? $locale,
+    // Associate with softWrap
+    Stream<bool?>? $softWrap,
+    // Associate with overflow
+    Stream<_i3.TextOverflow?>? $overflow,
+    // Associate with textScaleFactor
+    Stream<double?>? $textScaleFactor,
+    // Associate with textScaler
+    Stream<_i3.TextScaler?>? $textScaler,
+    // Associate with maxLines
+    Stream<int?>? $maxLines,
+    // Associate with semanticsLabel
+    Stream<String?>? $semanticsLabel,
+    // Associate with textWidthBasis
+    Stream<_i3.TextWidthBasis?>? $textWidthBasis,
+    // Associate with textHeightBehavior
+    Stream<ui.TextHeightBehavior?>? $textHeightBehavior,
+    // Associate with selectionColor
+    Stream<ui.Color?>? $selectionColor,
   }) : super(
-          Argument({
-            #textSpan: textSpan,
-            #key: key,
-            #style: style,
-            #strutStyle: strutStyle,
-            #textAlign: textAlign,
-            #textDirection: textDirection,
-            #locale: locale,
-            #softWrap: softWrap,
-            #overflow: overflow,
-            #textScaleFactor: textScaleFactor,
-            #textScaler: textScaler,
-            #maxLines: maxLines,
-            #semanticsLabel: semanticsLabel,
-            #textWidthBasis: textWidthBasis,
-            #textHeightBehavior: textHeightBehavior,
-            #selectionColor: selectionColor,
-          }),
+          Argument(
+            {
+              'textSpan': textSpan,
+              'key': key,
+              'style': style,
+              'strutStyle': strutStyle,
+              'textAlign': textAlign,
+              'textDirection': textDirection,
+              'locale': locale,
+              'softWrap': softWrap,
+              'overflow': overflow,
+              'textScaleFactor': textScaleFactor,
+              'textScaler': textScaler,
+              'maxLines': maxLines,
+              'semanticsLabel': semanticsLabel,
+              'textWidthBasis': textWidthBasis,
+              'textHeightBehavior': textHeightBehavior,
+              'selectionColor': selectionColor,
+            },
+            stream: {
+              'textSpan': $textSpan,
+              'key': $key,
+              'style': $style,
+              'strutStyle': $strutStyle,
+              'textAlign': $textAlign,
+              'textDirection': $textDirection,
+              'locale': $locale,
+              'softWrap': $softWrap,
+              'overflow': $overflow,
+              'textScaleFactor': $textScaleFactor,
+              'textScaler': $textScaler,
+              'maxLines': $maxLines,
+              'semanticsLabel': $semanticsLabel,
+              'textWidthBasis': $textWidthBasis,
+              'textHeightBehavior': $textHeightBehavior,
+              'selectionColor': $selectionColor,
+            },
+          ),
           builder: (args) => _i1.Text.rich(
-            args(#textSpan),
-            key: args(#key),
-            style: args(#style),
-            strutStyle: args(#strutStyle),
-            textAlign: args(#textAlign),
-            textDirection: args(#textDirection),
-            locale: args(#locale),
-            softWrap: args(#softWrap),
-            overflow: args(#overflow),
-            textScaleFactor: args(#textScaleFactor),
-            textScaler: args(#textScaler),
-            maxLines: args(#maxLines),
-            semanticsLabel: args(#semanticsLabel),
-            textWidthBasis: args(#textWidthBasis),
-            textHeightBehavior: args(#textHeightBehavior),
-            selectionColor: args(#selectionColor),
+            args('textSpan'),
+            key: args('key'),
+            style: args('style'),
+            strutStyle: args('strutStyle'),
+            textAlign: args('textAlign'),
+            textDirection: args('textDirection'),
+            locale: args('locale'),
+            softWrap: args('softWrap'),
+            overflow: args('overflow'),
+            textScaleFactor: args('textScaleFactor'),
+            textScaler: args('textScaler'),
+            maxLines: args('maxLines'),
+            semanticsLabel: args('semanticsLabel'),
+            textWidthBasis: args('textWidthBasis'),
+            textHeightBehavior: args('textHeightBehavior'),
+            selectionColor: args('selectionColor'),
           ),
         );
 }
 
 final class DefaultTextStyle extends Wrapper {
   @Goto(_i1.DefaultTextStyle.new)
-  DefaultTextStyle(
-    $ $config, {
+  DefaultTextStyle({
     _i2.Key? key,
     required _i3.TextStyle style,
     ui.TextAlign? textAlign,
@@ -160,37 +273,72 @@ final class DefaultTextStyle extends Wrapper {
     _i3.TextWidthBasis textWidthBasis = _i3.TextWidthBasis.parent,
     ui.TextHeightBehavior? textHeightBehavior,
     required _i1.Widget child,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with style
+    Stream<_i3.TextStyle>? $style,
+    // Associate with textAlign
+    Stream<ui.TextAlign?>? $textAlign,
+    // Associate with softWrap
+    Stream<bool>? $softWrap,
+    // Associate with overflow
+    Stream<_i3.TextOverflow>? $overflow,
+    // Associate with maxLines
+    Stream<int?>? $maxLines,
+    // Associate with textWidthBasis
+    Stream<_i3.TextWidthBasis>? $textWidthBasis,
+    // Associate with textHeightBehavior
+    Stream<ui.TextHeightBehavior?>? $textHeightBehavior,
+    // Associate with child
+    Stream<_i1.Widget>? $child,
   }) : super(
-          Argument({
-            #key: key,
-            #style: style,
-            #textAlign: textAlign,
-            #softWrap: softWrap,
-            #overflow: overflow,
-            #maxLines: maxLines,
-            #textWidthBasis: textWidthBasis,
-            #textHeightBehavior: textHeightBehavior,
-            #child: child,
-          }),
+          Argument(
+            {
+              'key': key,
+              'style': style,
+              'textAlign': textAlign,
+              'softWrap': softWrap,
+              'overflow': overflow,
+              'maxLines': maxLines,
+              'textWidthBasis': textWidthBasis,
+              'textHeightBehavior': textHeightBehavior,
+              'child': child,
+            },
+            stream: {
+              'key': $key,
+              'style': $style,
+              'textAlign': $textAlign,
+              'softWrap': $softWrap,
+              'overflow': $overflow,
+              'maxLines': $maxLines,
+              'textWidthBasis': $textWidthBasis,
+              'textHeightBehavior': $textHeightBehavior,
+              'child': $child,
+            },
+          ),
           builder: (args) => _i1.DefaultTextStyle(
-            key: args(#key),
-            style: args(#style),
-            textAlign: args(#textAlign),
-            softWrap: args(#softWrap),
-            overflow: args(#overflow),
-            maxLines: args(#maxLines),
-            textWidthBasis: args(#textWidthBasis),
-            textHeightBehavior: args(#textHeightBehavior),
-            child: args(#child),
+            key: args('key'),
+            style: args('style'),
+            textAlign: args('textAlign'),
+            softWrap: args('softWrap'),
+            overflow: args('overflow'),
+            maxLines: args('maxLines'),
+            textWidthBasis: args('textWidthBasis'),
+            textHeightBehavior: args('textHeightBehavior'),
+            child: args('child'),
           ),
         );
 
   @Goto(_i1.DefaultTextStyle.fallback)
-  DefaultTextStyle.fallback(
-    $ $config, {
+  DefaultTextStyle.fallback({
     _i2.Key? key,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
   }) : super(
-          Argument({#key: key}),
-          builder: (args) => _i1.DefaultTextStyle.fallback(key: args(#key)),
+          Argument(
+            {'key': key},
+            stream: {'key': $key},
+          ),
+          builder: (args) => _i1.DefaultTextStyle.fallback(key: args('key')),
         );
 }

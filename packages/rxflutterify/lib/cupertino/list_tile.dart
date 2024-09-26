@@ -12,19 +12,22 @@ import '../wrapper.dart';
 
 final class CupertinoListTileChevron extends Wrapper {
   @Goto(_i1.CupertinoListTileChevron.new)
-  CupertinoListTileChevron(
-    $ $config, {
+  CupertinoListTileChevron({
     _i2.Key? key,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
   }) : super(
-          Argument({#key: key}),
-          builder: (args) => _i1.CupertinoListTileChevron(key: args(#key)),
+          Argument(
+            {'key': key},
+            stream: {'key': $key},
+          ),
+          builder: (args) => _i1.CupertinoListTileChevron(key: args('key')),
         );
 }
 
 final class CupertinoListTile extends Wrapper {
   @Goto(_i1.CupertinoListTile.new)
-  CupertinoListTile(
-    $ $config, {
+  CupertinoListTile({
     _i2.Key? key,
     required _i3.Widget title,
     _i3.Widget? subtitle,
@@ -37,40 +40,79 @@ final class CupertinoListTile extends Wrapper {
     _i4.EdgeInsetsGeometry? padding,
     double leadingSize = _kLeadingSize,
     double leadingToTitle = _kLeadingToTitle,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with title
+    Stream<_i3.Widget>? $title,
+    // Associate with subtitle
+    Stream<_i3.Widget?>? $subtitle,
+    // Associate with additionalInfo
+    Stream<_i3.Widget?>? $additionalInfo,
+    // Associate with leading
+    Stream<_i3.Widget?>? $leading,
+    // Associate with trailing
+    Stream<_i3.Widget?>? $trailing,
+    // Associate with onTap
+    Stream<FutureOr<void> Function()?>? $onTap,
+    // Associate with backgroundColor
+    Stream<ui.Color?>? $backgroundColor,
+    // Associate with backgroundColorActivated
+    Stream<ui.Color?>? $backgroundColorActivated,
+    // Associate with padding
+    Stream<_i4.EdgeInsetsGeometry?>? $padding,
+    // Associate with leadingSize
+    Stream<double>? $leadingSize,
+    // Associate with leadingToTitle
+    Stream<double>? $leadingToTitle,
   }) : super(
-          Argument({
-            #key: key,
-            #title: title,
-            #subtitle: subtitle,
-            #additionalInfo: additionalInfo,
-            #leading: leading,
-            #trailing: trailing,
-            #onTap: onTap,
-            #backgroundColor: backgroundColor,
-            #backgroundColorActivated: backgroundColorActivated,
-            #padding: padding,
-            #leadingSize: leadingSize,
-            #leadingToTitle: leadingToTitle,
-          }),
+          Argument(
+            {
+              'key': key,
+              'title': title,
+              'subtitle': subtitle,
+              'additionalInfo': additionalInfo,
+              'leading': leading,
+              'trailing': trailing,
+              'onTap': onTap,
+              'backgroundColor': backgroundColor,
+              'backgroundColorActivated': backgroundColorActivated,
+              'padding': padding,
+              'leadingSize': leadingSize,
+              'leadingToTitle': leadingToTitle,
+            },
+            stream: {
+              'key': $key,
+              'title': $title,
+              'subtitle': $subtitle,
+              'additionalInfo': $additionalInfo,
+              'leading': $leading,
+              'trailing': $trailing,
+              'onTap': $onTap,
+              'backgroundColor': $backgroundColor,
+              'backgroundColorActivated': $backgroundColorActivated,
+              'padding': $padding,
+              'leadingSize': $leadingSize,
+              'leadingToTitle': $leadingToTitle,
+            },
+          ),
           builder: (args) => _i1.CupertinoListTile(
-            key: args(#key),
-            title: args(#title),
-            subtitle: args(#subtitle),
-            additionalInfo: args(#additionalInfo),
-            leading: args(#leading),
-            trailing: args(#trailing),
-            onTap: args(#onTap),
-            backgroundColor: args(#backgroundColor),
-            backgroundColorActivated: args(#backgroundColorActivated),
-            padding: args(#padding),
-            leadingSize: args(#leadingSize),
-            leadingToTitle: args(#leadingToTitle),
+            key: args('key'),
+            title: args('title'),
+            subtitle: args('subtitle'),
+            additionalInfo: args('additionalInfo'),
+            leading: args('leading'),
+            trailing: args('trailing'),
+            onTap: args('onTap'),
+            backgroundColor: args('backgroundColor'),
+            backgroundColorActivated: args('backgroundColorActivated'),
+            padding: args('padding'),
+            leadingSize: args('leadingSize'),
+            leadingToTitle: args('leadingToTitle'),
           ),
         );
 
   @Goto(_i1.CupertinoListTile.notched)
-  CupertinoListTile.notched(
-    $ $config, {
+  CupertinoListTile.notched({
     _i2.Key? key,
     required _i3.Widget title,
     _i3.Widget? subtitle,
@@ -83,34 +125,74 @@ final class CupertinoListTile extends Wrapper {
     _i4.EdgeInsetsGeometry? padding,
     double leadingSize = _kNotchedLeadingSize,
     double leadingToTitle = _kNotchedLeadingToTitle,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with title
+    Stream<_i3.Widget>? $title,
+    // Associate with subtitle
+    Stream<_i3.Widget?>? $subtitle,
+    // Associate with additionalInfo
+    Stream<_i3.Widget?>? $additionalInfo,
+    // Associate with leading
+    Stream<_i3.Widget?>? $leading,
+    // Associate with trailing
+    Stream<_i3.Widget?>? $trailing,
+    // Associate with onTap
+    Stream<FutureOr<void> Function()?>? $onTap,
+    // Associate with backgroundColor
+    Stream<ui.Color?>? $backgroundColor,
+    // Associate with backgroundColorActivated
+    Stream<ui.Color?>? $backgroundColorActivated,
+    // Associate with padding
+    Stream<_i4.EdgeInsetsGeometry?>? $padding,
+    // Associate with leadingSize
+    Stream<double>? $leadingSize,
+    // Associate with leadingToTitle
+    Stream<double>? $leadingToTitle,
   }) : super(
-          Argument({
-            #key: key,
-            #title: title,
-            #subtitle: subtitle,
-            #additionalInfo: additionalInfo,
-            #leading: leading,
-            #trailing: trailing,
-            #onTap: onTap,
-            #backgroundColor: backgroundColor,
-            #backgroundColorActivated: backgroundColorActivated,
-            #padding: padding,
-            #leadingSize: leadingSize,
-            #leadingToTitle: leadingToTitle,
-          }),
+          Argument(
+            {
+              'key': key,
+              'title': title,
+              'subtitle': subtitle,
+              'additionalInfo': additionalInfo,
+              'leading': leading,
+              'trailing': trailing,
+              'onTap': onTap,
+              'backgroundColor': backgroundColor,
+              'backgroundColorActivated': backgroundColorActivated,
+              'padding': padding,
+              'leadingSize': leadingSize,
+              'leadingToTitle': leadingToTitle,
+            },
+            stream: {
+              'key': $key,
+              'title': $title,
+              'subtitle': $subtitle,
+              'additionalInfo': $additionalInfo,
+              'leading': $leading,
+              'trailing': $trailing,
+              'onTap': $onTap,
+              'backgroundColor': $backgroundColor,
+              'backgroundColorActivated': $backgroundColorActivated,
+              'padding': $padding,
+              'leadingSize': $leadingSize,
+              'leadingToTitle': $leadingToTitle,
+            },
+          ),
           builder: (args) => _i1.CupertinoListTile.notched(
-            key: args(#key),
-            title: args(#title),
-            subtitle: args(#subtitle),
-            additionalInfo: args(#additionalInfo),
-            leading: args(#leading),
-            trailing: args(#trailing),
-            onTap: args(#onTap),
-            backgroundColor: args(#backgroundColor),
-            backgroundColorActivated: args(#backgroundColorActivated),
-            padding: args(#padding),
-            leadingSize: args(#leadingSize),
-            leadingToTitle: args(#leadingToTitle),
+            key: args('key'),
+            title: args('title'),
+            subtitle: args('subtitle'),
+            additionalInfo: args('additionalInfo'),
+            leading: args('leading'),
+            trailing: args('trailing'),
+            onTap: args('onTap'),
+            backgroundColor: args('backgroundColor'),
+            backgroundColorActivated: args('backgroundColorActivated'),
+            padding: args('padding'),
+            leadingSize: args('leadingSize'),
+            leadingToTitle: args('leadingToTitle'),
           ),
         );
 }

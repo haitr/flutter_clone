@@ -11,8 +11,7 @@ import '../wrapper.dart';
 
 final class UserAccountsDrawerHeader extends Wrapper {
   @Goto(_i1.UserAccountsDrawerHeader.new)
-  UserAccountsDrawerHeader(
-    $ $config, {
+  UserAccountsDrawerHeader({
     _i2.Key? key,
     _i3.Decoration? decoration,
     _i3.EdgeInsetsGeometry? margin = const _i3.EdgeInsets.only(bottom: 8.0),
@@ -24,32 +23,69 @@ final class UserAccountsDrawerHeader extends Wrapper {
     required _i4.Widget? accountEmail,
     ui.VoidCallback? onDetailsPressed,
     ui.Color arrowColor = _i1.Colors.white,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with decoration
+    Stream<_i3.Decoration?>? $decoration,
+    // Associate with margin
+    Stream<_i3.EdgeInsetsGeometry?>? $margin,
+    // Associate with currentAccountPicture
+    Stream<_i4.Widget?>? $currentAccountPicture,
+    // Associate with otherAccountsPictures
+    Stream<List<_i4.Widget>?>? $otherAccountsPictures,
+    // Associate with currentAccountPictureSize
+    Stream<ui.Size>? $currentAccountPictureSize,
+    // Associate with otherAccountsPicturesSize
+    Stream<ui.Size>? $otherAccountsPicturesSize,
+    // Associate with accountName
+    Stream<_i4.Widget?>? $accountName,
+    // Associate with accountEmail
+    Stream<_i4.Widget?>? $accountEmail,
+    // Associate with onDetailsPressed
+    Stream<ui.VoidCallback?>? $onDetailsPressed,
+    // Associate with arrowColor
+    Stream<ui.Color>? $arrowColor,
   }) : super(
-          Argument({
-            #key: key,
-            #decoration: decoration,
-            #margin: margin,
-            #currentAccountPicture: currentAccountPicture,
-            #otherAccountsPictures: otherAccountsPictures,
-            #currentAccountPictureSize: currentAccountPictureSize,
-            #otherAccountsPicturesSize: otherAccountsPicturesSize,
-            #accountName: accountName,
-            #accountEmail: accountEmail,
-            #onDetailsPressed: onDetailsPressed,
-            #arrowColor: arrowColor,
-          }),
+          Argument(
+            {
+              'key': key,
+              'decoration': decoration,
+              'margin': margin,
+              'currentAccountPicture': currentAccountPicture,
+              'otherAccountsPictures': otherAccountsPictures,
+              'currentAccountPictureSize': currentAccountPictureSize,
+              'otherAccountsPicturesSize': otherAccountsPicturesSize,
+              'accountName': accountName,
+              'accountEmail': accountEmail,
+              'onDetailsPressed': onDetailsPressed,
+              'arrowColor': arrowColor,
+            },
+            stream: {
+              'key': $key,
+              'decoration': $decoration,
+              'margin': $margin,
+              'currentAccountPicture': $currentAccountPicture,
+              'otherAccountsPictures': $otherAccountsPictures,
+              'currentAccountPictureSize': $currentAccountPictureSize,
+              'otherAccountsPicturesSize': $otherAccountsPicturesSize,
+              'accountName': $accountName,
+              'accountEmail': $accountEmail,
+              'onDetailsPressed': $onDetailsPressed,
+              'arrowColor': $arrowColor,
+            },
+          ),
           builder: (args) => _i1.UserAccountsDrawerHeader(
-            key: args(#key),
-            decoration: args(#decoration),
-            margin: args(#margin),
-            currentAccountPicture: args(#currentAccountPicture),
-            otherAccountsPictures: args(#otherAccountsPictures),
-            currentAccountPictureSize: args(#currentAccountPictureSize),
-            otherAccountsPicturesSize: args(#otherAccountsPicturesSize),
-            accountName: args(#accountName),
-            accountEmail: args(#accountEmail),
-            onDetailsPressed: args(#onDetailsPressed),
-            arrowColor: args(#arrowColor),
+            key: args('key'),
+            decoration: args('decoration'),
+            margin: args('margin'),
+            currentAccountPicture: args('currentAccountPicture'),
+            otherAccountsPictures: args('otherAccountsPictures'),
+            currentAccountPictureSize: args('currentAccountPictureSize'),
+            otherAccountsPicturesSize: args('otherAccountsPicturesSize'),
+            accountName: args('accountName'),
+            accountEmail: args('accountEmail'),
+            onDetailsPressed: args('onDetailsPressed'),
+            arrowColor: args('arrowColor'),
           ),
         );
 }

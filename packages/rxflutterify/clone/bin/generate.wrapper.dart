@@ -12,6 +12,8 @@ import 'package:path/path.dart' as path;
 
 import 'generate.dart';
 
+const libName = 'rxflutterify';
+
 extension _MapExt<K, V> on Map<K, V> {
   Map<K, V> filteredByKey(bool Function(K key) filter) =>
       Map.fromEntries(entries.where((entry) => filter(entry.key)));
@@ -74,11 +76,11 @@ FutureOr<void> afterGenerated({List<String>? generatedPaths}) async {
     //
     final emitter = DartEmitter(orderDirectives: true, useNullSafetySyntax: true);
     var library = Library((builder) {
-      builder.name = 'rxflutterify';
+      builder.name = libName;
       builder.directives.addAll(filePath.map((e) => Directive.import(e)));
       builder.directives.add(Directive.export('package:rxdart/rxdart.dart'));
       builder.directives.add(Directive.export('wrapper.dart',
-          show: ['ReactableObjectExt', 'ListenableExt', 'BindExt', 'Wrapper', '\$']));
+          show: ['ReactableObjectExt', 'ListenableExt', 'Wrapper']));
       filePath
           .map((p) => analyzingResults.firstWhere((result) => result.filePath.endsWith(p)))
           .expand((result) => result.classDecls.filteredByKey(_accept).values)
@@ -100,14 +102,14 @@ FutureOr<void> afterGenerated({List<String>? generatedPaths}) async {
 FutureOr<String> generateWrapper(AnalyzeResult result) async {
   final libSession = LibraryBuildingSession();
 
-  const wrapperPath = '../wrapper.dart';
+  final wrapperPath = '../wrapper.dart';
   final emitter = DartEmitter(
       allocator: PrefixedAllocator(ignoreAlias: {wrapperPath}),
       orderDirectives: true,
       useNullSafetySyntax: true);
   var isEmpty = true;
   var library = Library((builder) {
-    builder.name = 'rxflutterify';
+    builder.name = libName;
     final clazzCodes = <Class>[];
 
     result.classDecls.forEach((classDecl, classAnalyzer) {
@@ -174,11 +176,6 @@ FutureOr<String> generateWrapper(AnalyzeResult result) async {
               final positionalParams = constructorMirror.parameters.where((p) => !p.isNamed);
               final namedParams = constructorMirror.parameters.where((p) => p.isNamed);
 
-              // Add widget marker
-              builder.requiredParameters.add(Parameter((builder) {
-                builder.name = '\$config';
-                builder.type = refer('\$');
-              }));
               // Add original parameter's declarations
               builder.requiredParameters.addAll(positionalParams.map((p) => Parameter((builder) {
                     final parameterAnalyzer = constructorAnalyzer[p.name]!;
@@ -204,6 +201,21 @@ FutureOr<String> generateWrapper(AnalyzeResult result) async {
                       builder.defaultTo = defaultValue(val)?.code;
                     }
                   })));
+
+              // Add streams
+              builder.optionalParameters.addAll(constructorMirror.parameters.map(
+                (p) => Parameter((builder) => builder
+                  ..docs.add('\n\t// Associate with ${p.name}')
+                  ..named = true
+                  ..name = '\$${p.name}'
+                  ..type = TypeReference((builder) => builder
+                    ..isNullable = true
+                    ..symbol = 'Stream'
+                    ..types.add(classSession.typeReference(
+                      mirror: p.type,
+                      analyzerType: constructorAnalyzer[p.name]!.declaratedType,
+                    )))),
+              ));
 
               /// In redirecting constructors, Dart allows non-nullable parameters without default values,
               /// which is not possible in other method declarations. This can lead to incorrect parameter types,
@@ -237,16 +249,18 @@ FutureOr<String> generateWrapper(AnalyzeResult result) async {
                         literalMap(
                           {
                             for (final p in constructorMirror.parameters)
-                              refer('#${p.name}'): refer(p.name)
+                              literalString(p.name): refer(p.name)
                           },
                         )
                       ],
-                      // {
-                      //   'scope': refer('Wrapper')
-                      //       .property('_scopeManager')
-                      //       .property('popScope')
-                      //       .call([]),
-                      // },
+                      {
+                        'stream': literalMap(
+                          {
+                            for (final p in constructorMirror.parameters)
+                              literalString(p.name): refer('\$${p.name}')
+                          },
+                        )
+                      },
                     ),
                   ],
                   {
@@ -261,11 +275,11 @@ FutureOr<String> generateWrapper(AnalyzeResult result) async {
                         ..body = InvokeExpression.newOf(
                                 creatingTypeRef,
                                 positionalParams
-                                    .map((e) => refer('args').call([refer('#${e.name}')]))
+                                    .map((e) => refer('args').call([literalString(e.name)]))
                                     .toList(),
                                 Map.fromEntries(namedParams.map((e) => MapEntry(
                                       e.name,
-                                      refer('args').call([refer('#${e.name}')]),
+                                      refer('args').call([literalString(e.name)]),
                                     ))),
                                 [],
                                 creatingConstructorName)

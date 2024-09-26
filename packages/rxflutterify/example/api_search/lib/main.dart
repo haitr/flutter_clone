@@ -12,12 +12,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '[rxflutter] Pub.dev example',
+      title: '[rxflutterify] Pub.dev example',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: '[rxflutter] Pub.dev example'),
+      home: const MyHomePage(title: '[rxflutterify] Pub.dev example'),
     );
   }
 }
@@ -63,10 +63,9 @@ class _MyHomePageState extends State<MyHomePage> {
               leading: const Icon(Icons.search),
               trailing: [
                 $Builder(
-                  $.all,
-                  builder: ((context) => const SizedBox.shrink() as Widget).bind(
-                    #builder,
-                    viewModel.input.text.map((event) => event.isEmpty
+                  builder: (context) => const SizedBox.shrink(),
+                  $builder: viewModel.input.text.map(
+                    (event) => event.isEmpty
                         ? (_) => const SizedBox.shrink()
                         : (_) => TextButton(
                               onPressed: () => viewModel.clearInputText(),
@@ -75,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 foregroundColor: WidgetStateProperty.all(Colors.white),
                               ),
                               child: const Text('Clear'),
-                            )),
+                            ),
                   ),
                 ),
               ],
@@ -85,9 +84,9 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: SafeArea(
         child: $ListView.separated(
-          $.all,
           separatorBuilder: (context, index) => Container(color: Colors.grey, height: 1),
-          itemCount: 0.bind(#itemCount, viewModel.output.packages.map((event) => event.length)),
+          itemCount: viewModel.output.packages.value.length,
+          $itemCount: viewModel.output.packages.map((event) => event.length),
           itemBuilder: (context, index) {
             final package = viewModel.output.packages.value[index];
             final packageName = package.package;
@@ -99,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   Text(packageName),
                   const SizedBox(height: 4),
-                  $Text($.all, '...'.bind(#data, packageInfo.map((event) => event.latest.version))),
+                  $Text('...', $data: packageInfo.map((event) => event.latest.version)),
                 ],
               ),
             );

@@ -40,7 +40,7 @@ import 'cupertino/text_selection_toolbar_button.dart';
 import 'cupertino/theme.dart';
 
 export 'package:rxdart/rxdart.dart';
-export 'wrapper.dart' show ReactableObjectExt, ListenableExt, BindExt, Wrapper, $;
+export 'wrapper.dart' show ReactableObjectExt, ListenableExt, Wrapper;
 
 typedef $CupertinoActivityIndicator = CupertinoActivityIndicator;
 typedef $CupertinoAdaptiveTextSelectionToolbar = CupertinoAdaptiveTextSelectionToolbar;

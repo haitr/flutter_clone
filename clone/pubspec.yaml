@@ -1,5 +1,5 @@
 name: clone
-description: .
+description: A Dart console application to analyze Flutter files and cache analyzed results for faster future access.
 version: 0.0.1
 publish_to: "none"
 

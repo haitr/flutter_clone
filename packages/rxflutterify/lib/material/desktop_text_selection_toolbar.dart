@@ -10,21 +10,33 @@ import '../wrapper.dart';
 
 final class DesktopTextSelectionToolbar extends Wrapper {
   @Goto(_i1.DesktopTextSelectionToolbar.new)
-  DesktopTextSelectionToolbar(
-    $ $config, {
+  DesktopTextSelectionToolbar({
     _i2.Key? key,
     required ui.Offset anchor,
     required List<_i3.Widget> children,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with anchor
+    Stream<ui.Offset>? $anchor,
+    // Associate with children
+    Stream<List<_i3.Widget>>? $children,
   }) : super(
-          Argument({
-            #key: key,
-            #anchor: anchor,
-            #children: children,
-          }),
+          Argument(
+            {
+              'key': key,
+              'anchor': anchor,
+              'children': children,
+            },
+            stream: {
+              'key': $key,
+              'anchor': $anchor,
+              'children': $children,
+            },
+          ),
           builder: (args) => _i1.DesktopTextSelectionToolbar(
-            key: args(#key),
-            anchor: args(#anchor),
-            children: args(#children),
+            key: args('key'),
+            anchor: args('anchor'),
+            children: args('children'),
           ),
         );
 }
