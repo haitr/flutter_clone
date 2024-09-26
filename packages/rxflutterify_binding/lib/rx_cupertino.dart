@@ -91,3 +91,4 @@ typedef $CupertinoTextFormFieldRow = CupertinoTextFormFieldRow;
 typedef $CupertinoTextSelectionToolbar = CupertinoTextSelectionToolbar;
 typedef $CupertinoTextSelectionToolbarButton = CupertinoTextSelectionToolbarButton;
 typedef $CupertinoTheme = CupertinoTheme;
+typedef $InheritedCupertinoTheme = InheritedCupertinoTheme;

@@ -48,6 +48,7 @@ final class FilterChip extends Wrapper {
     _i4.ShapeBorder avatarBorder = const _i4.CircleBorder(),
     _i5.BoxConstraints? avatarBoxConstraints,
     _i5.BoxConstraints? deleteIconBoxConstraints,
+    _i1.ChipAnimationStyle? chipAnimationStyle,
     // Associate with key
     Stream<_i2.Key?>? $key,
     // Associate with avatar
@@ -118,6 +119,8 @@ final class FilterChip extends Wrapper {
     Stream<_i5.BoxConstraints?>? $avatarBoxConstraints,
     // Associate with deleteIconBoxConstraints
     Stream<_i5.BoxConstraints?>? $deleteIconBoxConstraints,
+    // Associate with chipAnimationStyle
+    Stream<_i1.ChipAnimationStyle?>? $chipAnimationStyle,
   }) : super(
           Argument(
             {
@@ -156,6 +159,7 @@ final class FilterChip extends Wrapper {
               'avatarBorder': avatarBorder,
               'avatarBoxConstraints': avatarBoxConstraints,
               'deleteIconBoxConstraints': deleteIconBoxConstraints,
+              'chipAnimationStyle': chipAnimationStyle,
             },
             stream: {
               'key': $key,
@@ -193,6 +197,7 @@ final class FilterChip extends Wrapper {
               'avatarBorder': $avatarBorder,
               'avatarBoxConstraints': $avatarBoxConstraints,
               'deleteIconBoxConstraints': $deleteIconBoxConstraints,
+              'chipAnimationStyle': $chipAnimationStyle,
             },
           ),
           builder: (args) => _i1.FilterChip(
@@ -231,6 +236,7 @@ final class FilterChip extends Wrapper {
             avatarBorder: args('avatarBorder'),
             avatarBoxConstraints: args('avatarBoxConstraints'),
             deleteIconBoxConstraints: args('deleteIconBoxConstraints'),
+            chipAnimationStyle: args('chipAnimationStyle'),
           ),
         );
 
@@ -271,6 +277,7 @@ final class FilterChip extends Wrapper {
     _i4.ShapeBorder avatarBorder = const _i4.CircleBorder(),
     _i5.BoxConstraints? avatarBoxConstraints,
     _i5.BoxConstraints? deleteIconBoxConstraints,
+    _i1.ChipAnimationStyle? chipAnimationStyle,
     // Associate with key
     Stream<_i2.Key?>? $key,
     // Associate with avatar
@@ -341,6 +348,8 @@ final class FilterChip extends Wrapper {
     Stream<_i5.BoxConstraints?>? $avatarBoxConstraints,
     // Associate with deleteIconBoxConstraints
     Stream<_i5.BoxConstraints?>? $deleteIconBoxConstraints,
+    // Associate with chipAnimationStyle
+    Stream<_i1.ChipAnimationStyle?>? $chipAnimationStyle,
   }) : super(
           Argument(
             {
@@ -379,6 +388,7 @@ final class FilterChip extends Wrapper {
               'avatarBorder': avatarBorder,
               'avatarBoxConstraints': avatarBoxConstraints,
               'deleteIconBoxConstraints': deleteIconBoxConstraints,
+              'chipAnimationStyle': chipAnimationStyle,
             },
             stream: {
               'key': $key,
@@ -416,6 +426,7 @@ final class FilterChip extends Wrapper {
               'avatarBorder': $avatarBorder,
               'avatarBoxConstraints': $avatarBoxConstraints,
               'deleteIconBoxConstraints': $deleteIconBoxConstraints,
+              'chipAnimationStyle': $chipAnimationStyle,
             },
           ),
           builder: (args) => _i1.FilterChip.elevated(
@@ -454,6 +465,7 @@ final class FilterChip extends Wrapper {
             avatarBorder: args('avatarBorder'),
             avatarBoxConstraints: args('avatarBoxConstraints'),
             deleteIconBoxConstraints: args('deleteIconBoxConstraints'),
+            chipAnimationStyle: args('chipAnimationStyle'),
           ),
         );
 }

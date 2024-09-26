@@ -22,6 +22,10 @@ final class CupertinoButton extends Wrapper {
     double? pressedOpacity = 0.4,
     _i4.BorderRadius? borderRadius = const _i4.BorderRadius.all(ui.Radius.circular(8.0)),
     _i4.AlignmentGeometry alignment = _i4.Alignment.center,
+    ui.Color? focusColor,
+    _i3.FocusNode? focusNode,
+    _i2.ValueChanged<bool>? onFocusChange,
+    bool autofocus = false,
     required ui.VoidCallback? onPressed,
   }) : super(
           Argument({
@@ -34,6 +38,10 @@ final class CupertinoButton extends Wrapper {
             #pressedOpacity: pressedOpacity,
             #borderRadius: borderRadius,
             #alignment: alignment,
+            #focusColor: focusColor,
+            #focusNode: focusNode,
+            #onFocusChange: onFocusChange,
+            #autofocus: autofocus,
             #onPressed: onPressed,
           }),
           builder: (args) => _i1.CupertinoButton(
@@ -46,6 +54,10 @@ final class CupertinoButton extends Wrapper {
             pressedOpacity: args(#pressedOpacity),
             borderRadius: args(#borderRadius),
             alignment: args(#alignment),
+            focusColor: args(#focusColor),
+            focusNode: args(#focusNode),
+            onFocusChange: args(#onFocusChange),
+            autofocus: args(#autofocus),
             onPressed: args(#onPressed),
           ),
         );
@@ -61,6 +73,10 @@ final class CupertinoButton extends Wrapper {
     double? pressedOpacity = 0.4,
     _i4.BorderRadius? borderRadius = const _i4.BorderRadius.all(ui.Radius.circular(8.0)),
     _i4.AlignmentGeometry alignment = _i4.Alignment.center,
+    ui.Color? focusColor,
+    _i3.FocusNode? focusNode,
+    _i2.ValueChanged<bool>? onFocusChange,
+    bool autofocus = false,
     required ui.VoidCallback? onPressed,
   }) : super(
           Argument({
@@ -72,6 +88,10 @@ final class CupertinoButton extends Wrapper {
             #pressedOpacity: pressedOpacity,
             #borderRadius: borderRadius,
             #alignment: alignment,
+            #focusColor: focusColor,
+            #focusNode: focusNode,
+            #onFocusChange: onFocusChange,
+            #autofocus: autofocus,
             #onPressed: onPressed,
           }),
           builder: (args) => _i1.CupertinoButton.filled(
@@ -83,6 +103,10 @@ final class CupertinoButton extends Wrapper {
             pressedOpacity: args(#pressedOpacity),
             borderRadius: args(#borderRadius),
             alignment: args(#alignment),
+            focusColor: args(#focusColor),
+            focusNode: args(#focusNode),
+            onFocusChange: args(#onFocusChange),
+            autofocus: args(#autofocus),
             onPressed: args(#onPressed),
           ),
         );

@@ -33,6 +33,8 @@ final class LongPressDraggable<T extends Object> extends Wrapper {
     bool ignoringFeedbackPointer = true,
     Duration delay = _i4.kLongPressTimeout,
     _i4.AllowedButtonsFilter? allowedButtonsFilter,
+    _i5.HitTestBehavior hitTestBehavior = _i5.HitTestBehavior.deferToChild,
+    bool rootOverlay = false,
   }) : super(
           Argument({
             #key: key,
@@ -54,6 +56,8 @@ final class LongPressDraggable<T extends Object> extends Wrapper {
             #ignoringFeedbackPointer: ignoringFeedbackPointer,
             #delay: delay,
             #allowedButtonsFilter: allowedButtonsFilter,
+            #hitTestBehavior: hitTestBehavior,
+            #rootOverlay: rootOverlay,
           }),
           builder: (args) => _i1.LongPressDraggable<T>(
             key: args(#key),
@@ -75,6 +79,8 @@ final class LongPressDraggable<T extends Object> extends Wrapper {
             ignoringFeedbackPointer: args(#ignoringFeedbackPointer),
             delay: args(#delay),
             allowedButtonsFilter: args(#allowedButtonsFilter),
+            hitTestBehavior: args(#hitTestBehavior),
+            rootOverlay: args(#rootOverlay),
           ),
         );
 }

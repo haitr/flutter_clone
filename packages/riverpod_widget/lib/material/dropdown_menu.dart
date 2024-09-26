@@ -1,5 +1,7 @@
 library rxflutterify; // ignore_for_file: no_leading_underscores_for_library_prefixes
 
+import 'dart:ui' as ui;
+
 import 'package:flutter/foundation.dart' as _i2;
 import 'package:flutter/material.dart' as _i1;
 import 'package:flutter/painting.dart' as _i4;
@@ -26,6 +28,7 @@ final class DropdownMenu<T> extends Wrapper {
     bool enableFilter = false,
     bool enableSearch = true,
     _i4.TextStyle? textStyle,
+    ui.TextAlign textAlign = ui.TextAlign.start,
     _i1.InputDecorationTheme? inputDecorationTheme,
     _i1.MenuStyle? menuStyle,
     _i3.TextEditingController? controller,
@@ -34,6 +37,7 @@ final class DropdownMenu<T> extends Wrapper {
     _i3.FocusNode? focusNode,
     bool? requestFocusOnTap,
     _i4.EdgeInsets? expandedInsets,
+    _i1.FilterCallback<T>? filterCallback,
     _i1.SearchCallback<T>? searchCallback,
     required List<_i1.DropdownMenuEntry<T>> dropdownMenuEntries,
     List<_i5.TextInputFormatter>? inputFormatters,
@@ -53,6 +57,7 @@ final class DropdownMenu<T> extends Wrapper {
             #enableFilter: enableFilter,
             #enableSearch: enableSearch,
             #textStyle: textStyle,
+            #textAlign: textAlign,
             #inputDecorationTheme: inputDecorationTheme,
             #menuStyle: menuStyle,
             #controller: controller,
@@ -61,6 +66,7 @@ final class DropdownMenu<T> extends Wrapper {
             #focusNode: focusNode,
             #requestFocusOnTap: requestFocusOnTap,
             #expandedInsets: expandedInsets,
+            #filterCallback: filterCallback,
             #searchCallback: searchCallback,
             #dropdownMenuEntries: dropdownMenuEntries,
             #inputFormatters: inputFormatters,
@@ -80,6 +86,7 @@ final class DropdownMenu<T> extends Wrapper {
             enableFilter: args(#enableFilter),
             enableSearch: args(#enableSearch),
             textStyle: args(#textStyle),
+            textAlign: args(#textAlign),
             inputDecorationTheme: args(#inputDecorationTheme),
             menuStyle: args(#menuStyle),
             controller: args(#controller),
@@ -88,6 +95,7 @@ final class DropdownMenu<T> extends Wrapper {
             focusNode: args(#focusNode),
             requestFocusOnTap: args(#requestFocusOnTap),
             expandedInsets: args(#expandedInsets),
+            filterCallback: args(#filterCallback),
             searchCallback: args(#searchCallback),
             dropdownMenuEntries: args(#dropdownMenuEntries),
             inputFormatters: args(#inputFormatters),

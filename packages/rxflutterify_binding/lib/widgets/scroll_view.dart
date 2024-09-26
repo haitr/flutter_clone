@@ -35,6 +35,7 @@ final class ListView extends Wrapper {
     _i1.ScrollViewKeyboardDismissBehavior keyboardDismissBehavior = _i1.ScrollViewKeyboardDismissBehavior.manual,
     String? restorationId,
     ui.Clip clipBehavior = ui.Clip.hardEdge,
+    _i4.HitTestBehavior hitTestBehavior = _i4.HitTestBehavior.opaque,
   }) : super(
           Argument({
             #key: key,
@@ -58,6 +59,7 @@ final class ListView extends Wrapper {
             #keyboardDismissBehavior: keyboardDismissBehavior,
             #restorationId: restorationId,
             #clipBehavior: clipBehavior,
+            #hitTestBehavior: hitTestBehavior,
           }),
           builder: (args) => _i1.ListView(
             key: args(#key),
@@ -81,6 +83,7 @@ final class ListView extends Wrapper {
             keyboardDismissBehavior: args(#keyboardDismissBehavior),
             restorationId: args(#restorationId),
             clipBehavior: args(#clipBehavior),
+            hitTestBehavior: args(#hitTestBehavior),
           ),
         );
 
@@ -110,6 +113,7 @@ final class ListView extends Wrapper {
     _i1.ScrollViewKeyboardDismissBehavior keyboardDismissBehavior = _i1.ScrollViewKeyboardDismissBehavior.manual,
     String? restorationId,
     ui.Clip clipBehavior = ui.Clip.hardEdge,
+    _i4.HitTestBehavior hitTestBehavior = _i4.HitTestBehavior.opaque,
   }) : super(
           Argument({
             #key: key,
@@ -135,6 +139,7 @@ final class ListView extends Wrapper {
             #keyboardDismissBehavior: keyboardDismissBehavior,
             #restorationId: restorationId,
             #clipBehavior: clipBehavior,
+            #hitTestBehavior: hitTestBehavior,
           }),
           builder: (args) => _i1.ListView.builder(
             key: args(#key),
@@ -160,6 +165,7 @@ final class ListView extends Wrapper {
             keyboardDismissBehavior: args(#keyboardDismissBehavior),
             restorationId: args(#restorationId),
             clipBehavior: args(#clipBehavior),
+            hitTestBehavior: args(#hitTestBehavior),
           ),
         );
 
@@ -186,6 +192,7 @@ final class ListView extends Wrapper {
     _i1.ScrollViewKeyboardDismissBehavior keyboardDismissBehavior = _i1.ScrollViewKeyboardDismissBehavior.manual,
     String? restorationId,
     ui.Clip clipBehavior = ui.Clip.hardEdge,
+    _i4.HitTestBehavior hitTestBehavior = _i4.HitTestBehavior.opaque,
   }) : super(
           Argument({
             #key: key,
@@ -208,6 +215,7 @@ final class ListView extends Wrapper {
             #keyboardDismissBehavior: keyboardDismissBehavior,
             #restorationId: restorationId,
             #clipBehavior: clipBehavior,
+            #hitTestBehavior: hitTestBehavior,
           }),
           builder: (args) => _i1.ListView.separated(
             key: args(#key),
@@ -230,6 +238,7 @@ final class ListView extends Wrapper {
             keyboardDismissBehavior: args(#keyboardDismissBehavior),
             restorationId: args(#restorationId),
             clipBehavior: args(#clipBehavior),
+            hitTestBehavior: args(#hitTestBehavior),
           ),
         );
 
@@ -254,6 +263,7 @@ final class ListView extends Wrapper {
     _i1.ScrollViewKeyboardDismissBehavior keyboardDismissBehavior = _i1.ScrollViewKeyboardDismissBehavior.manual,
     String? restorationId,
     ui.Clip clipBehavior = ui.Clip.hardEdge,
+    _i4.HitTestBehavior hitTestBehavior = _i4.HitTestBehavior.opaque,
   }) : super(
           Argument({
             #key: key,
@@ -274,6 +284,7 @@ final class ListView extends Wrapper {
             #keyboardDismissBehavior: keyboardDismissBehavior,
             #restorationId: restorationId,
             #clipBehavior: clipBehavior,
+            #hitTestBehavior: hitTestBehavior,
           }),
           builder: (args) => _i1.ListView.custom(
             key: args(#key),
@@ -294,6 +305,7 @@ final class ListView extends Wrapper {
             keyboardDismissBehavior: args(#keyboardDismissBehavior),
             restorationId: args(#restorationId),
             clipBehavior: args(#clipBehavior),
+            hitTestBehavior: args(#hitTestBehavior),
           ),
         );
 }
@@ -319,6 +331,7 @@ final class CustomScrollView extends Wrapper {
     _i1.ScrollViewKeyboardDismissBehavior keyboardDismissBehavior = _i1.ScrollViewKeyboardDismissBehavior.manual,
     String? restorationId,
     ui.Clip clipBehavior = ui.Clip.hardEdge,
+    _i4.HitTestBehavior hitTestBehavior = _i4.HitTestBehavior.opaque,
   }) : super(
           Argument({
             #key: key,
@@ -338,6 +351,7 @@ final class CustomScrollView extends Wrapper {
             #keyboardDismissBehavior: keyboardDismissBehavior,
             #restorationId: restorationId,
             #clipBehavior: clipBehavior,
+            #hitTestBehavior: hitTestBehavior,
           }),
           builder: (args) => _i1.CustomScrollView(
             key: args(#key),
@@ -357,6 +371,7 @@ final class CustomScrollView extends Wrapper {
             keyboardDismissBehavior: args(#keyboardDismissBehavior),
             restorationId: args(#restorationId),
             clipBehavior: args(#clipBehavior),
+            hitTestBehavior: args(#hitTestBehavior),
           ),
         );
 }
@@ -384,6 +399,7 @@ final class GridView extends Wrapper {
     ui.Clip clipBehavior = ui.Clip.hardEdge,
     _i1.ScrollViewKeyboardDismissBehavior keyboardDismissBehavior = _i1.ScrollViewKeyboardDismissBehavior.manual,
     String? restorationId,
+    _i4.HitTestBehavior hitTestBehavior = _i4.HitTestBehavior.opaque,
   }) : super(
           Argument({
             #key: key,
@@ -405,6 +421,7 @@ final class GridView extends Wrapper {
             #clipBehavior: clipBehavior,
             #keyboardDismissBehavior: keyboardDismissBehavior,
             #restorationId: restorationId,
+            #hitTestBehavior: hitTestBehavior,
           }),
           builder: (args) => _i1.GridView(
             key: args(#key),
@@ -426,6 +443,7 @@ final class GridView extends Wrapper {
             clipBehavior: args(#clipBehavior),
             keyboardDismissBehavior: args(#keyboardDismissBehavior),
             restorationId: args(#restorationId),
+            hitTestBehavior: args(#hitTestBehavior),
           ),
         );
 
@@ -453,6 +471,7 @@ final class GridView extends Wrapper {
     _i1.ScrollViewKeyboardDismissBehavior keyboardDismissBehavior = _i1.ScrollViewKeyboardDismissBehavior.manual,
     String? restorationId,
     ui.Clip clipBehavior = ui.Clip.hardEdge,
+    _i4.HitTestBehavior hitTestBehavior = _i4.HitTestBehavior.opaque,
   }) : super(
           Argument({
             #key: key,
@@ -476,6 +495,7 @@ final class GridView extends Wrapper {
             #keyboardDismissBehavior: keyboardDismissBehavior,
             #restorationId: restorationId,
             #clipBehavior: clipBehavior,
+            #hitTestBehavior: hitTestBehavior,
           }),
           builder: (args) => _i1.GridView.builder(
             key: args(#key),
@@ -499,6 +519,7 @@ final class GridView extends Wrapper {
             keyboardDismissBehavior: args(#keyboardDismissBehavior),
             restorationId: args(#restorationId),
             clipBehavior: args(#clipBehavior),
+            hitTestBehavior: args(#hitTestBehavior),
           ),
         );
 
@@ -521,6 +542,7 @@ final class GridView extends Wrapper {
     _i1.ScrollViewKeyboardDismissBehavior keyboardDismissBehavior = _i1.ScrollViewKeyboardDismissBehavior.manual,
     String? restorationId,
     ui.Clip clipBehavior = ui.Clip.hardEdge,
+    _i4.HitTestBehavior hitTestBehavior = _i4.HitTestBehavior.opaque,
   }) : super(
           Argument({
             #key: key,
@@ -539,6 +561,7 @@ final class GridView extends Wrapper {
             #keyboardDismissBehavior: keyboardDismissBehavior,
             #restorationId: restorationId,
             #clipBehavior: clipBehavior,
+            #hitTestBehavior: hitTestBehavior,
           }),
           builder: (args) => _i1.GridView.custom(
             key: args(#key),
@@ -557,6 +580,7 @@ final class GridView extends Wrapper {
             keyboardDismissBehavior: args(#keyboardDismissBehavior),
             restorationId: args(#restorationId),
             clipBehavior: args(#clipBehavior),
+            hitTestBehavior: args(#hitTestBehavior),
           ),
         );
 
@@ -585,6 +609,7 @@ final class GridView extends Wrapper {
     _i1.ScrollViewKeyboardDismissBehavior keyboardDismissBehavior = _i1.ScrollViewKeyboardDismissBehavior.manual,
     String? restorationId,
     ui.Clip clipBehavior = ui.Clip.hardEdge,
+    _i4.HitTestBehavior hitTestBehavior = _i4.HitTestBehavior.opaque,
   }) : super(
           Argument({
             #key: key,
@@ -609,6 +634,7 @@ final class GridView extends Wrapper {
             #keyboardDismissBehavior: keyboardDismissBehavior,
             #restorationId: restorationId,
             #clipBehavior: clipBehavior,
+            #hitTestBehavior: hitTestBehavior,
           }),
           builder: (args) => _i1.GridView.count(
             key: args(#key),
@@ -633,6 +659,7 @@ final class GridView extends Wrapper {
             keyboardDismissBehavior: args(#keyboardDismissBehavior),
             restorationId: args(#restorationId),
             clipBehavior: args(#clipBehavior),
+            hitTestBehavior: args(#hitTestBehavior),
           ),
         );
 
@@ -661,6 +688,7 @@ final class GridView extends Wrapper {
     _i1.ScrollViewKeyboardDismissBehavior keyboardDismissBehavior = _i1.ScrollViewKeyboardDismissBehavior.manual,
     String? restorationId,
     ui.Clip clipBehavior = ui.Clip.hardEdge,
+    _i4.HitTestBehavior hitTestBehavior = _i4.HitTestBehavior.opaque,
   }) : super(
           Argument({
             #key: key,
@@ -685,6 +713,7 @@ final class GridView extends Wrapper {
             #keyboardDismissBehavior: keyboardDismissBehavior,
             #restorationId: restorationId,
             #clipBehavior: clipBehavior,
+            #hitTestBehavior: hitTestBehavior,
           }),
           builder: (args) => _i1.GridView.extent(
             key: args(#key),
@@ -709,6 +738,7 @@ final class GridView extends Wrapper {
             keyboardDismissBehavior: args(#keyboardDismissBehavior),
             restorationId: args(#restorationId),
             clipBehavior: args(#clipBehavior),
+            hitTestBehavior: args(#hitTestBehavior),
           ),
         );
 }

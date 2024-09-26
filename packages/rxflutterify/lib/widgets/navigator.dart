@@ -82,6 +82,7 @@ final class Navigator extends Wrapper {
     bool requestFocus = true,
     String? restorationScopeId,
     _i1.TraversalEdgeBehavior routeTraversalEdgeBehavior = _i1.kDefaultRouteTraversalEdgeBehavior,
+    _i1.DidRemovePageCallback? onDidRemovePage,
     // Associate with key
     Stream<_i2.Key?>? $key,
     // Associate with pages
@@ -110,6 +111,8 @@ final class Navigator extends Wrapper {
     Stream<String?>? $restorationScopeId,
     // Associate with routeTraversalEdgeBehavior
     Stream<_i1.TraversalEdgeBehavior>? $routeTraversalEdgeBehavior,
+    // Associate with onDidRemovePage
+    Stream<_i1.DidRemovePageCallback?>? $onDidRemovePage,
   }) : super(
           Argument(
             {
@@ -127,6 +130,7 @@ final class Navigator extends Wrapper {
               'requestFocus': requestFocus,
               'restorationScopeId': restorationScopeId,
               'routeTraversalEdgeBehavior': routeTraversalEdgeBehavior,
+              'onDidRemovePage': onDidRemovePage,
             },
             stream: {
               'key': $key,
@@ -143,6 +147,7 @@ final class Navigator extends Wrapper {
               'requestFocus': $requestFocus,
               'restorationScopeId': $restorationScopeId,
               'routeTraversalEdgeBehavior': $routeTraversalEdgeBehavior,
+              'onDidRemovePage': $onDidRemovePage,
             },
           ),
           builder: (args) => _i1.Navigator(
@@ -160,6 +165,7 @@ final class Navigator extends Wrapper {
             requestFocus: args('requestFocus'),
             restorationScopeId: args('restorationScopeId'),
             routeTraversalEdgeBehavior: args('routeTraversalEdgeBehavior'),
+            onDidRemovePage: args('onDidRemovePage'),
           ),
         );
 }

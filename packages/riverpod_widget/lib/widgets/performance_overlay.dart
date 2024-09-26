@@ -11,23 +11,14 @@ final class PerformanceOverlay extends Wrapper {
     $ $config, {
     _i2.Key? key,
     int optionsMask = 0,
-    int rasterizerThreshold = 0,
-    bool checkerboardRasterCacheImages = false,
-    bool checkerboardOffscreenLayers = false,
   }) : super(
           Argument({
             #key: key,
             #optionsMask: optionsMask,
-            #rasterizerThreshold: rasterizerThreshold,
-            #checkerboardRasterCacheImages: checkerboardRasterCacheImages,
-            #checkerboardOffscreenLayers: checkerboardOffscreenLayers,
           }),
           builder: (args) => _i1.PerformanceOverlay(
             key: args(#key),
             optionsMask: args(#optionsMask),
-            rasterizerThreshold: args(#rasterizerThreshold),
-            checkerboardRasterCacheImages: args(#checkerboardRasterCacheImages),
-            checkerboardOffscreenLayers: args(#checkerboardOffscreenLayers),
           ),
         );
 
@@ -35,21 +26,8 @@ final class PerformanceOverlay extends Wrapper {
   PerformanceOverlay.allEnabled(
     $ $config, {
     _i2.Key? key,
-    int rasterizerThreshold = 0,
-    bool checkerboardRasterCacheImages = false,
-    bool checkerboardOffscreenLayers = false,
   }) : super(
-          Argument({
-            #key: key,
-            #rasterizerThreshold: rasterizerThreshold,
-            #checkerboardRasterCacheImages: checkerboardRasterCacheImages,
-            #checkerboardOffscreenLayers: checkerboardOffscreenLayers,
-          }),
-          builder: (args) => _i1.PerformanceOverlay.allEnabled(
-            key: args(#key),
-            rasterizerThreshold: args(#rasterizerThreshold),
-            checkerboardRasterCacheImages: args(#checkerboardRasterCacheImages),
-            checkerboardOffscreenLayers: args(#checkerboardOffscreenLayers),
-          ),
+          Argument({#key: key}),
+          builder: (args) => _i1.PerformanceOverlay.allEnabled(key: args(#key)),
         );
 }

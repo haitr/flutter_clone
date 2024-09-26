@@ -112,6 +112,7 @@ final class TextFieldTapRegion extends Wrapper {
     _i1.TapRegionCallback? onTapInside,
     bool consumeOutsideTaps = false,
     String? debugLabel,
+    Object? groupId = _i1.EditableText,
     // Associate with key
     Stream<_i2.Key?>? $key,
     // Associate with child
@@ -126,6 +127,8 @@ final class TextFieldTapRegion extends Wrapper {
     Stream<bool>? $consumeOutsideTaps,
     // Associate with debugLabel
     Stream<String?>? $debugLabel,
+    // Associate with groupId
+    Stream<Object?>? $groupId,
   }) : super(
           Argument(
             {
@@ -136,6 +139,7 @@ final class TextFieldTapRegion extends Wrapper {
               'onTapInside': onTapInside,
               'consumeOutsideTaps': consumeOutsideTaps,
               'debugLabel': debugLabel,
+              'groupId': groupId,
             },
             stream: {
               'key': $key,
@@ -145,6 +149,7 @@ final class TextFieldTapRegion extends Wrapper {
               'onTapInside': $onTapInside,
               'consumeOutsideTaps': $consumeOutsideTaps,
               'debugLabel': $debugLabel,
+              'groupId': $groupId,
             },
           ),
           builder: (args) => _i1.TextFieldTapRegion(
@@ -155,6 +160,7 @@ final class TextFieldTapRegion extends Wrapper {
             onTapInside: args('onTapInside'),
             consumeOutsideTaps: args('consumeOutsideTaps'),
             debugLabel: args('debugLabel'),
+            groupId: args('groupId'),
           ),
         );
 }

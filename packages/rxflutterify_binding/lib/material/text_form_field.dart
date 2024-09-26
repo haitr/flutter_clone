@@ -16,9 +16,11 @@ final class TextFormField extends Wrapper {
   TextFormField(
     $ $config, {
     _i2.Key? key,
+    Object groupId = _i3.EditableText,
     _i3.TextEditingController? controller,
     String? initialValue,
     _i3.FocusNode? focusNode,
+    String? forceErrorText,
     _i1.InputDecoration? decoration = const _i1.InputDecoration(),
     _i4.TextInputType? keyboardType,
     _i4.TextCapitalization textCapitalization = _i4.TextCapitalization.none,
@@ -88,9 +90,11 @@ final class TextFormField extends Wrapper {
   }) : super(
           Argument({
             #key: key,
+            #groupId: groupId,
             #controller: controller,
             #initialValue: initialValue,
             #focusNode: focusNode,
+            #forceErrorText: forceErrorText,
             #decoration: decoration,
             #keyboardType: keyboardType,
             #textCapitalization: textCapitalization,
@@ -160,9 +164,11 @@ final class TextFormField extends Wrapper {
           }),
           builder: (args) => _i1.TextFormField(
             key: args(#key),
+            groupId: args(#groupId),
             controller: args(#controller),
             initialValue: args(#initialValue),
             focusNode: args(#focusNode),
+            forceErrorText: args(#forceErrorText),
             decoration: args(#decoration),
             keyboardType: args(#keyboardType),
             textCapitalization: args(#textCapitalization),

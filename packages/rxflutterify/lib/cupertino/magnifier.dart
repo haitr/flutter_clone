@@ -87,8 +87,10 @@ final class CupertinoMagnifier extends Wrapper {
         ),
         blurRadius: 11,
         spreadRadius: 0.2,
+        blurStyle: ui.BlurStyle.outer,
       )
     ],
+    ui.Clip clipBehavior = ui.Clip.none,
     _i5.BorderSide borderSide = const _i5.BorderSide(
         color: ui.Color.fromARGB(
       255,
@@ -107,6 +109,8 @@ final class CupertinoMagnifier extends Wrapper {
     Stream<ui.Offset>? $additionalFocalPointOffset,
     // Associate with shadows
     Stream<List<_i5.BoxShadow>>? $shadows,
+    // Associate with clipBehavior
+    Stream<ui.Clip>? $clipBehavior,
     // Associate with borderSide
     Stream<_i5.BorderSide>? $borderSide,
     // Associate with inOutAnimation
@@ -119,6 +123,7 @@ final class CupertinoMagnifier extends Wrapper {
               'borderRadius': borderRadius,
               'additionalFocalPointOffset': additionalFocalPointOffset,
               'shadows': shadows,
+              'clipBehavior': clipBehavior,
               'borderSide': borderSide,
               'inOutAnimation': inOutAnimation,
             },
@@ -128,6 +133,7 @@ final class CupertinoMagnifier extends Wrapper {
               'borderRadius': $borderRadius,
               'additionalFocalPointOffset': $additionalFocalPointOffset,
               'shadows': $shadows,
+              'clipBehavior': $clipBehavior,
               'borderSide': $borderSide,
               'inOutAnimation': $inOutAnimation,
             },
@@ -138,6 +144,7 @@ final class CupertinoMagnifier extends Wrapper {
             borderRadius: args('borderRadius'),
             additionalFocalPointOffset: args('additionalFocalPointOffset'),
             shadows: args('shadows'),
+            clipBehavior: args('clipBehavior'),
             borderSide: args('borderSide'),
             inOutAnimation: args('inOutAnimation'),
           ),

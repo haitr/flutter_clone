@@ -20,6 +20,8 @@ final class ExpandIcon extends Wrapper {
     ui.Color? color,
     ui.Color? disabledColor,
     ui.Color? expandedColor,
+    ui.Color? splashColor,
+    ui.Color? highlightColor,
   }) : super(
           Argument({
             #key: key,
@@ -30,6 +32,8 @@ final class ExpandIcon extends Wrapper {
             #color: color,
             #disabledColor: disabledColor,
             #expandedColor: expandedColor,
+            #splashColor: splashColor,
+            #highlightColor: highlightColor,
           }),
           builder: (args) => _i1.ExpandIcon(
             key: args(#key),
@@ -40,6 +44,8 @@ final class ExpandIcon extends Wrapper {
             color: args(#color),
             disabledColor: args(#disabledColor),
             expandedColor: args(#expandedColor),
+            splashColor: args(#splashColor),
+            highlightColor: args(#highlightColor),
           ),
         );
 }

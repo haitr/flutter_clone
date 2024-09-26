@@ -13,6 +13,7 @@ final class FormField<T> extends Wrapper {
     _i2.Key? key,
     required _i1.FormFieldBuilder<T> builder,
     _i1.FormFieldSetter<T>? onSaved,
+    String? forceErrorText,
     _i1.FormFieldValidator<T>? validator,
     T? initialValue,
     bool enabled = true,
@@ -24,6 +25,8 @@ final class FormField<T> extends Wrapper {
     Stream<_i1.FormFieldBuilder<T>>? $builder,
     // Associate with onSaved
     Stream<_i1.FormFieldSetter<T>?>? $onSaved,
+    // Associate with forceErrorText
+    Stream<String?>? $forceErrorText,
     // Associate with validator
     Stream<_i1.FormFieldValidator<T>?>? $validator,
     // Associate with initialValue
@@ -40,6 +43,7 @@ final class FormField<T> extends Wrapper {
               'key': key,
               'builder': builder,
               'onSaved': onSaved,
+              'forceErrorText': forceErrorText,
               'validator': validator,
               'initialValue': initialValue,
               'enabled': enabled,
@@ -50,6 +54,7 @@ final class FormField<T> extends Wrapper {
               'key': $key,
               'builder': $builder,
               'onSaved': $onSaved,
+              'forceErrorText': $forceErrorText,
               'validator': $validator,
               'initialValue': $initialValue,
               'enabled': $enabled,
@@ -61,6 +66,7 @@ final class FormField<T> extends Wrapper {
             key: args('key'),
             builder: args('builder'),
             onSaved: args('onSaved'),
+            forceErrorText: args('forceErrorText'),
             validator: args('validator'),
             initialValue: args('initialValue'),
             enabled: args('enabled'),
@@ -77,6 +83,7 @@ final class Form extends Wrapper {
     required _i1.Widget child,
     bool? canPop,
     _i1.PopInvokedCallback? onPopInvoked,
+    _i1.PopInvokedWithResultCallback<Object?>? onPopInvokedWithResult,
     _i1.WillPopCallback? onWillPop,
     ui.VoidCallback? onChanged,
     _i1.AutovalidateMode? autovalidateMode,
@@ -88,6 +95,8 @@ final class Form extends Wrapper {
     Stream<bool?>? $canPop,
     // Associate with onPopInvoked
     Stream<_i1.PopInvokedCallback?>? $onPopInvoked,
+    // Associate with onPopInvokedWithResult
+    Stream<_i1.PopInvokedWithResultCallback<Object?>?>? $onPopInvokedWithResult,
     // Associate with onWillPop
     Stream<_i1.WillPopCallback?>? $onWillPop,
     // Associate with onChanged
@@ -101,6 +110,7 @@ final class Form extends Wrapper {
               'child': child,
               'canPop': canPop,
               'onPopInvoked': onPopInvoked,
+              'onPopInvokedWithResult': onPopInvokedWithResult,
               'onWillPop': onWillPop,
               'onChanged': onChanged,
               'autovalidateMode': autovalidateMode,
@@ -110,6 +120,7 @@ final class Form extends Wrapper {
               'child': $child,
               'canPop': $canPop,
               'onPopInvoked': $onPopInvoked,
+              'onPopInvokedWithResult': $onPopInvokedWithResult,
               'onWillPop': $onWillPop,
               'onChanged': $onChanged,
               'autovalidateMode': $autovalidateMode,
@@ -120,6 +131,7 @@ final class Form extends Wrapper {
             child: args('child'),
             canPop: args('canPop'),
             onPopInvoked: args('onPopInvoked'),
+            onPopInvokedWithResult: args('onPopInvokedWithResult'),
             onWillPop: args('onWillPop'),
             onChanged: args('onChanged'),
             autovalidateMode: args('autovalidateMode'),

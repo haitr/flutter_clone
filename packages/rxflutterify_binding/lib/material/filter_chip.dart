@@ -49,6 +49,7 @@ final class FilterChip extends Wrapper {
     _i4.ShapeBorder avatarBorder = const _i4.CircleBorder(),
     _i5.BoxConstraints? avatarBoxConstraints,
     _i5.BoxConstraints? deleteIconBoxConstraints,
+    _i1.ChipAnimationStyle? chipAnimationStyle,
   }) : super(
           Argument({
             #key: key,
@@ -86,6 +87,7 @@ final class FilterChip extends Wrapper {
             #avatarBorder: avatarBorder,
             #avatarBoxConstraints: avatarBoxConstraints,
             #deleteIconBoxConstraints: deleteIconBoxConstraints,
+            #chipAnimationStyle: chipAnimationStyle,
           }),
           builder: (args) => _i1.FilterChip(
             key: args(#key),
@@ -123,6 +125,7 @@ final class FilterChip extends Wrapper {
             avatarBorder: args(#avatarBorder),
             avatarBoxConstraints: args(#avatarBoxConstraints),
             deleteIconBoxConstraints: args(#deleteIconBoxConstraints),
+            chipAnimationStyle: args(#chipAnimationStyle),
           ),
         );
 
@@ -164,6 +167,7 @@ final class FilterChip extends Wrapper {
     _i4.ShapeBorder avatarBorder = const _i4.CircleBorder(),
     _i5.BoxConstraints? avatarBoxConstraints,
     _i5.BoxConstraints? deleteIconBoxConstraints,
+    _i1.ChipAnimationStyle? chipAnimationStyle,
   }) : super(
           Argument({
             #key: key,
@@ -201,6 +205,7 @@ final class FilterChip extends Wrapper {
             #avatarBorder: avatarBorder,
             #avatarBoxConstraints: avatarBoxConstraints,
             #deleteIconBoxConstraints: deleteIconBoxConstraints,
+            #chipAnimationStyle: chipAnimationStyle,
           }),
           builder: (args) => _i1.FilterChip.elevated(
             key: args(#key),
@@ -238,6 +243,7 @@ final class FilterChip extends Wrapper {
             avatarBorder: args(#avatarBorder),
             avatarBoxConstraints: args(#avatarBoxConstraints),
             deleteIconBoxConstraints: args(#deleteIconBoxConstraints),
+            chipAnimationStyle: args(#chipAnimationStyle),
           ),
         );
 }

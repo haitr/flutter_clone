@@ -2,7 +2,8 @@ library rxflutterify_binding; // ignore_for_file: no_leading_underscores_for_lib
 
 import 'package:flutter/foundation.dart' as _i2;
 import 'package:flutter/material.dart' as _i1;
-import 'package:flutter/widgets.dart' as _i3;
+import 'package:flutter/painting.dart' as _i3;
+import 'package:flutter/widgets.dart' as _i4;
 
 import '../wrapper.dart';
 
@@ -16,9 +17,10 @@ final class SegmentedButton<T> extends Wrapper {
     void Function(Set<T>)? onSelectionChanged,
     bool multiSelectionEnabled = false,
     bool emptySelectionAllowed = false,
+    _i3.EdgeInsets? expandedInsets,
     _i1.ButtonStyle? style,
     bool showSelectedIcon = true,
-    _i3.Widget? selectedIcon,
+    _i4.Widget? selectedIcon,
   }) : super(
           Argument({
             #key: key,
@@ -27,6 +29,7 @@ final class SegmentedButton<T> extends Wrapper {
             #onSelectionChanged: onSelectionChanged,
             #multiSelectionEnabled: multiSelectionEnabled,
             #emptySelectionAllowed: emptySelectionAllowed,
+            #expandedInsets: expandedInsets,
             #style: style,
             #showSelectedIcon: showSelectedIcon,
             #selectedIcon: selectedIcon,
@@ -38,6 +41,7 @@ final class SegmentedButton<T> extends Wrapper {
             onSelectionChanged: args(#onSelectionChanged),
             multiSelectionEnabled: args(#multiSelectionEnabled),
             emptySelectionAllowed: args(#emptySelectionAllowed),
+            expandedInsets: args(#expandedInsets),
             style: args(#style),
             showSelectedIcon: args(#showSelectedIcon),
             selectedIcon: args(#selectedIcon),

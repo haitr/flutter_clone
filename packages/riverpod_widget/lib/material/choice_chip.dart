@@ -44,6 +44,7 @@ final class ChoiceChip extends Wrapper {
     ui.Color? checkmarkColor,
     _i4.ShapeBorder avatarBorder = const _i4.CircleBorder(),
     _i5.BoxConstraints? avatarBoxConstraints,
+    _i1.ChipAnimationStyle? chipAnimationStyle,
   }) : super(
           Argument({
             #key: key,
@@ -76,6 +77,7 @@ final class ChoiceChip extends Wrapper {
             #checkmarkColor: checkmarkColor,
             #avatarBorder: avatarBorder,
             #avatarBoxConstraints: avatarBoxConstraints,
+            #chipAnimationStyle: chipAnimationStyle,
           }),
           builder: (args) => _i1.ChoiceChip(
             key: args(#key),
@@ -108,6 +110,7 @@ final class ChoiceChip extends Wrapper {
             checkmarkColor: args(#checkmarkColor),
             avatarBorder: args(#avatarBorder),
             avatarBoxConstraints: args(#avatarBoxConstraints),
+            chipAnimationStyle: args(#chipAnimationStyle),
           ),
         );
 
@@ -144,6 +147,7 @@ final class ChoiceChip extends Wrapper {
     ui.Color? checkmarkColor,
     _i4.ShapeBorder avatarBorder = const _i4.CircleBorder(),
     _i5.BoxConstraints? avatarBoxConstraints,
+    _i1.ChipAnimationStyle? chipAnimationStyle,
   }) : super(
           Argument({
             #key: key,
@@ -176,6 +180,7 @@ final class ChoiceChip extends Wrapper {
             #checkmarkColor: checkmarkColor,
             #avatarBorder: avatarBorder,
             #avatarBoxConstraints: avatarBoxConstraints,
+            #chipAnimationStyle: chipAnimationStyle,
           }),
           builder: (args) => _i1.ChoiceChip.elevated(
             key: args(#key),
@@ -208,6 +213,7 @@ final class ChoiceChip extends Wrapper {
             checkmarkColor: args(#checkmarkColor),
             avatarBorder: args(#avatarBorder),
             avatarBoxConstraints: args(#avatarBoxConstraints),
+            chipAnimationStyle: args(#chipAnimationStyle),
           ),
         );
 }

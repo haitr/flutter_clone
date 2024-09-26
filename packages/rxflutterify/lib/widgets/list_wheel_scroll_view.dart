@@ -25,6 +25,7 @@ final class ListWheelScrollView extends Wrapper {
     _i2.ValueChanged<int>? onSelectedItemChanged,
     bool renderChildrenOutsideViewport = false,
     ui.Clip clipBehavior = ui.Clip.hardEdge,
+    _i3.HitTestBehavior hitTestBehavior = _i3.HitTestBehavior.opaque,
     String? restorationId,
     _i1.ScrollBehavior? scrollBehavior,
     required List<_i1.Widget> children,
@@ -56,6 +57,8 @@ final class ListWheelScrollView extends Wrapper {
     Stream<bool>? $renderChildrenOutsideViewport,
     // Associate with clipBehavior
     Stream<ui.Clip>? $clipBehavior,
+    // Associate with hitTestBehavior
+    Stream<_i3.HitTestBehavior>? $hitTestBehavior,
     // Associate with restorationId
     Stream<String?>? $restorationId,
     // Associate with scrollBehavior
@@ -79,6 +82,7 @@ final class ListWheelScrollView extends Wrapper {
               'onSelectedItemChanged': onSelectedItemChanged,
               'renderChildrenOutsideViewport': renderChildrenOutsideViewport,
               'clipBehavior': clipBehavior,
+              'hitTestBehavior': hitTestBehavior,
               'restorationId': restorationId,
               'scrollBehavior': scrollBehavior,
               'children': children,
@@ -98,6 +102,7 @@ final class ListWheelScrollView extends Wrapper {
               'onSelectedItemChanged': $onSelectedItemChanged,
               'renderChildrenOutsideViewport': $renderChildrenOutsideViewport,
               'clipBehavior': $clipBehavior,
+              'hitTestBehavior': $hitTestBehavior,
               'restorationId': $restorationId,
               'scrollBehavior': $scrollBehavior,
               'children': $children,
@@ -118,6 +123,7 @@ final class ListWheelScrollView extends Wrapper {
             onSelectedItemChanged: args('onSelectedItemChanged'),
             renderChildrenOutsideViewport: args('renderChildrenOutsideViewport'),
             clipBehavior: args('clipBehavior'),
+            hitTestBehavior: args('hitTestBehavior'),
             restorationId: args('restorationId'),
             scrollBehavior: args('scrollBehavior'),
             children: args('children'),
@@ -140,6 +146,7 @@ final class ListWheelScrollView extends Wrapper {
     _i2.ValueChanged<int>? onSelectedItemChanged,
     bool renderChildrenOutsideViewport = false,
     ui.Clip clipBehavior = ui.Clip.hardEdge,
+    _i3.HitTestBehavior hitTestBehavior = _i3.HitTestBehavior.opaque,
     String? restorationId,
     _i1.ScrollBehavior? scrollBehavior,
     required _i1.ListWheelChildDelegate childDelegate,
@@ -171,6 +178,8 @@ final class ListWheelScrollView extends Wrapper {
     Stream<bool>? $renderChildrenOutsideViewport,
     // Associate with clipBehavior
     Stream<ui.Clip>? $clipBehavior,
+    // Associate with hitTestBehavior
+    Stream<_i3.HitTestBehavior>? $hitTestBehavior,
     // Associate with restorationId
     Stream<String?>? $restorationId,
     // Associate with scrollBehavior
@@ -194,6 +203,7 @@ final class ListWheelScrollView extends Wrapper {
               'onSelectedItemChanged': onSelectedItemChanged,
               'renderChildrenOutsideViewport': renderChildrenOutsideViewport,
               'clipBehavior': clipBehavior,
+              'hitTestBehavior': hitTestBehavior,
               'restorationId': restorationId,
               'scrollBehavior': scrollBehavior,
               'childDelegate': childDelegate,
@@ -213,6 +223,7 @@ final class ListWheelScrollView extends Wrapper {
               'onSelectedItemChanged': $onSelectedItemChanged,
               'renderChildrenOutsideViewport': $renderChildrenOutsideViewport,
               'clipBehavior': $clipBehavior,
+              'hitTestBehavior': $hitTestBehavior,
               'restorationId': $restorationId,
               'scrollBehavior': $scrollBehavior,
               'childDelegate': $childDelegate,
@@ -233,6 +244,7 @@ final class ListWheelScrollView extends Wrapper {
             onSelectedItemChanged: args('onSelectedItemChanged'),
             renderChildrenOutsideViewport: args('renderChildrenOutsideViewport'),
             clipBehavior: args('clipBehavior'),
+            hitTestBehavior: args('hitTestBehavior'),
             restorationId: args('restorationId'),
             scrollBehavior: args('scrollBehavior'),
             childDelegate: args('childDelegate'),

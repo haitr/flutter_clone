@@ -15,6 +15,7 @@ final class TextField extends Wrapper {
   @Goto(_i1.TextField.new)
   TextField({
     _i2.Key? key,
+    Object groupId = _i3.EditableText,
     _i3.TextEditingController? controller,
     _i3.FocusNode? focusNode,
     _i3.UndoHistoryController? undoController,
@@ -82,6 +83,8 @@ final class TextField extends Wrapper {
     _i3.TextMagnifierConfiguration? magnifierConfiguration,
     // Associate with key
     Stream<_i2.Key?>? $key,
+    // Associate with groupId
+    Stream<Object>? $groupId,
     // Associate with controller
     Stream<_i3.TextEditingController?>? $controller,
     // Associate with focusNode
@@ -216,6 +219,7 @@ final class TextField extends Wrapper {
           Argument(
             {
               'key': key,
+              'groupId': groupId,
               'controller': controller,
               'focusNode': focusNode,
               'undoController': undoController,
@@ -284,6 +288,7 @@ final class TextField extends Wrapper {
             },
             stream: {
               'key': $key,
+              'groupId': $groupId,
               'controller': $controller,
               'focusNode': $focusNode,
               'undoController': $undoController,
@@ -353,6 +358,7 @@ final class TextField extends Wrapper {
           ),
           builder: (args) => _i1.TextField(
             key: args('key'),
+            groupId: args('groupId'),
             controller: args('controller'),
             focusNode: args('focusNode'),
             undoController: args('undoController'),

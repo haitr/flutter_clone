@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart' as _i2;
 import 'package:flutter/material.dart' as _i1;
+import 'package:flutter/painting.dart' as _i4;
 import 'package:flutter/widgets.dart' as _i3;
 
 import '../wrapper.dart';
@@ -213,14 +214,17 @@ final class MenuItemButton extends Wrapper {
     bool requestFocusOnHover = true,
     _i2.ValueChanged<bool>? onFocusChange,
     _i3.FocusNode? focusNode,
+    bool autofocus = false,
     _i3.MenuSerializableShortcut? shortcut,
+    String? semanticsLabel,
     _i1.ButtonStyle? style,
     _i3.WidgetStatesController? statesController,
     ui.Clip clipBehavior = ui.Clip.none,
     _i3.Widget? leadingIcon,
     _i3.Widget? trailingIcon,
     bool closeOnActivate = true,
-    required _i3.Widget? child,
+    _i4.Axis overflowAxis = _i4.Axis.horizontal,
+    _i3.Widget? child,
   }) : super(
           Argument({
             #key: key,
@@ -229,13 +233,16 @@ final class MenuItemButton extends Wrapper {
             #requestFocusOnHover: requestFocusOnHover,
             #onFocusChange: onFocusChange,
             #focusNode: focusNode,
+            #autofocus: autofocus,
             #shortcut: shortcut,
+            #semanticsLabel: semanticsLabel,
             #style: style,
             #statesController: statesController,
             #clipBehavior: clipBehavior,
             #leadingIcon: leadingIcon,
             #trailingIcon: trailingIcon,
             #closeOnActivate: closeOnActivate,
+            #overflowAxis: overflowAxis,
             #child: child,
           }),
           builder: (args) => _i1.MenuItemButton(
@@ -245,13 +252,16 @@ final class MenuItemButton extends Wrapper {
             requestFocusOnHover: args(#requestFocusOnHover),
             onFocusChange: args(#onFocusChange),
             focusNode: args(#focusNode),
+            autofocus: args(#autofocus),
             shortcut: args(#shortcut),
+            semanticsLabel: args(#semanticsLabel),
             style: args(#style),
             statesController: args(#statesController),
             clipBehavior: args(#clipBehavior),
             leadingIcon: args(#leadingIcon),
             trailingIcon: args(#trailingIcon),
             closeOnActivate: args(#closeOnActivate),
+            overflowAxis: args(#overflowAxis),
             child: args(#child),
           ),
         );

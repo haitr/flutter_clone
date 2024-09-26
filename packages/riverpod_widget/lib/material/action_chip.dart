@@ -38,6 +38,7 @@ final class ActionChip extends Wrapper {
     ui.Color? surfaceTintColor,
     _i3.IconThemeData? iconTheme,
     _i5.BoxConstraints? avatarBoxConstraints,
+    _i1.ChipAnimationStyle? chipAnimationStyle,
   }) : super(
           Argument({
             #key: key,
@@ -64,6 +65,7 @@ final class ActionChip extends Wrapper {
             #surfaceTintColor: surfaceTintColor,
             #iconTheme: iconTheme,
             #avatarBoxConstraints: avatarBoxConstraints,
+            #chipAnimationStyle: chipAnimationStyle,
           }),
           builder: (args) => _i1.ActionChip(
             key: args(#key),
@@ -90,6 +92,7 @@ final class ActionChip extends Wrapper {
             surfaceTintColor: args(#surfaceTintColor),
             iconTheme: args(#iconTheme),
             avatarBoxConstraints: args(#avatarBoxConstraints),
+            chipAnimationStyle: args(#chipAnimationStyle),
           ),
         );
 
@@ -120,6 +123,7 @@ final class ActionChip extends Wrapper {
     ui.Color? surfaceTintColor,
     _i3.IconThemeData? iconTheme,
     _i5.BoxConstraints? avatarBoxConstraints,
+    _i1.ChipAnimationStyle? chipAnimationStyle,
   }) : super(
           Argument({
             #key: key,
@@ -146,6 +150,7 @@ final class ActionChip extends Wrapper {
             #surfaceTintColor: surfaceTintColor,
             #iconTheme: iconTheme,
             #avatarBoxConstraints: avatarBoxConstraints,
+            #chipAnimationStyle: chipAnimationStyle,
           }),
           builder: (args) => _i1.ActionChip.elevated(
             key: args(#key),
@@ -172,6 +177,7 @@ final class ActionChip extends Wrapper {
             surfaceTintColor: args(#surfaceTintColor),
             iconTheme: args(#iconTheme),
             avatarBoxConstraints: args(#avatarBoxConstraints),
+            chipAnimationStyle: args(#chipAnimationStyle),
           ),
         );
 }

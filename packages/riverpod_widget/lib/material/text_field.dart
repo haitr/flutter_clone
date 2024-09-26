@@ -16,6 +16,7 @@ final class TextField extends Wrapper {
   TextField(
     $ $config, {
     _i2.Key? key,
+    Object groupId = _i3.EditableText,
     _i3.TextEditingController? controller,
     _i3.FocusNode? focusNode,
     _i3.UndoHistoryController? undoController,
@@ -84,6 +85,7 @@ final class TextField extends Wrapper {
   }) : super(
           Argument({
             #key: key,
+            #groupId: groupId,
             #controller: controller,
             #focusNode: focusNode,
             #undoController: undoController,
@@ -152,6 +154,7 @@ final class TextField extends Wrapper {
           }),
           builder: (args) => _i1.TextField(
             key: args(#key),
+            groupId: args(#groupId),
             controller: args(#controller),
             focusNode: args(#focusNode),
             undoController: args(#undoController),

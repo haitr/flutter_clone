@@ -74,6 +74,7 @@ final class TextFieldTapRegion extends Wrapper {
     _i1.TapRegionCallback? onTapInside,
     bool consumeOutsideTaps = false,
     String? debugLabel,
+    Object? groupId = _i1.EditableText,
   }) : super(
           Argument({
             #key: key,
@@ -83,6 +84,7 @@ final class TextFieldTapRegion extends Wrapper {
             #onTapInside: onTapInside,
             #consumeOutsideTaps: consumeOutsideTaps,
             #debugLabel: debugLabel,
+            #groupId: groupId,
           }),
           builder: (args) => _i1.TextFieldTapRegion(
             key: args(#key),
@@ -92,6 +94,7 @@ final class TextFieldTapRegion extends Wrapper {
             onTapInside: args(#onTapInside),
             consumeOutsideTaps: args(#consumeOutsideTaps),
             debugLabel: args(#debugLabel),
+            groupId: args(#groupId),
           ),
         );
 }

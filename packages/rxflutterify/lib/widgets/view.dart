@@ -8,6 +8,51 @@ import 'package:flutter/widgets.dart' as _i1;
 
 import '../wrapper.dart';
 
+final class RawView extends Wrapper {
+  @Goto(_i1.RawView.new)
+  RawView({
+    _i2.Key? key,
+    required ui.FlutterView view,
+    _i3.PipelineOwner? deprecatedDoNotUseWillBeRemovedWithoutNoticePipelineOwner,
+    _i3.RenderView? deprecatedDoNotUseWillBeRemovedWithoutNoticeRenderView,
+    required _i1.Widget child,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with view
+    Stream<ui.FlutterView>? $view,
+    // Associate with deprecatedDoNotUseWillBeRemovedWithoutNoticePipelineOwner
+    Stream<_i3.PipelineOwner?>? $deprecatedDoNotUseWillBeRemovedWithoutNoticePipelineOwner,
+    // Associate with deprecatedDoNotUseWillBeRemovedWithoutNoticeRenderView
+    Stream<_i3.RenderView?>? $deprecatedDoNotUseWillBeRemovedWithoutNoticeRenderView,
+    // Associate with child
+    Stream<_i1.Widget>? $child,
+  }) : super(
+          Argument(
+            {
+              'key': key,
+              'view': view,
+              'deprecatedDoNotUseWillBeRemovedWithoutNoticePipelineOwner': deprecatedDoNotUseWillBeRemovedWithoutNoticePipelineOwner,
+              'deprecatedDoNotUseWillBeRemovedWithoutNoticeRenderView': deprecatedDoNotUseWillBeRemovedWithoutNoticeRenderView,
+              'child': child,
+            },
+            stream: {
+              'key': $key,
+              'view': $view,
+              'deprecatedDoNotUseWillBeRemovedWithoutNoticePipelineOwner': $deprecatedDoNotUseWillBeRemovedWithoutNoticePipelineOwner,
+              'deprecatedDoNotUseWillBeRemovedWithoutNoticeRenderView': $deprecatedDoNotUseWillBeRemovedWithoutNoticeRenderView,
+              'child': $child,
+            },
+          ),
+          builder: (args) => _i1.RawView(
+            key: args('key'),
+            view: args('view'),
+            deprecatedDoNotUseWillBeRemovedWithoutNoticePipelineOwner: args('deprecatedDoNotUseWillBeRemovedWithoutNoticePipelineOwner'),
+            deprecatedDoNotUseWillBeRemovedWithoutNoticeRenderView: args('deprecatedDoNotUseWillBeRemovedWithoutNoticeRenderView'),
+            child: args('child'),
+          ),
+        );
+}
+
 final class View extends Wrapper {
   @Goto(_i1.View.new)
   View({

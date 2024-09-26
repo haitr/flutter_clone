@@ -5,6 +5,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart' as _i2;
 import 'package:flutter/gestures.dart' as _i4;
 import 'package:flutter/painting.dart' as _i3;
+import 'package:flutter/rendering.dart' as _i5;
 import 'package:flutter/widgets.dart' as _i1;
 
 import '../wrapper.dart';
@@ -23,6 +24,7 @@ final class SingleChildScrollView extends Wrapper {
     _i1.Widget? child,
     _i4.DragStartBehavior dragStartBehavior = _i4.DragStartBehavior.start,
     ui.Clip clipBehavior = ui.Clip.hardEdge,
+    _i5.HitTestBehavior hitTestBehavior = _i5.HitTestBehavior.opaque,
     String? restorationId,
     _i1.ScrollViewKeyboardDismissBehavior keyboardDismissBehavior = _i1.ScrollViewKeyboardDismissBehavior.manual,
   }) : super(
@@ -37,6 +39,7 @@ final class SingleChildScrollView extends Wrapper {
             #child: child,
             #dragStartBehavior: dragStartBehavior,
             #clipBehavior: clipBehavior,
+            #hitTestBehavior: hitTestBehavior,
             #restorationId: restorationId,
             #keyboardDismissBehavior: keyboardDismissBehavior,
           }),
@@ -51,6 +54,7 @@ final class SingleChildScrollView extends Wrapper {
             child: args(#child),
             dragStartBehavior: args(#dragStartBehavior),
             clipBehavior: args(#clipBehavior),
+            hitTestBehavior: args(#hitTestBehavior),
             restorationId: args(#restorationId),
             keyboardDismissBehavior: args(#keyboardDismissBehavior),
           ),

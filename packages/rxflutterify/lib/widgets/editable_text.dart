@@ -52,6 +52,7 @@ final class EditableText extends Wrapper {
     _i1.AppPrivateCommandCallback? onAppPrivateCommand,
     _i1.SelectionChangedCallback? onSelectionChanged,
     ui.VoidCallback? onSelectionHandleTapped,
+    Object groupId = _i1.EditableText,
     _i1.TapRegionCallback? onTapOutside,
     List<_i3.TextInputFormatter>? inputFormatters,
     _i3.MouseCursor? mouseCursor,
@@ -162,6 +163,8 @@ final class EditableText extends Wrapper {
     Stream<_i1.SelectionChangedCallback?>? $onSelectionChanged,
     // Associate with onSelectionHandleTapped
     Stream<ui.VoidCallback?>? $onSelectionHandleTapped,
+    // Associate with groupId
+    Stream<Object>? $groupId,
     // Associate with onTapOutside
     Stream<_i1.TapRegionCallback?>? $onTapOutside,
     // Associate with inputFormatters
@@ -268,6 +271,7 @@ final class EditableText extends Wrapper {
               'onAppPrivateCommand': onAppPrivateCommand,
               'onSelectionChanged': onSelectionChanged,
               'onSelectionHandleTapped': onSelectionHandleTapped,
+              'groupId': groupId,
               'onTapOutside': onTapOutside,
               'inputFormatters': inputFormatters,
               'mouseCursor': mouseCursor,
@@ -341,6 +345,7 @@ final class EditableText extends Wrapper {
               'onAppPrivateCommand': $onAppPrivateCommand,
               'onSelectionChanged': $onSelectionChanged,
               'onSelectionHandleTapped': $onSelectionHandleTapped,
+              'groupId': $groupId,
               'onTapOutside': $onTapOutside,
               'inputFormatters': $inputFormatters,
               'mouseCursor': $mouseCursor,
@@ -415,6 +420,7 @@ final class EditableText extends Wrapper {
             onAppPrivateCommand: args('onAppPrivateCommand'),
             onSelectionChanged: args('onSelectionChanged'),
             onSelectionHandleTapped: args('onSelectionHandleTapped'),
+            groupId: args('groupId'),
             onTapOutside: args('onTapOutside'),
             inputFormatters: args('inputFormatters'),
             mouseCursor: args('mouseCursor'),

@@ -30,6 +30,7 @@ final class DropdownButton<T> extends Wrapper {
     bool isDense = false,
     bool isExpanded = false,
     double? itemHeight = _i1.kMinInteractiveDimension,
+    double? menuWidth,
     ui.Color? focusColor,
     _i3.FocusNode? focusNode,
     bool autofocus = false,
@@ -75,6 +76,8 @@ final class DropdownButton<T> extends Wrapper {
     Stream<bool>? $isExpanded,
     // Associate with itemHeight
     Stream<double?>? $itemHeight,
+    // Associate with menuWidth
+    Stream<double?>? $menuWidth,
     // Associate with focusColor
     Stream<ui.Color?>? $focusColor,
     // Associate with focusNode
@@ -114,6 +117,7 @@ final class DropdownButton<T> extends Wrapper {
               'isDense': isDense,
               'isExpanded': isExpanded,
               'itemHeight': itemHeight,
+              'menuWidth': menuWidth,
               'focusColor': focusColor,
               'focusNode': focusNode,
               'autofocus': autofocus,
@@ -143,6 +147,7 @@ final class DropdownButton<T> extends Wrapper {
               'isDense': $isDense,
               'isExpanded': $isExpanded,
               'itemHeight': $itemHeight,
+              'menuWidth': $menuWidth,
               'focusColor': $focusColor,
               'focusNode': $focusNode,
               'autofocus': $autofocus,
@@ -173,6 +178,7 @@ final class DropdownButton<T> extends Wrapper {
             isDense: args('isDense'),
             isExpanded: args('isExpanded'),
             itemHeight: args('itemHeight'),
+            menuWidth: args('menuWidth'),
             focusColor: args('focusColor'),
             focusNode: args('focusNode'),
             autofocus: args('autofocus'),

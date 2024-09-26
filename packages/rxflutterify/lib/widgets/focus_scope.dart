@@ -206,6 +206,9 @@ final class FocusScope extends Wrapper {
     _i1.FocusOnKeyEventCallback? onKeyEvent,
     _i1.FocusOnKeyCallback? onKey,
     String? debugLabel,
+    bool includeSemantics = true,
+    bool? descendantsAreFocusable,
+    bool? descendantsAreTraversable,
     // Associate with key
     Stream<_i2.Key?>? $key,
     // Associate with node
@@ -228,6 +231,12 @@ final class FocusScope extends Wrapper {
     Stream<_i1.FocusOnKeyCallback?>? $onKey,
     // Associate with debugLabel
     Stream<String?>? $debugLabel,
+    // Associate with includeSemantics
+    Stream<bool>? $includeSemantics,
+    // Associate with descendantsAreFocusable
+    Stream<bool?>? $descendantsAreFocusable,
+    // Associate with descendantsAreTraversable
+    Stream<bool?>? $descendantsAreTraversable,
   }) : super(
           Argument(
             {
@@ -242,6 +251,9 @@ final class FocusScope extends Wrapper {
               'onKeyEvent': onKeyEvent,
               'onKey': onKey,
               'debugLabel': debugLabel,
+              'includeSemantics': includeSemantics,
+              'descendantsAreFocusable': descendantsAreFocusable,
+              'descendantsAreTraversable': descendantsAreTraversable,
             },
             stream: {
               'key': $key,
@@ -255,6 +267,9 @@ final class FocusScope extends Wrapper {
               'onKeyEvent': $onKeyEvent,
               'onKey': $onKey,
               'debugLabel': $debugLabel,
+              'includeSemantics': $includeSemantics,
+              'descendantsAreFocusable': $descendantsAreFocusable,
+              'descendantsAreTraversable': $descendantsAreTraversable,
             },
           ),
           builder: (args) => _i1.FocusScope(
@@ -269,6 +284,9 @@ final class FocusScope extends Wrapper {
             onKeyEvent: args('onKeyEvent'),
             onKey: args('onKey'),
             debugLabel: args('debugLabel'),
+            includeSemantics: args('includeSemantics'),
+            descendantsAreFocusable: args('descendantsAreFocusable'),
+            descendantsAreTraversable: args('descendantsAreTraversable'),
           ),
         );
 
@@ -279,6 +297,7 @@ final class FocusScope extends Wrapper {
     required _i1.FocusScopeNode focusScopeNode,
     _i1.FocusNode? parentNode,
     bool autofocus = false,
+    bool includeSemantics = true,
     _i2.ValueChanged<bool>? onFocusChange,
     // Associate with key
     Stream<_i2.Key?>? $key,
@@ -290,6 +309,8 @@ final class FocusScope extends Wrapper {
     Stream<_i1.FocusNode?>? $parentNode,
     // Associate with autofocus
     Stream<bool>? $autofocus,
+    // Associate with includeSemantics
+    Stream<bool>? $includeSemantics,
     // Associate with onFocusChange
     Stream<_i2.ValueChanged<bool>?>? $onFocusChange,
   }) : super(
@@ -300,6 +321,7 @@ final class FocusScope extends Wrapper {
               'focusScopeNode': focusScopeNode,
               'parentNode': parentNode,
               'autofocus': autofocus,
+              'includeSemantics': includeSemantics,
               'onFocusChange': onFocusChange,
             },
             stream: {
@@ -308,6 +330,7 @@ final class FocusScope extends Wrapper {
               'focusScopeNode': $focusScopeNode,
               'parentNode': $parentNode,
               'autofocus': $autofocus,
+              'includeSemantics': $includeSemantics,
               'onFocusChange': $onFocusChange,
             },
           ),
@@ -317,6 +340,7 @@ final class FocusScope extends Wrapper {
             focusScopeNode: args('focusScopeNode'),
             parentNode: args('parentNode'),
             autofocus: args('autofocus'),
+            includeSemantics: args('includeSemantics'),
             onFocusChange: args('onFocusChange'),
           ),
         );
@@ -351,7 +375,13 @@ class _FocusWithExternalFocusNode extends _i1.Focus {
 
 class _FocusScopeWithExternalFocusNode extends _i1.FocusScope {
   const _FocusScopeWithExternalFocusNode(
-      {super.key, required super.child, required _i1.FocusScopeNode focusScopeNode, super.parentNode, super.autofocus, super.onFocusChange})
+      {super.key,
+      required super.child,
+      required _i1.FocusScopeNode focusScopeNode,
+      super.parentNode,
+      super.autofocus,
+      super.includeSemantics,
+      super.onFocusChange})
       : super(node: focusScopeNode);
   @override
   bool get _usingExternalFocus => true;

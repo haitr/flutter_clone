@@ -4,7 +4,8 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart' as _i2;
 import 'package:flutter/gestures.dart' as _i3;
-import 'package:flutter/painting.dart' as _i4;
+import 'package:flutter/painting.dart' as _i5;
+import 'package:flutter/rendering.dart' as _i4;
 import 'package:flutter/widgets.dart' as _i1;
 
 import '../wrapper.dart';
@@ -21,6 +22,7 @@ final class TwoDimensionalScrollable extends Wrapper {
     bool excludeFromSemantics = false,
     _i1.DiagonalDragBehavior diagonalDragBehavior = _i1.DiagonalDragBehavior.none,
     _i3.DragStartBehavior dragStartBehavior = _i3.DragStartBehavior.start,
+    _i4.HitTestBehavior hitTestBehavior = _i4.HitTestBehavior.opaque,
     // Associate with key
     Stream<_i2.Key?>? $key,
     // Associate with horizontalDetails
@@ -39,6 +41,8 @@ final class TwoDimensionalScrollable extends Wrapper {
     Stream<_i1.DiagonalDragBehavior>? $diagonalDragBehavior,
     // Associate with dragStartBehavior
     Stream<_i3.DragStartBehavior>? $dragStartBehavior,
+    // Associate with hitTestBehavior
+    Stream<_i4.HitTestBehavior>? $hitTestBehavior,
   }) : super(
           Argument(
             {
@@ -51,6 +55,7 @@ final class TwoDimensionalScrollable extends Wrapper {
               'excludeFromSemantics': excludeFromSemantics,
               'diagonalDragBehavior': diagonalDragBehavior,
               'dragStartBehavior': dragStartBehavior,
+              'hitTestBehavior': hitTestBehavior,
             },
             stream: {
               'key': $key,
@@ -62,6 +67,7 @@ final class TwoDimensionalScrollable extends Wrapper {
               'excludeFromSemantics': $excludeFromSemantics,
               'diagonalDragBehavior': $diagonalDragBehavior,
               'dragStartBehavior': $dragStartBehavior,
+              'hitTestBehavior': $hitTestBehavior,
             },
           ),
           builder: (args) => _i1.TwoDimensionalScrollable(
@@ -74,6 +80,7 @@ final class TwoDimensionalScrollable extends Wrapper {
             excludeFromSemantics: args('excludeFromSemantics'),
             diagonalDragBehavior: args('diagonalDragBehavior'),
             dragStartBehavior: args('dragStartBehavior'),
+            hitTestBehavior: args('hitTestBehavior'),
           ),
         );
 }
@@ -82,7 +89,7 @@ final class Scrollable extends Wrapper {
   @Goto(_i1.Scrollable.new)
   Scrollable({
     _i2.Key? key,
-    _i4.AxisDirection axisDirection = _i4.AxisDirection.down,
+    _i5.AxisDirection axisDirection = _i5.AxisDirection.down,
     _i1.ScrollController? controller,
     _i1.ScrollPhysics? physics,
     required _i1.ViewportBuilder viewportBuilder,
@@ -93,10 +100,11 @@ final class Scrollable extends Wrapper {
     String? restorationId,
     _i1.ScrollBehavior? scrollBehavior,
     ui.Clip clipBehavior = ui.Clip.hardEdge,
+    _i4.HitTestBehavior hitTestBehavior = _i4.HitTestBehavior.opaque,
     // Associate with key
     Stream<_i2.Key?>? $key,
     // Associate with axisDirection
-    Stream<_i4.AxisDirection>? $axisDirection,
+    Stream<_i5.AxisDirection>? $axisDirection,
     // Associate with controller
     Stream<_i1.ScrollController?>? $controller,
     // Associate with physics
@@ -117,6 +125,8 @@ final class Scrollable extends Wrapper {
     Stream<_i1.ScrollBehavior?>? $scrollBehavior,
     // Associate with clipBehavior
     Stream<ui.Clip>? $clipBehavior,
+    // Associate with hitTestBehavior
+    Stream<_i4.HitTestBehavior>? $hitTestBehavior,
   }) : super(
           Argument(
             {
@@ -132,6 +142,7 @@ final class Scrollable extends Wrapper {
               'restorationId': restorationId,
               'scrollBehavior': scrollBehavior,
               'clipBehavior': clipBehavior,
+              'hitTestBehavior': hitTestBehavior,
             },
             stream: {
               'key': $key,
@@ -146,6 +157,7 @@ final class Scrollable extends Wrapper {
               'restorationId': $restorationId,
               'scrollBehavior': $scrollBehavior,
               'clipBehavior': $clipBehavior,
+              'hitTestBehavior': $hitTestBehavior,
             },
           ),
           builder: (args) => _i1.Scrollable(
@@ -161,6 +173,7 @@ final class Scrollable extends Wrapper {
             restorationId: args('restorationId'),
             scrollBehavior: args('scrollBehavior'),
             clipBehavior: args('clipBehavior'),
+            hitTestBehavior: args('hitTestBehavior'),
           ),
         );
 }

@@ -35,7 +35,7 @@ final class Image extends Wrapper {
     bool matchTextDirection = false,
     bool gaplessPlayback = false,
     bool isAntiAlias = false,
-    ui.FilterQuality filterQuality = ui.FilterQuality.low,
+    ui.FilterQuality filterQuality = ui.FilterQuality.medium,
   }) : super(
           Argument({
             #key: key,
@@ -105,7 +105,7 @@ final class Image extends Wrapper {
     ui.Rect? centerSlice,
     bool matchTextDirection = false,
     bool gaplessPlayback = false,
-    ui.FilterQuality filterQuality = ui.FilterQuality.low,
+    ui.FilterQuality filterQuality = ui.FilterQuality.medium,
     bool isAntiAlias = false,
     Map<String, String>? headers,
     int? cacheWidth,
@@ -187,7 +187,7 @@ final class Image extends Wrapper {
     bool matchTextDirection = false,
     bool gaplessPlayback = false,
     bool isAntiAlias = false,
-    ui.FilterQuality filterQuality = ui.FilterQuality.low,
+    ui.FilterQuality filterQuality = ui.FilterQuality.medium,
     int? cacheWidth,
     int? cacheHeight,
   }) : super(
@@ -265,7 +265,7 @@ final class Image extends Wrapper {
     bool gaplessPlayback = false,
     bool isAntiAlias = false,
     String? package,
-    ui.FilterQuality filterQuality = ui.FilterQuality.low,
+    ui.FilterQuality filterQuality = ui.FilterQuality.medium,
     int? cacheWidth,
     int? cacheHeight,
   }) : super(
@@ -345,7 +345,7 @@ final class Image extends Wrapper {
     bool matchTextDirection = false,
     bool gaplessPlayback = false,
     bool isAntiAlias = false,
-    ui.FilterQuality filterQuality = ui.FilterQuality.low,
+    ui.FilterQuality filterQuality = ui.FilterQuality.medium,
     int? cacheWidth,
     int? cacheHeight,
   }) : super(

@@ -15,6 +15,7 @@ final class CupertinoTextField extends Wrapper {
   @Goto(_i1.CupertinoTextField.new)
   CupertinoTextField({
     _i2.Key? key,
+    Object groupId = _i3.EditableText,
     _i3.TextEditingController? controller,
     _i3.FocusNode? focusNode,
     _i3.UndoHistoryController? undoController,
@@ -86,6 +87,8 @@ final class CupertinoTextField extends Wrapper {
     _i3.TextMagnifierConfiguration? magnifierConfiguration,
     // Associate with key
     Stream<_i2.Key?>? $key,
+    // Associate with groupId
+    Stream<Object>? $groupId,
     // Associate with controller
     Stream<_i3.TextEditingController?>? $controller,
     // Associate with focusNode
@@ -222,6 +225,7 @@ final class CupertinoTextField extends Wrapper {
           Argument(
             {
               'key': key,
+              'groupId': groupId,
               'controller': controller,
               'focusNode': focusNode,
               'undoController': undoController,
@@ -291,6 +295,7 @@ final class CupertinoTextField extends Wrapper {
             },
             stream: {
               'key': $key,
+              'groupId': $groupId,
               'controller': $controller,
               'focusNode': $focusNode,
               'undoController': $undoController,
@@ -361,6 +366,7 @@ final class CupertinoTextField extends Wrapper {
           ),
           builder: (args) => _i1.CupertinoTextField(
             key: args('key'),
+            groupId: args('groupId'),
             controller: args('controller'),
             focusNode: args('focusNode'),
             undoController: args('undoController'),
@@ -433,6 +439,7 @@ final class CupertinoTextField extends Wrapper {
   @Goto(_i1.CupertinoTextField.borderless)
   CupertinoTextField.borderless({
     _i2.Key? key,
+    Object groupId = _i3.EditableText,
     _i3.TextEditingController? controller,
     _i3.FocusNode? focusNode,
     _i3.UndoHistoryController? undoController,
@@ -501,6 +508,8 @@ final class CupertinoTextField extends Wrapper {
     _i3.TextMagnifierConfiguration? magnifierConfiguration,
     // Associate with key
     Stream<_i2.Key?>? $key,
+    // Associate with groupId
+    Stream<Object>? $groupId,
     // Associate with controller
     Stream<_i3.TextEditingController?>? $controller,
     // Associate with focusNode
@@ -637,6 +646,7 @@ final class CupertinoTextField extends Wrapper {
           Argument(
             {
               'key': key,
+              'groupId': groupId,
               'controller': controller,
               'focusNode': focusNode,
               'undoController': undoController,
@@ -706,6 +716,7 @@ final class CupertinoTextField extends Wrapper {
             },
             stream: {
               'key': $key,
+              'groupId': $groupId,
               'controller': $controller,
               'focusNode': $focusNode,
               'undoController': $undoController,
@@ -776,6 +787,7 @@ final class CupertinoTextField extends Wrapper {
           ),
           builder: (args) => _i1.CupertinoTextField.borderless(
             key: args('key'),
+            groupId: args('groupId'),
             controller: args('controller'),
             focusNode: args('focusNode'),
             undoController: args('undoController'),

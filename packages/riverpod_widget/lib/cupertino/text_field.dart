@@ -16,6 +16,7 @@ final class CupertinoTextField extends Wrapper {
   CupertinoTextField(
     $ $config, {
     _i2.Key? key,
+    Object groupId = _i3.EditableText,
     _i3.TextEditingController? controller,
     _i3.FocusNode? focusNode,
     _i3.UndoHistoryController? undoController,
@@ -88,6 +89,7 @@ final class CupertinoTextField extends Wrapper {
   }) : super(
           Argument({
             #key: key,
+            #groupId: groupId,
             #controller: controller,
             #focusNode: focusNode,
             #undoController: undoController,
@@ -157,6 +159,7 @@ final class CupertinoTextField extends Wrapper {
           }),
           builder: (args) => _i1.CupertinoTextField(
             key: args(#key),
+            groupId: args(#groupId),
             controller: args(#controller),
             focusNode: args(#focusNode),
             undoController: args(#undoController),
@@ -230,6 +233,7 @@ final class CupertinoTextField extends Wrapper {
   CupertinoTextField.borderless(
     $ $config, {
     _i2.Key? key,
+    Object groupId = _i3.EditableText,
     _i3.TextEditingController? controller,
     _i3.FocusNode? focusNode,
     _i3.UndoHistoryController? undoController,
@@ -299,6 +303,7 @@ final class CupertinoTextField extends Wrapper {
   }) : super(
           Argument({
             #key: key,
+            #groupId: groupId,
             #controller: controller,
             #focusNode: focusNode,
             #undoController: undoController,
@@ -368,6 +373,7 @@ final class CupertinoTextField extends Wrapper {
           }),
           builder: (args) => _i1.CupertinoTextField.borderless(
             key: args(#key),
+            groupId: args(#groupId),
             controller: args(#controller),
             focusNode: args(#focusNode),
             undoController: args(#undoController),

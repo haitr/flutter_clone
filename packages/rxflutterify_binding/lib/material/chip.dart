@@ -53,6 +53,7 @@ final class RawChip extends Wrapper {
     _i4.ShapeBorder avatarBorder = const _i4.CircleBorder(),
     _i5.BoxConstraints? avatarBoxConstraints,
     _i5.BoxConstraints? deleteIconBoxConstraints,
+    _i1.ChipAnimationStyle? chipAnimationStyle,
   }) : super(
           Argument({
             #key: key,
@@ -94,6 +95,7 @@ final class RawChip extends Wrapper {
             #avatarBorder: avatarBorder,
             #avatarBoxConstraints: avatarBoxConstraints,
             #deleteIconBoxConstraints: deleteIconBoxConstraints,
+            #chipAnimationStyle: chipAnimationStyle,
           }),
           builder: (args) => _i1.RawChip(
             key: args(#key),
@@ -135,6 +137,7 @@ final class RawChip extends Wrapper {
             avatarBorder: args(#avatarBorder),
             avatarBoxConstraints: args(#avatarBoxConstraints),
             deleteIconBoxConstraints: args(#deleteIconBoxConstraints),
+            chipAnimationStyle: args(#chipAnimationStyle),
           ),
         );
 }
@@ -168,6 +171,7 @@ final class Chip extends Wrapper {
     _i3.IconThemeData? iconTheme,
     _i5.BoxConstraints? avatarBoxConstraints,
     _i5.BoxConstraints? deleteIconBoxConstraints,
+    _i1.ChipAnimationStyle? chipAnimationStyle,
   }) : super(
           Argument({
             #key: key,
@@ -195,6 +199,7 @@ final class Chip extends Wrapper {
             #iconTheme: iconTheme,
             #avatarBoxConstraints: avatarBoxConstraints,
             #deleteIconBoxConstraints: deleteIconBoxConstraints,
+            #chipAnimationStyle: chipAnimationStyle,
           }),
           builder: (args) => _i1.Chip(
             key: args(#key),
@@ -222,6 +227,7 @@ final class Chip extends Wrapper {
             iconTheme: args(#iconTheme),
             avatarBoxConstraints: args(#avatarBoxConstraints),
             deleteIconBoxConstraints: args(#deleteIconBoxConstraints),
+            chipAnimationStyle: args(#chipAnimationStyle),
           ),
         );
 }

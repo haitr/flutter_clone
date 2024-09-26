@@ -43,6 +43,7 @@ final class ChoiceChip extends Wrapper {
     ui.Color? checkmarkColor,
     _i4.ShapeBorder avatarBorder = const _i4.CircleBorder(),
     _i5.BoxConstraints? avatarBoxConstraints,
+    _i1.ChipAnimationStyle? chipAnimationStyle,
     // Associate with key
     Stream<_i2.Key?>? $key,
     // Associate with avatar
@@ -103,6 +104,8 @@ final class ChoiceChip extends Wrapper {
     Stream<_i4.ShapeBorder>? $avatarBorder,
     // Associate with avatarBoxConstraints
     Stream<_i5.BoxConstraints?>? $avatarBoxConstraints,
+    // Associate with chipAnimationStyle
+    Stream<_i1.ChipAnimationStyle?>? $chipAnimationStyle,
   }) : super(
           Argument(
             {
@@ -136,6 +139,7 @@ final class ChoiceChip extends Wrapper {
               'checkmarkColor': checkmarkColor,
               'avatarBorder': avatarBorder,
               'avatarBoxConstraints': avatarBoxConstraints,
+              'chipAnimationStyle': chipAnimationStyle,
             },
             stream: {
               'key': $key,
@@ -168,6 +172,7 @@ final class ChoiceChip extends Wrapper {
               'checkmarkColor': $checkmarkColor,
               'avatarBorder': $avatarBorder,
               'avatarBoxConstraints': $avatarBoxConstraints,
+              'chipAnimationStyle': $chipAnimationStyle,
             },
           ),
           builder: (args) => _i1.ChoiceChip(
@@ -201,6 +206,7 @@ final class ChoiceChip extends Wrapper {
             checkmarkColor: args('checkmarkColor'),
             avatarBorder: args('avatarBorder'),
             avatarBoxConstraints: args('avatarBoxConstraints'),
+            chipAnimationStyle: args('chipAnimationStyle'),
           ),
         );
 
@@ -236,6 +242,7 @@ final class ChoiceChip extends Wrapper {
     ui.Color? checkmarkColor,
     _i4.ShapeBorder avatarBorder = const _i4.CircleBorder(),
     _i5.BoxConstraints? avatarBoxConstraints,
+    _i1.ChipAnimationStyle? chipAnimationStyle,
     // Associate with key
     Stream<_i2.Key?>? $key,
     // Associate with avatar
@@ -296,6 +303,8 @@ final class ChoiceChip extends Wrapper {
     Stream<_i4.ShapeBorder>? $avatarBorder,
     // Associate with avatarBoxConstraints
     Stream<_i5.BoxConstraints?>? $avatarBoxConstraints,
+    // Associate with chipAnimationStyle
+    Stream<_i1.ChipAnimationStyle?>? $chipAnimationStyle,
   }) : super(
           Argument(
             {
@@ -329,6 +338,7 @@ final class ChoiceChip extends Wrapper {
               'checkmarkColor': checkmarkColor,
               'avatarBorder': avatarBorder,
               'avatarBoxConstraints': avatarBoxConstraints,
+              'chipAnimationStyle': chipAnimationStyle,
             },
             stream: {
               'key': $key,
@@ -361,6 +371,7 @@ final class ChoiceChip extends Wrapper {
               'checkmarkColor': $checkmarkColor,
               'avatarBorder': $avatarBorder,
               'avatarBoxConstraints': $avatarBoxConstraints,
+              'chipAnimationStyle': $chipAnimationStyle,
             },
           ),
           builder: (args) => _i1.ChoiceChip.elevated(
@@ -394,6 +405,7 @@ final class ChoiceChip extends Wrapper {
             checkmarkColor: args('checkmarkColor'),
             avatarBorder: args('avatarBorder'),
             avatarBoxConstraints: args('avatarBoxConstraints'),
+            chipAnimationStyle: args('chipAnimationStyle'),
           ),
         );
 }

@@ -151,10 +151,10 @@ final class AnimatedPhysicalModel extends Wrapper {
     $ $config, {
     _i2.Key? key,
     required _i1.Widget child,
-    required _i3.BoxShape shape,
+    _i3.BoxShape shape = _i3.BoxShape.rectangle,
     ui.Clip clipBehavior = ui.Clip.none,
-    _i3.BorderRadius borderRadius = _i3.BorderRadius.zero,
-    required double elevation,
+    _i3.BorderRadius? borderRadius,
+    double elevation = 0.0,
     required ui.Color color,
     bool animateColor = true,
     required ui.Color shadowColor,

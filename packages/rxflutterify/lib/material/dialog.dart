@@ -62,7 +62,7 @@ final class Dialog extends Wrapper {
     Duration insetAnimationDuration = const Duration(milliseconds: 100),
     _i5.Curve insetAnimationCurve = _i5.Curves.decelerate,
     _i3.EdgeInsets? insetPadding,
-    ui.Clip clipBehavior = ui.Clip.none,
+    ui.Clip? clipBehavior,
     _i3.ShapeBorder? shape,
     _i3.AlignmentGeometry? alignment,
     _i4.Widget? child,
@@ -83,7 +83,7 @@ final class Dialog extends Wrapper {
     // Associate with insetPadding
     Stream<_i3.EdgeInsets?>? $insetPadding,
     // Associate with clipBehavior
-    Stream<ui.Clip>? $clipBehavior,
+    Stream<ui.Clip?>? $clipBehavior,
     // Associate with shape
     Stream<_i3.ShapeBorder?>? $shape,
     // Associate with alignment
@@ -206,7 +206,7 @@ final class SimpleDialog extends Wrapper {
     ui.Color? surfaceTintColor,
     String? semanticLabel,
     _i3.EdgeInsets? insetPadding,
-    ui.Clip clipBehavior = ui.Clip.none,
+    ui.Clip? clipBehavior,
     _i3.ShapeBorder? shape,
     _i3.AlignmentGeometry? alignment,
     // Associate with key
@@ -234,7 +234,7 @@ final class SimpleDialog extends Wrapper {
     // Associate with insetPadding
     Stream<_i3.EdgeInsets?>? $insetPadding,
     // Associate with clipBehavior
-    Stream<ui.Clip>? $clipBehavior,
+    Stream<ui.Clip?>? $clipBehavior,
     // Associate with shape
     Stream<_i3.ShapeBorder?>? $shape,
     // Associate with alignment
@@ -322,7 +322,7 @@ final class AlertDialog extends Wrapper {
     ui.Color? surfaceTintColor,
     String? semanticLabel,
     _i3.EdgeInsets? insetPadding,
-    ui.Clip clipBehavior = ui.Clip.none,
+    ui.Clip? clipBehavior,
     _i3.ShapeBorder? shape,
     _i3.AlignmentGeometry? alignment,
     bool scrollable = false,
@@ -373,7 +373,7 @@ final class AlertDialog extends Wrapper {
     // Associate with insetPadding
     Stream<_i3.EdgeInsets?>? $insetPadding,
     // Associate with clipBehavior
-    Stream<ui.Clip>? $clipBehavior,
+    Stream<ui.Clip?>? $clipBehavior,
     // Associate with shape
     Stream<_i3.ShapeBorder?>? $shape,
     // Associate with alignment
@@ -497,7 +497,7 @@ final class AlertDialog extends Wrapper {
     ui.Color? surfaceTintColor,
     String? semanticLabel,
     _i3.EdgeInsets? insetPadding,
-    ui.Clip clipBehavior = ui.Clip.none,
+    ui.Clip? clipBehavior,
     _i3.ShapeBorder? shape,
     _i3.AlignmentGeometry? alignment,
     bool scrollable = false,
@@ -552,7 +552,7 @@ final class AlertDialog extends Wrapper {
     // Associate with insetPadding
     Stream<_i3.EdgeInsets?>? $insetPadding,
     // Associate with clipBehavior
-    Stream<ui.Clip>? $clipBehavior,
+    Stream<ui.Clip?>? $clipBehavior,
     // Associate with shape
     Stream<_i3.ShapeBorder?>? $shape,
     // Associate with alignment
@@ -697,7 +697,7 @@ class _AdaptiveAlertDialog extends _i1.AlertDialog {
       super.surfaceTintColor,
       super.semanticLabel,
       super.insetPadding,
-      super.clipBehavior = ui.Clip.none,
+      super.clipBehavior,
       super.shape,
       super.alignment,
       super.scrollable = false,

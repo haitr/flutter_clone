@@ -37,6 +37,7 @@ final class ActionChip extends Wrapper {
     ui.Color? surfaceTintColor,
     _i3.IconThemeData? iconTheme,
     _i5.BoxConstraints? avatarBoxConstraints,
+    _i1.ChipAnimationStyle? chipAnimationStyle,
     // Associate with key
     Stream<_i2.Key?>? $key,
     // Associate with avatar
@@ -85,6 +86,8 @@ final class ActionChip extends Wrapper {
     Stream<_i3.IconThemeData?>? $iconTheme,
     // Associate with avatarBoxConstraints
     Stream<_i5.BoxConstraints?>? $avatarBoxConstraints,
+    // Associate with chipAnimationStyle
+    Stream<_i1.ChipAnimationStyle?>? $chipAnimationStyle,
   }) : super(
           Argument(
             {
@@ -112,6 +115,7 @@ final class ActionChip extends Wrapper {
               'surfaceTintColor': surfaceTintColor,
               'iconTheme': iconTheme,
               'avatarBoxConstraints': avatarBoxConstraints,
+              'chipAnimationStyle': chipAnimationStyle,
             },
             stream: {
               'key': $key,
@@ -138,6 +142,7 @@ final class ActionChip extends Wrapper {
               'surfaceTintColor': $surfaceTintColor,
               'iconTheme': $iconTheme,
               'avatarBoxConstraints': $avatarBoxConstraints,
+              'chipAnimationStyle': $chipAnimationStyle,
             },
           ),
           builder: (args) => _i1.ActionChip(
@@ -165,6 +170,7 @@ final class ActionChip extends Wrapper {
             surfaceTintColor: args('surfaceTintColor'),
             iconTheme: args('iconTheme'),
             avatarBoxConstraints: args('avatarBoxConstraints'),
+            chipAnimationStyle: args('chipAnimationStyle'),
           ),
         );
 
@@ -194,6 +200,7 @@ final class ActionChip extends Wrapper {
     ui.Color? surfaceTintColor,
     _i3.IconThemeData? iconTheme,
     _i5.BoxConstraints? avatarBoxConstraints,
+    _i1.ChipAnimationStyle? chipAnimationStyle,
     // Associate with key
     Stream<_i2.Key?>? $key,
     // Associate with avatar
@@ -242,6 +249,8 @@ final class ActionChip extends Wrapper {
     Stream<_i3.IconThemeData?>? $iconTheme,
     // Associate with avatarBoxConstraints
     Stream<_i5.BoxConstraints?>? $avatarBoxConstraints,
+    // Associate with chipAnimationStyle
+    Stream<_i1.ChipAnimationStyle?>? $chipAnimationStyle,
   }) : super(
           Argument(
             {
@@ -269,6 +278,7 @@ final class ActionChip extends Wrapper {
               'surfaceTintColor': surfaceTintColor,
               'iconTheme': iconTheme,
               'avatarBoxConstraints': avatarBoxConstraints,
+              'chipAnimationStyle': chipAnimationStyle,
             },
             stream: {
               'key': $key,
@@ -295,6 +305,7 @@ final class ActionChip extends Wrapper {
               'surfaceTintColor': $surfaceTintColor,
               'iconTheme': $iconTheme,
               'avatarBoxConstraints': $avatarBoxConstraints,
+              'chipAnimationStyle': $chipAnimationStyle,
             },
           ),
           builder: (args) => _i1.ActionChip.elevated(
@@ -322,6 +333,7 @@ final class ActionChip extends Wrapper {
             surfaceTintColor: args('surfaceTintColor'),
             iconTheme: args('iconTheme'),
             avatarBoxConstraints: args('avatarBoxConstraints'),
+            chipAnimationStyle: args('chipAnimationStyle'),
           ),
         );
 }

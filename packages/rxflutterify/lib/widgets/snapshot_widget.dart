@@ -78,7 +78,7 @@ class _DefaultSnapshotPainter implements _i1.SnapshotPainter {
   void paintSnapshot(_i3.PaintingContext context, ui.Offset offset, ui.Size size, ui.Image image, ui.Size sourceSize, double pixelRatio) {
     final ui.Rect src = ui.Rect.fromLTWH(0, 0, sourceSize.width, sourceSize.height);
     final ui.Rect dst = ui.Rect.fromLTWH(offset.dx, offset.dy, size.width, size.height);
-    final ui.Paint paint = ui.Paint()..filterQuality = ui.FilterQuality.low;
+    final ui.Paint paint = ui.Paint()..filterQuality = ui.FilterQuality.medium;
     context.canvas.drawImageRect(image, src, dst, paint);
   }
 

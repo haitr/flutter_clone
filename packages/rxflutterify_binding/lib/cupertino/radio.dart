@@ -4,7 +4,8 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/cupertino.dart' as _i1;
 import 'package:flutter/foundation.dart' as _i2;
-import 'package:flutter/widgets.dart' as _i3;
+import 'package:flutter/services.dart' as _i3;
+import 'package:flutter/widgets.dart' as _i4;
 
 import '../wrapper.dart';
 
@@ -16,12 +17,13 @@ final class CupertinoRadio<T> extends Wrapper {
     required T value,
     required T? groupValue,
     required _i2.ValueChanged<T?>? onChanged,
+    _i3.MouseCursor? mouseCursor,
     bool toggleable = false,
     ui.Color? activeColor,
     ui.Color? inactiveColor,
     ui.Color? fillColor,
     ui.Color? focusColor,
-    _i3.FocusNode? focusNode,
+    _i4.FocusNode? focusNode,
     bool autofocus = false,
     bool useCheckmarkStyle = false,
   }) : super(
@@ -30,6 +32,7 @@ final class CupertinoRadio<T> extends Wrapper {
             #value: value,
             #groupValue: groupValue,
             #onChanged: onChanged,
+            #mouseCursor: mouseCursor,
             #toggleable: toggleable,
             #activeColor: activeColor,
             #inactiveColor: inactiveColor,
@@ -44,6 +47,7 @@ final class CupertinoRadio<T> extends Wrapper {
             value: args(#value),
             groupValue: args(#groupValue),
             onChanged: args(#onChanged),
+            mouseCursor: args(#mouseCursor),
             toggleable: args(#toggleable),
             activeColor: args(#activeColor),
             inactiveColor: args(#inactiveColor),

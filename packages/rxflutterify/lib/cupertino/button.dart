@@ -21,6 +21,10 @@ final class CupertinoButton extends Wrapper {
     double? pressedOpacity = 0.4,
     _i4.BorderRadius? borderRadius = const _i4.BorderRadius.all(ui.Radius.circular(8.0)),
     _i4.AlignmentGeometry alignment = _i4.Alignment.center,
+    ui.Color? focusColor,
+    _i3.FocusNode? focusNode,
+    _i2.ValueChanged<bool>? onFocusChange,
+    bool autofocus = false,
     required ui.VoidCallback? onPressed,
     // Associate with key
     Stream<_i2.Key?>? $key,
@@ -40,6 +44,14 @@ final class CupertinoButton extends Wrapper {
     Stream<_i4.BorderRadius?>? $borderRadius,
     // Associate with alignment
     Stream<_i4.AlignmentGeometry>? $alignment,
+    // Associate with focusColor
+    Stream<ui.Color?>? $focusColor,
+    // Associate with focusNode
+    Stream<_i3.FocusNode?>? $focusNode,
+    // Associate with onFocusChange
+    Stream<_i2.ValueChanged<bool>?>? $onFocusChange,
+    // Associate with autofocus
+    Stream<bool>? $autofocus,
     // Associate with onPressed
     Stream<ui.VoidCallback?>? $onPressed,
   }) : super(
@@ -54,6 +66,10 @@ final class CupertinoButton extends Wrapper {
               'pressedOpacity': pressedOpacity,
               'borderRadius': borderRadius,
               'alignment': alignment,
+              'focusColor': focusColor,
+              'focusNode': focusNode,
+              'onFocusChange': onFocusChange,
+              'autofocus': autofocus,
               'onPressed': onPressed,
             },
             stream: {
@@ -66,6 +82,10 @@ final class CupertinoButton extends Wrapper {
               'pressedOpacity': $pressedOpacity,
               'borderRadius': $borderRadius,
               'alignment': $alignment,
+              'focusColor': $focusColor,
+              'focusNode': $focusNode,
+              'onFocusChange': $onFocusChange,
+              'autofocus': $autofocus,
               'onPressed': $onPressed,
             },
           ),
@@ -79,6 +99,10 @@ final class CupertinoButton extends Wrapper {
             pressedOpacity: args('pressedOpacity'),
             borderRadius: args('borderRadius'),
             alignment: args('alignment'),
+            focusColor: args('focusColor'),
+            focusNode: args('focusNode'),
+            onFocusChange: args('onFocusChange'),
+            autofocus: args('autofocus'),
             onPressed: args('onPressed'),
           ),
         );
@@ -93,6 +117,10 @@ final class CupertinoButton extends Wrapper {
     double? pressedOpacity = 0.4,
     _i4.BorderRadius? borderRadius = const _i4.BorderRadius.all(ui.Radius.circular(8.0)),
     _i4.AlignmentGeometry alignment = _i4.Alignment.center,
+    ui.Color? focusColor,
+    _i3.FocusNode? focusNode,
+    _i2.ValueChanged<bool>? onFocusChange,
+    bool autofocus = false,
     required ui.VoidCallback? onPressed,
     // Associate with key
     Stream<_i2.Key?>? $key,
@@ -110,6 +138,14 @@ final class CupertinoButton extends Wrapper {
     Stream<_i4.BorderRadius?>? $borderRadius,
     // Associate with alignment
     Stream<_i4.AlignmentGeometry>? $alignment,
+    // Associate with focusColor
+    Stream<ui.Color?>? $focusColor,
+    // Associate with focusNode
+    Stream<_i3.FocusNode?>? $focusNode,
+    // Associate with onFocusChange
+    Stream<_i2.ValueChanged<bool>?>? $onFocusChange,
+    // Associate with autofocus
+    Stream<bool>? $autofocus,
     // Associate with onPressed
     Stream<ui.VoidCallback?>? $onPressed,
   }) : super(
@@ -123,6 +159,10 @@ final class CupertinoButton extends Wrapper {
               'pressedOpacity': pressedOpacity,
               'borderRadius': borderRadius,
               'alignment': alignment,
+              'focusColor': focusColor,
+              'focusNode': focusNode,
+              'onFocusChange': onFocusChange,
+              'autofocus': autofocus,
               'onPressed': onPressed,
             },
             stream: {
@@ -134,6 +174,10 @@ final class CupertinoButton extends Wrapper {
               'pressedOpacity': $pressedOpacity,
               'borderRadius': $borderRadius,
               'alignment': $alignment,
+              'focusColor': $focusColor,
+              'focusNode': $focusNode,
+              'onFocusChange': $onFocusChange,
+              'autofocus': $autofocus,
               'onPressed': $onPressed,
             },
           ),
@@ -146,6 +190,10 @@ final class CupertinoButton extends Wrapper {
             pressedOpacity: args('pressedOpacity'),
             borderRadius: args('borderRadius'),
             alignment: args('alignment'),
+            focusColor: args('focusColor'),
+            focusNode: args('focusNode'),
+            onFocusChange: args('onFocusChange'),
+            autofocus: args('autofocus'),
             onPressed: args('onPressed'),
           ),
         );

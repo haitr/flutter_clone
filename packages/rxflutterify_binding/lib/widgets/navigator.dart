@@ -62,6 +62,7 @@ final class Navigator extends Wrapper {
     bool requestFocus = true,
     String? restorationScopeId,
     _i1.TraversalEdgeBehavior routeTraversalEdgeBehavior = _i1.kDefaultRouteTraversalEdgeBehavior,
+    _i1.DidRemovePageCallback? onDidRemovePage,
   }) : super(
           Argument({
             #key: key,
@@ -78,6 +79,7 @@ final class Navigator extends Wrapper {
             #requestFocus: requestFocus,
             #restorationScopeId: restorationScopeId,
             #routeTraversalEdgeBehavior: routeTraversalEdgeBehavior,
+            #onDidRemovePage: onDidRemovePage,
           }),
           builder: (args) => _i1.Navigator(
             key: args(#key),
@@ -94,6 +96,7 @@ final class Navigator extends Wrapper {
             requestFocus: args(#requestFocus),
             restorationScopeId: args(#restorationScopeId),
             routeTraversalEdgeBehavior: args(#routeTraversalEdgeBehavior),
+            onDidRemovePage: args(#onDidRemovePage),
           ),
         );
 }

@@ -19,6 +19,8 @@ final class ExpandIcon extends Wrapper {
     ui.Color? color,
     ui.Color? disabledColor,
     ui.Color? expandedColor,
+    ui.Color? splashColor,
+    ui.Color? highlightColor,
     // Associate with key
     Stream<_i2.Key?>? $key,
     // Associate with isExpanded
@@ -35,6 +37,10 @@ final class ExpandIcon extends Wrapper {
     Stream<ui.Color?>? $disabledColor,
     // Associate with expandedColor
     Stream<ui.Color?>? $expandedColor,
+    // Associate with splashColor
+    Stream<ui.Color?>? $splashColor,
+    // Associate with highlightColor
+    Stream<ui.Color?>? $highlightColor,
   }) : super(
           Argument(
             {
@@ -46,6 +52,8 @@ final class ExpandIcon extends Wrapper {
               'color': color,
               'disabledColor': disabledColor,
               'expandedColor': expandedColor,
+              'splashColor': splashColor,
+              'highlightColor': highlightColor,
             },
             stream: {
               'key': $key,
@@ -56,6 +64,8 @@ final class ExpandIcon extends Wrapper {
               'color': $color,
               'disabledColor': $disabledColor,
               'expandedColor': $expandedColor,
+              'splashColor': $splashColor,
+              'highlightColor': $highlightColor,
             },
           ),
           builder: (args) => _i1.ExpandIcon(
@@ -67,6 +77,8 @@ final class ExpandIcon extends Wrapper {
             color: args('color'),
             disabledColor: args('disabledColor'),
             expandedColor: args('expandedColor'),
+            splashColor: args('splashColor'),
+            highlightColor: args('highlightColor'),
           ),
         );
 }

@@ -32,6 +32,8 @@ final class LongPressDraggable<T extends Object> extends Wrapper {
     bool ignoringFeedbackPointer = true,
     Duration delay = _i4.kLongPressTimeout,
     _i4.AllowedButtonsFilter? allowedButtonsFilter,
+    _i5.HitTestBehavior hitTestBehavior = _i5.HitTestBehavior.deferToChild,
+    bool rootOverlay = false,
     // Associate with key
     Stream<_i2.Key?>? $key,
     // Associate with child
@@ -70,6 +72,10 @@ final class LongPressDraggable<T extends Object> extends Wrapper {
     Stream<Duration>? $delay,
     // Associate with allowedButtonsFilter
     Stream<_i4.AllowedButtonsFilter?>? $allowedButtonsFilter,
+    // Associate with hitTestBehavior
+    Stream<_i5.HitTestBehavior>? $hitTestBehavior,
+    // Associate with rootOverlay
+    Stream<bool>? $rootOverlay,
   }) : super(
           Argument(
             {
@@ -92,6 +98,8 @@ final class LongPressDraggable<T extends Object> extends Wrapper {
               'ignoringFeedbackPointer': ignoringFeedbackPointer,
               'delay': delay,
               'allowedButtonsFilter': allowedButtonsFilter,
+              'hitTestBehavior': hitTestBehavior,
+              'rootOverlay': rootOverlay,
             },
             stream: {
               'key': $key,
@@ -113,6 +121,8 @@ final class LongPressDraggable<T extends Object> extends Wrapper {
               'ignoringFeedbackPointer': $ignoringFeedbackPointer,
               'delay': $delay,
               'allowedButtonsFilter': $allowedButtonsFilter,
+              'hitTestBehavior': $hitTestBehavior,
+              'rootOverlay': $rootOverlay,
             },
           ),
           builder: (args) => _i1.LongPressDraggable<T>(
@@ -135,6 +145,8 @@ final class LongPressDraggable<T extends Object> extends Wrapper {
             ignoringFeedbackPointer: args('ignoringFeedbackPointer'),
             delay: args('delay'),
             allowedButtonsFilter: args('allowedButtonsFilter'),
+            hitTestBehavior: args('hitTestBehavior'),
+            rootOverlay: args('rootOverlay'),
           ),
         );
 }

@@ -105,6 +105,7 @@ final class TabBar extends Wrapper {
     _i1.InteractiveInkFeatureFactory? splashFactory,
     _i5.BorderRadius? splashBorderRadius,
     _i1.TabAlignment? tabAlignment,
+    _i5.TextScaler? textScaler,
   }) : super(
           Argument({
             #key: key,
@@ -134,6 +135,7 @@ final class TabBar extends Wrapper {
             #splashFactory: splashFactory,
             #splashBorderRadius: splashBorderRadius,
             #tabAlignment: tabAlignment,
+            #textScaler: textScaler,
           }),
           builder: (args) => _i1.TabBar(
             key: args(#key),
@@ -163,6 +165,7 @@ final class TabBar extends Wrapper {
             splashFactory: args(#splashFactory),
             splashBorderRadius: args(#splashBorderRadius),
             tabAlignment: args(#tabAlignment),
+            textScaler: args(#textScaler),
           ),
         );
 
@@ -196,6 +199,7 @@ final class TabBar extends Wrapper {
     _i1.InteractiveInkFeatureFactory? splashFactory,
     _i5.BorderRadius? splashBorderRadius,
     _i1.TabAlignment? tabAlignment,
+    _i5.TextScaler? textScaler,
   }) : super(
           Argument({
             #key: key,
@@ -225,6 +229,7 @@ final class TabBar extends Wrapper {
             #splashFactory: splashFactory,
             #splashBorderRadius: splashBorderRadius,
             #tabAlignment: tabAlignment,
+            #textScaler: textScaler,
           }),
           builder: (args) => _i1.TabBar.secondary(
             key: args(#key),
@@ -254,6 +259,7 @@ final class TabBar extends Wrapper {
             splashFactory: args(#splashFactory),
             splashBorderRadius: args(#splashBorderRadius),
             tabAlignment: args(#tabAlignment),
+            textScaler: args(#textScaler),
           ),
         );
 }

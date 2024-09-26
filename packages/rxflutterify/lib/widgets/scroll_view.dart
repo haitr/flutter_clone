@@ -34,6 +34,7 @@ final class ListView extends Wrapper {
     _i1.ScrollViewKeyboardDismissBehavior keyboardDismissBehavior = _i1.ScrollViewKeyboardDismissBehavior.manual,
     String? restorationId,
     ui.Clip clipBehavior = ui.Clip.hardEdge,
+    _i4.HitTestBehavior hitTestBehavior = _i4.HitTestBehavior.opaque,
     // Associate with key
     Stream<_i2.Key?>? $key,
     // Associate with scrollDirection
@@ -76,6 +77,8 @@ final class ListView extends Wrapper {
     Stream<String?>? $restorationId,
     // Associate with clipBehavior
     Stream<ui.Clip>? $clipBehavior,
+    // Associate with hitTestBehavior
+    Stream<_i4.HitTestBehavior>? $hitTestBehavior,
   }) : super(
           Argument(
             {
@@ -100,6 +103,7 @@ final class ListView extends Wrapper {
               'keyboardDismissBehavior': keyboardDismissBehavior,
               'restorationId': restorationId,
               'clipBehavior': clipBehavior,
+              'hitTestBehavior': hitTestBehavior,
             },
             stream: {
               'key': $key,
@@ -123,6 +127,7 @@ final class ListView extends Wrapper {
               'keyboardDismissBehavior': $keyboardDismissBehavior,
               'restorationId': $restorationId,
               'clipBehavior': $clipBehavior,
+              'hitTestBehavior': $hitTestBehavior,
             },
           ),
           builder: (args) => _i1.ListView(
@@ -147,6 +152,7 @@ final class ListView extends Wrapper {
             keyboardDismissBehavior: args('keyboardDismissBehavior'),
             restorationId: args('restorationId'),
             clipBehavior: args('clipBehavior'),
+            hitTestBehavior: args('hitTestBehavior'),
           ),
         );
 
@@ -175,6 +181,7 @@ final class ListView extends Wrapper {
     _i1.ScrollViewKeyboardDismissBehavior keyboardDismissBehavior = _i1.ScrollViewKeyboardDismissBehavior.manual,
     String? restorationId,
     ui.Clip clipBehavior = ui.Clip.hardEdge,
+    _i4.HitTestBehavior hitTestBehavior = _i4.HitTestBehavior.opaque,
     // Associate with key
     Stream<_i2.Key?>? $key,
     // Associate with scrollDirection
@@ -221,6 +228,8 @@ final class ListView extends Wrapper {
     Stream<String?>? $restorationId,
     // Associate with clipBehavior
     Stream<ui.Clip>? $clipBehavior,
+    // Associate with hitTestBehavior
+    Stream<_i4.HitTestBehavior>? $hitTestBehavior,
   }) : super(
           Argument(
             {
@@ -247,6 +256,7 @@ final class ListView extends Wrapper {
               'keyboardDismissBehavior': keyboardDismissBehavior,
               'restorationId': restorationId,
               'clipBehavior': clipBehavior,
+              'hitTestBehavior': hitTestBehavior,
             },
             stream: {
               'key': $key,
@@ -272,6 +282,7 @@ final class ListView extends Wrapper {
               'keyboardDismissBehavior': $keyboardDismissBehavior,
               'restorationId': $restorationId,
               'clipBehavior': $clipBehavior,
+              'hitTestBehavior': $hitTestBehavior,
             },
           ),
           builder: (args) => _i1.ListView.builder(
@@ -298,6 +309,7 @@ final class ListView extends Wrapper {
             keyboardDismissBehavior: args('keyboardDismissBehavior'),
             restorationId: args('restorationId'),
             clipBehavior: args('clipBehavior'),
+            hitTestBehavior: args('hitTestBehavior'),
           ),
         );
 
@@ -323,6 +335,7 @@ final class ListView extends Wrapper {
     _i1.ScrollViewKeyboardDismissBehavior keyboardDismissBehavior = _i1.ScrollViewKeyboardDismissBehavior.manual,
     String? restorationId,
     ui.Clip clipBehavior = ui.Clip.hardEdge,
+    _i4.HitTestBehavior hitTestBehavior = _i4.HitTestBehavior.opaque,
     // Associate with key
     Stream<_i2.Key?>? $key,
     // Associate with scrollDirection
@@ -363,6 +376,8 @@ final class ListView extends Wrapper {
     Stream<String?>? $restorationId,
     // Associate with clipBehavior
     Stream<ui.Clip>? $clipBehavior,
+    // Associate with hitTestBehavior
+    Stream<_i4.HitTestBehavior>? $hitTestBehavior,
   }) : super(
           Argument(
             {
@@ -386,6 +401,7 @@ final class ListView extends Wrapper {
               'keyboardDismissBehavior': keyboardDismissBehavior,
               'restorationId': restorationId,
               'clipBehavior': clipBehavior,
+              'hitTestBehavior': hitTestBehavior,
             },
             stream: {
               'key': $key,
@@ -408,6 +424,7 @@ final class ListView extends Wrapper {
               'keyboardDismissBehavior': $keyboardDismissBehavior,
               'restorationId': $restorationId,
               'clipBehavior': $clipBehavior,
+              'hitTestBehavior': $hitTestBehavior,
             },
           ),
           builder: (args) => _i1.ListView.separated(
@@ -431,6 +448,7 @@ final class ListView extends Wrapper {
             keyboardDismissBehavior: args('keyboardDismissBehavior'),
             restorationId: args('restorationId'),
             clipBehavior: args('clipBehavior'),
+            hitTestBehavior: args('hitTestBehavior'),
           ),
         );
 
@@ -454,6 +472,7 @@ final class ListView extends Wrapper {
     _i1.ScrollViewKeyboardDismissBehavior keyboardDismissBehavior = _i1.ScrollViewKeyboardDismissBehavior.manual,
     String? restorationId,
     ui.Clip clipBehavior = ui.Clip.hardEdge,
+    _i4.HitTestBehavior hitTestBehavior = _i4.HitTestBehavior.opaque,
     // Associate with key
     Stream<_i2.Key?>? $key,
     // Associate with scrollDirection
@@ -490,6 +509,8 @@ final class ListView extends Wrapper {
     Stream<String?>? $restorationId,
     // Associate with clipBehavior
     Stream<ui.Clip>? $clipBehavior,
+    // Associate with hitTestBehavior
+    Stream<_i4.HitTestBehavior>? $hitTestBehavior,
   }) : super(
           Argument(
             {
@@ -511,6 +532,7 @@ final class ListView extends Wrapper {
               'keyboardDismissBehavior': keyboardDismissBehavior,
               'restorationId': restorationId,
               'clipBehavior': clipBehavior,
+              'hitTestBehavior': hitTestBehavior,
             },
             stream: {
               'key': $key,
@@ -531,6 +553,7 @@ final class ListView extends Wrapper {
               'keyboardDismissBehavior': $keyboardDismissBehavior,
               'restorationId': $restorationId,
               'clipBehavior': $clipBehavior,
+              'hitTestBehavior': $hitTestBehavior,
             },
           ),
           builder: (args) => _i1.ListView.custom(
@@ -552,6 +575,7 @@ final class ListView extends Wrapper {
             keyboardDismissBehavior: args('keyboardDismissBehavior'),
             restorationId: args('restorationId'),
             clipBehavior: args('clipBehavior'),
+            hitTestBehavior: args('hitTestBehavior'),
           ),
         );
 }
@@ -576,6 +600,7 @@ final class CustomScrollView extends Wrapper {
     _i1.ScrollViewKeyboardDismissBehavior keyboardDismissBehavior = _i1.ScrollViewKeyboardDismissBehavior.manual,
     String? restorationId,
     ui.Clip clipBehavior = ui.Clip.hardEdge,
+    _i4.HitTestBehavior hitTestBehavior = _i4.HitTestBehavior.opaque,
     // Associate with key
     Stream<_i2.Key?>? $key,
     // Associate with scrollDirection
@@ -610,6 +635,8 @@ final class CustomScrollView extends Wrapper {
     Stream<String?>? $restorationId,
     // Associate with clipBehavior
     Stream<ui.Clip>? $clipBehavior,
+    // Associate with hitTestBehavior
+    Stream<_i4.HitTestBehavior>? $hitTestBehavior,
   }) : super(
           Argument(
             {
@@ -630,6 +657,7 @@ final class CustomScrollView extends Wrapper {
               'keyboardDismissBehavior': keyboardDismissBehavior,
               'restorationId': restorationId,
               'clipBehavior': clipBehavior,
+              'hitTestBehavior': hitTestBehavior,
             },
             stream: {
               'key': $key,
@@ -649,6 +677,7 @@ final class CustomScrollView extends Wrapper {
               'keyboardDismissBehavior': $keyboardDismissBehavior,
               'restorationId': $restorationId,
               'clipBehavior': $clipBehavior,
+              'hitTestBehavior': $hitTestBehavior,
             },
           ),
           builder: (args) => _i1.CustomScrollView(
@@ -669,6 +698,7 @@ final class CustomScrollView extends Wrapper {
             keyboardDismissBehavior: args('keyboardDismissBehavior'),
             restorationId: args('restorationId'),
             clipBehavior: args('clipBehavior'),
+            hitTestBehavior: args('hitTestBehavior'),
           ),
         );
 }
@@ -695,6 +725,7 @@ final class GridView extends Wrapper {
     ui.Clip clipBehavior = ui.Clip.hardEdge,
     _i1.ScrollViewKeyboardDismissBehavior keyboardDismissBehavior = _i1.ScrollViewKeyboardDismissBehavior.manual,
     String? restorationId,
+    _i4.HitTestBehavior hitTestBehavior = _i4.HitTestBehavior.opaque,
     // Associate with key
     Stream<_i2.Key?>? $key,
     // Associate with scrollDirection
@@ -733,6 +764,8 @@ final class GridView extends Wrapper {
     Stream<_i1.ScrollViewKeyboardDismissBehavior>? $keyboardDismissBehavior,
     // Associate with restorationId
     Stream<String?>? $restorationId,
+    // Associate with hitTestBehavior
+    Stream<_i4.HitTestBehavior>? $hitTestBehavior,
   }) : super(
           Argument(
             {
@@ -755,6 +788,7 @@ final class GridView extends Wrapper {
               'clipBehavior': clipBehavior,
               'keyboardDismissBehavior': keyboardDismissBehavior,
               'restorationId': restorationId,
+              'hitTestBehavior': hitTestBehavior,
             },
             stream: {
               'key': $key,
@@ -776,6 +810,7 @@ final class GridView extends Wrapper {
               'clipBehavior': $clipBehavior,
               'keyboardDismissBehavior': $keyboardDismissBehavior,
               'restorationId': $restorationId,
+              'hitTestBehavior': $hitTestBehavior,
             },
           ),
           builder: (args) => _i1.GridView(
@@ -798,6 +833,7 @@ final class GridView extends Wrapper {
             clipBehavior: args('clipBehavior'),
             keyboardDismissBehavior: args('keyboardDismissBehavior'),
             restorationId: args('restorationId'),
+            hitTestBehavior: args('hitTestBehavior'),
           ),
         );
 
@@ -824,6 +860,7 @@ final class GridView extends Wrapper {
     _i1.ScrollViewKeyboardDismissBehavior keyboardDismissBehavior = _i1.ScrollViewKeyboardDismissBehavior.manual,
     String? restorationId,
     ui.Clip clipBehavior = ui.Clip.hardEdge,
+    _i4.HitTestBehavior hitTestBehavior = _i4.HitTestBehavior.opaque,
     // Associate with key
     Stream<_i2.Key?>? $key,
     // Associate with scrollDirection
@@ -866,6 +903,8 @@ final class GridView extends Wrapper {
     Stream<String?>? $restorationId,
     // Associate with clipBehavior
     Stream<ui.Clip>? $clipBehavior,
+    // Associate with hitTestBehavior
+    Stream<_i4.HitTestBehavior>? $hitTestBehavior,
   }) : super(
           Argument(
             {
@@ -890,6 +929,7 @@ final class GridView extends Wrapper {
               'keyboardDismissBehavior': keyboardDismissBehavior,
               'restorationId': restorationId,
               'clipBehavior': clipBehavior,
+              'hitTestBehavior': hitTestBehavior,
             },
             stream: {
               'key': $key,
@@ -913,6 +953,7 @@ final class GridView extends Wrapper {
               'keyboardDismissBehavior': $keyboardDismissBehavior,
               'restorationId': $restorationId,
               'clipBehavior': $clipBehavior,
+              'hitTestBehavior': $hitTestBehavior,
             },
           ),
           builder: (args) => _i1.GridView.builder(
@@ -937,6 +978,7 @@ final class GridView extends Wrapper {
             keyboardDismissBehavior: args('keyboardDismissBehavior'),
             restorationId: args('restorationId'),
             clipBehavior: args('clipBehavior'),
+            hitTestBehavior: args('hitTestBehavior'),
           ),
         );
 
@@ -958,6 +1000,7 @@ final class GridView extends Wrapper {
     _i1.ScrollViewKeyboardDismissBehavior keyboardDismissBehavior = _i1.ScrollViewKeyboardDismissBehavior.manual,
     String? restorationId,
     ui.Clip clipBehavior = ui.Clip.hardEdge,
+    _i4.HitTestBehavior hitTestBehavior = _i4.HitTestBehavior.opaque,
     // Associate with key
     Stream<_i2.Key?>? $key,
     // Associate with scrollDirection
@@ -990,6 +1033,8 @@ final class GridView extends Wrapper {
     Stream<String?>? $restorationId,
     // Associate with clipBehavior
     Stream<ui.Clip>? $clipBehavior,
+    // Associate with hitTestBehavior
+    Stream<_i4.HitTestBehavior>? $hitTestBehavior,
   }) : super(
           Argument(
             {
@@ -1009,6 +1054,7 @@ final class GridView extends Wrapper {
               'keyboardDismissBehavior': keyboardDismissBehavior,
               'restorationId': restorationId,
               'clipBehavior': clipBehavior,
+              'hitTestBehavior': hitTestBehavior,
             },
             stream: {
               'key': $key,
@@ -1027,6 +1073,7 @@ final class GridView extends Wrapper {
               'keyboardDismissBehavior': $keyboardDismissBehavior,
               'restorationId': $restorationId,
               'clipBehavior': $clipBehavior,
+              'hitTestBehavior': $hitTestBehavior,
             },
           ),
           builder: (args) => _i1.GridView.custom(
@@ -1046,6 +1093,7 @@ final class GridView extends Wrapper {
             keyboardDismissBehavior: args('keyboardDismissBehavior'),
             restorationId: args('restorationId'),
             clipBehavior: args('clipBehavior'),
+            hitTestBehavior: args('hitTestBehavior'),
           ),
         );
 
@@ -1073,6 +1121,7 @@ final class GridView extends Wrapper {
     _i1.ScrollViewKeyboardDismissBehavior keyboardDismissBehavior = _i1.ScrollViewKeyboardDismissBehavior.manual,
     String? restorationId,
     ui.Clip clipBehavior = ui.Clip.hardEdge,
+    _i4.HitTestBehavior hitTestBehavior = _i4.HitTestBehavior.opaque,
     // Associate with key
     Stream<_i2.Key?>? $key,
     // Associate with scrollDirection
@@ -1117,6 +1166,8 @@ final class GridView extends Wrapper {
     Stream<String?>? $restorationId,
     // Associate with clipBehavior
     Stream<ui.Clip>? $clipBehavior,
+    // Associate with hitTestBehavior
+    Stream<_i4.HitTestBehavior>? $hitTestBehavior,
   }) : super(
           Argument(
             {
@@ -1142,6 +1193,7 @@ final class GridView extends Wrapper {
               'keyboardDismissBehavior': keyboardDismissBehavior,
               'restorationId': restorationId,
               'clipBehavior': clipBehavior,
+              'hitTestBehavior': hitTestBehavior,
             },
             stream: {
               'key': $key,
@@ -1166,6 +1218,7 @@ final class GridView extends Wrapper {
               'keyboardDismissBehavior': $keyboardDismissBehavior,
               'restorationId': $restorationId,
               'clipBehavior': $clipBehavior,
+              'hitTestBehavior': $hitTestBehavior,
             },
           ),
           builder: (args) => _i1.GridView.count(
@@ -1191,6 +1244,7 @@ final class GridView extends Wrapper {
             keyboardDismissBehavior: args('keyboardDismissBehavior'),
             restorationId: args('restorationId'),
             clipBehavior: args('clipBehavior'),
+            hitTestBehavior: args('hitTestBehavior'),
           ),
         );
 
@@ -1218,6 +1272,7 @@ final class GridView extends Wrapper {
     _i1.ScrollViewKeyboardDismissBehavior keyboardDismissBehavior = _i1.ScrollViewKeyboardDismissBehavior.manual,
     String? restorationId,
     ui.Clip clipBehavior = ui.Clip.hardEdge,
+    _i4.HitTestBehavior hitTestBehavior = _i4.HitTestBehavior.opaque,
     // Associate with key
     Stream<_i2.Key?>? $key,
     // Associate with scrollDirection
@@ -1262,6 +1317,8 @@ final class GridView extends Wrapper {
     Stream<String?>? $restorationId,
     // Associate with clipBehavior
     Stream<ui.Clip>? $clipBehavior,
+    // Associate with hitTestBehavior
+    Stream<_i4.HitTestBehavior>? $hitTestBehavior,
   }) : super(
           Argument(
             {
@@ -1287,6 +1344,7 @@ final class GridView extends Wrapper {
               'keyboardDismissBehavior': keyboardDismissBehavior,
               'restorationId': restorationId,
               'clipBehavior': clipBehavior,
+              'hitTestBehavior': hitTestBehavior,
             },
             stream: {
               'key': $key,
@@ -1311,6 +1369,7 @@ final class GridView extends Wrapper {
               'keyboardDismissBehavior': $keyboardDismissBehavior,
               'restorationId': $restorationId,
               'clipBehavior': $clipBehavior,
+              'hitTestBehavior': $hitTestBehavior,
             },
           ),
           builder: (args) => _i1.GridView.extent(
@@ -1336,6 +1395,7 @@ final class GridView extends Wrapper {
             keyboardDismissBehavior: args('keyboardDismissBehavior'),
             restorationId: args('restorationId'),
             clipBehavior: args('clipBehavior'),
+            hitTestBehavior: args('hitTestBehavior'),
           ),
         );
 }

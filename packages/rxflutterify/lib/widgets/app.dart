@@ -38,8 +38,6 @@ final class WidgetsApp extends Wrapper {
       )
     ],
     bool showPerformanceOverlay = false,
-    bool checkerboardRasterCacheImages = false,
-    bool checkerboardOffscreenLayers = false,
     bool showSemanticsDebugger = false,
     bool debugShowWidgetInspector = false,
     bool debugShowCheckedModeBanner = true,
@@ -92,10 +90,6 @@ final class WidgetsApp extends Wrapper {
     Stream<Iterable<ui.Locale>>? $supportedLocales,
     // Associate with showPerformanceOverlay
     Stream<bool>? $showPerformanceOverlay,
-    // Associate with checkerboardRasterCacheImages
-    Stream<bool>? $checkerboardRasterCacheImages,
-    // Associate with checkerboardOffscreenLayers
-    Stream<bool>? $checkerboardOffscreenLayers,
     // Associate with showSemanticsDebugger
     Stream<bool>? $showSemanticsDebugger,
     // Associate with debugShowWidgetInspector
@@ -137,8 +131,6 @@ final class WidgetsApp extends Wrapper {
               'localeResolutionCallback': localeResolutionCallback,
               'supportedLocales': supportedLocales,
               'showPerformanceOverlay': showPerformanceOverlay,
-              'checkerboardRasterCacheImages': checkerboardRasterCacheImages,
-              'checkerboardOffscreenLayers': checkerboardOffscreenLayers,
               'showSemanticsDebugger': showSemanticsDebugger,
               'debugShowWidgetInspector': debugShowWidgetInspector,
               'debugShowCheckedModeBanner': debugShowCheckedModeBanner,
@@ -171,8 +163,6 @@ final class WidgetsApp extends Wrapper {
               'localeResolutionCallback': $localeResolutionCallback,
               'supportedLocales': $supportedLocales,
               'showPerformanceOverlay': $showPerformanceOverlay,
-              'checkerboardRasterCacheImages': $checkerboardRasterCacheImages,
-              'checkerboardOffscreenLayers': $checkerboardOffscreenLayers,
               'showSemanticsDebugger': $showSemanticsDebugger,
               'debugShowWidgetInspector': $debugShowWidgetInspector,
               'debugShowCheckedModeBanner': $debugShowCheckedModeBanner,
@@ -206,8 +196,6 @@ final class WidgetsApp extends Wrapper {
             localeResolutionCallback: args('localeResolutionCallback'),
             supportedLocales: args('supportedLocales'),
             showPerformanceOverlay: args('showPerformanceOverlay'),
-            checkerboardRasterCacheImages: args('checkerboardRasterCacheImages'),
-            checkerboardOffscreenLayers: args('checkerboardOffscreenLayers'),
             showSemanticsDebugger: args('showSemanticsDebugger'),
             debugShowWidgetInspector: args('debugShowWidgetInspector'),
             debugShowCheckedModeBanner: args('debugShowCheckedModeBanner'),
@@ -244,8 +232,6 @@ final class WidgetsApp extends Wrapper {
       )
     ],
     bool showPerformanceOverlay = false,
-    bool checkerboardRasterCacheImages = false,
-    bool checkerboardOffscreenLayers = false,
     bool showSemanticsDebugger = false,
     bool debugShowWidgetInspector = false,
     bool debugShowCheckedModeBanner = true,
@@ -290,10 +276,6 @@ final class WidgetsApp extends Wrapper {
     Stream<Iterable<ui.Locale>>? $supportedLocales,
     // Associate with showPerformanceOverlay
     Stream<bool>? $showPerformanceOverlay,
-    // Associate with checkerboardRasterCacheImages
-    Stream<bool>? $checkerboardRasterCacheImages,
-    // Associate with checkerboardOffscreenLayers
-    Stream<bool>? $checkerboardOffscreenLayers,
     // Associate with showSemanticsDebugger
     Stream<bool>? $showSemanticsDebugger,
     // Associate with debugShowWidgetInspector
@@ -331,8 +313,6 @@ final class WidgetsApp extends Wrapper {
               'localeResolutionCallback': localeResolutionCallback,
               'supportedLocales': supportedLocales,
               'showPerformanceOverlay': showPerformanceOverlay,
-              'checkerboardRasterCacheImages': checkerboardRasterCacheImages,
-              'checkerboardOffscreenLayers': checkerboardOffscreenLayers,
               'showSemanticsDebugger': showSemanticsDebugger,
               'debugShowWidgetInspector': debugShowWidgetInspector,
               'debugShowCheckedModeBanner': debugShowCheckedModeBanner,
@@ -361,8 +341,6 @@ final class WidgetsApp extends Wrapper {
               'localeResolutionCallback': $localeResolutionCallback,
               'supportedLocales': $supportedLocales,
               'showPerformanceOverlay': $showPerformanceOverlay,
-              'checkerboardRasterCacheImages': $checkerboardRasterCacheImages,
-              'checkerboardOffscreenLayers': $checkerboardOffscreenLayers,
               'showSemanticsDebugger': $showSemanticsDebugger,
               'debugShowWidgetInspector': $debugShowWidgetInspector,
               'debugShowCheckedModeBanner': $debugShowCheckedModeBanner,
@@ -392,8 +370,6 @@ final class WidgetsApp extends Wrapper {
             localeResolutionCallback: args('localeResolutionCallback'),
             supportedLocales: args('supportedLocales'),
             showPerformanceOverlay: args('showPerformanceOverlay'),
-            checkerboardRasterCacheImages: args('checkerboardRasterCacheImages'),
-            checkerboardOffscreenLayers: args('checkerboardOffscreenLayers'),
             showSemanticsDebugger: args('showSemanticsDebugger'),
             debugShowWidgetInspector: args('debugShowWidgetInspector'),
             debugShowCheckedModeBanner: args('debugShowCheckedModeBanner'),

@@ -52,8 +52,8 @@ final class Magnifier extends Wrapper {
       _i4.BoxShadow(
         blurRadius: 1.5,
         offset: ui.Offset(
-          0,
-          2,
+          0.0,
+          2.0,
         ),
         spreadRadius: 0.75,
         color: ui.Color.fromARGB(
@@ -64,6 +64,7 @@ final class Magnifier extends Wrapper {
         ),
       )
     ],
+    ui.Clip clipBehavior = ui.Clip.hardEdge,
     ui.Size size = _i1.Magnifier.kDefaultMagnifierSize,
     // Associate with key
     Stream<_i2.Key?>? $key,
@@ -75,6 +76,8 @@ final class Magnifier extends Wrapper {
     Stream<ui.Color>? $filmColor,
     // Associate with shadows
     Stream<List<_i4.BoxShadow>>? $shadows,
+    // Associate with clipBehavior
+    Stream<ui.Clip>? $clipBehavior,
     // Associate with size
     Stream<ui.Size>? $size,
   }) : super(
@@ -85,6 +88,7 @@ final class Magnifier extends Wrapper {
               'borderRadius': borderRadius,
               'filmColor': filmColor,
               'shadows': shadows,
+              'clipBehavior': clipBehavior,
               'size': size,
             },
             stream: {
@@ -93,6 +97,7 @@ final class Magnifier extends Wrapper {
               'borderRadius': $borderRadius,
               'filmColor': $filmColor,
               'shadows': $shadows,
+              'clipBehavior': $clipBehavior,
               'size': $size,
             },
           ),
@@ -102,6 +107,7 @@ final class Magnifier extends Wrapper {
             borderRadius: args('borderRadius'),
             filmColor: args('filmColor'),
             shadows: args('shadows'),
+            clipBehavior: args('clipBehavior'),
             size: args('size'),
           ),
         );

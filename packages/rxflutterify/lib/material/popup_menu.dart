@@ -26,6 +26,7 @@ final class PopupMenuButton<T> extends Wrapper {
     ui.Color? shadowColor,
     ui.Color? surfaceTintColor,
     _i3.EdgeInsetsGeometry padding = const _i3.EdgeInsets.all(8.0),
+    _i3.EdgeInsetsGeometry? menuPadding,
     _i4.Widget? child,
     double? splashRadius,
     _i4.Widget? icon,
@@ -65,6 +66,8 @@ final class PopupMenuButton<T> extends Wrapper {
     Stream<ui.Color?>? $surfaceTintColor,
     // Associate with padding
     Stream<_i3.EdgeInsetsGeometry>? $padding,
+    // Associate with menuPadding
+    Stream<_i3.EdgeInsetsGeometry?>? $menuPadding,
     // Associate with child
     Stream<_i4.Widget?>? $child,
     // Associate with splashRadius
@@ -113,6 +116,7 @@ final class PopupMenuButton<T> extends Wrapper {
               'shadowColor': shadowColor,
               'surfaceTintColor': surfaceTintColor,
               'padding': padding,
+              'menuPadding': menuPadding,
               'child': child,
               'splashRadius': splashRadius,
               'icon': icon,
@@ -143,6 +147,7 @@ final class PopupMenuButton<T> extends Wrapper {
               'shadowColor': $shadowColor,
               'surfaceTintColor': $surfaceTintColor,
               'padding': $padding,
+              'menuPadding': $menuPadding,
               'child': $child,
               'splashRadius': $splashRadius,
               'icon': $icon,
@@ -174,6 +179,7 @@ final class PopupMenuButton<T> extends Wrapper {
             shadowColor: args('shadowColor'),
             surfaceTintColor: args('surfaceTintColor'),
             padding: args('padding'),
+            menuPadding: args('menuPadding'),
             child: args('child'),
             splashRadius: args('splashRadius'),
             icon: args('icon'),

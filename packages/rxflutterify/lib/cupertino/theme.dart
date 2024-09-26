@@ -38,3 +38,36 @@ final class CupertinoTheme extends Wrapper {
           ),
         );
 }
+
+final class InheritedCupertinoTheme extends Wrapper {
+  @Goto(_i1.InheritedCupertinoTheme.new)
+  InheritedCupertinoTheme({
+    _i2.Key? key,
+    required _i1.CupertinoTheme theme,
+    required _i3.Widget child,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with theme
+    Stream<_i1.CupertinoTheme>? $theme,
+    // Associate with child
+    Stream<_i3.Widget>? $child,
+  }) : super(
+          Argument(
+            {
+              'key': key,
+              'theme': theme,
+              'child': child,
+            },
+            stream: {
+              'key': $key,
+              'theme': $theme,
+              'child': $child,
+            },
+          ),
+          builder: (args) => _i1.InheritedCupertinoTheme(
+            key: args('key'),
+            theme: args('theme'),
+            child: args('child'),
+          ),
+        );
+}

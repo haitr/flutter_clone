@@ -44,8 +44,8 @@ final class Magnifier extends Wrapper {
       _i4.BoxShadow(
         blurRadius: 1.5,
         offset: ui.Offset(
-          0,
-          2,
+          0.0,
+          2.0,
         ),
         spreadRadius: 0.75,
         color: ui.Color.fromARGB(
@@ -56,6 +56,7 @@ final class Magnifier extends Wrapper {
         ),
       )
     ],
+    ui.Clip clipBehavior = ui.Clip.hardEdge,
     ui.Size size = _i1.Magnifier.kDefaultMagnifierSize,
   }) : super(
           Argument({
@@ -64,6 +65,7 @@ final class Magnifier extends Wrapper {
             #borderRadius: borderRadius,
             #filmColor: filmColor,
             #shadows: shadows,
+            #clipBehavior: clipBehavior,
             #size: size,
           }),
           builder: (args) => _i1.Magnifier(
@@ -72,6 +74,7 @@ final class Magnifier extends Wrapper {
             borderRadius: args(#borderRadius),
             filmColor: args(#filmColor),
             shadows: args(#shadows),
+            clipBehavior: args(#clipBehavior),
             size: args(#size),
           ),
         );

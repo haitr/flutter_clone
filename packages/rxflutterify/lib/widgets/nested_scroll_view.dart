@@ -92,6 +92,7 @@ final class NestedScrollView extends Wrapper {
     _i5.DragStartBehavior dragStartBehavior = _i5.DragStartBehavior.start,
     bool floatHeaderSlivers = false,
     ui.Clip clipBehavior = ui.Clip.hardEdge,
+    _i4.HitTestBehavior hitTestBehavior = _i4.HitTestBehavior.opaque,
     String? restorationId,
     _i1.ScrollBehavior? scrollBehavior,
     // Associate with key
@@ -114,6 +115,8 @@ final class NestedScrollView extends Wrapper {
     Stream<bool>? $floatHeaderSlivers,
     // Associate with clipBehavior
     Stream<ui.Clip>? $clipBehavior,
+    // Associate with hitTestBehavior
+    Stream<_i4.HitTestBehavior>? $hitTestBehavior,
     // Associate with restorationId
     Stream<String?>? $restorationId,
     // Associate with scrollBehavior
@@ -131,6 +134,7 @@ final class NestedScrollView extends Wrapper {
               'dragStartBehavior': dragStartBehavior,
               'floatHeaderSlivers': floatHeaderSlivers,
               'clipBehavior': clipBehavior,
+              'hitTestBehavior': hitTestBehavior,
               'restorationId': restorationId,
               'scrollBehavior': scrollBehavior,
             },
@@ -145,6 +149,7 @@ final class NestedScrollView extends Wrapper {
               'dragStartBehavior': $dragStartBehavior,
               'floatHeaderSlivers': $floatHeaderSlivers,
               'clipBehavior': $clipBehavior,
+              'hitTestBehavior': $hitTestBehavior,
               'restorationId': $restorationId,
               'scrollBehavior': $scrollBehavior,
             },
@@ -160,6 +165,7 @@ final class NestedScrollView extends Wrapper {
             dragStartBehavior: args('dragStartBehavior'),
             floatHeaderSlivers: args('floatHeaderSlivers'),
             clipBehavior: args('clipBehavior'),
+            hitTestBehavior: args('hitTestBehavior'),
             restorationId: args('restorationId'),
             scrollBehavior: args('scrollBehavior'),
           ),

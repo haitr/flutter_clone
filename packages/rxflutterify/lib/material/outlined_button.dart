@@ -99,6 +99,8 @@ final class OutlinedButton extends Wrapper {
     _i2.Key? key,
     required ui.VoidCallback? onPressed,
     ui.VoidCallback? onLongPress,
+    _i2.ValueChanged<bool>? onHover,
+    _i2.ValueChanged<bool>? onFocusChange,
     _i1.ButtonStyle? style,
     _i3.FocusNode? focusNode,
     bool? autofocus,
@@ -113,6 +115,10 @@ final class OutlinedButton extends Wrapper {
     Stream<ui.VoidCallback?>? $onPressed,
     // Associate with onLongPress
     Stream<ui.VoidCallback?>? $onLongPress,
+    // Associate with onHover
+    Stream<_i2.ValueChanged<bool>?>? $onHover,
+    // Associate with onFocusChange
+    Stream<_i2.ValueChanged<bool>?>? $onFocusChange,
     // Associate with style
     Stream<_i1.ButtonStyle?>? $style,
     // Associate with focusNode
@@ -135,6 +141,8 @@ final class OutlinedButton extends Wrapper {
               'key': key,
               'onPressed': onPressed,
               'onLongPress': onLongPress,
+              'onHover': onHover,
+              'onFocusChange': onFocusChange,
               'style': style,
               'focusNode': focusNode,
               'autofocus': autofocus,
@@ -148,6 +156,8 @@ final class OutlinedButton extends Wrapper {
               'key': $key,
               'onPressed': $onPressed,
               'onLongPress': $onLongPress,
+              'onHover': $onHover,
+              'onFocusChange': $onFocusChange,
               'style': $style,
               'focusNode': $focusNode,
               'autofocus': $autofocus,
@@ -162,6 +172,8 @@ final class OutlinedButton extends Wrapper {
             key: args('key'),
             onPressed: args('onPressed'),
             onLongPress: args('onLongPress'),
+            onHover: args('onHover'),
+            onFocusChange: args('onFocusChange'),
             style: args('style'),
             focusNode: args('focusNode'),
             autofocus: args('autofocus'),

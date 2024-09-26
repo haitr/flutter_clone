@@ -25,6 +25,7 @@ final class CupertinoDatePicker extends Wrapper {
     ui.Color? backgroundColor,
     bool showDayOfWeek = false,
     double itemExtent = _kItemExtent,
+    _i1.SelectionOverlayBuilder? selectionOverlayBuilder,
     // Associate with key
     Stream<_i2.Key?>? $key,
     // Associate with mode
@@ -53,6 +54,8 @@ final class CupertinoDatePicker extends Wrapper {
     Stream<bool>? $showDayOfWeek,
     // Associate with itemExtent
     Stream<double>? $itemExtent,
+    // Associate with selectionOverlayBuilder
+    Stream<_i1.SelectionOverlayBuilder?>? $selectionOverlayBuilder,
   }) : super(
           Argument(
             {
@@ -70,6 +73,7 @@ final class CupertinoDatePicker extends Wrapper {
               'backgroundColor': backgroundColor,
               'showDayOfWeek': showDayOfWeek,
               'itemExtent': itemExtent,
+              'selectionOverlayBuilder': selectionOverlayBuilder,
             },
             stream: {
               'key': $key,
@@ -86,6 +90,7 @@ final class CupertinoDatePicker extends Wrapper {
               'backgroundColor': $backgroundColor,
               'showDayOfWeek': $showDayOfWeek,
               'itemExtent': $itemExtent,
+              'selectionOverlayBuilder': $selectionOverlayBuilder,
             },
           ),
           builder: (args) => _i1.CupertinoDatePicker(
@@ -103,6 +108,7 @@ final class CupertinoDatePicker extends Wrapper {
             backgroundColor: args('backgroundColor'),
             showDayOfWeek: args('showDayOfWeek'),
             itemExtent: args('itemExtent'),
+            selectionOverlayBuilder: args('selectionOverlayBuilder'),
           ),
         );
 }
@@ -119,6 +125,7 @@ final class CupertinoTimerPicker extends Wrapper {
     ui.Color? backgroundColor,
     double itemExtent = _kItemExtent,
     required _i2.ValueChanged<Duration> onTimerDurationChanged,
+    _i1.SelectionOverlayBuilder? selectionOverlayBuilder,
     // Associate with key
     Stream<_i2.Key?>? $key,
     // Associate with mode
@@ -137,6 +144,8 @@ final class CupertinoTimerPicker extends Wrapper {
     Stream<double>? $itemExtent,
     // Associate with onTimerDurationChanged
     Stream<_i2.ValueChanged<Duration>>? $onTimerDurationChanged,
+    // Associate with selectionOverlayBuilder
+    Stream<_i1.SelectionOverlayBuilder?>? $selectionOverlayBuilder,
   }) : super(
           Argument(
             {
@@ -149,6 +158,7 @@ final class CupertinoTimerPicker extends Wrapper {
               'backgroundColor': backgroundColor,
               'itemExtent': itemExtent,
               'onTimerDurationChanged': onTimerDurationChanged,
+              'selectionOverlayBuilder': selectionOverlayBuilder,
             },
             stream: {
               'key': $key,
@@ -160,6 +170,7 @@ final class CupertinoTimerPicker extends Wrapper {
               'backgroundColor': $backgroundColor,
               'itemExtent': $itemExtent,
               'onTimerDurationChanged': $onTimerDurationChanged,
+              'selectionOverlayBuilder': $selectionOverlayBuilder,
             },
           ),
           builder: (args) => _i1.CupertinoTimerPicker(
@@ -172,6 +183,7 @@ final class CupertinoTimerPicker extends Wrapper {
             backgroundColor: args('backgroundColor'),
             itemExtent: args('itemExtent'),
             onTimerDurationChanged: args('onTimerDurationChanged'),
+            selectionOverlayBuilder: args('selectionOverlayBuilder'),
           ),
         );
 }

@@ -21,6 +21,7 @@ final class ExpansionTile extends Wrapper {
     _i2.ValueChanged<bool>? onExpansionChanged,
     List<_i3.Widget> children = const [],
     _i3.Widget? trailing,
+    bool showTrailingIcon = true,
     bool initiallyExpanded = false,
     bool maintainState = false,
     _i4.EdgeInsetsGeometry? tilePadding,
@@ -58,6 +59,8 @@ final class ExpansionTile extends Wrapper {
     Stream<List<_i3.Widget>>? $children,
     // Associate with trailing
     Stream<_i3.Widget?>? $trailing,
+    // Associate with showTrailingIcon
+    Stream<bool>? $showTrailingIcon,
     // Associate with initiallyExpanded
     Stream<bool>? $initiallyExpanded,
     // Associate with maintainState
@@ -114,6 +117,7 @@ final class ExpansionTile extends Wrapper {
               'onExpansionChanged': onExpansionChanged,
               'children': children,
               'trailing': trailing,
+              'showTrailingIcon': showTrailingIcon,
               'initiallyExpanded': initiallyExpanded,
               'maintainState': maintainState,
               'tilePadding': tilePadding,
@@ -146,6 +150,7 @@ final class ExpansionTile extends Wrapper {
               'onExpansionChanged': $onExpansionChanged,
               'children': $children,
               'trailing': $trailing,
+              'showTrailingIcon': $showTrailingIcon,
               'initiallyExpanded': $initiallyExpanded,
               'maintainState': $maintainState,
               'tilePadding': $tilePadding,
@@ -179,6 +184,7 @@ final class ExpansionTile extends Wrapper {
             onExpansionChanged: args('onExpansionChanged'),
             children: args('children'),
             trailing: args('trailing'),
+            showTrailingIcon: args('showTrailingIcon'),
             initiallyExpanded: args('initiallyExpanded'),
             maintainState: args('maintainState'),
             tilePadding: args('tilePadding'),

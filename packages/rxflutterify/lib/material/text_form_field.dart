@@ -15,9 +15,11 @@ final class TextFormField extends Wrapper {
   @Goto(_i1.TextFormField.new)
   TextFormField({
     _i2.Key? key,
+    Object groupId = _i3.EditableText,
     _i3.TextEditingController? controller,
     String? initialValue,
     _i3.FocusNode? focusNode,
+    String? forceErrorText,
     _i1.InputDecoration? decoration = const _i1.InputDecoration(),
     _i4.TextInputType? keyboardType,
     _i4.TextCapitalization textCapitalization = _i4.TextCapitalization.none,
@@ -86,12 +88,16 @@ final class TextFormField extends Wrapper {
     bool canRequestFocus = true,
     // Associate with key
     Stream<_i2.Key?>? $key,
+    // Associate with groupId
+    Stream<Object>? $groupId,
     // Associate with controller
     Stream<_i3.TextEditingController?>? $controller,
     // Associate with initialValue
     Stream<String?>? $initialValue,
     // Associate with focusNode
     Stream<_i3.FocusNode?>? $focusNode,
+    // Associate with forceErrorText
+    Stream<String?>? $forceErrorText,
     // Associate with decoration
     Stream<_i1.InputDecoration?>? $decoration,
     // Associate with keyboardType
@@ -228,9 +234,11 @@ final class TextFormField extends Wrapper {
           Argument(
             {
               'key': key,
+              'groupId': groupId,
               'controller': controller,
               'initialValue': initialValue,
               'focusNode': focusNode,
+              'forceErrorText': forceErrorText,
               'decoration': decoration,
               'keyboardType': keyboardType,
               'textCapitalization': textCapitalization,
@@ -300,9 +308,11 @@ final class TextFormField extends Wrapper {
             },
             stream: {
               'key': $key,
+              'groupId': $groupId,
               'controller': $controller,
               'initialValue': $initialValue,
               'focusNode': $focusNode,
+              'forceErrorText': $forceErrorText,
               'decoration': $decoration,
               'keyboardType': $keyboardType,
               'textCapitalization': $textCapitalization,
@@ -373,9 +383,11 @@ final class TextFormField extends Wrapper {
           ),
           builder: (args) => _i1.TextFormField(
             key: args('key'),
+            groupId: args('groupId'),
             controller: args('controller'),
             initialValue: args('initialValue'),
             focusNode: args('focusNode'),
+            forceErrorText: args('forceErrorText'),
             decoration: args('decoration'),
             keyboardType: args('keyboardType'),
             textCapitalization: args('textCapitalization'),

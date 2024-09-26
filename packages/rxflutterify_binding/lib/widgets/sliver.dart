@@ -137,24 +137,6 @@ final class SliverIgnorePointer extends Wrapper {
         );
 }
 
-final class SliverCrossAxisGroup extends Wrapper {
-  @Goto(_i1.SliverCrossAxisGroup.new)
-  SliverCrossAxisGroup(
-    $ $config, {
-    _i2.Key? key,
-    required List<_i1.Widget> slivers,
-  }) : super(
-          Argument({
-            #key: key,
-            #slivers: slivers,
-          }),
-          builder: (args) => _i1.SliverCrossAxisGroup(
-            key: args(#key),
-            slivers: args(#slivers),
-          ),
-        );
-}
-
 final class KeepAlive extends Wrapper {
   @Goto(_i1.KeepAlive.new)
   KeepAlive(
@@ -172,6 +154,24 @@ final class KeepAlive extends Wrapper {
             key: args(#key),
             keepAlive: args(#keepAlive),
             child: args(#child),
+          ),
+        );
+}
+
+final class SliverCrossAxisGroup extends Wrapper {
+  @Goto(_i1.SliverCrossAxisGroup.new)
+  SliverCrossAxisGroup(
+    $ $config, {
+    _i2.Key? key,
+    required List<_i1.Widget> slivers,
+  }) : super(
+          Argument({
+            #key: key,
+            #slivers: slivers,
+          }),
+          builder: (args) => _i1.SliverCrossAxisGroup(
+            key: args(#key),
+            slivers: args(#slivers),
           ),
         );
 }
@@ -277,6 +277,89 @@ final class SliverList extends Wrapper {
           builder: (args) => _i1.SliverList.list(
             key: args(#key),
             children: args(#children),
+            addAutomaticKeepAlives: args(#addAutomaticKeepAlives),
+            addRepaintBoundaries: args(#addRepaintBoundaries),
+            addSemanticIndexes: args(#addSemanticIndexes),
+          ),
+        );
+}
+
+final class SliverVariedExtentList extends Wrapper {
+  @Goto(_i1.SliverVariedExtentList.new)
+  SliverVariedExtentList(
+    $ $config, {
+    _i2.Key? key,
+    required _i1.SliverChildDelegate delegate,
+    required _i3.ItemExtentBuilder itemExtentBuilder,
+  }) : super(
+          Argument({
+            #key: key,
+            #delegate: delegate,
+            #itemExtentBuilder: itemExtentBuilder,
+          }),
+          builder: (args) => _i1.SliverVariedExtentList(
+            key: args(#key),
+            delegate: args(#delegate),
+            itemExtentBuilder: args(#itemExtentBuilder),
+          ),
+        );
+
+  @Goto(_i1.SliverVariedExtentList.builder)
+  SliverVariedExtentList.builder(
+    $ $config, {
+    _i2.Key? key,
+    required _i1.NullableIndexedWidgetBuilder itemBuilder,
+    required _i3.ItemExtentBuilder itemExtentBuilder,
+    _i1.ChildIndexGetter? findChildIndexCallback,
+    int? itemCount,
+    bool addAutomaticKeepAlives = true,
+    bool addRepaintBoundaries = true,
+    bool addSemanticIndexes = true,
+  }) : super(
+          Argument({
+            #key: key,
+            #itemBuilder: itemBuilder,
+            #itemExtentBuilder: itemExtentBuilder,
+            #findChildIndexCallback: findChildIndexCallback,
+            #itemCount: itemCount,
+            #addAutomaticKeepAlives: addAutomaticKeepAlives,
+            #addRepaintBoundaries: addRepaintBoundaries,
+            #addSemanticIndexes: addSemanticIndexes,
+          }),
+          builder: (args) => _i1.SliverVariedExtentList.builder(
+            key: args(#key),
+            itemBuilder: args(#itemBuilder),
+            itemExtentBuilder: args(#itemExtentBuilder),
+            findChildIndexCallback: args(#findChildIndexCallback),
+            itemCount: args(#itemCount),
+            addAutomaticKeepAlives: args(#addAutomaticKeepAlives),
+            addRepaintBoundaries: args(#addRepaintBoundaries),
+            addSemanticIndexes: args(#addSemanticIndexes),
+          ),
+        );
+
+  @Goto(_i1.SliverVariedExtentList.list)
+  SliverVariedExtentList.list(
+    $ $config, {
+    _i2.Key? key,
+    required List<_i1.Widget> children,
+    required _i3.ItemExtentBuilder itemExtentBuilder,
+    bool addAutomaticKeepAlives = true,
+    bool addRepaintBoundaries = true,
+    bool addSemanticIndexes = true,
+  }) : super(
+          Argument({
+            #key: key,
+            #children: children,
+            #itemExtentBuilder: itemExtentBuilder,
+            #addAutomaticKeepAlives: addAutomaticKeepAlives,
+            #addRepaintBoundaries: addRepaintBoundaries,
+            #addSemanticIndexes: addSemanticIndexes,
+          }),
+          builder: (args) => _i1.SliverVariedExtentList.list(
+            key: args(#key),
+            children: args(#children),
+            itemExtentBuilder: args(#itemExtentBuilder),
             addAutomaticKeepAlives: args(#addAutomaticKeepAlives),
             addRepaintBoundaries: args(#addRepaintBoundaries),
             addSemanticIndexes: args(#addSemanticIndexes),

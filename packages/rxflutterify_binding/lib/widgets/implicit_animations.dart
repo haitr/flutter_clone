@@ -145,49 +145,16 @@ final class AnimatedContainer extends Wrapper {
         );
 }
 
-final class SliverAnimatedOpacity extends Wrapper {
-  @Goto(_i1.SliverAnimatedOpacity.new)
-  SliverAnimatedOpacity(
-    $ $config, {
-    _i2.Key? key,
-    _i1.Widget? sliver,
-    required double opacity,
-    _i4.Curve curve = _i4.Curves.linear,
-    required Duration duration,
-    ui.VoidCallback? onEnd,
-    bool alwaysIncludeSemantics = false,
-  }) : super(
-          Argument({
-            #key: key,
-            #sliver: sliver,
-            #opacity: opacity,
-            #curve: curve,
-            #duration: duration,
-            #onEnd: onEnd,
-            #alwaysIncludeSemantics: alwaysIncludeSemantics,
-          }),
-          builder: (args) => _i1.SliverAnimatedOpacity(
-            key: args(#key),
-            sliver: args(#sliver),
-            opacity: args(#opacity),
-            curve: args(#curve),
-            duration: args(#duration),
-            onEnd: args(#onEnd),
-            alwaysIncludeSemantics: args(#alwaysIncludeSemantics),
-          ),
-        );
-}
-
 final class AnimatedPhysicalModel extends Wrapper {
   @Goto(_i1.AnimatedPhysicalModel.new)
   AnimatedPhysicalModel(
     $ $config, {
     _i2.Key? key,
     required _i1.Widget child,
-    required _i3.BoxShape shape,
+    _i3.BoxShape shape = _i3.BoxShape.rectangle,
     ui.Clip clipBehavior = ui.Clip.none,
-    _i3.BorderRadius borderRadius = _i3.BorderRadius.zero,
-    required double elevation,
+    _i3.BorderRadius? borderRadius,
+    double elevation = 0.0,
     required ui.Color color,
     bool animateColor = true,
     required ui.Color shadowColor,
@@ -225,6 +192,39 @@ final class AnimatedPhysicalModel extends Wrapper {
             curve: args(#curve),
             duration: args(#duration),
             onEnd: args(#onEnd),
+          ),
+        );
+}
+
+final class SliverAnimatedOpacity extends Wrapper {
+  @Goto(_i1.SliverAnimatedOpacity.new)
+  SliverAnimatedOpacity(
+    $ $config, {
+    _i2.Key? key,
+    _i1.Widget? sliver,
+    required double opacity,
+    _i4.Curve curve = _i4.Curves.linear,
+    required Duration duration,
+    ui.VoidCallback? onEnd,
+    bool alwaysIncludeSemantics = false,
+  }) : super(
+          Argument({
+            #key: key,
+            #sliver: sliver,
+            #opacity: opacity,
+            #curve: curve,
+            #duration: duration,
+            #onEnd: onEnd,
+            #alwaysIncludeSemantics: alwaysIncludeSemantics,
+          }),
+          builder: (args) => _i1.SliverAnimatedOpacity(
+            key: args(#key),
+            sliver: args(#sliver),
+            opacity: args(#opacity),
+            curve: args(#curve),
+            duration: args(#duration),
+            onEnd: args(#onEnd),
+            alwaysIncludeSemantics: args(#alwaysIncludeSemantics),
           ),
         );
 }

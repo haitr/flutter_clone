@@ -26,3 +26,24 @@ final class CupertinoTheme extends Wrapper {
           ),
         );
 }
+
+final class InheritedCupertinoTheme extends Wrapper {
+  @Goto(_i1.InheritedCupertinoTheme.new)
+  InheritedCupertinoTheme(
+    $ $config, {
+    _i2.Key? key,
+    required _i1.CupertinoTheme theme,
+    required _i3.Widget child,
+  }) : super(
+          Argument({
+            #key: key,
+            #theme: theme,
+            #child: child,
+          }),
+          builder: (args) => _i1.InheritedCupertinoTheme(
+            key: args(#key),
+            theme: args(#theme),
+            child: args(#child),
+          ),
+        );
+}

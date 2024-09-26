@@ -90,6 +90,45 @@ final class AnimatedGrid extends Wrapper {
         );
 }
 
+final class SliverAnimatedList extends Wrapper {
+  @Goto(_i1.SliverAnimatedList.new)
+  SliverAnimatedList({
+    _i2.Key? key,
+    required _i1.AnimatedItemBuilder itemBuilder,
+    _i1.ChildIndexGetter? findChildIndexCallback,
+    int initialItemCount = 0,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with itemBuilder
+    Stream<_i1.AnimatedItemBuilder>? $itemBuilder,
+    // Associate with findChildIndexCallback
+    Stream<_i1.ChildIndexGetter?>? $findChildIndexCallback,
+    // Associate with initialItemCount
+    Stream<int>? $initialItemCount,
+  }) : super(
+          Argument(
+            {
+              'key': key,
+              'itemBuilder': itemBuilder,
+              'findChildIndexCallback': findChildIndexCallback,
+              'initialItemCount': initialItemCount,
+            },
+            stream: {
+              'key': $key,
+              'itemBuilder': $itemBuilder,
+              'findChildIndexCallback': $findChildIndexCallback,
+              'initialItemCount': $initialItemCount,
+            },
+          ),
+          builder: (args) => _i1.SliverAnimatedList(
+            key: args('key'),
+            itemBuilder: args('itemBuilder'),
+            findChildIndexCallback: args('findChildIndexCallback'),
+            initialItemCount: args('initialItemCount'),
+          ),
+        );
+}
+
 final class SliverAnimatedGrid extends Wrapper {
   @Goto(_i1.SliverAnimatedGrid.new)
   SliverAnimatedGrid({
@@ -129,45 +168,6 @@ final class SliverAnimatedGrid extends Wrapper {
             key: args('key'),
             itemBuilder: args('itemBuilder'),
             gridDelegate: args('gridDelegate'),
-            findChildIndexCallback: args('findChildIndexCallback'),
-            initialItemCount: args('initialItemCount'),
-          ),
-        );
-}
-
-final class SliverAnimatedList extends Wrapper {
-  @Goto(_i1.SliverAnimatedList.new)
-  SliverAnimatedList({
-    _i2.Key? key,
-    required _i1.AnimatedItemBuilder itemBuilder,
-    _i1.ChildIndexGetter? findChildIndexCallback,
-    int initialItemCount = 0,
-    // Associate with key
-    Stream<_i2.Key?>? $key,
-    // Associate with itemBuilder
-    Stream<_i1.AnimatedItemBuilder>? $itemBuilder,
-    // Associate with findChildIndexCallback
-    Stream<_i1.ChildIndexGetter?>? $findChildIndexCallback,
-    // Associate with initialItemCount
-    Stream<int>? $initialItemCount,
-  }) : super(
-          Argument(
-            {
-              'key': key,
-              'itemBuilder': itemBuilder,
-              'findChildIndexCallback': findChildIndexCallback,
-              'initialItemCount': initialItemCount,
-            },
-            stream: {
-              'key': $key,
-              'itemBuilder': $itemBuilder,
-              'findChildIndexCallback': $findChildIndexCallback,
-              'initialItemCount': $initialItemCount,
-            },
-          ),
-          builder: (args) => _i1.SliverAnimatedList(
-            key: args('key'),
-            itemBuilder: args('itemBuilder'),
             findChildIndexCallback: args('findChildIndexCallback'),
             initialItemCount: args('initialItemCount'),
           ),
@@ -242,6 +242,97 @@ final class AnimatedList extends Wrapper {
           builder: (args) => _i1.AnimatedList(
             key: args('key'),
             itemBuilder: args('itemBuilder'),
+            initialItemCount: args('initialItemCount'),
+            scrollDirection: args('scrollDirection'),
+            reverse: args('reverse'),
+            controller: args('controller'),
+            primary: args('primary'),
+            physics: args('physics'),
+            shrinkWrap: args('shrinkWrap'),
+            padding: args('padding'),
+            clipBehavior: args('clipBehavior'),
+          ),
+        );
+
+  @Goto(_i1.AnimatedList.separated)
+  AnimatedList.separated({
+    _i2.Key? key,
+    required _i1.AnimatedItemBuilder itemBuilder,
+    required _i1.AnimatedItemBuilder separatorBuilder,
+    required _i1.AnimatedItemBuilder removedSeparatorBuilder,
+    int initialItemCount = 0,
+    _i4.Axis scrollDirection = _i4.Axis.vertical,
+    bool reverse = false,
+    _i1.ScrollController? controller,
+    bool? primary,
+    _i1.ScrollPhysics? physics,
+    bool shrinkWrap = false,
+    _i4.EdgeInsetsGeometry? padding,
+    ui.Clip clipBehavior = ui.Clip.hardEdge,
+    // Associate with key
+    Stream<_i2.Key?>? $key,
+    // Associate with itemBuilder
+    Stream<_i1.AnimatedItemBuilder>? $itemBuilder,
+    // Associate with separatorBuilder
+    Stream<_i1.AnimatedItemBuilder>? $separatorBuilder,
+    // Associate with removedSeparatorBuilder
+    Stream<_i1.AnimatedItemBuilder>? $removedSeparatorBuilder,
+    // Associate with initialItemCount
+    Stream<int>? $initialItemCount,
+    // Associate with scrollDirection
+    Stream<_i4.Axis>? $scrollDirection,
+    // Associate with reverse
+    Stream<bool>? $reverse,
+    // Associate with controller
+    Stream<_i1.ScrollController?>? $controller,
+    // Associate with primary
+    Stream<bool?>? $primary,
+    // Associate with physics
+    Stream<_i1.ScrollPhysics?>? $physics,
+    // Associate with shrinkWrap
+    Stream<bool>? $shrinkWrap,
+    // Associate with padding
+    Stream<_i4.EdgeInsetsGeometry?>? $padding,
+    // Associate with clipBehavior
+    Stream<ui.Clip>? $clipBehavior,
+  }) : super(
+          Argument(
+            {
+              'key': key,
+              'itemBuilder': itemBuilder,
+              'separatorBuilder': separatorBuilder,
+              'removedSeparatorBuilder': removedSeparatorBuilder,
+              'initialItemCount': initialItemCount,
+              'scrollDirection': scrollDirection,
+              'reverse': reverse,
+              'controller': controller,
+              'primary': primary,
+              'physics': physics,
+              'shrinkWrap': shrinkWrap,
+              'padding': padding,
+              'clipBehavior': clipBehavior,
+            },
+            stream: {
+              'key': $key,
+              'itemBuilder': $itemBuilder,
+              'separatorBuilder': $separatorBuilder,
+              'removedSeparatorBuilder': $removedSeparatorBuilder,
+              'initialItemCount': $initialItemCount,
+              'scrollDirection': $scrollDirection,
+              'reverse': $reverse,
+              'controller': $controller,
+              'primary': $primary,
+              'physics': $physics,
+              'shrinkWrap': $shrinkWrap,
+              'padding': $padding,
+              'clipBehavior': $clipBehavior,
+            },
+          ),
+          builder: (args) => _i1.AnimatedList.separated(
+            key: args('key'),
+            itemBuilder: args('itemBuilder'),
+            separatorBuilder: args('separatorBuilder'),
+            removedSeparatorBuilder: args('removedSeparatorBuilder'),
             initialItemCount: args('initialItemCount'),
             scrollDirection: args('scrollDirection'),
             reverse: args('reverse'),

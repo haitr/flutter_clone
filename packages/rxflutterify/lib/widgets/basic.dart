@@ -1719,6 +1719,7 @@ final class Semantics extends Wrapper {
     bool? keyboardKey,
     bool? link,
     bool? header,
+    int? headingLevel,
     bool? textField,
     bool? readOnly,
     bool? focusable,
@@ -1769,6 +1770,7 @@ final class Semantics extends Wrapper {
     _i6.SetTextHandler? onSetText,
     ui.VoidCallback? onDidGainAccessibilityFocus,
     ui.VoidCallback? onDidLoseAccessibilityFocus,
+    ui.VoidCallback? onFocus,
     Map<_i6.CustomSemanticsAction, ui.VoidCallback>? customSemanticsActions,
     // Associate with key
     Stream<_i2.Key?>? $key,
@@ -1802,6 +1804,8 @@ final class Semantics extends Wrapper {
     Stream<bool?>? $link,
     // Associate with header
     Stream<bool?>? $header,
+    // Associate with headingLevel
+    Stream<int?>? $headingLevel,
     // Associate with textField
     Stream<bool?>? $textField,
     // Associate with readOnly
@@ -1902,6 +1906,8 @@ final class Semantics extends Wrapper {
     Stream<ui.VoidCallback?>? $onDidGainAccessibilityFocus,
     // Associate with onDidLoseAccessibilityFocus
     Stream<ui.VoidCallback?>? $onDidLoseAccessibilityFocus,
+    // Associate with onFocus
+    Stream<ui.VoidCallback?>? $onFocus,
     // Associate with customSemanticsActions
     Stream<Map<_i6.CustomSemanticsAction, ui.VoidCallback>?>? $customSemanticsActions,
   }) : super(
@@ -1923,6 +1929,7 @@ final class Semantics extends Wrapper {
               'keyboardKey': keyboardKey,
               'link': link,
               'header': header,
+              'headingLevel': headingLevel,
               'textField': textField,
               'readOnly': readOnly,
               'focusable': focusable,
@@ -1973,6 +1980,7 @@ final class Semantics extends Wrapper {
               'onSetText': onSetText,
               'onDidGainAccessibilityFocus': onDidGainAccessibilityFocus,
               'onDidLoseAccessibilityFocus': onDidLoseAccessibilityFocus,
+              'onFocus': onFocus,
               'customSemanticsActions': customSemanticsActions,
             },
             stream: {
@@ -1992,6 +2000,7 @@ final class Semantics extends Wrapper {
               'keyboardKey': $keyboardKey,
               'link': $link,
               'header': $header,
+              'headingLevel': $headingLevel,
               'textField': $textField,
               'readOnly': $readOnly,
               'focusable': $focusable,
@@ -2042,6 +2051,7 @@ final class Semantics extends Wrapper {
               'onSetText': $onSetText,
               'onDidGainAccessibilityFocus': $onDidGainAccessibilityFocus,
               'onDidLoseAccessibilityFocus': $onDidLoseAccessibilityFocus,
+              'onFocus': $onFocus,
               'customSemanticsActions': $customSemanticsActions,
             },
           ),
@@ -2062,6 +2072,7 @@ final class Semantics extends Wrapper {
             keyboardKey: args('keyboardKey'),
             link: args('link'),
             header: args('header'),
+            headingLevel: args('headingLevel'),
             textField: args('textField'),
             readOnly: args('readOnly'),
             focusable: args('focusable'),
@@ -2112,6 +2123,7 @@ final class Semantics extends Wrapper {
             onSetText: args('onSetText'),
             onDidGainAccessibilityFocus: args('onDidGainAccessibilityFocus'),
             onDidLoseAccessibilityFocus: args('onDidLoseAccessibilityFocus'),
+            onFocus: args('onFocus'),
             customSemanticsActions: args('customSemanticsActions'),
           ),
         );
@@ -3937,7 +3949,7 @@ final class RawImage extends Wrapper {
     ui.Rect? centerSlice,
     bool matchTextDirection = false,
     bool invertColors = false,
-    ui.FilterQuality filterQuality = ui.FilterQuality.low,
+    ui.FilterQuality filterQuality = ui.FilterQuality.medium,
     bool isAntiAlias = false,
     // Associate with key
     Stream<_i2.Key?>? $key,

@@ -1039,6 +1039,7 @@ final class Semantics extends Wrapper {
     bool? keyboardKey,
     bool? link,
     bool? header,
+    int? headingLevel,
     bool? textField,
     bool? readOnly,
     bool? focusable,
@@ -1089,6 +1090,7 @@ final class Semantics extends Wrapper {
     _i6.SetTextHandler? onSetText,
     ui.VoidCallback? onDidGainAccessibilityFocus,
     ui.VoidCallback? onDidLoseAccessibilityFocus,
+    ui.VoidCallback? onFocus,
     Map<_i6.CustomSemanticsAction, ui.VoidCallback>? customSemanticsActions,
   }) : super(
           Argument({
@@ -1108,6 +1110,7 @@ final class Semantics extends Wrapper {
             #keyboardKey: keyboardKey,
             #link: link,
             #header: header,
+            #headingLevel: headingLevel,
             #textField: textField,
             #readOnly: readOnly,
             #focusable: focusable,
@@ -1158,6 +1161,7 @@ final class Semantics extends Wrapper {
             #onSetText: onSetText,
             #onDidGainAccessibilityFocus: onDidGainAccessibilityFocus,
             #onDidLoseAccessibilityFocus: onDidLoseAccessibilityFocus,
+            #onFocus: onFocus,
             #customSemanticsActions: customSemanticsActions,
           }),
           builder: (args) => _i1.Semantics(
@@ -1177,6 +1181,7 @@ final class Semantics extends Wrapper {
             keyboardKey: args(#keyboardKey),
             link: args(#link),
             header: args(#header),
+            headingLevel: args(#headingLevel),
             textField: args(#textField),
             readOnly: args(#readOnly),
             focusable: args(#focusable),
@@ -1227,6 +1232,7 @@ final class Semantics extends Wrapper {
             onSetText: args(#onSetText),
             onDidGainAccessibilityFocus: args(#onDidGainAccessibilityFocus),
             onDidLoseAccessibilityFocus: args(#onDidLoseAccessibilityFocus),
+            onFocus: args(#onFocus),
             customSemanticsActions: args(#customSemanticsActions),
           ),
         );
@@ -2333,7 +2339,7 @@ final class RawImage extends Wrapper {
     ui.Rect? centerSlice,
     bool matchTextDirection = false,
     bool invertColors = false,
-    ui.FilterQuality filterQuality = ui.FilterQuality.low,
+    ui.FilterQuality filterQuality = ui.FilterQuality.medium,
     bool isAntiAlias = false,
   }) : super(
           Argument({

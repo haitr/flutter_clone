@@ -110,18 +110,35 @@ class _RenderCupertinoTextSelectionToolbarShape extends _i4.RenderShiftedBox {
     markNeedsPaint();
   }
 
-  bool get isAbove => anchorAbove.dy >= (child?.size.height ?? 0.0) - _kToolbarArrowSize.height * 2;
+  bool _isAbove(double childHeight) => anchorAbove.dy >= childHeight - _kToolbarArrowSize.height * 2;
+  _i4.BoxConstraints _constraintsForChild(_i4.BoxConstraints constraints) {
+    return _i4.BoxConstraints(minWidth: _kToolbarArrowSize.width + _kToolbarBorderRadius.x * 2).enforce(constraints.loosen());
+  }
+
+  ui.Offset _computeChildOffset(ui.Size childSize) {
+    return ui.Offset(0.0, _isAbove(childSize.height) ? -_kToolbarArrowSize.height : 0.0);
+  }
+
+  @override
+  double? computeDryBaseline(covariant _i4.BoxConstraints constraints, ui.TextBaseline baseline) {
+    final _i4.RenderBox? child = this.child;
+    if (child == null) {
+      return null;
+    }
+    final _i4.BoxConstraints enforcedConstraint = _constraintsForChild(constraints);
+    final double? result = child.getDryBaseline(enforcedConstraint, baseline);
+    return result == null ? null : result + _computeChildOffset(child.getDryLayout(enforcedConstraint)).dy;
+  }
+
   @override
   void performLayout() {
     final _i4.RenderBox? child = this.child;
     if (child == null) {
       return;
     }
-    final _i4.BoxConstraints enforcedConstraint =
-        _i4.BoxConstraints(minWidth: _kToolbarArrowSize.width + _kToolbarBorderRadius.x * 2).enforce(constraints.loosen());
-    child.layout(enforcedConstraint, parentUsesSize: true);
+    child.layout(_constraintsForChild(constraints), parentUsesSize: true);
     final _i4.BoxParentData childParentData = child.parentData! as _i4.BoxParentData;
-    childParentData.offset = ui.Offset(0.0, isAbove ? -_kToolbarArrowSize.height : 0.0);
+    childParentData.offset = _computeChildOffset(child.size);
     size = ui.Size(child.size.width, child.size.height - _kToolbarArrowSize.height);
   }
 
@@ -155,6 +172,7 @@ class _RenderCupertinoTextSelectionToolbarShape extends _i4.RenderShiftedBox {
     if (_kToolbarBorderRadius.x * 2 + _kToolbarArrowSize.width > size.width) {
       return path..addRRect(rrect);
     }
+    final bool isAbove = _isAbove(child.size.height);
     final ui.Offset localAnchor = globalToLocal(isAbove ? _anchorAbove : _anchorBelow);
     final double arrowTipX = ui.clampDouble(
         localAnchor.dx, _kToolbarBorderRadius.x + _kToolbarArrowSize.width / 2, size.width - _kToolbarArrowSize.width / 2 - _kToolbarBorderRadius.x);
@@ -216,7 +234,7 @@ class _RenderCupertinoTextSelectionToolbarShape extends _i4.RenderShiftedBox {
         ..shader = ui.Gradient.linear(
             ui.Offset.zero,
             const ui.Offset(10.0, 10.0),
-            const <ui.Color>[ui.Color(0x00000000), ui.Color(0xFFFF00FF), ui.Color(0xFFFF00FF), ui.Color(0x00000000)],
+            const <ui.Color>[_i1.CupertinoColors.transparent, ui.Color(0xFFFF00FF), ui.Color(0xFFFF00FF), _i1.CupertinoColors.transparent],
             const <double>[0.25, 0.25, 0.75, 0.75],
             ui.TileMode.repeated)
         ..strokeWidth = 2.0

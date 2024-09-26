@@ -26,6 +26,7 @@ final class CupertinoDatePicker extends Wrapper {
     ui.Color? backgroundColor,
     bool showDayOfWeek = false,
     double itemExtent = _kItemExtent,
+    _i1.SelectionOverlayBuilder? selectionOverlayBuilder,
   }) : super(
           Argument({
             #key: key,
@@ -42,6 +43,7 @@ final class CupertinoDatePicker extends Wrapper {
             #backgroundColor: backgroundColor,
             #showDayOfWeek: showDayOfWeek,
             #itemExtent: itemExtent,
+            #selectionOverlayBuilder: selectionOverlayBuilder,
           }),
           builder: (args) => _i1.CupertinoDatePicker(
             key: args(#key),
@@ -58,6 +60,7 @@ final class CupertinoDatePicker extends Wrapper {
             backgroundColor: args(#backgroundColor),
             showDayOfWeek: args(#showDayOfWeek),
             itemExtent: args(#itemExtent),
+            selectionOverlayBuilder: args(#selectionOverlayBuilder),
           ),
         );
 }
@@ -75,6 +78,7 @@ final class CupertinoTimerPicker extends Wrapper {
     ui.Color? backgroundColor,
     double itemExtent = _kItemExtent,
     required _i2.ValueChanged<Duration> onTimerDurationChanged,
+    _i1.SelectionOverlayBuilder? selectionOverlayBuilder,
   }) : super(
           Argument({
             #key: key,
@@ -86,6 +90,7 @@ final class CupertinoTimerPicker extends Wrapper {
             #backgroundColor: backgroundColor,
             #itemExtent: itemExtent,
             #onTimerDurationChanged: onTimerDurationChanged,
+            #selectionOverlayBuilder: selectionOverlayBuilder,
           }),
           builder: (args) => _i1.CupertinoTimerPicker(
             key: args(#key),
@@ -97,6 +102,7 @@ final class CupertinoTimerPicker extends Wrapper {
             backgroundColor: args(#backgroundColor),
             itemExtent: args(#itemExtent),
             onTimerDurationChanged: args(#onTimerDurationChanged),
+            selectionOverlayBuilder: args(#selectionOverlayBuilder),
           ),
         );
 }

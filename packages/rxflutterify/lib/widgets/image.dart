@@ -34,7 +34,7 @@ final class Image extends Wrapper {
     bool matchTextDirection = false,
     bool gaplessPlayback = false,
     bool isAntiAlias = false,
-    ui.FilterQuality filterQuality = ui.FilterQuality.low,
+    ui.FilterQuality filterQuality = ui.FilterQuality.medium,
     // Associate with key
     Stream<_i2.Key?>? $key,
     // Associate with image
@@ -167,7 +167,7 @@ final class Image extends Wrapper {
     ui.Rect? centerSlice,
     bool matchTextDirection = false,
     bool gaplessPlayback = false,
-    ui.FilterQuality filterQuality = ui.FilterQuality.low,
+    ui.FilterQuality filterQuality = ui.FilterQuality.medium,
     bool isAntiAlias = false,
     Map<String, String>? headers,
     int? cacheWidth,
@@ -324,7 +324,7 @@ final class Image extends Wrapper {
     bool matchTextDirection = false,
     bool gaplessPlayback = false,
     bool isAntiAlias = false,
-    ui.FilterQuality filterQuality = ui.FilterQuality.low,
+    ui.FilterQuality filterQuality = ui.FilterQuality.medium,
     int? cacheWidth,
     int? cacheHeight,
     // Associate with file
@@ -471,7 +471,7 @@ final class Image extends Wrapper {
     bool gaplessPlayback = false,
     bool isAntiAlias = false,
     String? package,
-    ui.FilterQuality filterQuality = ui.FilterQuality.low,
+    ui.FilterQuality filterQuality = ui.FilterQuality.medium,
     int? cacheWidth,
     int? cacheHeight,
     // Associate with name
@@ -626,7 +626,7 @@ final class Image extends Wrapper {
     bool matchTextDirection = false,
     bool gaplessPlayback = false,
     bool isAntiAlias = false,
-    ui.FilterQuality filterQuality = ui.FilterQuality.low,
+    ui.FilterQuality filterQuality = ui.FilterQuality.medium,
     int? cacheWidth,
     int? cacheHeight,
     // Associate with bytes

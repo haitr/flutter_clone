@@ -5,12 +5,13 @@ import 'package:flutter/widgets.dart' as _i1;
 
 import '../wrapper.dart';
 
-final class PopScope extends Wrapper {
+final class PopScope<T> extends Wrapper {
   @Goto(_i1.PopScope.new)
   PopScope({
     _i2.Key? key,
     required _i1.Widget child,
     bool canPop = true,
+    _i1.PopInvokedWithResultCallback<T>? onPopInvokedWithResult,
     _i1.PopInvokedCallback? onPopInvoked,
     // Associate with key
     Stream<_i2.Key?>? $key,
@@ -18,6 +19,8 @@ final class PopScope extends Wrapper {
     Stream<_i1.Widget>? $child,
     // Associate with canPop
     Stream<bool>? $canPop,
+    // Associate with onPopInvokedWithResult
+    Stream<_i1.PopInvokedWithResultCallback<T>?>? $onPopInvokedWithResult,
     // Associate with onPopInvoked
     Stream<_i1.PopInvokedCallback?>? $onPopInvoked,
   }) : super(
@@ -26,19 +29,22 @@ final class PopScope extends Wrapper {
               'key': key,
               'child': child,
               'canPop': canPop,
+              'onPopInvokedWithResult': onPopInvokedWithResult,
               'onPopInvoked': onPopInvoked,
             },
             stream: {
               'key': $key,
               'child': $child,
               'canPop': $canPop,
+              'onPopInvokedWithResult': $onPopInvokedWithResult,
               'onPopInvoked': $onPopInvoked,
             },
           ),
-          builder: (args) => _i1.PopScope(
+          builder: (args) => _i1.PopScope<T>(
             key: args('key'),
             child: args('child'),
             canPop: args('canPop'),
+            onPopInvokedWithResult: args('onPopInvokedWithResult'),
             onPopInvoked: args('onPopInvoked'),
           ),
         );
