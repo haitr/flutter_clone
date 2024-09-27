@@ -4,8 +4,11 @@ description: >
   making state management easier and more efficient.
 version: 0.0.2
 homepage: https://github.com/haitr/flutter_clone
-repository: https://github.com/haitr/flutter_clone/
-issue_tracker: https://github.com/haitr/flutter_clone/issues
+repository: https://github.com/haitr/flutter_clone/tree/main/packages/riverpod_widget
+issue_tracker: https://github.com/haitr/flutter_clone/issues?q=is%3Aissue+is%3Aopen+label%3A%22p%3A+riverpod_widget%22
+topics:
+  - reactive-programming
+  - riverpod
 
 environment:
   sdk: ">=3.4.0 <4.0.0"
