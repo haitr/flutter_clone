@@ -46,7 +46,7 @@ More detail in [*Usage*](#usage) section.
 
 ```yaml
 dependencies:
-  rxflutterify: ^0.0.1
+  rxflutterify: 0.0.2
 ```
 
 If the latest version of this package is incompatible with your Flutter version, please refer to the *Version Mapping* section below. There, you'll find instructions on how to use a specific version that matches your Flutter environment.
@@ -59,7 +59,7 @@ dependencies:
     git:
       url: https://github.com/haitr/flutter_clone.git
       path: packages/rxflutterify
-      ref: rxflutterify/v0.0.1
+      ref: rxflutterify/v0.0.2
 ```
 
 ### Version Compatibility
