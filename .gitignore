@@ -1,1 +1,4 @@
 clone/pubspec.yaml
+.dart_tool
+.idea
+*.iml

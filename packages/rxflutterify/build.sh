@@ -20,3 +20,4 @@ cd clone
 dart pub get
 dart run prepare
 dart run clone -o "$TARGET_DIR"
+rm latest.tar.gz

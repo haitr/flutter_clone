@@ -7,3 +7,5 @@ pubspec.lock
 latest.tar.gz
 clone/*
 !clone/bin/generate.wrapper.dart
+
+pubspec_overrides.yaml

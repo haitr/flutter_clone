@@ -2,6 +2,8 @@
 
 A Dart console application to analyze Flutter files and cache analyzed results for faster future access.
 
+[![melos](https://img.shields.io/badge/maintained%20with-melos-f700ff.svg?style=flat-square)](https://github.com/invertase/melos)
+
 ## Features
 
 - **Analyze Flutter Files:** Parse and analyze Flutter project files to extract useful information.

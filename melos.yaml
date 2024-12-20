@@ -1,0 +1,6 @@
+name: clone
+repository: https://github.com/haitr/flutter_clone
+
+packages:
+  - clone/**
+  - packages/**
