@@ -1,7 +1,6 @@
 name: prepare
-description: A sample command-line application.
-version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+description: A tool to prepare and process Dart/Flutter source code for cloning and code generation.
+version: 0.0.1
 
 environment:
   sdk: ">=3.4.0 <4.0.0"

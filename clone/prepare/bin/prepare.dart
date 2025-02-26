@@ -1,5 +1,6 @@
 // ignore_for_file: depend_on_referenced_packages
 
+import 'dart:convert' show jsonDecode;
 import 'dart:io';
 
 import 'package:analyzer/dart/analysis/utilities.dart';
@@ -12,16 +13,27 @@ import 'package:yaml_edit/yaml_edit.dart';
 
 import 'visitor.dart';
 
+/// Command line argument parser configuration
 final parser = ArgParser()
   ..addFlag('verbose', abbr: 'v', help: 'Enable verbose output', negatable: false)
   ..addOption('output', abbr: 'o', help: 'Output directory', defaultsTo: './dependencies')
   ..addFlag('help', abbr: 'h', help: 'Help command', negatable: false);
 
+/// Parsed command line arguments
 late ArgResults cmds;
 
+/// Gets the configured output directory path
 String get output => cmds.option('output')!;
+
+/// Whether help flag was specified
 bool get help => cmds['help']!;
 
+/// Entry point of the preparation script.
+/// This script performs the following tasks:
+/// 1. Copies required Flutter dependencies
+/// 2. Modifies sky_engine package
+/// 3. Updates Flutter package references
+/// 4. Updates project pubspec.yaml
 void main(List<String> args) async {
   // Parse arguments
   cmds = parser.parse(args);
@@ -44,23 +56,47 @@ void main(List<String> args) async {
   }
 }
 
-/// As the function name
+/// Determines the Flutter SDK installation directory path.
+///
+/// Uses the 'flutter --version --machine' command to get JSON output
+/// containing the Flutter root directory path.
+///
+/// Throws an exception if Flutter is not found in PATH or command fails.
 Future<String> _getFlutterDirectoryPath() async {
-  var whereCmd = 'which';
-  if (Platform.isWindows) {
-    whereCmd = 'where.exe';
+  try {
+    // We'll use dart:io's Process to run a single command that works across platforms
+    // The command prints the Flutter SDK path
+    const flutterCommand = 'flutter';
+    const args = ['--version', '--machine'];
+
+    // Try to run the command (should work if flutter is in PATH)
+    final result = await Process.run(flutterCommand, args, runInShell: true);
+    print(result.stdout.toString());
+
+    if (result.exitCode == 0) {
+      // Parse the JSON output
+      final Map<String, dynamic> versionInfo = jsonDecode(result.stdout.toString());
+      if (versionInfo.containsKey('flutterRoot')) {
+        print(versionInfo['flutterRoot']);
+        return versionInfo['flutterRoot'];
+      }
+    }
+  } catch (e) {
+    // Command failed or flutter not in PATH
+    print(e.toString());
   }
-  var processResult = await Process.run(whereCmd, ['flutter']);
-  var flutterBinPath = processResult.stdout.toString().trim();
-  final link = Link(flutterBinPath);
-  if (link.existsSync()) {
-    flutterBinPath = link.resolveSymbolicLinksSync();
-  }
-  final flutterPath = path.canonicalize(path.join(path.dirname(flutterBinPath), '..'));
-  return flutterPath;
+
+  throw Exception(
+      'Could not determine Flutter SDK path. Ensure Flutter is installed and in your PATH.');
 }
 
-/// Generate flutter and sky_engine into output directory
+/// Copies required Flutter dependencies to the output directory.
+///
+/// This includes:
+/// - Flutter framework package (only lib/ directory and config files)
+/// - sky_engine package (only ui/ and ui_web/ directories)
+///
+/// @param flutterBinPath The path to Flutter SDK installation
 Future<void> _copyDeps(String flutterBinPath) async {
   // remove old files
   if (Directory(output) case final dir when dir.existsSync()) {
@@ -126,7 +162,12 @@ Future<void> _copyDeps(String flutterBinPath) async {
   });
 }
 
+/// Modifies the Flutter framework package to use the local sky_engine.
 ///
+/// Changes made:
+/// 1. Updates pubspec.yaml to depend on local cooked_sky_engine
+/// 2. Replaces dart:ui imports with package:cooked_sky_engine
+/// 3. Updates UI-related imports to use the modified sky_engine
 Future<void> _modifyFlutter() async {
   final outputPath = path.join(output, 'flutter');
   // edit pubspec.yaml
@@ -167,7 +208,14 @@ Future<void> _modifyFlutter() async {
   }
 }
 
-/// Redirect all 'dart:ui' import statements to the modified sky_engine, so-called 'cooked_sky_engine'
+/// Replaces dart:ui imports with references to the modified sky_engine package.
+///
+/// Special handling is done for painting/ directory to avoid naming conflicts
+/// with TextStyle class that exists in both dart:ui and painting/.
+///
+/// @param filePath Path to the Dart file being processed
+/// @param contents Original file contents
+/// @returns Modified file contents with updated imports
 String _replaceFlutterImport(String filePath, String contents) {
   final paths = path.split(filePath);
   final category = paths[paths.indexOf('src') + 1];
@@ -214,6 +262,13 @@ String _replaceFlutterImport(String filePath, String contents) {
   );
 }
 
+/// Modifies the sky_engine package to create a dummy implementation.
+///
+/// Changes made:
+/// 1. Renames package to cooked_sky_engine in pubspec.yaml
+/// 2. Creates stub implementations of all APIs
+/// 3. Preserves type definitions and interfaces
+/// 4. Makes all method implementations throw UnimplementedError
 Future<void> _modifySkyEngine() async {
   final outputPath = path.join(output, 'sky_engine');
   // edit pubspec.yaml
@@ -298,6 +353,12 @@ Future<void> _modifySkyEngine() async {
   }
 }
 
+/// Utility function to recursively copy a directory.
+///
+/// Preserves the directory structure and handles files, directories and symlinks.
+///
+/// @param from Source directory path
+/// @param to Destination directory path
 Future<void> _copyPath(String from, String to) async {
   await Directory(to).create(recursive: true);
   await for (final file in Directory(from).list(recursive: true)) {
@@ -312,7 +373,10 @@ Future<void> _copyPath(String from, String to) async {
   }
 }
 
+/// Updates the project's pubspec.yaml to use the local Flutter package.
 ///
+/// Replaces the flutter dependency with a path reference to the
+/// locally modified Flutter framework package.
 Future<void> _modifyPubspec() async {
   // print(path.current);
   // edit pubspec.yaml

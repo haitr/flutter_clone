@@ -64,7 +64,7 @@ dart run prepare
 Make your own implementation `generateWrapper` (and `afterGenerated` is optional) for generating from Flutter analyzed results. See the example [rxflutter wrapper implementation](../packages/rxflutter/clone/bin/generate.wrapper.dart) for more details.
 
 Note: 
-- If `flutter` cannot be found, try to remove `.dart_tool` directory and `dart pub run` again to re-address the `flutter` package.
+- If `flutter` cannot be found, try to remove `.dart_tool` directory and `dart pub get` again to re-address the `flutter` package.
 
 #### Generate
 ```bash
