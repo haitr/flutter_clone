@@ -7,6 +7,7 @@ import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:args/args.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:dart_style/dart_style.dart';
+import 'package:file/memory.dart';
 import 'package:path/path.dart' as path;
 import 'package:yaml/yaml.dart';
 import 'package:yaml_edit/yaml_edit.dart';
@@ -45,7 +46,7 @@ void main(List<String> args) async {
 
   // get absolute path of Fluter
   try {
-    await _copyDeps(await _getFlutterDirectoryPath());
+    await _copyDependences();
     _modifySkyEngine();
     _modifyFlutter();
     _modifyPubspec();
@@ -71,13 +72,11 @@ Future<String> _getFlutterDirectoryPath() async {
 
     // Try to run the command (should work if flutter is in PATH)
     final result = await Process.run(flutterCommand, args, runInShell: true);
-    print(result.stdout.toString());
 
     if (result.exitCode == 0) {
       // Parse the JSON output
       final Map<String, dynamic> versionInfo = jsonDecode(result.stdout.toString());
       if (versionInfo.containsKey('flutterRoot')) {
-        print(versionInfo['flutterRoot']);
         return versionInfo['flutterRoot'];
       }
     }
@@ -95,9 +94,9 @@ Future<String> _getFlutterDirectoryPath() async {
 /// This includes:
 /// - Flutter framework package (only lib/ directory and config files)
 /// - sky_engine package (only ui/ and ui_web/ directories)
-///
-/// @param flutterBinPath The path to Flutter SDK installation
-Future<void> _copyDeps(String flutterBinPath) async {
+Future<void> _copyDependences() async {
+  MemoryFileSystem();
+  final flutterBinPath = await _getFlutterDirectoryPath();
   // remove old files
   if (Directory(output) case final dir when dir.existsSync()) {
     dir.deleteSync(recursive: true);
@@ -282,11 +281,10 @@ Future<void> _modifySkyEngine() async {
     if (path.extension(entity.path).toLowerCase() == '.dart') {
       final file = File(entity.path);
       var contents = await file.readAsString();
-      // final skip = entity.path.endsWith('hooks.dart');
       final skip = false;
       if (!skip) {
         final parsedUnit = parseString(content: contents).unit;
-        final visitor = Visitor(entity.path, verbose: false);
+        final visitor = FileVisitor(entity.path, verbose: false);
         parsedUnit.accept(visitor);
 
         final emitter = DartEmitter(orderDirectives: true, useNullSafetySyntax: true);
@@ -309,7 +307,7 @@ Future<void> _modifySkyEngine() async {
           // Typedef
           builder.body.addAll(visitor.typeAliases.map((e) => Code(e)));
           // Enums
-          builder.body.addAll(visitor.enums.map((e) => Code(e)));
+          builder.body.addAll(visitor.enumDeclarations.map((e) => Code(e)));
           // Classes
           builder.body.addAll(visitor.classes.map((clazz) {
             final code = StringBuffer();
@@ -327,16 +325,16 @@ Future<void> _modifySkyEngine() async {
                 if (constructor.factory) code.write('factory ');
                 code.write(clazz.name);
                 if (constructor.name case final name?) code.write('.$name');
-                code.write(constructor.declaration);
-                if (constructor.initializer.isNotEmpty) {
+                code.write(constructor.parameterDeclaration);
+                if (constructor.initializerDeclarations.isNotEmpty) {
                   code.write(' : ');
-                  code.write(constructor.initializer.join(','));
+                  code.write(constructor.initializerDeclarations.join(','));
                 }
                 if (constructor.factory) code.write(' => throw UnimplementedError()');
                 code.write(';');
                 return code.toString();
               }),
-              ...clazz.fields,
+              ...clazz.fieldDeclarations,
               ...clazz.methods.map((e) => e.external
                   ? Code('${e.declaration};')
                   : Code('${e.declaration}=> throw UnimplementedError();')),
@@ -378,7 +376,6 @@ Future<void> _copyPath(String from, String to) async {
 /// Replaces the flutter dependency with a path reference to the
 /// locally modified Flutter framework package.
 Future<void> _modifyPubspec() async {
-  // print(path.current);
   // edit pubspec.yaml
   final file = File('pubspec.yaml');
   final yamlEditor = YamlEditor(await file.readAsString());

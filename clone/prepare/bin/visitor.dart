@@ -3,12 +3,25 @@ import 'dart:io';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:path/path.dart' as path;
 
-class CustomAstVisitor implements AstVisitor<void> {
+/// A visitor for AST nodes that optionally logs each visited node.
+///
+/// This visitor implements the [AstVisitor] interface and can be configured to:
+/// - Log information about each visited node (verbose mode)
+/// - Recursively visit child nodes
+///
+/// This is primarily used as a base class for more specific visitors.
+class _VerboseAstVisitor implements AstVisitor<void> {
+  /// Whether to log visited nodes
   final bool verbose;
+
+  /// Whether to visit child nodes recursively
   final bool recursive;
 
   /// Initialize a newly created visitor.
-  CustomAstVisitor({this.verbose = true, this.recursive = true});
+  ///
+  /// If [verbose] is true, information about each visited node will be printed.
+  /// If [recursive] is true, child nodes will be visited automatically.
+  _VerboseAstVisitor({required this.recursive, this.verbose = true});
 
   @override
   void visitAdjacentStrings(AdjacentStrings node) => _logAndVisitChildren(node);
@@ -78,11 +91,11 @@ class CustomAstVisitor implements AstVisitor<void> {
   void visitClassTypeAlias(ClassTypeAlias node) => _logAndVisitChildren(node);
 
   @override
-  // void visitComment(Comment node) => _logAndVisitChildren(node);
+  // Intentionally empty to avoid unnecessary comment processing
   void visitComment(Comment node) {}
 
   @override
-  // void visitCommentReference(CommentReference node) => _logAndVisitChildren(node);
+  // Intentionally empty to avoid unnecessary comment reference processing
   void visitCommentReference(CommentReference node) {}
 
   @override
@@ -542,16 +555,8 @@ class CustomAstVisitor implements AstVisitor<void> {
   @override
   void visitYieldStatement(YieldStatement node) => _logAndVisitChildren(node);
 
-  void _logAndVisitChildren(AstNode node) {
-    if (verbose) {
-      var typeName = node.runtimeType.toString();
-      if (typeName.endsWith('Impl')) {
-        typeName = typeName.substring(0, typeName.length - 4);
-      }
-      print('Visit visit$typeName with node: $node');
-    }
-    if (recursive) node.visitChildren(this);
-  }
+  // Below methods are commented out as they may be from newer Dart SDK versions
+  // and not available in the current analyzer package version.
 
   // @override
   // void visitAugmentedExpression(AugmentedExpression node) => _logAndVisitChildren(node);
@@ -564,43 +569,104 @@ class CustomAstVisitor implements AstVisitor<void> {
 
   // @override
   // void visitMixinOnClause(MixinOnClause node) => _logAndVisitChildren(node);
+
+  /// Logs the node being visited if verbose mode is enabled and recursively visits children if configured.
+  ///
+  /// This is a helper method called by all visit methods to:
+  /// 1. Log information about the node (if [verbose] is true)
+  /// 2. Visit child nodes (if [recursive] is true)
+  ///
+  /// @param node The AST node being processed
+  void _logAndVisitChildren(AstNode node) {
+    if (verbose) {
+      var typeName = node.runtimeType.toString();
+      // Remove 'Impl' suffix from implementation classes to get cleaner log output
+      if (typeName.endsWith('Impl')) {
+        typeName = typeName.substring(0, typeName.length - 4);
+      }
+      print('Visit visit$typeName with node: $node');
+    }
+    if (recursive) node.visitChildren(this);
+  }
 }
 
+/// Represents information about an import directive in Dart code.
+///
+/// Contains details about the imported URI and any alias (prefix) used.
 class _ImportAnalyzer {
+  /// The URI being imported
   final String uri;
+
+  /// Optional prefix/alias for the import (may be null)
   final String? alias;
 
+  /// Creates a new import analyzer with the specified URI and optional alias.
   _ImportAnalyzer({required this.uri, this.alias});
 }
 
+/// Represents information about a constructor declaration in a Dart class.
+///
+/// Captures details including the constructor name, parameters, modifiers (const, factory),
+/// and initializer lists.
 class _ConstructorAnalyzer {
+  /// Optional constructor name (null for unnamed/default constructors)
   final String? name;
-  final String declaration;
-  final bool isConst;
-  final bool factory;
-  final Iterable<String> initializer;
 
+  /// The parameter declaration string
+  final String parameterDeclaration;
+
+  /// Whether this is a const constructor
+  final bool isConst;
+
+  /// Whether this is a factory constructor
+  final bool factory;
+
+  /// The initializer declarations (e.g., `: field = value`)
+  final Iterable<String> initializerDeclarations;
+
+  /// Creates a new constructor analyzer with the specified properties.
   _ConstructorAnalyzer({
     required this.name,
-    required this.declaration,
+    required this.parameterDeclaration,
     required this.isConst,
     required this.factory,
-    this.initializer = const [],
+    this.initializerDeclarations = const [],
   });
 }
 
+/// Represents information about a class declaration in Dart code.
+///
+/// Captures details including the class name, modifiers (abstract, base, sealed),
+/// inheritance relationships, and class members (constructors, fields, methods).
 class _ClassAnalyzer {
+  /// The name of the class
   final String name;
+
+  /// Whether this is an abstract class
   final bool abstract;
+
+  /// Whether this is a base class
   final bool base;
+
+  /// Whether this is a sealed class
   final bool sealed;
+
+  /// The extends clause (may be null)
   final String? extendClause;
+
+  /// The implements clause (may be null)
   final String? implementClause;
 
+  /// List of constructors in this class
   final constructors = <_ConstructorAnalyzer>[];
-  final fields = <String>[];
+
+  /// List of field declarations in this class
+  final fieldDeclarations = <String>[];
+
+  /// List of methods in this class
   final methods = <_FunctionAnalyzer>[];
 
+  /// Creates a new class analyzer with the specified properties.
   _ClassAnalyzer({
     required this.name,
     this.abstract = false,
@@ -611,34 +677,131 @@ class _ClassAnalyzer {
   });
 }
 
+/// Represents information about a function or method declaration in Dart code.
+///
+/// Captures details including the full declaration text and whether the function is external.
 class _FunctionAnalyzer {
+  /// The complete function declaration text (excluding body)
   final String declaration;
+
+  /// Whether this is an external function
   final bool external;
 
+  /// Creates a new function analyzer with the specified properties.
   _FunctionAnalyzer({required this.declaration, required this.external});
 }
 
-class Visitor extends CustomAstVisitor {
+/// A visitor for collecting information about a class declaration.
+///
+/// This visitor parses details about class declarations including:
+/// - Class properties (name, modifiers)
+/// - Constructors
+/// - Fields
+/// - Methods
+class _ClassVisitor extends _VerboseAstVisitor {
+  /// Creates a new class visitor with recursion enabled and verbose logging disabled.
+  _ClassVisitor() : super(verbose: false, recursive: true);
+
+  /// The analyzer containing the collected class information
+  late final _ClassAnalyzer analyzer;
+
+  @override
+  void visitClassDeclaration(ClassDeclaration node) {
+    analyzer = _ClassAnalyzer(
+      name: node.name.toString(),
+      abstract: node.abstractKeyword != null,
+      base: node.baseKeyword != null,
+      sealed: node.sealedKeyword != null,
+      extendClause: node.extendsClause?.toString(),
+      implementClause: node.implementsClause?.toString(),
+    );
+    super.visitClassDeclaration(node);
+  }
+
+  @override
+  void visitConstructorDeclaration(ConstructorDeclaration node) {
+    super.visitConstructorDeclaration(node);
+    analyzer.constructors.add(_ConstructorAnalyzer(
+      name: node.name?.toString(),
+      parameterDeclaration: node.parameters.toString(),
+      isConst: node.constKeyword != null,
+      factory: node.factoryKeyword != null,
+      initializerDeclarations: node.initializers.map((e) => e.toString()),
+    ));
+  }
+
+  @override
+  void visitFieldDeclaration(FieldDeclaration node) {
+    super.visitFieldDeclaration(node);
+    analyzer.fieldDeclarations.add(node.toString());
+  }
+
+  @override
+  void visitMethodDeclaration(MethodDeclaration node) {
+    analyzer.methods.add(_FunctionAnalyzer(
+      declaration: node.toString().replaceFirst(node.body.toString(), ''),
+      external: node.externalKeyword != null,
+    ));
+  }
+}
+
+/// A visitor for analyzing Dart source files.
+///
+/// This visitor collects comprehensive information about the contents of a Dart file including:
+/// - Imports and exports
+/// - Part/part of directives
+/// - Top-level functions
+/// - Classes
+/// - Enums
+/// - Type aliases
+/// - Global variables
+///
+/// The collected information can be used for code generation, documentation, or analysis tasks.
+class FileVisitor extends _VerboseAstVisitor {
+  /// Part-of directives in this file
   final partOfs = <String>[];
+
+  /// Import directives in this file
   final imports = <_ImportAnalyzer>[];
+
+  /// Part directives in this file
   final parts = <String>[];
+
+  /// Top-level functions in this file
   final funcs = <_FunctionAnalyzer>[];
+
+  /// Class declarations in this file
   final classes = <_ClassAnalyzer>[];
+
+  /// Type alias declarations in this file
   final typeAliases = <String>[];
-  final enums = <String>[];
+
+  /// Enum declarations in this file
+  final enumDeclarations = <String>[];
+
+  /// Top-level variable declarations in this file
   final vars = <String>[];
 
+  /// The absolute path to the Dart file being analyzed
   final String filePath;
-  Visitor(this.filePath, {super.verbose = false});
+
+  /// Creates a new file visitor for the specified file path.
+  ///
+  /// @param filePath The path to the Dart file being analyzed
+  /// @param verbose Whether to enable verbose logging (defaults to false)
+  /// @param recursive Whether to enable recursive visiting of child nodes (defaults to true)
+  FileVisitor(this.filePath, {super.verbose = false, super.recursive = true});
 
   @override
   void visitImportDirective(ImportDirective node) {
     super.visitImportDirective(node);
     if (node.uri.stringValue case final uri?) {
       if (RegExp(r'dart:(.*)').firstMatch(uri) case final match?) {
+        // Handle special case for dart:ui by replacing it with a local UI implementation
         if (match.group(1)! == 'ui') {
           return imports.add(_ImportAnalyzer(uri: '../ui/ui.dart', alias: node.prefix?.toString()));
         }
+        // Skip private dart: imports (those starting with underscore)
         if (!match.group(1)!.startsWith('_')) {
           return imports.add(_ImportAnalyzer(uri: uri, alias: node.prefix?.toString()));
         }
@@ -651,6 +814,7 @@ class Visitor extends CustomAstVisitor {
   @override
   void visitPartDirective(PartDirective node) {
     super.visitPartDirective(node);
+    // Only include part files that actually exist on disk
     if (node.uri.stringValue case final partFile?
         when File(path.join(path.dirname(filePath), partFile)).existsSync()) {
       parts.add(partFile);
@@ -673,6 +837,7 @@ class Visitor extends CustomAstVisitor {
   void visitFunctionDeclaration(FunctionDeclaration node) {
     super.visitFunctionDeclaration(node);
     funcs.add(_FunctionAnalyzer(
+      // Extract just the declaration part by removing the function body
       declaration: node.toString().replaceFirst(node.functionExpression.body.toString(), ''),
       external: node.externalKeyword != null,
     ));
@@ -681,6 +846,7 @@ class Visitor extends CustomAstVisitor {
   @override
   void visitClassDeclaration(ClassDeclaration node) {
     super.visitClassDeclaration(node);
+    // Use a specialized visitor to collect detailed information about the class
     final visitor = _ClassVisitor();
     node.accept(visitor);
     classes.add(visitor.analyzer);
@@ -689,7 +855,7 @@ class Visitor extends CustomAstVisitor {
   @override
   void visitEnumDeclaration(EnumDeclaration node) {
     super.visitEnumDeclaration(node);
-    enums.add(node.toString());
+    enumDeclarations.add(node.toString());
   }
 
   @override
@@ -698,55 +864,3 @@ class Visitor extends CustomAstVisitor {
     vars.add(node.toString());
   }
 }
-
-class _ClassVisitor extends CustomAstVisitor {
-  _ClassVisitor({super.verbose = false});
-
-  late final _ClassAnalyzer analyzer;
-
-  @override
-  void visitClassDeclaration(ClassDeclaration node) {
-    analyzer = _ClassAnalyzer(
-      name: node.name.toString(),
-      abstract: node.abstractKeyword != null,
-      base: node.baseKeyword != null,
-      sealed: node.sealedKeyword != null,
-      extendClause: node.extendsClause?.toString(),
-      implementClause: node.implementsClause?.toString(),
-    );
-    super.visitClassDeclaration(node);
-  }
-
-  @override
-  void visitConstructorDeclaration(ConstructorDeclaration node) {
-    super.visitConstructorDeclaration(node);
-    analyzer.constructors.add(_ConstructorAnalyzer(
-      name: node.name?.toString(),
-      declaration: node.parameters.toString(),
-      isConst: node.constKeyword != null,
-      factory: node.factoryKeyword != null,
-      initializer: node.initializers.map((e) => e.toString()),
-    ));
-  }
-
-  @override
-  void visitFieldDeclaration(FieldDeclaration node) {
-    super.visitFieldDeclaration(node);
-    analyzer.fields.add(node.toString());
-  }
-
-  @override
-  void visitMethodDeclaration(MethodDeclaration node) {
-    analyzer.methods.add(_FunctionAnalyzer(
-      declaration: node.toString().replaceFirst(node.body.toString(), ''),
-      external: node.externalKeyword != null,
-    ));
-  }
-}
-
-// class X {
-//   final String x;
-//   factory X() => throw UnimplementedError();
-//   const X.a() : x = '';
-//   X.b() => throw UnimplementedError();
-// }

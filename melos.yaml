@@ -4,3 +4,15 @@ repository: https://github.com/haitr/flutter_clone
 packages:
   - clone/**
   - packages/**
+
+command:
+  version:
+    # Conventional commits specification: https://conventionalcommits.org
+    conventionalCommits: true
+    # Include workspace package when versioning
+    includeScopes: true
+
+scripts:
+  analyze:
+    run: melos exec -- dart analyze .
+    description: Run analyzer in all packages.
