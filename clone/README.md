@@ -53,10 +53,10 @@ dart pub get
 #### Copy `flutter` and `sky_engine`
 
 Simply run the following command line with default arguments. See `--help` for more information.
+Make sure that `melos` already installed.
 
 ```bash
-cd clone
-dart run prepare
+melos run prepare
 ```
 
 #### Implement

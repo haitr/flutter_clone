@@ -14,5 +14,11 @@ command:
 
 scripts:
   analyze:
-    run: melos exec -- dart analyze .
     description: Run analyzer in all packages.
+    run: melos exec -- dart analyze .
+
+  prepare:
+    description: Prepare all packages for cloning.
+    steps:
+      - cd clone
+      - dart run prepare/bin/prepare.dart
