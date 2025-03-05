@@ -1,33 +1,20 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'dart:convert' show jsonDecode;
-import 'dart:io';
+import 'dart:io' as io;
 
 import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:args/args.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:dart_style/dart_style.dart';
-import 'package:file/memory.dart';
+import 'package:fs_shim/fs.dart';
 import 'package:path/path.dart' as path;
 import 'package:yaml/yaml.dart';
 import 'package:yaml_edit/yaml_edit.dart';
 
+import 'copy_path.dart';
+import 'local_file_system.dart';
 import 'visitor.dart';
-
-/// Command line argument parser configuration
-final parser = ArgParser()
-  ..addFlag('verbose', abbr: 'v', help: 'Enable verbose output', negatable: false)
-  ..addOption('output', abbr: 'o', help: 'Output directory', defaultsTo: './dependencies')
-  ..addFlag('help', abbr: 'h', help: 'Help command', negatable: false);
-
-/// Parsed command line arguments
-late ArgResults cmds;
-
-/// Gets the configured output directory path
-String get output => cmds.option('output')!;
-
-/// Whether help flag was specified
-bool get help => cmds['help']!;
 
 /// Entry point of the preparation script.
 /// This script performs the following tasks:
@@ -36,8 +23,16 @@ bool get help => cmds['help']!;
 /// 3. Updates Flutter package references
 /// 4. Updates project pubspec.yaml
 void main(List<String> args) async {
+  // Command line argument parser configuration
+  final parser = ArgParser()
+    ..addFlag('verbose', abbr: 'v', help: 'Enable verbose output', negatable: false)
+    ..addOption('output', abbr: 'o', help: 'Output directory', defaultsTo: './dependencies')
+    ..addFlag('help', abbr: 'h', help: 'Help command', negatable: false);
+
   // Parse arguments
-  cmds = parser.parse(args);
+  final cmds = parser.parse(args);
+  final String output = cmds.option('output')!;
+  final bool help = cmds['help']!;
 
   if (help) {
     print(parser.usage);
@@ -46,10 +41,21 @@ void main(List<String> args) async {
 
   // get absolute path of Fluter
   try {
-    await _copyDependences();
-    _modifySkyEngine();
-    _modifyFlutter();
-    _modifyPubspec();
+    // copy dependencies
+    final outputFs = LocalFileSystem(workingDir: output);
+    await _copyDependencies(outputFs);
+
+    // modify sky_engine
+    final skyEngineFs = LocalFileSystem(workingDir: '$output/sky_engine');
+    modifySkyEngine(skyEngineFs);
+
+    // modify flutter
+    final flutterFs = LocalFileSystem(workingDir: '$output/flutter');
+    modifyFlutter(flutterFs);
+
+    // modify pubspec.yaml
+    final currentFs = LocalFileSystem();
+    modifyPubspec(currentFs, flutterFs);
   } catch (e) {
     print(e.toString());
   } finally {
@@ -71,7 +77,7 @@ Future<String> _getFlutterDirectoryPath() async {
     const args = ['--version', '--machine'];
 
     // Try to run the command (should work if flutter is in PATH)
-    final result = await Process.run(flutterCommand, args, runInShell: true);
+    final result = await io.Process.run(flutterCommand, args, runInShell: true);
 
     if (result.exitCode == 0) {
       // Parse the JSON output
@@ -94,71 +100,48 @@ Future<String> _getFlutterDirectoryPath() async {
 /// This includes:
 /// - Flutter framework package (only lib/ directory and config files)
 /// - sky_engine package (only ui/ and ui_web/ directories)
-Future<void> _copyDependences() async {
-  MemoryFileSystem();
-  final flutterBinPath = await _getFlutterDirectoryPath();
-  // remove old files
-  if (Directory(output) case final dir when dir.existsSync()) {
-    dir.deleteSync(recursive: true);
+Future<void> _copyDependencies(FileSystem fs) async {
+  final flutterPath = await _getFlutterDirectoryPath();
+
+  // create output directory
+  if (await fs.currentDirectory.exists()) {
+    await fs.currentDirectory.delete(recursive: true);
   }
-  Directory(output).createSync();
+  await fs.currentDirectory.create(recursive: true);
+
   // copy flutter
-  await _copyPath(
-    path.join(flutterBinPath, 'packages', 'flutter'),
-    path.join(output, 'flutter'),
+  await copyPath(
+    path.join(flutterPath, 'packages', 'flutter'),
+    path.join(fs.currentDirectory.path, 'flutter'),
+    includes: [
+      'lib/**',
+      'pubspec.yaml',
+      'analysis_options.yaml',
+    ],
   );
-  Directory(path.join(output, 'flutter')).listSync().forEach((entity) {
-    final baseName = path.basename(entity.path);
-    if (entity is Directory) {
-      if (baseName != 'lib') entity.deleteSync(recursive: true);
-    }
-    if (entity is File) {
-      if (baseName != 'pubspec.yaml' && baseName != 'analysis_options.yaml') {
-        entity.deleteSync(recursive: true);
-      }
-    }
-  });
 
   // make version file
-  if (File(path.join(flutterBinPath, 'version')) case var versionFile
-      when versionFile.existsSync()) {
-    versionFile.copy(path.join(output, 'flutter', 'version'));
+  final inputFs = LocalFileSystem(workingDir: flutterPath);
+  if (inputFs.file('version') case var versionFile when await versionFile.exists()) {
+    await versionFile.copy(fs.file('flutter/version').path);
   }
 
   // copy sky_engine
   // this sky_engine is actually a dummy unusable library so many redundant files will be removed
   // only lib/ui and lib/ui_web are needed
-  await _copyPath(
-    path.join(flutterBinPath, 'bin', 'cache', 'pkg', 'sky_engine'),
-    path.join(output, 'sky_engine'),
+  await copyPath(
+    path.join(flutterPath, 'bin', 'cache', 'pkg', 'sky_engine'),
+    path.join(fs.currentDirectory.path, 'sky_engine'),
+    includes: [
+      'lib/ui/**',
+      'lib/ui_web/ui_web.dart',
+      'lib/ui_web/ui_web/browser_detection.dart',
+      'lib/ui_web/ui_web/images.dart',
+      'lib/ui_web/ui_web/platform_view_registry.dart',
+      'lib/ui_web/ui_web/testing.dart',
+      'pubspec.yaml',
+    ],
   );
-  Directory(path.join(output, 'sky_engine')).listSync().forEach((entity) {
-    if (entity is Directory) {
-      if (path.basename(entity.path) == 'lib') {
-        entity.listSync().forEach((entity) {
-          final dirName = path.basename(entity.path);
-          if (dirName == 'ui') {
-            return;
-          }
-          if (dirName == 'ui_web') {
-            (entity as Directory).listSync(recursive: true).forEach((entity) {
-              if (entity is Directory) return;
-              if (!['images', 'platform_view_registry', 'testing', 'browser_detection', 'ui_web']
-                  .contains(path.basenameWithoutExtension(entity.path))) {
-                entity.deleteSync(recursive: false);
-              }
-            });
-            return;
-          }
-          entity.deleteSync(recursive: true);
-        });
-      } else {
-        entity.deleteSync(recursive: true);
-      }
-    } else {
-      if (path.basename(entity.path) != 'pubspec.yaml') entity.deleteSync(recursive: true);
-    }
-  });
 }
 
 /// Modifies the Flutter framework package to use the local sky_engine.
@@ -167,11 +150,10 @@ Future<void> _copyDependences() async {
 /// 1. Updates pubspec.yaml to depend on local cooked_sky_engine
 /// 2. Replaces dart:ui imports with package:cooked_sky_engine
 /// 3. Updates UI-related imports to use the modified sky_engine
-Future<void> _modifyFlutter() async {
-  final outputPath = path.join(output, 'flutter');
+Future<void> modifyFlutter(FileSystem flutterFs) async {
   // edit pubspec.yaml
-  final file = File(path.join(outputPath, 'pubspec.yaml'));
-  final yamlEditor = YamlEditor(await file.readAsString());
+  final pubspec = flutterFs.file('pubspec.yaml');
+  final yamlEditor = YamlEditor(await pubspec.readAsString());
   yamlEditor.remove(['dependencies', 'sky_engine']);
   yamlEditor.update([
     'dependencies'
@@ -179,30 +161,28 @@ Future<void> _modifyFlutter() async {
     ...(yamlEditor.parseAt(['dependencies']) as YamlMap).nodes,
     'cooked_sky_engine': {'path': '../sky_engine'}
   });
-  await file.writeAsString(yamlEditor.toString());
+  await pubspec.writeAsString(yamlEditor.toString());
 
   // edit dart:ui and dart:ui_web imports
-  final directory = Directory(path.join(outputPath, 'lib'));
-  for (final entity in directory.listSync(recursive: true).whereType<File>()) {
-    if (path.extension(entity.path).toLowerCase() == '.dart') {
-      final file = File(entity.path);
-      final contents = await file.readAsString();
-      final updatedContents = _replaceFlutterImport(entity.path, contents)
-          .replaceFirst(
-            'export \'dart:ui\'',
-            'export \'${['package:cooked_sky_engine', 'ui', 'ui.dart'].join('/')}\'',
-          )
-          .replaceFirst(
-            'import \'dart:ui_web\'',
-            'import \'${['package:cooked_sky_engine', 'ui_web', 'ui_web.dart'].join('/')}\'',
-          )
-          .replaceFirst(
-            'export \'dart:ui_web\'',
-            'export \'${['package:cooked_sky_engine', 'ui_web', 'ui_web.dart'].join('/')}\'',
-          );
-      if (updatedContents != contents) {
-        await file.writeAsString(updatedContents);
-      }
+  final list = flutterFs
+      .directory('lib')
+      .list(recursive: true)
+      .where((e) => e is File && path.extension(e.path).toLowerCase() == '.dart');
+  await for (final entity in list) {
+    // Filter for files only and check if they are dart files
+    final file = flutterFs.file(entity.path);
+    final contents = await file.readAsString();
+    final updatedContents = _replaceFlutterImport(entity.path, contents)
+        .replaceFirst(
+          'export \'dart:ui\'',
+          'export \'${['package:cooked_sky_engine', 'ui', 'ui.dart'].join('/')}\'',
+        )
+        .replaceFirst(
+          'import \'dart:ui_web\'',
+          'import \'${['package:cooked_sky_engine', 'ui_web', 'ui_web.dart'].join('/')}\'',
+        );
+    if (updatedContents != contents) {
+      await file.writeAsString(updatedContents);
     }
   }
 }
@@ -268,106 +248,88 @@ String _replaceFlutterImport(String filePath, String contents) {
 /// 2. Creates stub implementations of all APIs
 /// 3. Preserves type definitions and interfaces
 /// 4. Makes all method implementations throw UnimplementedError
-Future<void> _modifySkyEngine() async {
-  final outputPath = path.join(output, 'sky_engine');
+Future<void> modifySkyEngine(FileSystem skyEngineFs) async {
   // edit pubspec.yaml
-  final file = File(path.join(outputPath, 'pubspec.yaml'));
+  final file = skyEngineFs.file('pubspec.yaml');
   final yamlEditor = YamlEditor(await file.readAsString());
   yamlEditor.update(['name'], 'cooked_sky_engine');
   await file.writeAsString(yamlEditor.toString());
+
   // edit ui
-  final dir = Directory(path.join(outputPath, 'lib'));
-  for (final entity in dir.listSync(recursive: true).whereType<File>()) {
-    if (path.extension(entity.path).toLowerCase() == '.dart') {
-      final file = File(entity.path);
-      var contents = await file.readAsString();
-      final skip = false;
-      if (!skip) {
-        final parsedUnit = parseString(content: contents).unit;
-        final visitor = FileVisitor(entity.path, verbose: false);
-        parsedUnit.accept(visitor);
+  final list = skyEngineFs
+      .directory('lib')
+      .list(recursive: true)
+      .where((e) => e is File && path.extension(e.path).toLowerCase() == '.dart');
 
-        final emitter = DartEmitter(orderDirectives: true, useNullSafetySyntax: true);
-        final library = Library((builder) {
-          // Directives
-          builder.directives.addAll(visitor.partOfs.map((e) => switch (e) {
-                'dart.ui' => Directive.partOf('ui.dart'),
-                'dart.ui_web' => Directive.partOf('../ui_web.dart'),
-                _ => throw 'Invalid import url!',
-              }));
-          builder.directives
-              .addAll(visitor.imports.map((e) => Directive.import(e.uri, as: e.alias)));
-          builder.directives.addAll(visitor.parts.map((e) => Directive.part(e)));
-          // top-level variables
-          builder.body.addAll(visitor.vars.map((e) => Code(e)));
-          // Functions
-          builder.body.addAll(visitor.funcs.map((e) => e.external
-              ? Code('${e.declaration};')
-              : Code('${e.declaration}=> throw UnimplementedError();')));
-          // Typedef
-          builder.body.addAll(visitor.typeAliases.map((e) => Code(e)));
-          // Enums
-          builder.body.addAll(visitor.enumDeclarations.map((e) => Code(e)));
-          // Classes
-          builder.body.addAll(visitor.classes.map((clazz) {
-            final code = StringBuffer();
-            code.writeAll([
-              if (clazz.abstract) 'abstract ',
-              if (clazz.base) 'base ',
-              if (clazz.sealed) 'sealed ',
-              'class ${clazz.name} ',
-              if (clazz.extendClause != null) '${clazz.extendClause} ',
-              if (clazz.implementClause != null) '${clazz.implementClause} ',
-              '{',
-              ...clazz.constructors.map((constructor) {
-                final code = StringBuffer();
-                if (constructor.isConst) code.write('const ');
-                if (constructor.factory) code.write('factory ');
-                code.write(clazz.name);
-                if (constructor.name case final name?) code.write('.$name');
-                code.write(constructor.parameterDeclaration);
-                if (constructor.initializerDeclarations.isNotEmpty) {
-                  code.write(' : ');
-                  code.write(constructor.initializerDeclarations.join(','));
-                }
-                if (constructor.factory) code.write(' => throw UnimplementedError()');
-                code.write(';');
-                return code.toString();
-              }),
-              ...clazz.fieldDeclarations,
-              ...clazz.methods.map((e) => e.external
-                  ? Code('${e.declaration};')
-                  : Code('${e.declaration}=> throw UnimplementedError();')),
-              '}',
-            ]);
-            return Code(code.toString());
-          }));
-        });
-        contents = DartFormatter(pageWidth: 160).format(library.accept(emitter).toString());
-      }
+  await for (final entity in list) {
+    // Filter for files only and check if they are dart files
+    final file = skyEngineFs.file(entity.path);
+    var contents = await file.readAsString();
+    final skip = false;
+    if (!skip) {
+      final parsedUnit = parseString(content: contents).unit;
+      final visitor = FileVisitor(entity.path, verbose: false);
+      parsedUnit.accept(visitor);
 
-      file.writeAsStringSync(contents);
+      final emitter = DartEmitter(orderDirectives: true, useNullSafetySyntax: true);
+      final library = Library((builder) {
+        // Directives
+        builder.directives.addAll(visitor.partOfs.map((e) => switch (e) {
+              'dart.ui' => Directive.partOf('ui.dart'),
+              'dart.ui_web' => Directive.partOf('../ui_web.dart'),
+              _ => throw 'Invalid import url!',
+            }));
+        builder.directives.addAll(visitor.imports.map((e) => Directive.import(e.uri, as: e.alias)));
+        builder.directives.addAll(visitor.parts.map((e) => Directive.part(e)));
+        // top-level variables
+        builder.body.addAll(visitor.vars.map((e) => Code(e)));
+        // Functions
+        builder.body.addAll(visitor.funcs.map((e) => e.external
+            ? Code('${e.declaration};')
+            : Code('${e.declaration}=> throw UnimplementedError();')));
+        // Typedef
+        builder.body.addAll(visitor.typeAliases.map((e) => Code(e)));
+        // Enums
+        builder.body.addAll(visitor.enumDeclarations.map((e) => Code(e)));
+        // Classes
+        builder.body.addAll(visitor.classes.map((clazz) {
+          final code = StringBuffer();
+          code.writeAll([
+            if (clazz.abstract) 'abstract ',
+            if (clazz.base) 'base ',
+            if (clazz.sealed) 'sealed ',
+            'class ${clazz.name} ',
+            if (clazz.extendClause != null) '${clazz.extendClause} ',
+            if (clazz.implementClause != null) '${clazz.implementClause} ',
+            '{',
+            ...clazz.constructors.map((constructor) {
+              final code = StringBuffer();
+              if (constructor.isConst) code.write('const ');
+              if (constructor.factory) code.write('factory ');
+              code.write(clazz.name);
+              if (constructor.name case final name?) code.write('.$name');
+              code.write(constructor.parameterDeclaration);
+              if (constructor.initializerDeclarations.isNotEmpty) {
+                code.write(' : ');
+                code.write(constructor.initializerDeclarations.join(','));
+              }
+              if (constructor.factory) code.write(' => throw UnimplementedError()');
+              code.write(';');
+              return code.toString();
+            }),
+            ...clazz.fieldDeclarations,
+            ...clazz.methods.map((e) => e.external
+                ? Code('${e.declaration};')
+                : Code('${e.declaration}=> throw UnimplementedError();')),
+            '}',
+          ]);
+          return Code(code.toString());
+        }));
+      });
+      contents = DartFormatter(pageWidth: 160).format(library.accept(emitter).toString());
     }
-  }
-}
 
-/// Utility function to recursively copy a directory.
-///
-/// Preserves the directory structure and handles files, directories and symlinks.
-///
-/// @param from Source directory path
-/// @param to Destination directory path
-Future<void> _copyPath(String from, String to) async {
-  await Directory(to).create(recursive: true);
-  await for (final file in Directory(from).list(recursive: true)) {
-    final copyTo = path.join(to, path.relative(file.path, from: from));
-    if (file is Directory) {
-      await Directory(copyTo).create(recursive: true);
-    } else if (file is File) {
-      await File(file.path).copy(copyTo);
-    } else if (file is Link) {
-      await Link(copyTo).create(await file.target(), recursive: true);
-    }
+    await file.writeAsString(contents);
   }
 }
 
@@ -375,15 +337,17 @@ Future<void> _copyPath(String from, String to) async {
 ///
 /// Replaces the flutter dependency with a path reference to the
 /// locally modified Flutter framework package.
-Future<void> _modifyPubspec() async {
+Future<void> modifyPubspec(FileSystem fs, FileSystem flutterFs) async {
   // edit pubspec.yaml
-  final file = File('pubspec.yaml');
+  final file = fs.file('pubspec.yaml');
   final yamlEditor = YamlEditor(await file.readAsString());
   final currentDeps = (yamlEditor.parseAt(['dependencies']) as YamlMap).nodes;
   yamlEditor.update([
     'dependencies'
   ], {
-    'flutter': {'path': '$output/flutter'},
+    'flutter': {
+      'path': path.relative(flutterFs.currentDirectory.path, from: fs.currentDirectory.path)
+    },
     ...Map.from(currentDeps)..remove('flutter'),
   });
   await file.writeAsString(yamlEditor.toString());
