@@ -4,13 +4,15 @@ import 'dart:convert' show jsonDecode;
 import 'dart:io' as io;
 
 import 'package:analyzer/dart/analysis/utilities.dart';
+import 'package:analyzer/dart/ast/ast.dart'
+    show Combinator, ExportDirective, HideCombinator, ImportDirective, ShowCombinator;
 import 'package:args/args.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:fs_shim/fs.dart';
+import 'package:json2yaml/json2yaml.dart';
 import 'package:path/path.dart' as path;
 import 'package:yaml/yaml.dart';
-import 'package:yaml_edit/yaml_edit.dart';
 
 import 'copy_path.dart';
 import 'local_file_system.dart';
@@ -55,7 +57,7 @@ void main(List<String> args) async {
 
     // modify pubspec.yaml
     final currentFs = LocalFileSystem();
-    modifyPubspec(currentFs, flutterFs);
+    modifyPubspec(currentFs, flutterFs.currentDirectory.path);
   } catch (e) {
     print(e.toString());
   } finally {
@@ -152,16 +154,14 @@ Future<void> _copyDependencies(FileSystem fs) async {
 /// 3. Updates UI-related imports to use the modified sky_engine
 Future<void> modifyFlutter(FileSystem flutterFs) async {
   // edit pubspec.yaml
-  final pubspec = flutterFs.file('pubspec.yaml');
-  final yamlEditor = YamlEditor(await pubspec.readAsString());
-  yamlEditor.remove(['dependencies', 'sky_engine']);
-  yamlEditor.update([
-    'dependencies'
-  ], {
-    ...(yamlEditor.parseAt(['dependencies']) as YamlMap).nodes,
-    'cooked_sky_engine': {'path': '../sky_engine'}
-  });
-  await pubspec.writeAsString(yamlEditor.toString());
+  final file = flutterFs.file('pubspec.yaml');
+  if (await file.exists()) {
+    final pubspec = loadYaml(await file.readAsString()) as YamlMap;
+    final mutablePubspec = _convertYamlMapToMutableMap(pubspec);
+    mutablePubspec['dependencies'].remove('sky_engine');
+    mutablePubspec['dependencies']['cooked_sky_engine'] = {'path': '../sky_engine'};
+    await file.writeAsString(json2yaml(mutablePubspec, yamlStyle: YamlStyle.pubspecYaml));
+  }
 
   // edit dart:ui and dart:ui_web imports
   final list = flutterFs
@@ -172,15 +172,7 @@ Future<void> modifyFlutter(FileSystem flutterFs) async {
     // Filter for files only and check if they are dart files
     final file = flutterFs.file(entity.path);
     final contents = await file.readAsString();
-    final updatedContents = _replaceFlutterImport(entity.path, contents)
-        .replaceFirst(
-          'export \'dart:ui\'',
-          'export \'${['package:cooked_sky_engine', 'ui', 'ui.dart'].join('/')}\'',
-        )
-        .replaceFirst(
-          'import \'dart:ui_web\'',
-          'import \'${['package:cooked_sky_engine', 'ui_web', 'ui_web.dart'].join('/')}\'',
-        );
+    final updatedContents = _replaceFlutterImport(entity.path, contents);
     if (updatedContents != contents) {
       await file.writeAsString(updatedContents);
     }
@@ -195,50 +187,106 @@ Future<void> modifyFlutter(FileSystem flutterFs) async {
 /// @param filePath Path to the Dart file being processed
 /// @param contents Original file contents
 /// @returns Modified file contents with updated imports
-String _replaceFlutterImport(String filePath, String contents) {
+String _replaceFlutterImport(String filePath, String dartCode) {
   final paths = path.split(filePath);
   final category = paths[paths.indexOf('src') + 1];
 
-  /// in both flutter/painting and dart:ui have the class called TextStyle
-  /// if we tried to replace 'dart:ui' in flutter/painting
-  /// it can leads to ambitious class name issue
-  /// this logic need to be improved later
-  if (category != 'painting') {
-    return contents.replaceFirstMapped(RegExp(r"import '(dart:ui)'(.*?);", dotAll: true), (match) {
-      String? vAs;
-      String? vShow;
-      String? vHide = 'TextStyle';
-      if (match.group(2) case var importModifier? when importModifier.isNotEmpty) {
-        final asStatement = RegExp(r"as\s+(.*?)(\s|$)", dotAll: true).firstMatch(importModifier);
-        vAs = asStatement?.group(1);
-        final hideStatement =
-            RegExp(r"hide\s+(.*?)(show|$)", dotAll: true).firstMatch(importModifier);
-        vHide = hideStatement?.group(1);
-        final showStatement =
-            RegExp(r"show\s+(.*?)(hide|$)", dotAll: true).firstMatch(importModifier);
-        vShow = showStatement?.group(1);
-      }
-      var modified = "import '${['package:cooked_sky_engine', 'ui', 'ui.dart'].join('/')}'";
-      if (vAs != null) {
-        modified += ' as $vAs';
-      }
-      var shouldAddHide = false;
-      if (vShow != null) {
-        modified += ' show $vShow';
-        shouldAddHide = !vShow.contains('TextStyle');
-      }
-      if (vHide != null) {
-        modified += ' hide $vHide';
-        if (shouldAddHide) modified += ', TextStyle';
-      }
+  /// Both flutter/painting and dart:ui have the TextStyle class name,
+  /// It may leads to ambiguous class name issue if we replace carelessly.
+  /// Here, if the file is not in the painting directory,
+  /// we replace 'dart:ui' and hide TextStyle if needed.
+  /// Otherwise, we don't touch it to avoid breaking the code
 
-      return '$modified;';
-    });
+  String makeStatement(
+    String modified,
+    String path,
+    bool isDeferred,
+    String? prefix,
+    Set<String> shows,
+    Set<String> hides,
+  ) {
+    var statement = '$modified \'$path\'';
+    if (isDeferred) {
+      statement += ' deferred';
+    }
+    if (prefix case var prefix?) {
+      statement += ' as $prefix';
+    }
+    if (shows.isNotEmpty) {
+      statement += ' show ${shows.join(', ')}';
+    }
+    if (hides.isNotEmpty) {
+      statement += ' hide ${hides.join(', ')}';
+    }
+    statement += ';';
+    return statement;
   }
-  return contents.replaceFirst(
-    'import \'dart:ui\'',
-    'import \'${['package:cooked_sky_engine', 'ui', 'ui.dart'].join('/')}\'',
-  );
+
+  (Set<String> shows, Set<String> hides) extractCombinators(List<Combinator> combinators) {
+    var shows = <String>{};
+    var hides = <String>{};
+    for (var e in combinators) {
+      if (e is ShowCombinator) {
+        shows.addAll(e.shownNames.map((e) => e.name));
+      }
+      if (e is HideCombinator) {
+        hides.addAll(e.hiddenNames.map((e) => e.name));
+      }
+    }
+    return (shows, hides);
+  }
+
+  final modifiedLines = dartCode.split('\n');
+  var parsedUnit = parseString(content: dartCode).unit;
+  for (final directive in parsedUnit.directives) {
+    if (directive is ImportDirective) {
+      if (directive.uri.stringValue! == 'dart:ui') {
+        final lineIndex = dartCode.substring(0, directive.offset).split('\n').length - 1;
+        final (shows, hides) = extractCombinators(directive.combinators);
+        // Here comes the tricky part
+        // We need to hide TextStyle if it is not in the shows list
+        // and show TextStyle if it is in the shows list
+        if (category != 'painting') {
+          if (!shows.contains('TextStyle')) {
+            hides.add('TextStyle');
+          }
+        }
+
+        modifiedLines[lineIndex] = makeStatement(
+            'import',
+            ['package:cooked_sky_engine', 'ui', 'ui.dart'].join('/'),
+            directive.deferredKeyword != null,
+            directive.prefix?.toString(),
+            shows,
+            hides);
+      }
+      if (directive.uri.stringValue! == 'dart:ui_web') {
+        final lineIndex = dartCode.substring(0, directive.offset).split('\n').length - 1;
+        final (shows, hides) = extractCombinators(directive.combinators);
+        modifiedLines[lineIndex] = makeStatement(
+            'import',
+            ['package:cooked_sky_engine', 'ui_web', 'ui_web.dart'].join('/'),
+            directive.deferredKeyword != null,
+            directive.prefix?.toString(),
+            shows,
+            hides);
+      }
+    }
+    if (directive is ExportDirective) {
+      if (directive.uri.stringValue! == 'dart:ui_web') {
+        final lineIndex = dartCode.substring(0, directive.offset).split('\n').length - 1;
+        final (shows, hides) = extractCombinators(directive.combinators);
+        modifiedLines[lineIndex] = makeStatement(
+            'export',
+            ['package:cooked_sky_engine', 'ui_web', 'ui_web.dart'].join('/'),
+            false,
+            null,
+            shows,
+            hides);
+      }
+    }
+  }
+  return modifiedLines.join('\n');
 }
 
 /// Modifies the sky_engine package to create a dummy implementation.
@@ -251,9 +299,10 @@ String _replaceFlutterImport(String filePath, String contents) {
 Future<void> modifySkyEngine(FileSystem skyEngineFs) async {
   // edit pubspec.yaml
   final file = skyEngineFs.file('pubspec.yaml');
-  final yamlEditor = YamlEditor(await file.readAsString());
-  yamlEditor.update(['name'], 'cooked_sky_engine');
-  await file.writeAsString(yamlEditor.toString());
+  final pubspec = loadYaml(await file.readAsString()) as YamlMap;
+  final mutablePubspec = _convertYamlMapToMutableMap(pubspec);
+  mutablePubspec['name'] = 'cooked_sky_engine';
+  await file.writeAsString(json2yaml(mutablePubspec, yamlStyle: YamlStyle.pubspecYaml));
 
   // edit ui
   final list = skyEngineFs
@@ -337,18 +386,33 @@ Future<void> modifySkyEngine(FileSystem skyEngineFs) async {
 ///
 /// Replaces the flutter dependency with a path reference to the
 /// locally modified Flutter framework package.
-Future<void> modifyPubspec(FileSystem fs, FileSystem flutterFs) async {
+Future<void> modifyPubspec(FileSystem fs, String flutterPath) async {
   // edit pubspec.yaml
   final file = fs.file('pubspec.yaml');
-  final yamlEditor = YamlEditor(await file.readAsString());
-  final currentDeps = (yamlEditor.parseAt(['dependencies']) as YamlMap).nodes;
-  yamlEditor.update([
-    'dependencies'
-  ], {
-    'flutter': {
-      'path': path.relative(flutterFs.currentDirectory.path, from: fs.currentDirectory.path)
-    },
-    ...Map.from(currentDeps)..remove('flutter'),
+  final pubspec = loadYaml(await file.readAsString()) as YamlMap;
+  final mutablePubspec = _convertYamlMapToMutableMap(pubspec);
+  mutablePubspec['dependencies']['flutter'] = {'path': path.absolute(flutterPath)};
+  await file.writeAsString(json2yaml(mutablePubspec, yamlStyle: YamlStyle.pubspecYaml));
+}
+
+Map<String, dynamic> _convertYamlMapToMutableMap(YamlMap yamlMap) {
+  final mutableMap = Map<String, dynamic>.from(yamlMap);
+
+  // Recursively convert nested YamlMaps to mutable Maps
+  mutableMap.forEach((key, value) {
+    if (value is YamlMap) {
+      mutableMap[key] = _convertYamlMapToMutableMap(value);
+    } else if (value is YamlList) {
+      // Convert YamlLists to Lists
+      mutableMap[key] = value.map((item) {
+        if (item is YamlMap) {
+          return _convertYamlMapToMutableMap(item);
+        } else {
+          return item;
+        }
+      }).toList();
+    }
   });
-  await file.writeAsString(yamlEditor.toString());
+
+  return mutableMap;
 }

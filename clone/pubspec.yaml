@@ -16,8 +16,6 @@ dev_dependencies:
     sdk: flutter
 
 dependencies:
-  flutter:
-    path: ./dependencies/flutter
   prepare:
     path: prepare
   path: ^1.8.0

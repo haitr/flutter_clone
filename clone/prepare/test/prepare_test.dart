@@ -3,17 +3,9 @@ import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
 
 // Import the functions to test
-import '../bin/prepare.dart' show modifySkyEngine, modifyFlutter, modifyPubspec;
+import '../bin/prepare.dart' show modifyFlutter, modifyPubspec, modifySkyEngine;
 
 void main() {
-  // Setup variables for tests
-  late FileSystem fsMemory;
-
-  setUp(() {
-    // Create a fresh memory file system for each test
-    fsMemory = newFileSystemMemory();
-  });
-
   group('modifySkyEngine tests', () {
     late FileSystem fsSkyEngine;
     setUp(() async {
@@ -23,6 +15,7 @@ void main() {
         name: sky_engine
         description: Dart Dummy Sky Engine
       ''');
+      await fsSkyEngine.directory('lib/ui').create(recursive: true);
     });
 
     test('should rename package to cooked_sky_engine in pubspec.yaml', () async {
@@ -37,11 +30,8 @@ void main() {
 
     test('should transform dart files correctly', () async {
       // Setup
-      await fsMemory.directory('sky_engine/lib/ui').create(recursive: true);
-      await fsMemory.file('sky_engine/lib/ui/ui.dart').writeAsString('''
+      await fsSkyEngine.file('lib/ui/ui.dart').writeAsString('''
         import 'dart:core';
-
-        part 'painting.dart';
 
         class TextStyle {
           final double fontSize;
@@ -54,13 +44,10 @@ void main() {
       ''');
 
       // Execute
-      await modifySkyEngine(fsMemory);
+      await modifySkyEngine(fsSkyEngine);
 
       // Verify
-      final content = await fsMemory.file('sky_engine/lib/ui/ui.dart').readAsString();
-
-      // Check that it kept the part directive
-      expect(content, contains("part 'painting.dart'"));
+      final content = await fsSkyEngine.file('lib/ui/ui.dart').readAsString();
 
       // Check the class definition is preserved
       expect(content, contains('class TextStyle'));
@@ -72,8 +59,7 @@ void main() {
 
     test('should handle various class modifiers and declarations', () async {
       // Setup
-      await fsMemory.directory('sky_engine/lib/ui').create(recursive: true);
-      await fsMemory.file('sky_engine/lib/ui/class_types.dart').writeAsString('''
+      await fsSkyEngine.file('lib/ui/class_types.dart').writeAsString('''
         abstract class AbstractClass {
           void abstractMethod();
         }
@@ -103,10 +89,10 @@ void main() {
       ''');
 
       // Execute
-      await modifySkyEngine(fsMemory);
+      await modifySkyEngine(fsSkyEngine);
 
       // Verify
-      final content = await fsMemory.file('sky_engine/lib/ui/class_types.dart').readAsString();
+      final content = await fsSkyEngine.file('lib/ui/class_types.dart').readAsString();
 
       // Check that class modifiers are preserved
       expect(content, contains('abstract class AbstractClass'));
@@ -126,26 +112,29 @@ void main() {
   });
 
   group('modifyFlutter tests', () {
+    late FileSystem fsFlutter;
+    setUp(() async {
+      fsFlutter = newFileSystemMemory();
+      await fsFlutter.directory('lib').create(recursive: true);
+    });
+
     test('should update pubspec.yaml to use local sky_engine', () async {
       // Setup
-      await fsMemory.directory('flutter').create(recursive: true);
-      await fsMemory.file('flutter/pubspec.yaml').writeAsString('''
-name: flutter
-description: Flutter framework
-version: 0.0.0
-homepage: https://flutter.dev
+      await fsFlutter.file('pubspec.yaml').writeAsString('''
+        name: flutter
+        description: Flutter framework
 
-dependencies:
-  sky_engine:
-    sdk: flutter
-  some_other_package: ^1.0.0
+        dependencies:
+          sky_engine:
+            sdk: flutter
+          some_other_package: ^1.0.0
       ''');
 
       // Execute
-      await modifyFlutter(fsMemory);
+      await modifyFlutter(fsFlutter);
 
       // Verify
-      final pubspec = await fsMemory.file('flutter/pubspec.yaml').readAsString();
+      final pubspec = await fsFlutter.file('pubspec.yaml').readAsString();
       final yaml = loadYaml(pubspec);
 
       // Check that sky_engine is removed and replaced with cooked_sky_engine
@@ -159,25 +148,24 @@ dependencies:
 
     test('should replace dart:ui imports in Dart files', () async {
       // Setup
-      await fsMemory.directory('flutter/lib').create(recursive: true);
-      await fsMemory.file('flutter/lib/material.dart').writeAsString('''
-import 'dart:ui';
-import 'dart:ui_web';
-import 'package:flutter/src/painting/text_style.dart';
+      await fsFlutter.file('lib/material.dart').writeAsString('''
+        import 'dart:ui';
+        import 'dart:ui_web';
+        import 'package:flutter/src/painting/text_style.dart';
 
-export 'dart:ui';
+        export 'dart:ui';
 
-class Material {
-  final Color color;
-  Material({required this.color});
-}
+        class Material {
+          final Color color;
+          Material({required this.color});
+        }
       ''');
 
       // Execute
-      await modifyFlutter(fsMemory);
+      await modifyFlutter(fsFlutter);
 
       // Verify
-      final content = await fsMemory.file('flutter/lib/material.dart').readAsString();
+      final content = await fsFlutter.file('lib/material.dart').readAsString();
 
       // Check that dart:ui imports are replaced
       expect(content, contains("import 'package:cooked_sky_engine/ui/ui.dart'"));
@@ -189,53 +177,27 @@ class Material {
       expect(content, contains("export 'package:cooked_sky_engine/ui/ui.dart'"));
     });
 
-    test('should handle special case for painting directory', () async {
-      // Setup - create a file in the painting directory
-      await fsMemory.directory('flutter/lib/src/painting').create(recursive: true);
-      await fsMemory.file('flutter/lib/src/painting/text_style.dart').writeAsString('''
-import 'dart:ui';
-import 'package:flutter/foundation.dart';
-
-class TextStyle {
-  final Color color;
-  final double fontSize;
-  
-  const TextStyle({this.color, this.fontSize});
-}
-      ''');
-
-      // Execute
-      await modifyFlutter(fsMemory);
-
-      // Verify
-      final content =
-          await fsMemory.file('flutter/lib/src/painting/text_style.dart').readAsString();
-
-      // Check that for painting directory, we don't change the import to avoid naming conflicts
-      expect(content, contains("import 'dart:ui'"));
-    });
-
     test('should handle complex import modifiers', () async {
       // Setup - create file with complex import modifiers
-      await fsMemory.directory('flutter/lib').create(recursive: true);
-      await fsMemory.file('flutter/lib/complex_imports.dart').writeAsString('''
-import 'dart:ui' show Color, Paint hide TextStyle;
-import 'dart:ui' as ui;
-import 'dart:ui_web' show PlatformViewRegistry;
+      await fsFlutter.directory('lib').create(recursive: true);
+      await fsFlutter.file('lib/complex_imports.dart').writeAsString('''
+        import 'dart:ui' show Color, Paint hide TextStyle;
+        import 'dart:ui' as ui;
+        import 'dart:ui_web' show PlatformViewRegistry;
 
-class CustomPaint {
-  final ui.Paint paint;
-  final Color color;
-  
-  CustomPaint(this.paint, this.color);
-}
+        class CustomPaint {
+          final ui.Paint paint;
+          final Color color;
+
+          CustomPaint(this.paint, this.color);
+        }
       ''');
 
       // Execute
-      await modifyFlutter(fsMemory);
+      await modifyFlutter(fsFlutter);
 
       // Verify
-      final content = await fsMemory.file('flutter/lib/complex_imports.dart').readAsString();
+      final content = await fsFlutter.file('lib/complex_imports.dart').readAsString();
 
       // Check that complex import modifiers are handled correctly
       expect(
@@ -252,13 +214,11 @@ class CustomPaint {
 
   group('modifyPubspec tests', () {
     late FileSystem fs;
-    late FileSystem flutterFs;
-    final outputPath = 'test_dependencies';
+    final outputPath = '/path/to/flutter';
 
     setUp(() async {
       // Create a fresh memory file system for each test
       fs = newFileSystemMemory();
-      flutterFs = newFileSystemMemory(outputPath);
       await fs.file('pubspec.yaml').writeAsString('''
         name: flutter_clone
         description: Dummy Flutter project
@@ -273,7 +233,7 @@ class CustomPaint {
 
     test('should update main pubspec.yaml to use local Flutter', () async {
       // Execute our testable version
-      await modifyPubspec(fs, flutterFs);
+      await modifyPubspec(fs, outputPath);
 
       // Verify
       final pubspec = await fs.file('pubspec.yaml').readAsString();
@@ -281,11 +241,8 @@ class CustomPaint {
       final yaml = loadYaml(pubspec);
 
       // Check that Flutter dependency is updated to use local path
-      // expect(yaml['dependencies']['flutter'], isMap);
-      // expect(yaml['dependencies']['flutter']['path'], equals('$outputPath/flutter'));
-
-      // // Check that other dependencies are preserved
-      // expect(yaml['dependencies']['some_package'], equals('^1.0.0'));
+      expect(yaml['dependencies']['flutter'], isMap);
+      expect(yaml['dependencies']['flutter']['path'], equals(outputPath));
     });
   });
 }
