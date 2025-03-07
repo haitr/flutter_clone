@@ -1,39 +1,67 @@
-// ignore_for_file: depend_on_referenced_packages
-
 import 'dart:async';
-import 'dart:mirrors';
+import 'dart:mirrors' show ClassMirror, currentMirrorSystem;
 
 import 'package:analyzer/dart/analysis/analysis_context_collection.dart';
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:clone/ast/analyzer.dart';
+import 'package:clone/ast/visitor.dart';
+import 'package:clone/extensions/extensions.dart';
+import 'package:clone/helper.dart';
 import 'package:collection/collection.dart';
 import 'package:path/path.dart' as path;
-
-import 'analyzer.dart';
-import 'helper.dart';
 
 // Dummy analyzers used as placeholders
 final _dummyClassAnalyer = ClassAnalyzer('', constructors: []);
 final _dummyMixinAnalyer = MixinAnalyzer('');
 
-// AnalyzeResult class to store analysis results
+/// Represents the result of analyzing Dart files for class, mixin, and other declarations.
+///
+/// This class stores information about classes, mixins, top-level variables, functions,
+/// enums, and other declarations found during static analysis of Dart source files.
 class AnalyzeResult {
+  static final _mirrorSystem = currentMirrorSystem();
+
+  /// The path to the Flutter framework used for analysis.
   static late final String flutterPath;
 
+  /// The URI used for importing the analyzed file.
   late final Uri importUri;
+
+  /// The import path as a string.
   final String importPath;
 
+  /// The absolute file path to the analyzed file.
   late final String filePath;
+
+  /// Map of class mirrors to their corresponding analyzers.
   late final Map<ClassMirror, ClassAnalyzer> classDecls;
+
+  /// Map of class mirrors to their corresponding mixin analyzers.
   late final Map<ClassMirror, MixinAnalyzer> mixinDecls;
+
+  /// Set of type aliases defined in the analyzed file.
   late final Set<String> aliases;
+
+  /// List of top-level variable declarations.
   late final List<PropertyDeclAnalyzer> topLevelVariables;
+
+  /// List of top-level function declarations.
   late final List<LazyDeclAnalyzer> topLevelFunctions;
+
+  /// Set of enum type names defined in the analyzed file.
   late final Set<String> enums;
+
+  /// List of private class declarations.
   late final List<LazyClassDeclAnalyzer> privateClassDecls;
+
+  /// List of private mixin declarations.
   late final List<LazyDeclAnalyzer> privateMixinDecls;
 
-  // Constructor to initialize AnalyzeResult with class list
+  /// Constructor to initialize AnalyzeResult with class list.
+  ///
+  /// [importPath] is the path used for importing the file.
+  /// [classList] is the list of class mirrors found in the file.
   AnalyzeResult(this.importPath, {required List<ClassMirror> classList}) {
     _init();
     classDecls = {for (var c in classList) c: _dummyClassAnalyer};
@@ -46,23 +74,30 @@ class AnalyzeResult {
     enums = {};
   }
 
-  // Factory method to create AnalyzeResult from a path
+  /// Factory method to create AnalyzeResult from a path.
+  ///
+  /// [importPath] is the path used for importing the file.
+  /// Returns an AnalyzeResult if classes are found, null otherwise.
   static AnalyzeResult? fromPath(String importPath) {
     final importUri = Uri.parse(importPath);
-    final classList = mirrorSystem.libraries.containsKey(importUri)
+    final classList = _mirrorSystem.libraries.containsKey(importUri)
         ? lookingForClassAtImportPath(importUri)
         : <ClassMirror>[];
     if (classList.isNotEmpty) return AnalyzeResult(importPath, classList: classList);
     return null;
   }
 
-  // Initialize paths and URIs
+  /// Initialize paths and URIs used by this analyzer.
   void _init() {
     importUri = Uri.parse(importPath);
     final [_, ...paths] = importUri.pathSegments;
     filePath = path.joinAll([flutterPath, ...paths]);
   }
 
+  /// Adds analysis data from a compilation unit.
+  ///
+  /// [unit] is the compilation unit to analyze.
+  /// This method populates all the declaration collections with data from the compilation unit.
   Future<void> addFileUnit(CompilationUnit unit) async {
     final visitor = FileVisitor();
     unit.accept(visitor);
@@ -75,22 +110,22 @@ class AnalyzeResult {
     }
 
     // Update class and mixin declarations with real analyzers
-    visitor.classes.forEach((classDecl) {
+    for (var classDecl in visitor.classes) {
       final mirror =
           classDecls.keys.firstWhereOrNull((element) => element.name == classDecl.name.toString());
       if (mirror != null) {
         classDecls[mirror] = ClassAnalyzer.create(classDecl)..associateWithMirror(mirror);
       }
-    });
+    }
     classDecls.removeWhere((key, value) => value == _dummyClassAnalyer);
 
-    visitor.mixins.forEach((mixinDecl) {
+    for (var mixinDecl in visitor.mixins) {
       final mirror =
           mixinDecls.keys.firstWhereOrNull((element) => element.name == mixinDecl.name.toString());
       if (mirror != null) {
         mixinDecls[mirror] = MixinAnalyzer.create(mixinDecl);
       }
-    });
+    }
     mixinDecls.removeWhere((key, value) => value == _dummyMixinAnalyer);
 
     // Collect other declarations and properties
@@ -102,7 +137,11 @@ class AnalyzeResult {
     enums.addAll(visitor.enums);
   }
 
-  // Deserialize from cache
+  /// Creates an AnalyzeResult from cached data.
+  ///
+  /// [importPath] is the path used for importing the file.
+  /// [classList] is the list of class mirrors found in the file.
+  /// [cache] is the cached data to restore from.
   AnalyzeResult.fromCache(this.importPath,
       {required List<ClassMirror> classList, required Map<String, dynamic> cache}) {
     _init();
@@ -135,22 +174,22 @@ class AnalyzeResult {
 
       topLevelVariables = [];
       if (data['top-level-variable'] case Map<String, dynamic> topLevelData?) {
-        topLevelData.keys.forEach((name) {
+        for (var name in topLevelData.keys) {
           if (topLevelData[name] case Map<String, dynamic> data) {
             data['name'] = name;
             topLevelVariables.add(PropertyDeclAnalyzer.fromJson(data));
           }
-        });
+        }
       }
 
       topLevelFunctions = [];
       if (data['top-level-function'] case Map<String, dynamic> topLevelData?) {
-        topLevelData.keys.forEach((name) {
+        for (var name in topLevelData.keys) {
           if (topLevelData[name] case Map<String, dynamic> data) {
             data['name'] = name;
             topLevelFunctions.add(LazyDeclAnalyzer.fromJson(data));
           }
-        });
+        }
       }
 
       enums = {};
@@ -176,7 +215,9 @@ class AnalyzeResult {
     }
   }
 
-  // Serialize to JSON
+  /// Converts the analysis result to a JSON-serializable map.
+  ///
+  /// Returns a map representation of the analysis result.
   Map<String, dynamic> toJson() {
     return {
       importPath: {
@@ -203,11 +244,17 @@ class AnalyzeResult {
   }
 }
 
-// Function to get list of classes from a given URI
+/// Retrieves a list of class declarations from a given import URI.
+///
+/// [uri] is the URI to search for class declarations.
+/// Returns a list of ClassMirror objects representing the classes found.
 List<ClassMirror> lookingForClassAtImportPath(Uri uri) =>
-    mirrorSystem.libraries[uri]!.declarations.values.classDeclarations;
+    currentMirrorSystem().libraries[uri]!.declarations.values.classDeclarations;
 
-// Function to run analysis on files
+/// Runs analysis on a list of file paths.
+///
+/// [filePaths] is the list of file paths to analyze.
+/// [onResult] is a callback function that is called for each resolved unit.
 Future<void> runAnalyzeOnFiles(
   List<String> filePaths, {
   required FutureOr<void> Function(String filePath, ResolvedUnitResult resolved) onResult,

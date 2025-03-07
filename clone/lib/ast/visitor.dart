@@ -1,56 +1,106 @@
-part of 'analyzer.dart';
+import 'package:analyzer/dart/ast/ast.dart';
+import 'package:clone/ast/analyzer.dart';
+import 'package:clone/ast/value.dart';
+import 'package:collection/collection.dart';
+
+import 'custom_visitor.dart';
+
+/// This file contains visitor classes used by the analyzer to extract information
+/// from the Dart AST (Abstract Syntax Tree). These visitors traverse different
+/// parts of the syntax tree to collect declarations, expressions, and type information.
+///
+/// The primary visitors include:
+/// * [FileVisitor] - Analyzes entire files to extract declarations
+/// * [ClassDeclVisitor] - Extracts information from class declarations
+/// * [ParameterizableDeclVisitor] - Analyzes function parameters
+/// * [TypeDeclVisitor] - Analyzes type declarations
+/// * [ExpressionVisitor] - Processes expression nodes
 
 // Visitor for analyzing a file and extracting declarations and directives
+/// A visitor for analyzing a Dart file and extracting declarations and directives.
+///
+/// This visitor traverses an AST and collects information about classes, mixins,
+/// parts, type aliases, top-level variables, top-level functions, and enums.
+/// It distinguishes between public and private declarations.
 class FileVisitor extends CustomAstVisitor {
-  final classes = <ClassDeclaration>[]; // List of class declarations
-  final mixins = <MixinDeclaration>[]; // List of mixin declarations
-  final parts = <String>[]; // List of part directives
-  final aliases = <String>{}; // Set of generic type aliases
-  final topLevelVariables = <PropertyDeclAnalyzer>[]; // List of top-level variables
-  final topLevelFunctions = <LazyDeclAnalyzer>[]; // List of top-level variables
-  final enums = <String>{}; // Set of enum declarations
-  final privateClasses = <ClassDeclaration>[]; // List of private class declarations
-  final privateMixins = <MixinDeclaration>[]; // List of private mixin declarations
+  /// List of public class declarations found in the file
+  final classes = <ClassDeclaration>[];
 
-  // Constructor with optional verbose flag
+  /// List of public mixin declarations found in the file
+  final mixins = <MixinDeclaration>[];
+
+  /// List of part directive URIs referenced in the file
+  final parts = <String>[];
+
+  /// Set of generic type aliases declared in the file
+  final aliases = <String>{};
+
+  /// List of top-level variable declarations
+  final topLevelVariables = <PropertyDeclAnalyzer>[];
+
+  /// List of top-level function declarations
+  final topLevelFunctions = <LazyDeclAnalyzer>[];
+
+  /// Set of enum type names declared in the file
+  final enums = <String>{};
+
+  /// List of private class declarations found in the file
+  final privateClasses = <ClassDeclaration>[];
+
+  /// List of private mixin declarations found in the file
+  final privateMixins = <MixinDeclaration>[];
+
+  /// Creates a new [FileVisitor] instance.
+  ///
+  /// [verbose] - When true, enables verbose logging during AST traversal.
   FileVisitor({super.verbose = false});
 
-  // Visits class declarations and categorizes them as private or public
+  /// Processes a class declaration node, categorizing it as private or public.
+  ///
+  /// If the class name starts with an underscore, it's considered private
+  /// and added to [privateClasses]. Otherwise, it's added to [classes].
   @override
   void visitClassDeclaration(ClassDeclaration node) {
     if (node.name.toString().startsWith('_')) {
-      privateClasses.add(node); // Add to private classes if name starts with '_'
+      privateClasses.add(node);
       return;
     }
-    classes.add(node); // Add to public classes
+    classes.add(node);
   }
 
-  // Visits mixin declarations and categorizes them as private or public
+  /// Processes a mixin declaration node, categorizing it as private or public.
+  ///
+  /// If the mixin name starts with an underscore, it's considered private
+  /// and added to [privateMixins]. Otherwise, it's added to [mixins].
   @override
   void visitMixinDeclaration(MixinDeclaration node) {
     if (node.name.toString().startsWith('_')) {
-      privateMixins.add(node); // Add to private mixins if name starts with '_'
+      privateMixins.add(node);
       return;
     }
-    mixins.add(node); // Add to public mixins
+    mixins.add(node);
   }
 
-  // Visits part directives and adds them to the parts list
+  /// Processes a part directive and adds its URI to the [parts] list.
   @override
   void visitPartDirective(PartDirective node) => parts.add(node.uri.stringValue!);
 
-  // Visits generic type aliases and adds them to the aliases set
+  /// Processes a generic type alias and adds its name to the [aliases] set.
   @override
   void visitGenericTypeAlias(GenericTypeAlias node) => aliases.add(node.name.toString());
 
-  // Visits top-level variable declarations and adds private variables to the list
+  /// Processes top-level variable declarations and adds private ones to [topLevelVariables].
+  ///
+  /// Only variables whose names start with an underscore are collected.
   @override
   void visitTopLevelVariableDeclaration(TopLevelVariableDeclaration node) =>
       topLevelVariables.addAll(node.variables.variables
-          .where((e) =>
-              e.name.toString().startsWith('_')) // Only care about private top-level variables
+          .where((e) => e.name.toString().startsWith('_'))
           .map((e) => PropertyDeclAnalyzer.from(e, type: node.variables.type)));
 
+  /// Processes top-level function declarations and adds private ones to [topLevelFunctions].
+  ///
+  /// Only functions whose names start with an underscore are collected.
   @override
   void visitFunctionDeclaration(FunctionDeclaration node) {
     if (node.name.toString().startsWith('_')) {
@@ -58,27 +108,40 @@ class FileVisitor extends CustomAstVisitor {
     }
   }
 
-  // Visits enum declarations and adds them to the enums set
+  /// Processes enum declarations and adds their names to the [enums] set.
   @override
   void visitEnumDeclaration(EnumDeclaration node) => enums.add(node.name.toString());
 }
 
-// Visitor for analyzing class declarations and extracting constructors, properties, and methods
+/// A visitor for analyzing class declarations and extracting their members.
+///
+/// This visitor collects information about constructors, properties, and methods
+/// defined within a class declaration.
 class ClassDeclVisitor extends CustomAstVisitor {
-  final ClassAnalyzer origin; // Originating class analyzer
-  final constructorList = <ConstructorAnalyzer>[]; // List of constructors
-  final properties = <ClassPropertyDeclAnalyzer>[]; // List of properties
-  final methods = <MethodAnalyzer>[]; // List of methods
+  /// The originating class analyzer that created this visitor
+  final ClassAnalyzer origin;
 
-  // Constructor accepting an origin class analyzer and optional verbose flag
+  /// List of constructors found in the class
+  final constructorList = <ConstructorAnalyzer>[];
+
+  /// List of properties found in the class
+  final properties = <ClassPropertyDeclAnalyzer>[];
+
+  /// List of methods found in the class
+  final methods = <MethodAnalyzer>[];
+
+  /// Creates a new [ClassDeclVisitor] instance.
+  ///
+  /// [origin] - The class analyzer that created this visitor.
+  /// [verbose] - When true, enables verbose logging during AST traversal.
   ClassDeclVisitor(this.origin, {super.verbose = false});
 
-  // Visits constructor declarations and adds them to the constructor list
+  /// Processes a constructor declaration and adds it to [constructorList].
   @override
   void visitConstructorDeclaration(ConstructorDeclaration node) =>
       constructorList.add(ConstructorAnalyzer.create(origin, node));
 
-  // Visits field declarations and adds them to the properties list
+  /// Processes a field declaration and adds its variables to [properties].
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
     for (var v in node.fields.variables) {
@@ -90,22 +153,30 @@ class ClassDeclVisitor extends CustomAstVisitor {
     }
   }
 
-  // Visits method declarations and adds static methods to the methods list
+  /// Processes a method declaration and adds static methods to [methods].
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
     if (node.isStatic) methods.add(MethodAnalyzer.fromNode(node));
   }
 }
 
-// Visitor for analyzing parameterizable declarations and extracting parameters
+/// A visitor for analyzing parameterizable declarations and extracting parameters.
+///
+/// This visitor collects information about parameters in functions, methods, and constructors.
 class ParameterizableDeclVisitor extends CustomAstVisitor {
-  final ParameterizableAnalyzer origin; // Originating parameterizable analyzer
-  final list = <ParameterDeclAnalyzer>[]; // List of parameter analyzers
+  /// The originating parameterizable analyzer that created this visitor
+  final ParameterizableAnalyzer origin;
 
-  // Constructor accepting an origin parameterizable analyzer and optional verbose flag
+  /// List of parameter analyzers collected during traversal
+  final list = <ParameterDeclAnalyzer>[];
+
+  /// Creates a new [ParameterizableDeclVisitor] instance.
+  ///
+  /// [origin] - The parameterizable analyzer that created this visitor.
+  /// [verbose] - When true, enables verbose logging during AST traversal.
   ParameterizableDeclVisitor(this.origin, {super.verbose = false});
 
-  // Visits simple formal parameters and adds them to the list
+  /// Processes a simple formal parameter and adds it to the [list].
   @override
   void visitSimpleFormalParameter(SimpleFormalParameter node) {
     super.visitSimpleFormalParameter(node);
@@ -126,7 +197,7 @@ class ParameterizableDeclVisitor extends CustomAstVisitor {
     ));
   }
 
-  // Visits field formal parameters and adds them to the list
+  /// Processes a field formal parameter and adds it to the [list].
   @override
   void visitFieldFormalParameter(FieldFormalParameter node) {
     super.visitFieldFormalParameter(node);
@@ -148,7 +219,7 @@ class ParameterizableDeclVisitor extends CustomAstVisitor {
     ));
   }
 
-  // Visits super formal parameters and adds them to the list
+  /// Processes a super formal parameter and adds it to the [list].
   @override
   void visitSuperFormalParameter(SuperFormalParameter node) {
     super.visitSuperFormalParameter(node);
@@ -171,24 +242,33 @@ class ParameterizableDeclVisitor extends CustomAstVisitor {
   }
 }
 
+/// A visitor for analyzing type declarations in the AST.
+///
+/// This visitor collects information about types, including record types,
+/// function types, and named types.
 class TypeDeclVisitor extends CustomAstVisitor {
+  /// Creates a new [TypeDeclVisitor] instance.
+  ///
+  /// [recursive] - When true, enables recursive AST traversal.
+  /// [verbose] - When true, enables verbose logging during AST traversal.
   TypeDeclVisitor({super.recursive = true, super.verbose = false});
 
+  /// The type analyzer resulting from the traversal
   late TypeAnalyzer type;
 
+  /// Processes a record type annotation and creates a [RecordTypeAnalyzer].
   @override
   void visitRecordTypeAnnotation(RecordTypeAnnotation node) {
     super.visitRecordTypeAnnotation(node);
-    // Analyze RecordTypeAnnotation to determine if it is nullable
     type = RecordTypeAnalyzer(
       nullable: node.question != null,
     );
   }
 
+  /// Processes a generic function type and creates a [FunctionTypeAnalyzer].
   @override
   void visitGenericFunctionType(GenericFunctionType node) {
     super.visitGenericFunctionType(node);
-    // Analyze GenericFunctionType to determine if it is nullable, its return type, and its parameters
     type = FunctionTypeAnalyzer(
       nullable: node.question != null,
       returnType: TypeAnalyzer.from(node.returnType),
@@ -199,13 +279,12 @@ class TypeDeclVisitor extends CustomAstVisitor {
     );
   }
 
+  /// Processes a named type and creates a [TypeAnalyzer].
   @override
   void visitNamedType(NamedType node) {
     super.visitNamedType(node);
-    // Determine the type name, considering if it has an alias (e.g., ui.TextHeightBehavior)
     final typeIndex = node.importPrefix != null ? 1 : 0;
     final name = node.childEntities.elementAt(typeIndex).toString();
-    // Analyze NamedType to determine its name, nullability, and type arguments
     type = TypeAnalyzer(
       name: name,
       nullable: node.question != null,
@@ -219,11 +298,24 @@ class TypeDeclVisitor extends CustomAstVisitor {
   }
 }
 
+/// A visitor for analyzing expressions in the AST and extracting default values.
+///
+/// This visitor handles various types of expressions including identifiers,
+/// creation expressions, method invocations, literals, and more.
 class ExpressionVisitor extends CustomAstVisitor {
+  /// The result of the expression analysis
   late DefaultValue result;
+
+  /// The parent class analyzer, if any
   final ClassAnalyzer? parent;
+
+  /// The potential type of the expression, if known
   final TypeAnalyzer? potentialType;
 
+  /// Creates a new [ExpressionVisitor] instance.
+  ///
+  /// [parent] - The parent class analyzer, if any.
+  /// [potentialType] - The potential type of the expression, if known.
   ExpressionVisitor(this.parent, {this.potentialType}) : super(recursive: false, verbose: false);
 
   /// Visits a simple identifier (e.g., top-level / current class' static instance)
@@ -285,14 +377,14 @@ class ExpressionVisitor extends CustomAstVisitor {
     final positionalArgs = <DefaultValue>[];
     final namedArgs = <DefaultValueNamedArgument>[];
     if (node.argumentList.arguments.isNotEmpty) {
-      node.argumentList.arguments.forEach((argument) {
+      for (var argument in node.argumentList.arguments) {
         final def = _parseExpression(argument, parent: parent);
         if (def is DefaultValueNamedArgument) {
           namedArgs.add(def);
         } else {
           positionalArgs.add(def);
         }
-      });
+      }
     }
 
     result = DefaultValueCreation(
@@ -320,14 +412,14 @@ class ExpressionVisitor extends CustomAstVisitor {
     final positionalArgs = <DefaultValue>[];
     final namedArgs = <DefaultValueNamedArgument>[];
     if (node.argumentList.arguments.isNotEmpty) {
-      node.argumentList.arguments.forEach((argument) {
+      for (var argument in node.argumentList.arguments) {
         final def = _parseExpression(argument, parent: parent);
         if (def is DefaultValueNamedArgument) {
           namedArgs.add(def);
         } else {
           positionalArgs.add(def);
         }
-      });
+      }
     }
 
     result = DefaultValueCreation(
@@ -501,7 +593,7 @@ class Occurrence {
   String toString() => 'occur($name, $offset -> $offsetEnd, raw: $raw)';
 }
 
-class _UnsolvedTypeVisitor extends CustomAstVisitor {
+class UnsolvedTypeVisitor extends CustomAstVisitor {
   static const _globalIgnores = {'void', 'bool', 'double', 'int', 'String', 'Future'};
   static const _allowPrefixes = {'ui', 'math'};
   static const _allowMethods = {'clampDouble'};
@@ -510,7 +602,7 @@ class _UnsolvedTypeVisitor extends CustomAstVisitor {
   final int paddingLeft;
   final int paddingRight;
 
-  _UnsolvedTypeVisitor({
+  UnsolvedTypeVisitor({
     required this.ignores,
     super.verbose = false,
     this.paddingLeft = 0,
@@ -649,8 +741,8 @@ class _UnsolvedTypeVisitor extends CustomAstVisitor {
   }
 }
 
-class _ParseTypeVisitor extends CustomAstVisitor {
-  _ParseTypeVisitor({super.verbose = false});
+class ParseTypeVisitor extends CustomAstVisitor {
+  ParseTypeVisitor({super.verbose = false});
 
   late TypeAnalyzer type;
 
@@ -669,4 +761,11 @@ class _ParseTypeVisitor extends CustomAstVisitor {
       }),
     );
   }
+}
+
+// Parses an expression into a DefaultValue
+DefaultValue _parseExpression(AstNode expr, {ClassAnalyzer? parent}) {
+  final visitor = ExpressionVisitor(parent);
+  expr.accept(visitor);
+  return visitor.result;
 }

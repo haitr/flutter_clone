@@ -1,7 +1,7 @@
 // After generated
 import 'dart:async';
 
-import 'package:clone/result.dart';
+import 'package:clone/analyze_result.dart';
 
 // ignore: unused_import
 import 'generate.dart';

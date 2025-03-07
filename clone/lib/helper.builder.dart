@@ -1,23 +1,25 @@
 import 'dart:mirrors';
 
+import 'package:clone/ast/value.dart';
+import 'package:clone/extensions/extensions.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:collection/collection.dart';
 
-import 'analyzer.dart';
+import 'ast/analyzer.dart';
 import 'helper.dart';
 
 // const _skyEnginePath = 'package:cooked_sky_engine/ui/ui.dart';
 const _skyEnginePath = 'dart:ui';
 
+/// The current active allocator instance
 late PrefixedAllocator _currentAllocator;
 
-// by using, the default Allocator.none using in DartEmitter,
-// we cannot modify or exclude any aliases,
-// including dart:core or dart:async which is complelely no needed.
-// The PrefixedAllocator mapped:
-//  - dart:ui as ui
-//  - dart:math as math
-// and exclude dart:core and dart:async
+/// A custom allocator that manages import prefixes for generated Dart code.
+///
+/// This allocator handles import statements and their aliases, specifically:
+///  - Mapping dart:ui as ui
+///  - Mapping dart:math as math
+///  - Excluding dart:core and dart:async by default
 class PrefixedAllocator implements Allocator {
   final _imports = <String, String?>{}; // Stores imports with their aliases
   final _prefixAlias = {
@@ -27,10 +29,18 @@ class PrefixedAllocator implements Allocator {
   };
 
   var _keys = 1; // Counter for generating unique aliases
+
+  /// Returns the next unique key for generating aliases
   int get _nextKey => _keys++;
 
-  final Set<String> ignoreAlias; // Imports to ignore aliasing
+  /// Set of imports to ignore aliasing (dart:core, dart:async by default)
+  final Set<String> ignoreAlias;
 
+  /// Creates a new [PrefixedAllocator] with optional imports to ignore.
+  ///
+  /// The [ignoreAlias] parameter allows specifying imports that should not
+  /// receive an alias prefix. By default, 'dart:core' and 'dart:async' are
+  /// always ignored.
   PrefixedAllocator({this.ignoreAlias = const {}}) {
     _currentAllocator = this;
     // Always ignore these core Dart imports by default
@@ -40,10 +50,13 @@ class PrefixedAllocator implements Allocator {
     ]);
   }
 
-  // Generate a unique alias for an import based on an index
+  /// Generates a unique alias based on the provided index.
   String _alias(int index) => '_i$index';
 
-  // Manually add an import if it's not already present
+  /// Manually adds an import with appropriate alias if not already present.
+  ///
+  /// This method will add an import using either a predefined alias from
+  /// [_prefixAlias] or generate a new unique alias.
   void _manuallyAddImport(String url) {
     if (!_imports.containsKey(url)) {
       // Use predefined alias if available, otherwise generate a new alias
@@ -55,6 +68,9 @@ class PrefixedAllocator implements Allocator {
     }
   }
 
+  /// Allocates a symbol with appropriate import prefix according to the allocator's rules.
+  ///
+  /// This is used to ensure symbols in the generated code properly reflect their import paths.
   @override
   String allocate(Reference reference) {
     final symbol = reference.symbol;
@@ -74,6 +90,7 @@ class PrefixedAllocator implements Allocator {
     return alias != null ? '$alias.${symbol!}' : symbol!;
   }
 
+  /// Returns the import directives for all tracked imports.
   @override
   Iterable<Directive> get imports {
     // Convert stored imports to Directive objects for use in code generation
@@ -81,12 +98,16 @@ class PrefixedAllocator implements Allocator {
   }
 }
 
+/// Helper class for managing import paths during code generation.
 class _ImportHelper {
+  /// Finds the import path for a type alias.
   static String? _aliasImportPathFinder(String typeName) {
     // Check if the type name requires a special alias
     if ({
       'VoidCallback',
-    }.contains(typeName)) return _skyEnginePath;
+    }.contains(typeName)) {
+      return _skyEnginePath;
+    }
     // Iterate over analyzing results to find matching alias
     for (var result in analyzingResults) {
       if (result.aliases.contains(typeName)) {
@@ -96,6 +117,7 @@ class _ImportHelper {
     return null;
   }
 
+  /// Finds the import path for a class name.
   static String? _classImportPathFinder(String className) {
     // Return predefined paths for specific class names
     if ({
@@ -115,7 +137,9 @@ class _ImportHelper {
       'Path',
       'RRect',
       'Gradient',
-    }.contains(className)) return _skyEnginePath;
+    }.contains(className)) {
+      return _skyEnginePath;
+    }
     if ({
       'Uint8List',
     }.contains(className)) {
@@ -130,6 +154,7 @@ class _ImportHelper {
     return rawPath != null ? flutterImportPath(rawPath) : null;
   }
 
+  /// Finds the import path for an enum name.
   static String? _enumImportPathFinder(String enumName) {
     // Return predefined paths for specific enum names
     if ({
@@ -148,19 +173,27 @@ class _ImportHelper {
     return rawPath != null ? flutterImportPath(rawPath) : null;
   }
 
+  /// Finds the import path for an identifier.
   static String? _identifierImportPathFinder(String identifier) {
     // Return predefined paths for specific identifiers
     if ({
       'clampDouble',
-    }.contains(identifier)) return _skyEnginePath;
+    }.contains(identifier)) {
+      return _skyEnginePath;
+    }
     if ({
       'pi',
-    }.contains(identifier)) return 'dart:math';
+    }.contains(identifier)) {
+      return 'dart:math';
+    }
     final rawPath = idenfierFinder(identifier);
     return rawPath != null ? flutterImportPath(rawPath) : null;
   }
 
-  // Finds the import path for a given name by checking aliases, class, enum, and identifier paths
+  /// Finds the appropriate import path for a given name by checking various sources.
+  ///
+  /// This method checks if the name is an alias, class, enum, or identifier and returns
+  /// the corresponding import path.
   static String? _findImportPath(String name) =>
       _aliasImportPathFinder(name) ??
       _classImportPathFinder(name) ??
@@ -168,16 +201,25 @@ class _ImportHelper {
       _identifierImportPathFinder(name);
 }
 
+/// The current active library building session
 late LibraryBuildingSession _currentLibSession;
 
+/// Manages the building process of a Dart library.
+///
+/// This class handles library-level dependencies and code generation during
+/// the code building process.
 class LibraryBuildingSession {
+  /// Creates a new library building session and sets it as the current active session.
   LibraryBuildingSession() {
     _currentLibSession = this;
   }
   // A set of private dependencies
   final _privateDeps = <String>{};
 
-  // Assigns a property declaration to an expression and returns the corresponding code statement
+  /// Assigns a property declaration to an expression and returns the corresponding code statement.
+  ///
+  /// This method handles generating code for property declarations, including
+  /// handling const, final, and var declarations with appropriate types and initializers.
   Code _assignProperty(PropertyDeclAnalyzer decl) {
     late Expression expr;
 
@@ -205,10 +247,15 @@ class LibraryBuildingSession {
     return expr.statement;
   }
 
-  // Manually adds a private dependency
+  /// Manually adds a private dependency to the session.
+  ///
+  /// This is used to track dependencies that need to be included in the generated code.
   void manuallyAddDependence(String dep) => _privateDeps.add(dep);
 
-  // Returns a list of code statements for private dependencies
+  /// Returns a list of code statements for all tracked private dependencies.
+  ///
+  /// This generates the necessary code statements for all private dependencies
+  /// that need to be included in the library.
   Iterable<Code> get dependencies sync* {
     for (var i = 0; i < _privateDeps.length; i++) {
       final dep = _privateDeps.elementAt(i);
@@ -234,9 +281,15 @@ class LibraryBuildingSession {
   }
 }
 
+/// The current active class building session
 late ClassBuildingSession _currentClassSession;
 
+/// Manages the building process of a Dart class.
+///
+/// This class handles class-level dependencies, type variables, and code generation
+/// during the class building process.
 class ClassBuildingSession {
+  /// Creates a new class building session and sets it as the current active session.
   ClassBuildingSession() {
     _currentClassSession = this;
   }
@@ -246,11 +299,19 @@ class ClassBuildingSession {
   // A set of dependencies for class-level static fields and methods
   final _classLevelDeps = <DefaultValueEnumOrStaticInstance>{};
 
-  // Add a mapping for a type variable to its name in the analyzer
+  /// Adds a mapping between a type variable mirror and its name in the analyzer.
+  ///
+  /// This is used to resolve type variables correctly during code generation.
   void addTypeVariableMap(TypeVariableMirror type, String nameInAnalyzer) =>
       _typeVariableMap[type] = nameInAnalyzer;
 
-  // Generate a Reference for a type, handling various cases such as function types and typedefs
+  /// Generates a reference for a type based on its mirror and analyzer type.
+  ///
+  /// This method handles various cases such as function types, typedefs, and
+  /// generic types, resolving them to the appropriate references with proper imports.
+  ///
+  /// [mirror] - The type mirror to generate a reference for
+  /// [analyzerType] - Optional analyzer type information
   Reference typeReference({required TypeMirror mirror, TypeAnalyzer? analyzerType}) {
     if (mirror is FunctionTypeMirror) {
       if (analyzerType case FunctionTypeAnalyzer analyzerType?) {
@@ -349,7 +410,12 @@ class ClassBuildingSession {
     );
   }
 
-  // Generates a list of fields for class-level dependencies
+  /// Generates a list of Field objects for class-level dependencies.
+  ///
+  /// This method creates Field objects for all class-level dependencies tracked
+  /// in the session, based on their properties in the root class analyzer.
+  ///
+  /// [root] - The class analyzer containing property information
   List<Field> classLevelFieldDeps(ClassAnalyzer root) =>
       _classLevelDeps.fold(<Field>[], (prev, value) {
         if (root.property(value.raw) case var property?) {
@@ -377,7 +443,12 @@ class ClassBuildingSession {
         return prev;
       });
 
-// Generates a list of methods for class-level dependencies
+  /// Generates a list of Method objects for class-level dependencies.
+  ///
+  /// This method creates Method objects for all class-level method dependencies tracked
+  /// in the session, based on their definitions in the root class analyzer.
+  ///
+  /// [root] - The class analyzer containing method information
   List<Method> classLevelMethodDeps(ClassAnalyzer root) =>
       _classLevelDeps.fold(<Method>[], (prev, value) {
         if (root.method(value.raw) case var method?) {
@@ -421,7 +492,12 @@ class ClassBuildingSession {
       });
 }
 
-// Resolves a LazyAnalyzer declaration and returns the corresponding code
+/// Resolves a LazyAnalyzer declaration and returns the corresponding code.
+///
+/// This function processes a LazyAnalyzer and resolves any unresolved types,
+/// adding import statements and dependencies as needed.
+///
+/// [decl] - The LazyAnalyzer declaration to resolve
 Code _resolveLazyAnalyzer(LazyAnalyzer decl) {
   final ignores = switch (decl) {
     LazyDeclAnalyzer(name: var name) => {name},
@@ -431,7 +507,7 @@ Code _resolveLazyAnalyzer(LazyAnalyzer decl) {
   var result = decl.decode;
   var offsetShift = 0;
 
-  occurrences.forEach((occurrence) {
+  for (var occurrence in occurrences) {
     var identifier = occurrence.name;
     if (identifier.startsWith('_')) {
       _currentLibSession._privateDeps.add(identifier);
@@ -452,7 +528,7 @@ Code _resolveLazyAnalyzer(LazyAnalyzer decl) {
         offsetShift += lengthDiff;
       }
     }
-  });
+  }
 
   // Ignore class annotations in the result
   if (RegExp(r'(class.*?{.*})', dotAll: true).firstMatch(result) case var match?) {
@@ -462,6 +538,13 @@ Code _resolveLazyAnalyzer(LazyAnalyzer decl) {
   return Code(result);
 }
 
+/// Creates a type reference for a TypeAnalyzer with optional URL.
+///
+/// This function builds a TypeReference for a given TypeAnalyzer, setting the
+/// symbol, URL, nullability, and recursively handling type arguments.
+///
+/// [analyzerType] - The TypeAnalyzer to create a reference for
+/// [url] - Optional URL override for the type
 Reference _typeArgumentReference(TypeAnalyzer analyzerType, {String? url}) {
   return TypeReference((builder) {
     builder.symbol = analyzerType.name;
@@ -475,6 +558,13 @@ Reference _typeArgumentReference(TypeAnalyzer analyzerType, {String? url}) {
   });
 }
 
+/// Converts a DefaultValue to an Expression for use in code generation.
+///
+/// This function handles various types of default values, including collections,
+/// object creations, enums, static instances, expressions, identifiers, literals,
+/// and prefixed values.
+///
+/// [analyzed] - The DefaultValue to convert to an Expression
 Expression? defaultValue(DefaultValue analyzed) {
   if (analyzed case DefaultValueCollection val when val.collectionType == CollectionType.map) {
     final pairs = val.values.cast<DefaultValuePair>();

@@ -1,46 +1,29 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:mirrors';
 
 import 'package:args/args.dart';
 import 'package:chalkdart/chalkstrings.dart';
 import 'package:cli_util/cli_logging.dart';
+import 'package:clone/analyze_result.dart';
+import 'package:clone/extensions/extensions.dart';
 import 'package:clone/helper.dart';
-import 'package:clone/result.dart';
 import 'package:console_bars/console_bars.dart';
-// ignore: unused_import, depend_on_referenced_packages
+// ignore: unused_import
 import 'package:flutter/cupertino.dart';
-// ignore: unused_import, depend_on_referenced_packages
+// ignore: unused_import
 import 'package:flutter/material.dart';
-// ignore: unused_import, depend_on_referenced_packages
+// ignore: unused_import
 import 'package:flutter/widgets.dart';
 import 'package:path/path.dart' as path;
 
 import 'generate.wrapper.dart';
+import 'local_file_system.dart';
 
 final whiteList = []; // A list of files to process, if not empty
 
-// Configuration for command line argument parsing
-// Supports various flags and options to control the generation process
-final parser = ArgParser()
-  ..addFlag('verbose', abbr: 'v', help: 'Enable verbose output', negatable: false)
-  ..addOption('output', abbr: 'o', help: 'Output directory', defaultsTo: defaultOutputDirectory)
-  ..addOption('input',
-      abbr: 'i', help: 'Input dependencies directory', defaultsTo: defaultDependenciesDirectory)
-  ..addFlag('cache',
-      abbr: 'x', help: 'Cache all parsed results', defaultsTo: true, negatable: false)
-  ..addFlag('delete-outputs',
-      abbr: 'd', help: 'Delete all output and cache files', negatable: false)
-  ..addFlag('help', abbr: 'h', help: 'Help command', negatable: false);
-
-// Store parsed command line arguments and provide convenient getters
-late ArgResults cmds;
-bool get verbose => cmds['verbose']; // Whether to enable verbose logging
-String get input => cmds['input']; // Input directory path
-String get output => cmds['output']; // Output directory path
-bool get clean => cmds['delete-outputs']; // Whether to clean output files
-bool get cache => cmds['cache']; // Whether to use caching
+/// Logger instance for standardized logging throughout the application
+late final Logger logger;
 
 // The process is straightforward:
 // 	-	Examine the flutter directory and store the analysis results in [analyzingResults].
@@ -52,20 +35,56 @@ bool get cache => cmds['cache']; // Whether to use caching
 /// 3. Generates wrapper classes for Flutter widgets
 /// 4. Performs any additional post-generation tasks
 void main(List<String> arguments) async {
-  mirrorSystem = currentMirrorSystem();
+  // Configuration for command line argument parsing
+  // Supports various flags and options to control the generation process
+  final parser = ArgParser()
+    ..addFlag('verbose', abbr: 'v', help: 'Enable verbose output', negatable: false)
+    ..addOption('output', abbr: 'o', help: 'Output directory', defaultsTo: './generated')
+    ..addOption('input',
+        abbr: 'i', help: 'Input dependencies directory', defaultsTo: './dependencies')
+    ..addFlag('cache',
+        abbr: 'x', help: 'Cache all parsed results', defaultsTo: true, negatable: false)
+    ..addFlag('delete-outputs',
+        abbr: 'd', help: 'Delete all output and cache files', negatable: false)
+    ..addFlag('help', abbr: 'h', help: 'Help command', negatable: false);
 
   // Parse arguments
-  cmds = parser.parse(arguments);
+  final cmds = parser.parse(arguments);
   if (cmds.flag('help')) {
     print(parser.usage);
     return;
   }
 
+  // Store parsed command line arguments and provide convenient getters
+  final bool verbose = cmds['verbose']; // Whether to enable verbose logging
+  final String input = cmds['input']; // Input directory path
+  final String output = cmds['output']; // Output directory path
+  final bool clean = cmds['delete-outputs']; // Whether to clean output files
+  final bool cache = cmds['cache']; // Whether to use caching
+
   logger = verbose ? Logger.verbose() : Logger.standard();
 
   print('Preparing...');
 
-  await _prepareResults();
+  final fsInput = LocalFileSystem(workingDir: input);
+  final fsOutput = LocalFileSystem(workingDir: output);
+
+  await _prepareResults(fsInput, fsOutput, clean);
+
+  if (cache) {
+    var cacheSuffix = '';
+    final cacheFile = File(path.join('.cache', 'flutter$cacheSuffix.json'));
+    final progress = logger.progress('Caching Flutter structure');
+    final contents = analyzingResults
+        .fold({}, (previousValue, element) => previousValue..addAll(element.toJson()));
+    final jsonEncoder = const JsonEncoder.withIndent('  ');
+    if (Directory(path.dirname(cacheFile.path)) case final cacheDir when !cacheDir.existsSync()) {
+      cacheDir.createSync();
+    }
+    await cacheFile.writeAsString(jsonEncoder.convert(contents));
+    progress.finish(showTiming: true);
+    print('Cache size: ${(cacheFile.lengthSync() / 1024 / 1024).toStringAsFixed(2)} MB');
+  }
 
   final progress = FillingBar(
     desc: 'Generating'.redBright,
@@ -86,7 +105,7 @@ void main(List<String> arguments) async {
     if (code.trim().isNotEmpty) {
       final pathSegments = path.split(result.filePath);
       final srcIdx = pathSegments.lastIndexOf('src');
-      final file = createIfNeeded(pathSegments.sublist(srcIdx + 1), outputDirectory: output);
+      final file = createIfNeeded(pathSegments.sublist(srcIdx + 1), output);
       generatedPaths.add(file.path);
       file.writeAsStringSync(code);
     }
@@ -104,7 +123,7 @@ void main(List<String> arguments) async {
 ///
 /// The results are stored in [analyzingResults] for later use in generation.
 /// Also handles cleaning of output files if --delete-outputs flag is set.
-Future<void> _prepareResults() async {
+Future<void> _prepareResults(LocalFileSystem input, LocalFileSystem output, bool clean) async {
   // Get the current working directory
   // Note: absolute path of Flutter's files should be prepared
   // analyzer's parsing arguments only accept absolute path
@@ -135,19 +154,6 @@ Future<void> _prepareResults() async {
   } else {
     final progress = logger.progress('Cache not found. Load from scratch...');
     analyzingResults = await _loadFromScratch();
-    // Write results to cache file
-    if (cache) {
-      final progress = logger.progress('Caching Flutter structure');
-      final contents = analyzingResults
-          .fold({}, (previousValue, element) => previousValue..addAll(element.toJson()));
-      final jsonEncoder = JsonEncoder.withIndent('  ');
-      if (Directory(path.dirname(cacheFile.path)) case final cacheDir when !cacheDir.existsSync()) {
-        cacheDir.createSync();
-      }
-      await cacheFile.writeAsString(jsonEncoder.convert(contents));
-      progress.finish(showTiming: true);
-      print('Cache size: ${(cacheFile.lengthSync() / 1024 / 1024).toStringAsFixed(2)} MB');
-    }
     progress.finish(showTiming: true);
   }
 

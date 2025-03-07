@@ -391,7 +391,9 @@ Future<void> modifyPubspec(FileSystem fs, String flutterPath) async {
   final file = fs.file('pubspec.yaml');
   final pubspec = loadYaml(await file.readAsString()) as YamlMap;
   final mutablePubspec = _convertYamlMapToMutableMap(pubspec);
-  mutablePubspec['dependencies']['flutter'] = {'path': path.absolute(flutterPath)};
+  mutablePubspec['dependency_overrides']['flutter'] = {
+    'path': path.relative(flutterPath, from: fs.currentDirectory.path),
+  };
   await file.writeAsString(json2yaml(mutablePubspec, yamlStyle: YamlStyle.pubspecYaml));
 }
 
