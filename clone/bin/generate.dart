@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:chalkdart/chalkstrings.dart';
-import 'package:cli_util/cli_logging.dart';
 import 'package:clone/analyze_result.dart';
 import 'package:clone/extensions/extensions.dart';
 import 'package:clone/helper.dart';
@@ -19,11 +18,9 @@ import 'package:path/path.dart' as path;
 
 import 'generate.wrapper.dart';
 import 'local_file_system.dart';
+import 'log.dart';
 
 final whiteList = []; // A list of files to process, if not empty
-
-/// Logger instance for standardized logging throughout the application
-late final Logger logger;
 
 // The process is straightforward:
 // 	-	Examine the flutter directory and store the analysis results in [analyzingResults].
@@ -62,7 +59,7 @@ void main(List<String> arguments) async {
   final bool clean = cmds['delete-outputs']; // Whether to clean output files
   final bool cache = cmds['cache']; // Whether to use caching
 
-  logger = verbose ? Logger.verbose() : Logger.standard();
+  SimpleLogger.setVerbose(verbose);
 
   print('Preparing...');
 
@@ -74,9 +71,11 @@ void main(List<String> arguments) async {
   if (cache) {
     var cacheSuffix = '';
     final cacheFile = File(path.join('.cache', 'flutter$cacheSuffix.json'));
-    final progress = logger.progress('Caching Flutter structure');
-    final contents = analyzingResults
-        .fold({}, (previousValue, element) => previousValue..addAll(element.toJson()));
+    final progress = SimpleLogger.progress('Caching Flutter structure');
+    final contents = analyzingResults.fold(
+      {},
+      (previousValue, element) => previousValue..addAll(element.toJson()),
+    );
     final jsonEncoder = const JsonEncoder.withIndent('  ');
     if (Directory(path.dirname(cacheFile.path)) case final cacheDir when !cacheDir.existsSync()) {
       cacheDir.createSync();
@@ -148,11 +147,11 @@ Future<void> _prepareResults(LocalFileSystem input, LocalFileSystem output, bool
     final size = (cacheFile.lengthSync() / 1024 / 1024).toStringAsFixed(2).redBright;
     print(
         'Found cache at ${path.relative(cacheFile.path, from: path.current).yellowBright} | Cache size: $size Mb...');
-    final progress = logger.progress('Loading from cache...');
+    final progress = SimpleLogger.progress('Loading from cache...');
     analyzingResults = await _loadFromCache(cacheFile);
     progress.finish(showTiming: true);
   } else {
-    final progress = logger.progress('Cache not found. Load from scratch...');
+    final progress = SimpleLogger.progress('Cache not found. Load from scratch...');
     analyzingResults = await _loadFromScratch();
     progress.finish(showTiming: true);
   }
