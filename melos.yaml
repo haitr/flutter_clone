@@ -20,5 +20,8 @@ scripts:
   prepare:
     description: Prepare all packages for cloning.
     steps:
-      - cd clone
+      - cd clone/prepare
+      - dart pub get
+      - cd ..
+      - dart pub get
       - dart run prepare/bin/prepare.dart
