@@ -48,10 +48,6 @@ class _VerboseAstVisitor implements AstVisitor<void> {
   void visitAssignmentExpression(AssignmentExpression node) => _logAndVisitChildren(node);
 
   @override
-  void visitAugmentationImportDirective(AugmentationImportDirective node) =>
-      _logAndVisitChildren(node);
-
-  @override
   void visitAwaitExpression(AwaitExpression node) => _logAndVisitChildren(node);
 
   @override
@@ -296,12 +292,6 @@ class _VerboseAstVisitor implements AstVisitor<void> {
 
   @override
   void visitLabeledStatement(LabeledStatement node) => _logAndVisitChildren(node);
-
-  @override
-  void visitLibraryAugmentationDirective(LibraryAugmentationDirective node) {
-    _logAndVisitChildren(node);
-  }
-
   @override
   void visitLibraryDirective(LibraryDirective node) => _logAndVisitChildren(node);
 
@@ -361,9 +351,6 @@ class _VerboseAstVisitor implements AstVisitor<void> {
 
   @override
   void visitObjectPattern(ObjectPattern node) => _logAndVisitChildren(node);
-
-  @override
-  void visitOnClause(OnClause node) => _logAndVisitChildren(node);
 
   @override
   void visitParenthesizedExpression(ParenthesizedExpression node) => _logAndVisitChildren(node);
@@ -555,20 +542,20 @@ class _VerboseAstVisitor implements AstVisitor<void> {
   @override
   void visitYieldStatement(YieldStatement node) => _logAndVisitChildren(node);
 
-  // Below methods are commented out as they may be from newer Dart SDK versions
-  // and not available in the current analyzer package version.
+  @override
+  void visitAugmentedExpression(AugmentedExpression node) => _logAndVisitChildren(node);
 
-  // @override
-  // void visitAugmentedExpression(AugmentedExpression node) => _logAndVisitChildren(node);
+  @override
+  void visitAugmentedInvocation(AugmentedInvocation node) => _logAndVisitChildren(node);
 
-  // @override
-  // void visitAugmentedInvocation(AugmentedInvocation node) => _logAndVisitChildren(node);
+  @override
+  void visitExtensionOnClause(ExtensionOnClause node) => _logAndVisitChildren(node);
 
-  // @override
-  // void visitExtensionOnClause(ExtensionOnClause node) => _logAndVisitChildren(node);
+  @override
+  void visitMixinOnClause(MixinOnClause node) => _logAndVisitChildren(node);
 
-  // @override
-  // void visitMixinOnClause(MixinOnClause node) => _logAndVisitChildren(node);
+  @override
+  void visitNullAwareElement(NullAwareElement node) => _logAndVisitChildren(node);
 
   /// Logs the node being visited if verbose mode is enabled and recursively visits children if configured.
   ///

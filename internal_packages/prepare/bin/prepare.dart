@@ -12,11 +12,10 @@ import 'package:dart_style/dart_style.dart';
 import 'package:fs_shim/fs.dart';
 import 'package:json2yaml/json2yaml.dart';
 import 'package:path/path.dart' as path;
+import 'package:prepare/copy_path.dart';
+import 'package:prepare/local_file_system.dart';
+import 'package:prepare/visitor.dart';
 import 'package:yaml/yaml.dart';
-
-import 'copy_path.dart';
-import 'local_file_system.dart';
-import 'visitor.dart';
 
 /// Entry point of the preparation script.
 /// This script performs the following tasks:
@@ -52,12 +51,12 @@ void main(List<String> args) async {
     modifySkyEngine(skyEngineFs);
 
     // modify flutter
-    final flutterFs = LocalFileSystem(workingDir: '$output/flutter');
-    modifyFlutter(flutterFs);
+    // final flutterFs = LocalFileSystem(workingDir: '$output/flutter');
+    // modifyFlutter(flutterFs);
 
     // modify pubspec.yaml
-    final currentFs = LocalFileSystem();
-    modifyPubspec(currentFs, flutterFs.currentDirectory.path);
+    // final currentFs = LocalFileSystem();
+    // modifyPubspec(currentFs, flutterFs.currentDirectory.path);
   } catch (e) {
     print(e.toString());
   } finally {
@@ -375,7 +374,10 @@ Future<void> modifySkyEngine(FileSystem skyEngineFs) async {
           return Code(code.toString());
         }));
       });
-      contents = DartFormatter(pageWidth: 160).format(library.accept(emitter).toString());
+      contents = DartFormatter(
+        pageWidth: 160,
+        languageVersion: DartFormatter.latestLanguageVersion,
+      ).format(library.accept(emitter).toString());
     }
 
     await file.writeAsString(contents);
