@@ -15,7 +15,6 @@ Future<void> copyPath(
   List<String> includes = const ['**/*'],
   List<String>? excludes,
 }) async {
-  print('copying $from to $to');
   await Directory(to).create(recursive: true);
   await for (final file in Directory(from).list(recursive: true)) {
     final relativePath = path.relative(file.path, from: from);

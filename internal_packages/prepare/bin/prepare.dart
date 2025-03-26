@@ -51,8 +51,8 @@ void main(List<String> args) async {
     modifySkyEngine(skyEngineFs);
 
     // modify flutter
-    // final flutterFs = LocalFileSystem(workingDir: '$output/flutter');
-    // modifyFlutter(flutterFs);
+    final flutterFs = LocalFileSystem(workingDir: '$output/flutter');
+    modifyFlutter(flutterFs);
 
     // modify pubspec.yaml
     // final currentFs = LocalFileSystem();
@@ -195,7 +195,6 @@ String _replaceFlutterImport(String filePath, String dartCode) {
   /// Here, if the file is not in the painting directory,
   /// we replace 'dart:ui' and hide TextStyle if needed.
   /// Otherwise, we don't touch it to avoid breaking the code
-
   String makeStatement(
     String modified,
     String path,
@@ -235,13 +234,21 @@ String _replaceFlutterImport(String filePath, String dartCode) {
     return (shows, hides);
   }
 
-  final modifiedLines = dartCode.split('\n');
   var parsedUnit = parseString(content: dartCode).unit;
+
+  // Instead of modifying lines, we'll make direct replacements in the full text
+  // Store replacements as (offset, length, replacement text) tuples
+  final replacements = <(int, int, String)>[];
+
   for (final directive in parsedUnit.directives) {
+    // Get the full directive's text range
+    final offset = directive.offset;
+    final length = directive.length;
+
     if (directive is ImportDirective) {
+      final (shows, hides) = extractCombinators(directive.combinators);
+
       if (directive.uri.stringValue! == 'dart:ui') {
-        final lineIndex = dartCode.substring(0, directive.offset).split('\n').length - 1;
-        final (shows, hides) = extractCombinators(directive.combinators);
         // Here comes the tricky part
         // We need to hide TextStyle if it is not in the shows list
         // and show TextStyle if it is in the shows list
@@ -249,43 +256,76 @@ String _replaceFlutterImport(String filePath, String dartCode) {
           if (!shows.contains('TextStyle')) {
             hides.add('TextStyle');
           }
+          if (!shows.contains('Canvas')) {
+            hides.add('Canvas');
+          }
         }
 
-        modifiedLines[lineIndex] = makeStatement(
+        final newDirective = makeStatement(
             'import',
             ['package:cooked_sky_engine', 'ui', 'ui.dart'].join('/'),
             directive.deferredKeyword != null,
             directive.prefix?.toString(),
             shows,
             hides);
+
+        replacements.add((offset, length, newDirective));
       }
       if (directive.uri.stringValue! == 'dart:ui_web') {
-        final lineIndex = dartCode.substring(0, directive.offset).split('\n').length - 1;
-        final (shows, hides) = extractCombinators(directive.combinators);
-        modifiedLines[lineIndex] = makeStatement(
+        final newDirective = makeStatement(
             'import',
             ['package:cooked_sky_engine', 'ui_web', 'ui_web.dart'].join('/'),
             directive.deferredKeyword != null,
             directive.prefix?.toString(),
             shows,
             hides);
+
+        replacements.add((offset, length, newDirective));
       }
     }
     if (directive is ExportDirective) {
+      final (shows, hides) = extractCombinators(directive.combinators);
+
+      if (directive.uri.stringValue! == 'dart:ui') {
+        final newDirective = makeStatement(
+          'export',
+          ['package:cooked_sky_engine', 'ui', 'ui.dart'].join('/'),
+          false,
+          null,
+          shows,
+          hides,
+        );
+
+        replacements.add((offset, length, newDirective));
+      }
+
       if (directive.uri.stringValue! == 'dart:ui_web') {
-        final lineIndex = dartCode.substring(0, directive.offset).split('\n').length - 1;
-        final (shows, hides) = extractCombinators(directive.combinators);
-        modifiedLines[lineIndex] = makeStatement(
-            'export',
-            ['package:cooked_sky_engine', 'ui_web', 'ui_web.dart'].join('/'),
-            false,
-            null,
-            shows,
-            hides);
+        final newDirective = makeStatement(
+          'export',
+          ['package:cooked_sky_engine', 'ui_web', 'ui_web.dart'].join('/'),
+          false,
+          null,
+          shows,
+          hides,
+        );
+
+        replacements.add((offset, length, newDirective));
       }
     }
   }
-  return modifiedLines.join('\n');
+
+  // Apply replacements in reverse order to maintain correct offsets
+  replacements.sort((a, b) => b.$1.compareTo(a.$1));
+
+  // Make a mutable copy of the original code
+  var result = dartCode;
+
+  // Apply each replacement
+  for (final (offset, length, replacement) in replacements) {
+    result = result.substring(0, offset) + replacement + result.substring(offset + length);
+  }
+
+  return result;
 }
 
 /// Modifies the sky_engine package to create a dummy implementation.
