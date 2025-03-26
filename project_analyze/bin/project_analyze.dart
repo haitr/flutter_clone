@@ -5,8 +5,9 @@ import 'package:chalkdart/chalkstrings.dart';
 import 'package:file/file.dart';
 import 'package:path/path.dart' as path;
 import 'package:project_analyze/analyze_result.dart';
-import 'package:project_analyze/local_file_system.dart';
-import 'package:project_analyze/log.dart';
+import 'package:project_analyze/project_analyze.dart';
+import 'package:project_analyze/utils/local_file_system.dart';
+import 'package:project_analyze/utils/log.dart';
 
 // The process is straightforward:
 // 	-	Examine the flutter directory and store the analysis results in [analyzingResults].
@@ -93,7 +94,7 @@ Future<List<AnalyzeResult>> _parseResult(FileSystem input, FileSystem output, bo
     progress.finish(showTiming: true);
   } else {
     final progress = SimpleLogger.progress('Cache not found. Load from scratch...');
-    result = await _loadFromScratch();
+    result = await _loadFromScratch(input);
     progress.finish(showTiming: true);
   }
 
@@ -116,7 +117,7 @@ Future<List<AnalyzeResult>> _loadFromCache(File cacheFile) async {
 ///
 /// Returns a List of [AnalyzeResult] objects containing the analysis results
 /// The results include class declarations and their analyzed structure
-Future<List<AnalyzeResult>> _loadFromScratch() async {
-  final result = <AnalyzeResult>[];
+Future<List<AnalyzeResult>> _loadFromScratch(FileSystem input) async {
+  final result = await analyzeProjectWithSymbolResolution(input);
   return result;
 }

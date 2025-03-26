@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'analyzer.dart';
+
 /// Enum representing different collection types in Dart.
 ///
 /// Used to classify collections as lists, sets, or maps when analyzing default values.

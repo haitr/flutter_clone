@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:project_analyze/log.dart';
+import 'package:project_analyze/utils/log.dart';
 
 /// A custom visitor for AST nodes that can log node information and optionally visit children
 class CustomAstVisitor implements AstVisitor<void> {

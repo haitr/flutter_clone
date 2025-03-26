@@ -5,6 +5,8 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:archive/archive_io.dart';
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:project_analyze/ast/visitor.dart';
+import 'package:project_analyze/extensions/extensions.dart';
 
 part 'analyzer.g.dart';
 

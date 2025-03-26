@@ -1,5 +1,7 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:collection/collection.dart';
+import 'package:project_analyze/ast/analyzer.dart';
+import 'package:project_analyze/ast/value.dart';
 
 import 'custom_visitor.dart';
 
@@ -293,7 +295,7 @@ class TypeDeclVisitor extends CustomAstVisitor {
       nullable: node.question != null,
       arguments: node.typeArguments?.arguments.fold([], (previousValue, element) {
         if (TypeAnalyzer.from(element) case var analyzer?) {
-          return previousValue..add(analyzer);
+          return previousValue?..add(analyzer);
         }
         return previousValue;
       }),
@@ -757,7 +759,7 @@ class ParseTypeVisitor extends CustomAstVisitor {
       arguments: node.typeArguments?.arguments.fold([], (previousValue, element) {
         // Convert each type argument to a TypeAnalyzer instance if possible
         if (TypeAnalyzer.from(element) case var analyzer?) {
-          return previousValue..add(analyzer);
+          return previousValue?..add(analyzer);
         }
         return previousValue;
       }),

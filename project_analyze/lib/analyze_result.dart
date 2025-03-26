@@ -1,10 +1,3 @@
-import 'dart:async';
-
-import 'package:analyzer/dart/analysis/analysis_context_collection.dart';
-import 'package:analyzer/dart/analysis/results.dart';
-import 'package:analyzer/dart/ast/ast.dart';
-import 'package:collection/collection.dart';
-import 'package:path/path.dart' as path;
 import 'package:project_analyze/ast/analyzer.dart';
 
 /// Represents the result of analyzing Dart files for class, mixin, and other declarations.
@@ -58,46 +51,46 @@ class AnalyzeResult {
   ///
   /// [unit] is the compilation unit to analyze.
   /// This method populates all the declaration collections with data from the compilation unit.
-  Future<void> addFileUnit(CompilationUnit unit) async {
-    final visitor = FileVisitor();
-    unit.accept(visitor);
-    // have to analyze part files either
-    if (visitor.parts.isNotEmpty) {
-      await runAnalyzeOnFiles(
-        visitor.parts.map((e) => path.join(path.dirname(filePath), e)).toList(),
-        onResult: (filePath, result) => result.unit.accept(visitor),
-      );
-    }
+  // Future<void> addFileUnit(CompilationUnit unit) async {
+  //   final visitor = FileVisitor();
+  //   unit.accept(visitor);
+  //   // have to analyze part files either
+  //   if (visitor.parts.isNotEmpty) {
+  //     await runAnalyzeOnFiles(
+  //       visitor.parts.map((e) => path.join(path.dirname(filePath), e)).toList(),
+  //       onResult: (filePath, result) => result.unit.accept(visitor),
+  //     );
+  //   }
 
-    // Update class and mixin declarations with real analyzers
-    for (var classDecl in visitor.classes) {
-      final mirror = classDecls.keys.firstWhereOrNull(
-        (element) => element.name == classDecl.name.toString(),
-      );
-      if (mirror != null) {
-        classDecls[mirror] = ClassAnalyzer.create(classDecl)..associateWithMirror(mirror);
-      }
-    }
-    classDecls.removeWhere((key, value) => value == _dummyClassAnalyer);
+  //   // Update class and mixin declarations with real analyzers
+  //   for (var classDecl in visitor.classes) {
+  //     final mirror = classDecls.keys.firstWhereOrNull(
+  //       (element) => element.name == classDecl.name.toString(),
+  //     );
+  //     if (mirror != null) {
+  //       classDecls[mirror] = ClassAnalyzer.create(classDecl)..associateWithMirror(mirror);
+  //     }
+  //   }
+  //   classDecls.removeWhere((key, value) => value == _dummyClassAnalyer);
 
-    for (var mixinDecl in visitor.mixins) {
-      final mirror = mixinDecls.keys.firstWhereOrNull(
-        (element) => element.name == mixinDecl.name.toString(),
-      );
-      if (mirror != null) {
-        mixinDecls[mirror] = MixinAnalyzer.create(mixinDecl);
-      }
-    }
-    mixinDecls.removeWhere((key, value) => value == _dummyMixinAnalyer);
+  //   for (var mixinDecl in visitor.mixins) {
+  //     final mirror = mixinDecls.keys.firstWhereOrNull(
+  //       (element) => element.name == mixinDecl.name.toString(),
+  //     );
+  //     if (mirror != null) {
+  //       mixinDecls[mirror] = MixinAnalyzer.create(mixinDecl);
+  //     }
+  //   }
+  //   mixinDecls.removeWhere((key, value) => value == _dummyMixinAnalyer);
 
-    // Collect other declarations and properties
-    privateClassDecls.addAll(visitor.privateClasses.map(LazyClassDeclAnalyzer.fromNode));
-    privateMixinDecls.addAll(visitor.privateMixins.map(LazyDeclAnalyzer.fromNode));
-    aliases.addAll(visitor.aliases);
-    topLevelVariables.addAll(visitor.topLevelVariables);
-    topLevelFunctions.addAll(visitor.topLevelFunctions);
-    enums.addAll(visitor.enums);
-  }
+  //   // Collect other declarations and properties
+  //   privateClassDecls.addAll(visitor.privateClasses.map(LazyClassDeclAnalyzer.fromNode));
+  //   privateMixinDecls.addAll(visitor.privateMixins.map(LazyDeclAnalyzer.fromNode));
+  //   aliases.addAll(visitor.aliases);
+  //   topLevelVariables.addAll(visitor.topLevelVariables);
+  //   topLevelFunctions.addAll(visitor.topLevelFunctions);
+  //   enums.addAll(visitor.enums);
+  // }
 
   /// Creates an AnalyzeResult from cached data.
   ///
@@ -106,26 +99,26 @@ class AnalyzeResult {
   /// [cache] is the cached data to restore from.
   AnalyzeResult.fromCache(this.importPath, {required Map<String, dynamic> cache}) {
     if (cache[importPath] case Map<String, dynamic> data?) {
-      classDecls = {};
-      if (data['class'] case Map<String, dynamic> classData?) {
-        for (var element in classList) {
-          if (classData[element.name] case Map<String, dynamic> elementData?) {
-            elementData['name'] = element.name;
-            classDecls[element] = ClassAnalyzer.fromJson(elementData)..associateWithMirror(element);
-          }
-        }
-      }
+      classDecls = [];
+      // if (data['class'] case Map<String, dynamic> classData?) {
+      //   for (var element in classList) {
+      //     if (classData[element.name] case Map<String, dynamic> elementData?) {
+      //       elementData['name'] = element.name;
+      //       classDecls[element] = ClassAnalyzer.fromJson(elementData)..associateWithMirror(element);
+      //     }
+      //   }
+      // }
 
-      mixinDecls = {};
-      if (data['mixin'] case Map<String, dynamic> mixinData?) {
-        for (var element in classList) {
-          if (mixinData[element.name] case Map<String, dynamic> elementData?) {
-            elementData['name'] = element.name;
-            final analyzer = MixinAnalyzer.fromJson(elementData);
-            mixinDecls[element] = analyzer;
-          }
-        }
-      }
+      mixinDecls = [];
+      // if (data['mixin'] case Map<String, dynamic> mixinData?) {
+      //   for (var element in classList) {
+      //     if (mixinData[element.name] case Map<String, dynamic> elementData?) {
+      //       elementData['name'] = element.name;
+      //       final analyzer = MixinAnalyzer.fromJson(elementData);
+      //       mixinDecls[element] = analyzer;
+      //     }
+      //   }
+      // }
 
       aliases = {};
       if (data['alias'] case List<dynamic> aliasData?) {

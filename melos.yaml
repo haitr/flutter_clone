@@ -20,8 +20,8 @@ scripts:
   prepare:
     description: Prepare all packages for cloning.
     steps:
-      - cd clone/prepare
-      - dart pub get
-      - cd ..
-      - dart pub get
-      - dart run prepare/bin/prepare.dart
+      - dart run internal_packages/prepare/bin/prepare.dart
+
+  xx:
+    steps:
+      - dart run project_analyze/bin/project_analyze.dart -i dependencies/flutter
