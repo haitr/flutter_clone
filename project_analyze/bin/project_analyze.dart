@@ -132,7 +132,7 @@ Future<List<AnalyzeResult>> _loadFromCache(File cacheFile) async {
   return raw.entries.map((e) => AnalyzeResult.fromJson(e.value)).toList();
 }
 
-/// Performs fresh analysis of Flutter source files
+/// Performs fresh analysis of project source files
 /// This is slower than loading from cache but necessary for initial run
 /// or when cache is invalidated
 ///

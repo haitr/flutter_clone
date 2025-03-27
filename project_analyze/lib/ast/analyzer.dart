@@ -1,14 +1,112 @@
-import 'dart:convert';
-
-import 'package:analyzer/dart/analysis/utilities.dart';
-import 'package:analyzer/dart/ast/ast.dart';
-import 'package:archive/archive_io.dart';
-import 'package:collection/collection.dart';
+import 'package:analyzer/dart/element/type.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:project_analyze/ast/visitor.dart';
-import 'package:project_analyze/extensions/extensions.dart';
+import 'package:path/path.dart' as path;
 
 part 'analyzer.g.dart';
+
+extension on DartType {
+  bool get isDartCore =>
+      isDartCoreBool ||
+      isDartCoreInt ||
+      isDartCoreDouble ||
+      isDartCoreString ||
+      isDartCoreObject ||
+      isDartCoreEnum ||
+      isDartCoreFunction ||
+      isDartCoreIterable ||
+      isDartCoreList ||
+      isDartCoreMap ||
+      isDartCoreNull ||
+      isDartCoreNum ||
+      isDartCoreRecord ||
+      isDartCoreSet ||
+      isDartCoreSymbol ||
+      isDartCoreType;
+}
+
+/// Analyzer for type references and annotations
+@JsonSerializable(explicitToJson: true)
+class TypeDefiningMetadata {
+  /// The declaring file path of the type
+  @JsonKey(includeIfNull: false)
+  final String? path;
+
+  /// The name of the type
+  final String name;
+
+  /// Type arguments for generic types
+  @JsonKey(includeIfNull: false)
+  final List<TypeParameterizedMetadata>? arguments;
+
+  /// String representation of the type with its type arguments
+  @override
+  String toString() =>
+      arguments == null ? name : '$name<${arguments!.map((e) => e.name).join(',')}>';
+
+  /// Constructor for serialization
+  ///
+  /// [path] - The declaring file path of the type
+  /// [name] - The name of the type
+  /// [arguments] - Type arguments for generic types
+  TypeDefiningMetadata({required this.name, this.path, this.arguments});
+
+  /// Create an instance from JSON
+  factory TypeDefiningMetadata.fromJson(Map<String, dynamic> json) =>
+      _$TypeDefiningMetadataFromJson(json);
+
+  /// Convert this instance to JSON
+  Map<String, dynamic> toJson() => _$TypeDefiningMetadataToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class TypeParameterizedMetadata extends TypeDefiningMetadata {
+  /// Whether the type is nullable
+  @JsonKey(name: 'null')
+  final bool nullable;
+
+  /// String representation of the type with its type arguments
+  @override
+  String toString() =>
+      arguments == null ? name : '$name<${arguments!.map((e) => e.name).join(',')}>';
+
+  /// Constructor for serialization
+  ///
+  /// [nullable] - Whether the type is nullable
+  TypeParameterizedMetadata({
+    required super.path,
+    required super.name,
+    this.nullable = false,
+    super.arguments,
+  });
+
+  factory TypeParameterizedMetadata.fromDartType(DartType type, String projectPath) =>
+      TypeParameterizedMetadata(
+        path:
+            !type.isDartCore
+                ? path.relative(type.element!.source!.fullName, from: projectPath)
+                : null,
+        name: type.getDisplayString(),
+        arguments:
+            type is ParameterizedType
+                ? type.typeArguments
+                    .map((e) => TypeParameterizedMetadata.fromDartType(e, projectPath))
+                    .toList()
+                : null,
+      );
+
+  /// Create an instance from JSON
+  factory TypeParameterizedMetadata.fromJson(Map<String, dynamic> json) =>
+      _$TypeParameterizedMetadataFromJson(json);
+  // factory TypeDefiningMetadata.fromJson(Map<String, dynamic> json) => switch (json) {
+  //   {'name': '_function_'} => FunctionTypeAnalyzer.fromJson(json),
+  //   {'name': '_record_'} => RecordTypeAnalyzer.fromJson(json),
+  //   _ => _$TypeAnalyzerFromJson(json),
+  // };
+
+  /// Convert this instance to JSON
+  @override
+  Map<String, dynamic> toJson() => _$TypeParameterizedMetadataToJson(this);
+}
 
 /// Analyzer for class declarations
 @JsonSerializable(explicitToJson: true)
@@ -18,23 +116,23 @@ class ClassMetadata {
 
   /// Type parameters defined on the class, if any
   @JsonKey(includeIfNull: false)
-  late final List<TypeParameterAnalyzer>? typeParameters;
-
-  /// Properties defined in the class, if any
-  @JsonKey(includeIfNull: false)
-  late final List<ClassPropertyDeclAnalyzer>? properties;
-
-  /// Constructors defined in the class, if any
-  @JsonKey(includeIfNull: false)
-  late final List<ConstructorAnalyzer>? constructors;
-
-  /// Methods defined in the class, if any
-  @JsonKey(includeIfNull: false)
-  late final List<MethodAnalyzer>? methods;
+  late final List<TypeParameterizedMetadata>? typeParameters;
 
   /// The superclass of this class, if any
   @JsonKey(includeIfNull: false)
-  late final TypeAnalyzer? superclass;
+  late final TypeDefiningMetadata? supertype;
+
+  /// Properties defined in the class, if any
+  // @JsonKey(includeIfNull: false)
+  // late final List<ClassPropertyDeclAnalyzer>? properties;
+
+  // /// Constructors defined in the class, if any
+  // @JsonKey(includeIfNull: false)
+  // late final List<ConstructorAnalyzer>? constructors;
+
+  // /// Methods defined in the class, if any
+  // @JsonKey(includeIfNull: false)
+  // late final List<MethodAnalyzer>? methods;
 
   /// Constructor for serialization
   ///
@@ -43,77 +141,27 @@ class ClassMetadata {
   /// [properties] - Properties defined in the class
   /// [constructors] - Constructors defined in the class
   /// [methods] - Methods defined in the class
-  /// [superclass] - The superclass of this class
+  /// [supertype] - The superclass of this class
   ClassMetadata(
     this.name, {
     this.typeParameters,
-    this.properties,
-    this.constructors,
-    this.methods,
-    this.superclass,
+    this.supertype,
+    // this.properties,
+    // this.constructors,
+    // this.methods,
   });
 
-  /// Factory method to create a ClassAnalyzer from a ClassDeclaration node
-  ///
-  /// [decl] - The AST node representing a class declaration
-  /// Returns a fully initialized ClassAnalyzer
-  ClassMetadata.create(ClassDeclaration decl) : name = decl.name.toString() {
-    final visitor = ClassDeclVisitor(this);
-    decl.accept(visitor);
-    typeParameters =
-        decl.typeParameters?.typeParameters.map((e) => TypeParameterAnalyzer.create(e)).toList();
-    constructors = visitor.constructorList.nullIfEmpty;
-    properties = visitor.properties.nullIfEmpty;
-    methods = visitor.methods;
-    superclass = TypeAnalyzer.from(decl.extendsClause?.superclass);
-  }
-
-  /// Get the constructor by name
-  ///
-  /// [name] - The name of the constructor to retrieve (null for unnamed constructor)
-  /// Returns the constructor or null if not found
-  ConstructorAnalyzer? constructor(String? name) =>
-      constructors?.firstWhereOrNull((e) => e.name == name);
-
-  /// Get a property by name
-  ///
-  /// [name] - The name of the property to retrieve
-  /// Returns the property or null if not found
-  ClassPropertyDeclAnalyzer? property(String name) =>
-      properties?.firstWhereOrNull((e) => e.name == name);
-
-  /// Get a method by name
-  ///
-  /// [name] - The name of the method to retrieve
-  /// Returns the method or null if not found
-  MethodAnalyzer? method(String name) => methods?.firstWhereOrNull((e) => e.name == name);
-
   /// String representation of the class with its type parameters and superclass
-  @override
-  String toString() {
-    var result =
-        typeParameters == null ? name : '$name<${typeParameters!.map((e) => e.name).join(',')}>';
-    if (superclass != null) result += ' extends $superclass';
-    return result;
-  }
-
-  /// Get the type representation of this class
-  ///
-  /// Returns a TypeAnalyzer representing this class
-  TypeAnalyzer get type {
-    return TypeAnalyzer(
-      name: name,
-      arguments: typeParameters?.map((e) => TypeAnalyzer(name: e.name)).toList(),
-    );
-  }
+  // @override
+  // String toString() {
+  //   var result =
+  //       typeParameters == null ? name : '$name<${typeParameters!.map((e) => e.name).join(',')}>';
+  //   if (supertype != null) result += ' extends $supertype';
+  //   return result;
+  // }
 
   /// Create an instance from JSON
-  factory ClassMetadata.fromJson(Map<String, dynamic> json) {
-    final result = _$ClassMetadataFromJson(json);
-    result.constructors?.forEach((element) => element.parent = result);
-    result.methods?.forEach((element) => element.parent = result);
-    return result;
-  }
+  factory ClassMetadata.fromJson(Map<String, dynamic> json) => _$ClassMetadataFromJson(json);
 
   /// Convert this instance to JSON
   Map<String, dynamic> toJson() => _$ClassMetadataToJson(this);
@@ -137,6 +185,7 @@ class MixinMetadata {
   Map<String, dynamic> toJson() => _$MixinMetadataToJson(this);
 }
 
+/*
 /// Abstract class representing a lazy analyzer for code analysis.
 ///
 /// This class provides the base functionality for analyzers that lazily process code.
@@ -264,7 +313,7 @@ class MethodAnalyzer extends LazyAnalyzer implements ParameterizableAnalyzer {
   final bool isStatic;
 
   /// The return type of the method
-  final TypeAnalyzer? returnType;
+  final TypeDefiningMetadata? returnType;
 
   /// List of parameter declarations in this method
   @override
@@ -305,7 +354,7 @@ class MethodAnalyzer extends LazyAnalyzer implements ParameterizableAnalyzer {
       name: node.name.toString(),
       encode: base64.encode(BZip2Encoder().encode(utf8.encode(body))),
       isStatic: node.isStatic,
-      returnType: TypeAnalyzer.from(node.returnType),
+      returnType: TypeDefiningMetadata.from(node.returnType),
     );
     final visitor = ParameterizableDeclVisitor(result);
     node.parameters?.accept(visitor);
@@ -365,7 +414,7 @@ class ClassPropertyDeclAnalyzer extends PropertyDeclAnalyzer {
   }) {
     return ClassPropertyDeclAnalyzer(
       decl.name.toString(),
-      TypeAnalyzer.from(type),
+      TypeDefiningMetadata.from(type),
       isStatic,
       nullable: type?.question != null,
       isConst: decl.isConst,
@@ -428,7 +477,7 @@ class PropertyDeclAnalyzer {
 
   /// The type of the property, if specified
   @JsonKey(includeIfNull: false)
-  final TypeAnalyzer? type;
+  final TypeDefiningMetadata? type;
 
   /// The initializer expression as a string, if any
   @JsonKey(includeIfNull: false)
@@ -442,7 +491,7 @@ class PropertyDeclAnalyzer {
   factory PropertyDeclAnalyzer.from(VariableDeclaration decl, {TypeAnnotation? type}) {
     return PropertyDeclAnalyzer(
       decl.name.toString(),
-      TypeAnalyzer.from(type),
+      TypeDefiningMetadata.from(type),
       nullable: type?.question != null,
       isConst: decl.isConst,
       isFinal: decl.isFinal,
@@ -507,7 +556,7 @@ class ConstructorAnalyzer implements ParameterizableAnalyzer {
     : name = decl.name?.toString() {
     if (decl.redirectedConstructor case var redirect?) {
       redirectConstructor = RedirectContructorAnalyzer(
-        TypeAnalyzer.from(redirect.type)!,
+        TypeDefiningMetadata.from(redirect.type)!,
         name: redirect.name?.toString(),
       );
     }
@@ -554,7 +603,7 @@ class ConstructorAnalyzer implements ParameterizableAnalyzer {
 @JsonSerializable()
 class RedirectContructorAnalyzer {
   /// The type being redirected to
-  final TypeAnalyzer type;
+  final TypeDefiningMetadata type;
 
   /// The name of the constructor being redirected to, null for unnamed constructors
   @JsonKey(includeIfNull: false)
@@ -586,7 +635,7 @@ class ParameterDeclAnalyzer {
 
   /// The type of the parameter, if specified
   @JsonKey(includeIfNull: false)
-  final TypeAnalyzer? type;
+  final TypeDefiningMetadata? type;
 
   /// Whether the parameter is named
   @JsonKey(name: 'named')
@@ -688,7 +737,7 @@ class TypeParameterAnalyzer {
 
   /// The bound type that this type parameter extends, if any
   @JsonKey(includeIfNull: false)
-  late final TypeAnalyzer? extend;
+  late final TypeDefiningMetadata? extend;
 
   /// String representation of the type parameter
   @override
@@ -699,7 +748,7 @@ class TypeParameterAnalyzer {
   /// [type] - The TypeParameter AST node
   TypeParameterAnalyzer.create(TypeParameter type) {
     name = type.name.toString();
-    extend = TypeAnalyzer.from(type.bound);
+    extend = TypeDefiningMetadata.from(type.bound);
   }
 
   /// Constructor for serialization
@@ -716,80 +765,9 @@ class TypeParameterAnalyzer {
   Map<String, dynamic> toJson() => _$TypeParameterAnalyzerToJson(this);
 }
 
-/// Analyzer for type references and annotations
-@JsonSerializable()
-class TypeAnalyzer {
-  /// The name of the type
-  final String name;
-
-  /// Whether the type is nullable
-  @JsonKey(name: 'null')
-  final bool nullable;
-
-  /// Type arguments for generic types
-  @JsonKey(includeIfNull: false)
-  final List<TypeAnalyzer>? arguments;
-
-  /// Static method to create an instance from TypeAnnotation
-  ///
-  /// [node] - The TypeAnnotation AST node
-  /// Returns a TypeAnalyzer or null if the node is null
-  static TypeAnalyzer? from(TypeAnnotation? node) {
-    if (node == null) return null;
-    final visitor = TypeDeclVisitor();
-    node.accept(visitor);
-    return visitor.type;
-  }
-
-  /// Static method to create an instance from a raw string
-  ///
-  /// [raw] - The raw type string
-  /// Returns a TypeAnalyzer representing the parsed type
-  static TypeAnalyzer fromString(String raw) {
-    final parsedUnit = parseString(content: 'const x = $raw();').unit;
-    final visitor = ParseTypeVisitor();
-    parsedUnit.accept(visitor);
-    return visitor.type;
-  }
-
-  /// String representation of the type with its type arguments
-  @override
-  String toString() =>
-      arguments == null ? name : '$name<${arguments!.map((e) => e.name).join(',')}>';
-
-  /// Method to create a copy with optional nullable parameter
-  ///
-  /// [nullable] - Whether the copy should be nullable
-  /// Returns a new TypeAnalyzer with the specified nullability
-  TypeAnalyzer copyWith({bool? nullable}) {
-    return TypeAnalyzer(
-      name: name,
-      nullable: nullable ?? this.nullable,
-      arguments: arguments?.map((e) => e.copyWith()).toList(),
-    );
-  }
-
-  /// Constructor for serialization
-  ///
-  /// [name] - The name of the type
-  /// [nullable] - Whether the type is nullable
-  /// [arguments] - Type arguments for generic types
-  TypeAnalyzer({required this.name, this.nullable = false, this.arguments});
-
-  /// Create an instance from JSON
-  factory TypeAnalyzer.fromJson(Map<String, dynamic> json) => switch (json) {
-    {'name': '_function_'} => FunctionTypeAnalyzer.fromJson(json),
-    {'name': '_record_'} => RecordTypeAnalyzer.fromJson(json),
-    _ => _$TypeAnalyzerFromJson(json),
-  };
-
-  /// Convert this instance to JSON
-  Map<String, dynamic> toJson() => _$TypeAnalyzerToJson(this);
-}
-
 /// Analyzer for record types
 @JsonSerializable()
-class RecordTypeAnalyzer extends TypeAnalyzer {
+class RecordTypeAnalyzer extends TypeDefiningMetadata {
   /// Constructor for serialization
   ///
   /// [nullable] - Whether the record type is nullable
@@ -819,13 +797,13 @@ class RecordTypeAnalyzer extends TypeAnalyzer {
 
 /// Analyzer for function types
 @JsonSerializable()
-class FunctionTypeAnalyzer extends TypeAnalyzer {
+class FunctionTypeAnalyzer extends TypeDefiningMetadata {
   /// The return type of the function
   @JsonKey(includeIfNull: false)
-  final TypeAnalyzer? returnType;
+  final TypeDefiningMetadata? returnType;
 
   /// The parameters of the function with optional names
-  final List<(String?, TypeAnalyzer)> parameters;
+  final List<(String?, TypeDefiningMetadata)> parameters;
 
   /// Constructor for serialization
   ///
@@ -864,3 +842,4 @@ class FunctionTypeAnalyzer extends TypeAnalyzer {
   @override
   Map<String, dynamic> toJson() => _$FunctionTypeAnalyzerToJson(this);
 }
+*/

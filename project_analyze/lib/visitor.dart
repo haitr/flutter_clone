@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/element/element.dart';
+import 'package:path/path.dart' as path;
 
 import 'ast/analyzer.dart';
 
@@ -7,6 +8,10 @@ import 'ast/analyzer.dart';
 /// Tracks dependencies between files by visiting elements and
 /// recording references to types defined in other files.
 class ElementAnalyzer extends ElementVisitor<void> {
+  final String projectPath;
+
+  ElementAnalyzer(this.projectPath);
+
   final classes = <ClassMetadata>[];
   final mixins = <MixinMetadata>[];
   final privateClasses = <String>[];
@@ -20,8 +25,30 @@ class ElementAnalyzer extends ElementVisitor<void> {
   void visitClassElement(ClassElement element) {
     final className = element.name;
     print('- $className');
-    print(element.supertype);
-    print(element.allSupertypes);
+
+    TypeDefiningMetadata? supertype;
+    if (element.supertype case var type?) {
+      print('-- $type');
+      print('--- ${type.typeArguments}');
+      supertype = TypeDefiningMetadata(
+        path: path.relative(type.element.source.fullName, from: projectPath),
+        name: type.element.name,
+        arguments:
+            type.typeArguments.isNotEmpty
+                ? type.typeArguments
+                    .map((e) => TypeParameterizedMetadata.fromDartType(e, projectPath))
+                    .toList()
+                : null,
+      );
+    }
+
+    List<TypeParameterizedMetadata>? typeParameters;
+    if (element.typeParameters.isNotEmpty) {
+      typeParameters =
+          element.typeParameters
+              .map((e) => TypeParameterizedMetadata.fromDartType(e.type, projectPath))
+              .toList();
+    }
 
     // if (element.constructors.isNotEmpty) {
     //   for (final constructor in element.constructors) {
@@ -33,7 +60,7 @@ class ElementAnalyzer extends ElementVisitor<void> {
     //   visitMethodElement(method);
     // }
 
-    classes.add(ClassMetadata(className));
+    classes.add(ClassMetadata(className, supertype: supertype, typeParameters: typeParameters));
   }
 
   @override

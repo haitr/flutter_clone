@@ -121,7 +121,7 @@ class DefaultValueIdentifier extends DefaultValue {
 /// Examples: Colors.red, HttpStatus.ok
 class DefaultValueEnumOrStaticInstance extends DefaultValue {
   /// The type that contains this enum value or static member.
-  final TypeAnalyzer from;
+  final TypeDefiningMetadata from;
 
   /// The identifier name of the enum value or static member.
   final String identifier;
@@ -143,7 +143,7 @@ class DefaultValueEnumOrStaticInstance extends DefaultValue {
 /// Examples: DateTime.now(), User(), Point(1, 2)
 class DefaultValueCreation extends DefaultValue {
   /// The type being created.
-  final TypeAnalyzer from;
+  final TypeDefiningMetadata from;
 
   /// The name of the constructor, or null for the default constructor.
   final String? constructor;

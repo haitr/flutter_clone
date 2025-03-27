@@ -22,19 +22,19 @@ class AnalyzeResult {
   late final Set<String> typeAliases;
 
   /// List of top-level variable declarations.
-  late final List<PropertyDeclAnalyzer> topLevelVariables;
+  // late final List<PropertyDeclAnalyzer> topLevelVariables;
 
   /// List of top-level function declarations.
-  late final List<LazyDeclAnalyzer> topLevelFunctions;
+  // late final List<LazyDeclAnalyzer> topLevelFunctions;
 
   /// Set of enum type names defined in the analyzed file.
   late final Set<String> enums;
 
   /// List of private class declarations.
-  late final List<LazyClassDeclAnalyzer> privateClasses;
+  // late final List<LazyClassDeclAnalyzer> privateClasses;
 
   /// List of private mixin declarations.
-  late final List<LazyDeclAnalyzer> privateMixins;
+  // late final List<LazyDeclAnalyzer> privateMixins;
 
   AnalyzeResult.fromElement(ResolvedLibraryResult library, String projectPath) {
     final element = library.element;
@@ -49,16 +49,16 @@ class AnalyzeResult {
       }
     }
 
-    final visitor = ElementAnalyzer();
+    final visitor = ElementAnalyzer(projectPath);
     library.element.accept(visitor);
 
     classes = visitor.classes;
     mixins = visitor.mixins;
-    privateClasses = [];
-    privateMixins = [];
+    // privateClasses = [];
+    // privateMixins = [];
     typeAliases = {};
-    topLevelVariables = [];
-    topLevelFunctions = [];
+    // topLevelVariables = [];
+    // topLevelFunctions = [];
     enums = {};
   }
 
@@ -94,48 +94,48 @@ class AnalyzeResult {
       typeAliases.addAll(aliasData.cast<String>().toSet());
     }
 
-    topLevelVariables = [];
-    if (data['top-level-variable'] case Map<String, dynamic> topLevelData?) {
-      for (var name in topLevelData.keys) {
-        if (topLevelData[name] case Map<String, dynamic> data) {
-          data['name'] = name;
-          topLevelVariables.add(PropertyDeclAnalyzer.fromJson(data));
-        }
-      }
-    }
+    // topLevelVariables = [];
+    // if (data['top-level-variable'] case Map<String, dynamic> topLevelData?) {
+    //   for (var name in topLevelData.keys) {
+    //     if (topLevelData[name] case Map<String, dynamic> data) {
+    //       data['name'] = name;
+    //       topLevelVariables.add(PropertyDeclAnalyzer.fromJson(data));
+    //     }
+    //   }
+    // }
 
-    topLevelFunctions = [];
-    if (data['top-level-function'] case Map<String, dynamic> topLevelData?) {
-      for (var name in topLevelData.keys) {
-        if (topLevelData[name] case Map<String, dynamic> data) {
-          data['name'] = name;
-          topLevelFunctions.add(LazyDeclAnalyzer.fromJson(data));
-        }
-      }
-    }
+    // topLevelFunctions = [];
+    // if (data['top-level-function'] case Map<String, dynamic> topLevelData?) {
+    //   for (var name in topLevelData.keys) {
+    //     if (topLevelData[name] case Map<String, dynamic> data) {
+    //       data['name'] = name;
+    //       topLevelFunctions.add(LazyDeclAnalyzer.fromJson(data));
+    //     }
+    //   }
+    // }
 
     enums = {};
     if (data['enum'] case List<dynamic> enumData) {
       enums.addAll(enumData.cast<String>().toSet());
     }
 
-    privateClasses = [];
-    if (data['private-class'] case Map<String, dynamic> privateData?) {
-      privateClasses.addAll(
-        privateData.entries.map(
-          (e) => LazyClassDeclAnalyzer.fromJson(e.value..putIfAbsent('name', () => e.key)),
-        ),
-      );
-    }
+    // privateClasses = [];
+    // if (data['private-class'] case Map<String, dynamic> privateData?) {
+    //   privateClasses.addAll(
+    //     privateData.entries.map(
+    //       (e) => LazyClassDeclAnalyzer.fromJson(e.value..putIfAbsent('name', () => e.key)),
+    //     ),
+    //   );
+    // }
 
-    privateMixins = [];
-    if (data['private-mixin'] case Map<String, dynamic> privateData?) {
-      privateMixins.addAll(
-        privateData.entries.map(
-          (e) => LazyDeclAnalyzer.fromJson(e.value..putIfAbsent('name', () => e.key)),
-        ),
-      );
-    }
+    // privateMixins = [];
+    // if (data['private-mixin'] case Map<String, dynamic> privateData?) {
+    //   privateMixins.addAll(
+    //     privateData.entries.map(
+    //       (e) => LazyDeclAnalyzer.fromJson(e.value..putIfAbsent('name', () => e.key)),
+    //     ),
+    //   );
+    // }
   }
 
   /// Converts the analysis result to a JSON-serializable map.
@@ -146,15 +146,15 @@ class AnalyzeResult {
       if (classes.isNotEmpty) 'class': {for (var e in classes) e.name: e.toJson()..remove('name')},
       if (mixins.isNotEmpty) 'mixin': {for (var e in mixins) e.name: e.toJson()..remove('name')},
       if (typeAliases.isNotEmpty) 'alias': typeAliases.toList(),
-      if (topLevelVariables.isNotEmpty)
-        'top-level-variable': {for (var e in topLevelVariables) e.name: e.toJson()..remove('name')},
-      if (topLevelFunctions.isNotEmpty)
-        'top-level-function': {for (var e in topLevelFunctions) e.name: e.toJson()..remove('name')},
-      if (enums.isNotEmpty) 'enum': enums.toList(),
-      if (privateClasses.isNotEmpty)
-        'private-class': {for (var e in privateClasses) e.name: e.toJson()..remove('name')},
-      if (privateMixins.isNotEmpty)
-        'private-mixin': {for (var e in privateMixins) e.name: e.toJson()..remove('name')},
+      // if (topLevelVariables.isNotEmpty)
+      //   'top-level-variable': {for (var e in topLevelVariables) e.name: e.toJson()..remove('name')},
+      // if (topLevelFunctions.isNotEmpty)
+      //   'top-level-function': {for (var e in topLevelFunctions) e.name: e.toJson()..remove('name')},
+      // if (enums.isNotEmpty) 'enum': enums.toList(),
+      // if (privateClasses.isNotEmpty)
+      //   'private-class': {for (var e in privateClasses) e.name: e.toJson()..remove('name')},
+      // if (privateMixins.isNotEmpty)
+      //   'private-mixin': {for (var e in privateMixins) e.name: e.toJson()..remove('name')},
     };
   }
 }
