@@ -8,6 +8,7 @@ import 'package:project_analyze/analyze_result.dart';
 import 'package:project_analyze/project_analyze.dart';
 import 'package:project_analyze/utils/local_file_system.dart';
 import 'package:project_analyze/utils/log.dart';
+import 'package:project_analyze/utils/selective_indent_json_encoder.dart';
 
 // The process is straightforward:
 // 	-	Examine the flutter directory and store the analysis results in [analyzingResults].
@@ -59,7 +60,27 @@ Future<void> main(List<String> arguments) async {
   final fsInput = WorkingDirectoryFileSystem(input);
   final fsOutput = WorkingDirectoryFileSystem(output);
 
-  await _parseResult(fsInput, fsOutput, clean);
+  if (fsOutput.directory('.') case final outputDir when !outputDir.existsSync()) {
+    outputDir.createSync(recursive: true);
+  }
+
+  final result = await _parseResult(fsInput, fsOutput, clean);
+
+  if (fsOutput.directory('.cache') case final cacheDir when !cacheDir.existsSync()) {
+    cacheDir.createSync();
+  }
+  final flutterVersion = await fsInput.file('version').readAsString();
+  final cacheSuffix = '-$flutterVersion';
+  final cacheFile = fsOutput.file(path.join('.cache', 'flutter$cacheSuffix.json'));
+  final progress = SimpleLogger.progress('Caching Flutter structure...');
+  final contents = result.fold(
+    {},
+    (previousValue, element) => previousValue..addAll(element.toJson()),
+  );
+  final jsonEncoder = SelectiveIndentJsonEncoder();
+  await cacheFile.writeAsString(jsonEncoder.convert(contents));
+  progress.finish(showTiming: true);
+  print('Cache size: ${(cacheFile.lengthSync() / 1024 / 1024).toStringAsFixed(2)} MB');
 }
 
 /// Prepares the analysis results by either:
@@ -108,7 +129,7 @@ Future<List<AnalyzeResult>> _parseResult(FileSystem input, FileSystem output, bo
 /// Returns a List of [AnalyzeResult] objects reconstructed from the cache
 Future<List<AnalyzeResult>> _loadFromCache(File cacheFile) async {
   final raw = jsonDecode(cacheFile.readAsStringSync()) as Map<String, dynamic>;
-  return raw.entries.map((e) => AnalyzeResult.fromCache(e.key, cache: e.value)).toList();
+  return raw.entries.map((e) => AnalyzeResult.fromJson(e.value)).toList();
 }
 
 /// Performs fresh analysis of Flutter source files
@@ -117,7 +138,5 @@ Future<List<AnalyzeResult>> _loadFromCache(File cacheFile) async {
 ///
 /// Returns a List of [AnalyzeResult] objects containing the analysis results
 /// The results include class declarations and their analyzed structure
-Future<List<AnalyzeResult>> _loadFromScratch(FileSystem input) async {
-  final result = await analyzeProjectWithSymbolResolution(input);
-  return result;
-}
+Future<List<AnalyzeResult>> _loadFromScratch(FileSystem input) =>
+    analyzeProjectWithSymbolResolution(input);

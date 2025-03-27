@@ -121,7 +121,7 @@ class FileVisitor extends CustomAstVisitor {
 /// defined within a class declaration.
 class ClassDeclVisitor extends CustomAstVisitor {
   /// The originating class analyzer that created this visitor
-  final ClassAnalyzer origin;
+  final ClassMetadata origin;
 
   /// List of constructors found in the class
   final constructorList = <ConstructorAnalyzer>[];
@@ -312,7 +312,7 @@ class ExpressionVisitor extends CustomAstVisitor {
   late DefaultValue result;
 
   /// The parent class analyzer, if any
-  final ClassAnalyzer? parent;
+  final ClassMetadata? parent;
 
   /// The potential type of the expression, if known
   final TypeAnalyzer? potentialType;
@@ -768,7 +768,7 @@ class ParseTypeVisitor extends CustomAstVisitor {
 }
 
 // Parses an expression into a DefaultValue
-DefaultValue _parseExpression(AstNode expr, {ClassAnalyzer? parent}) {
+DefaultValue _parseExpression(AstNode expr, {ClassMetadata? parent}) {
   final visitor = ExpressionVisitor(parent);
   expr.accept(visitor);
   return visitor.result;

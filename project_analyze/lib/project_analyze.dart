@@ -5,12 +5,11 @@ import 'package:glob/glob.dart';
 import 'package:glob/list_local_fs.dart';
 import 'package:path/path.dart' as path;
 import 'package:project_analyze/utils/log.dart';
-import 'package:project_analyze/visitor.dart';
 import 'package:yaml/yaml.dart';
 
 import 'analyze_result.dart';
 
-List<String> getLocalPackages(FileSystem input) {
+List<String> _getLocalPackages(FileSystem input) {
   final file = input.file('pubspec.yaml');
   final pubspec = loadYaml(file.readAsStringSync()) as YamlMap;
   final dependencies = pubspec['dependencies'] as YamlMap?;
@@ -40,72 +39,58 @@ List<String> getLocalPackages(FileSystem input) {
 }
 
 Future<List<AnalyzeResult>> analyzeProjectWithSymbolResolution(FileSystem input) async {
-  final localPackages = getLocalPackages(input);
+  final localPackages = _getLocalPackages(input);
 
   SimpleLogger.info('Analyzing project at: ${input.currentDirectory.path}');
 
   // Find sky_engine path
   final includePaths = [input.currentDirectory.path, ...localPackages].map(path.normalize).toList();
 
-  SimpleLogger.info('Include paths: $includePaths');
   // Create the analysis context with all required paths
   final collection = AnalysisContextCollection(includedPaths: includePaths);
 
   SimpleLogger.info('Analysis context created with paths:');
-  for (final context in collection.contexts) {
-    SimpleLogger.info('  - ${context.contextRoot.root.path}');
-  }
+  collection.contexts
+      .map((context) => ' - ${context.contextRoot.root.path}')
+      .forEach(SimpleLogger.info);
 
-  // Remove DAS-related code
-  final visitor = CrossReferenceAnalyzer();
+  final dartFiles =
+      Glob(
+        '**/*.dart',
+      ).listSync(root: includePaths[0]).whereType<File>().map((file) => file.path).toList();
 
-  try {
-    final dartFiles =
-        Glob(
-          '**/*.dart',
-        ).listSync(root: includePaths[0]).whereType<File>().map((file) => file.path).toList();
+  SimpleLogger.info('Found ${dartFiles.length} Dart files');
 
-    SimpleLogger.info('Found ${dartFiles.length} Dart files');
+  final results = <AnalyzeResult>[];
 
-    final analyzedLibraries = <String>{};
-
-    for (final filePath in dartFiles) {
-      if (path.basename(filePath) != 'text.dart') {
-        continue;
-      }
-
-      // Open the file for analysis first
-      final context = collection.contextFor(filePath);
-      final library = await context.currentSession.getResolvedLibrary(filePath);
-
-      if (library is ResolvedLibraryResult) {
-        final element = library.element;
-        final libraryPath = element.source.fullName;
-
-        if (analyzedLibraries.contains(libraryPath)) continue;
-        analyzedLibraries.add(libraryPath);
-
-        SimpleLogger.info(
-          '\nAnalyzing library: ${path.relative(libraryPath, from: includePaths[0])}',
-        );
-
-        // Let the visitor analyze classes and track dependencies
-        element.accept(visitor);
-
-        for (final part in element.units) {
-          if (part != element.definingCompilationUnit) {
-            final partPath = part.source.fullName;
-            SimpleLogger.info(' - Part: ${path.relative(partPath, from: includePaths[0])}');
-          }
-        }
-      }
+  for (final filePath in dartFiles) {
+    if (path.basename(filePath) != 'text.dart') {
+      continue;
     }
 
-    // Print the dependency information
-    visitor.printDependencies();
-  } finally {
-    // Remove DAS shutdown
+    // Open the file for analysis first
+    final context = collection.contextFor(filePath);
+    final library = await context.currentSession.getResolvedLibrary(filePath);
+
+    if (library is ResolvedLibraryResult) {
+      final element = library.element;
+      final libraryPath = element.source.fullName;
+
+      SimpleLogger.progress(
+        '\nAnalyzing library: ${path.relative(libraryPath, from: includePaths[0])}',
+      );
+
+      // Let the visitor analyze classes and track dependencies
+      results.add(AnalyzeResult.fromElement(library, includePaths[0]));
+
+      //   for (final part in element.units) {
+      //     if (part != element.definingCompilationUnit) {
+      //       final partPath = part.source.fullName;
+      //       SimpleLogger.info(' - Part: ${path.relative(partPath, from: includePaths[0])}');
+      //     }
+      //   }
+    }
   }
 
-  return [];
+  return results;
 }

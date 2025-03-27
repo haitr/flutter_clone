@@ -10,6 +10,133 @@ import 'package:project_analyze/extensions/extensions.dart';
 
 part 'analyzer.g.dart';
 
+/// Analyzer for class declarations
+@JsonSerializable(explicitToJson: true)
+class ClassMetadata {
+  /// The name of the class
+  final String name;
+
+  /// Type parameters defined on the class, if any
+  @JsonKey(includeIfNull: false)
+  late final List<TypeParameterAnalyzer>? typeParameters;
+
+  /// Properties defined in the class, if any
+  @JsonKey(includeIfNull: false)
+  late final List<ClassPropertyDeclAnalyzer>? properties;
+
+  /// Constructors defined in the class, if any
+  @JsonKey(includeIfNull: false)
+  late final List<ConstructorAnalyzer>? constructors;
+
+  /// Methods defined in the class, if any
+  @JsonKey(includeIfNull: false)
+  late final List<MethodAnalyzer>? methods;
+
+  /// The superclass of this class, if any
+  @JsonKey(includeIfNull: false)
+  late final TypeAnalyzer? superclass;
+
+  /// Constructor for serialization
+  ///
+  /// [name] - The name of the class
+  /// [typeParameters] - Type parameters defined on the class
+  /// [properties] - Properties defined in the class
+  /// [constructors] - Constructors defined in the class
+  /// [methods] - Methods defined in the class
+  /// [superclass] - The superclass of this class
+  ClassMetadata(
+    this.name, {
+    this.typeParameters,
+    this.properties,
+    this.constructors,
+    this.methods,
+    this.superclass,
+  });
+
+  /// Factory method to create a ClassAnalyzer from a ClassDeclaration node
+  ///
+  /// [decl] - The AST node representing a class declaration
+  /// Returns a fully initialized ClassAnalyzer
+  ClassMetadata.create(ClassDeclaration decl) : name = decl.name.toString() {
+    final visitor = ClassDeclVisitor(this);
+    decl.accept(visitor);
+    typeParameters =
+        decl.typeParameters?.typeParameters.map((e) => TypeParameterAnalyzer.create(e)).toList();
+    constructors = visitor.constructorList.nullIfEmpty;
+    properties = visitor.properties.nullIfEmpty;
+    methods = visitor.methods;
+    superclass = TypeAnalyzer.from(decl.extendsClause?.superclass);
+  }
+
+  /// Get the constructor by name
+  ///
+  /// [name] - The name of the constructor to retrieve (null for unnamed constructor)
+  /// Returns the constructor or null if not found
+  ConstructorAnalyzer? constructor(String? name) =>
+      constructors?.firstWhereOrNull((e) => e.name == name);
+
+  /// Get a property by name
+  ///
+  /// [name] - The name of the property to retrieve
+  /// Returns the property or null if not found
+  ClassPropertyDeclAnalyzer? property(String name) =>
+      properties?.firstWhereOrNull((e) => e.name == name);
+
+  /// Get a method by name
+  ///
+  /// [name] - The name of the method to retrieve
+  /// Returns the method or null if not found
+  MethodAnalyzer? method(String name) => methods?.firstWhereOrNull((e) => e.name == name);
+
+  /// String representation of the class with its type parameters and superclass
+  @override
+  String toString() {
+    var result =
+        typeParameters == null ? name : '$name<${typeParameters!.map((e) => e.name).join(',')}>';
+    if (superclass != null) result += ' extends $superclass';
+    return result;
+  }
+
+  /// Get the type representation of this class
+  ///
+  /// Returns a TypeAnalyzer representing this class
+  TypeAnalyzer get type {
+    return TypeAnalyzer(
+      name: name,
+      arguments: typeParameters?.map((e) => TypeAnalyzer(name: e.name)).toList(),
+    );
+  }
+
+  /// Create an instance from JSON
+  factory ClassMetadata.fromJson(Map<String, dynamic> json) {
+    final result = _$ClassMetadataFromJson(json);
+    result.constructors?.forEach((element) => element.parent = result);
+    result.methods?.forEach((element) => element.parent = result);
+    return result;
+  }
+
+  /// Convert this instance to JSON
+  Map<String, dynamic> toJson() => _$ClassMetadataToJson(this);
+}
+
+/// Analyzer for mixin declarations
+@JsonSerializable(explicitToJson: true)
+class MixinMetadata {
+  /// The name of the mixin
+  final String name;
+
+  /// Constructor for serialization
+  ///
+  /// [name] - The name of the mixin
+  MixinMetadata(this.name);
+
+  /// Create an instance from JSON
+  factory MixinMetadata.fromJson(Map<String, dynamic> json) => _$MixinMetadataFromJson(json);
+
+  /// Convert this instance to JSON
+  Map<String, dynamic> toJson() => _$MixinMetadataToJson(this);
+}
+
 /// Abstract class representing a lazy analyzer for code analysis.
 ///
 /// This class provides the base functionality for analyzers that lazily process code.
@@ -47,7 +174,7 @@ abstract interface class ParameterizableAnalyzer {
   late final List<ParameterDeclAnalyzer>? parameters;
 
   /// Reference to the parent class analyzer
-  late final ClassAnalyzer parent;
+  late final ClassMetadata parent;
 
   /// Access a parameter by name
   ///
@@ -115,10 +242,10 @@ class LazyClassDeclAnalyzer extends LazyDeclAnalyzer {
   /// Analyze the class declaration to create a ClassAnalyzer instance
   ///
   /// Returns a fully analyzed ClassAnalyzer
-  ClassAnalyzer analyze() {
+  ClassMetadata analyze() {
     final parsedUnit = parseString(content: decode).unit;
     final decl = parsedUnit.declarations.first as ClassDeclaration;
-    return ClassAnalyzer.create(decl);
+    return ClassMetadata.create(decl);
   }
 
   /// Create an instance from JSON
@@ -147,7 +274,7 @@ class MethodAnalyzer extends LazyAnalyzer implements ParameterizableAnalyzer {
   /// Reference to the parent class analyzer
   @override
   @JsonKey(includeToJson: false, includeFromJson: false)
-  late final ClassAnalyzer parent;
+  late final ClassMetadata parent;
 
   /// Parse unresolved types in the method body
   ///
@@ -217,132 +344,6 @@ class MethodAnalyzer extends LazyAnalyzer implements ParameterizableAnalyzer {
 
   /// Convert this instance to JSON
   Map<String, dynamic> toJson() => _$MethodAnalyzerToJson(this);
-}
-
-/// Analyzer for class declarations
-@JsonSerializable(explicitToJson: true)
-class ClassAnalyzer {
-  /// The name of the class
-  final String name;
-
-  /// Type parameters defined on the class, if any
-  @JsonKey(includeIfNull: false)
-  late final List<TypeParameterAnalyzer>? typeParameters;
-
-  /// Properties defined in the class, if any
-  @JsonKey(includeIfNull: false)
-  late final List<ClassPropertyDeclAnalyzer>? properties;
-
-  /// Constructors defined in the class, if any
-  @JsonKey(includeIfNull: false)
-  late final List<ConstructorAnalyzer>? constructors;
-
-  /// Methods defined in the class, if any
-  @JsonKey(includeIfNull: false)
-  late final List<MethodAnalyzer>? methods;
-
-  /// The superclass of this class, if any
-  @JsonKey(includeIfNull: false)
-  late final TypeAnalyzer? superclass;
-
-  /// Factory method to create a ClassAnalyzer from a ClassDeclaration node
-  ///
-  /// [decl] - The AST node representing a class declaration
-  /// Returns a fully initialized ClassAnalyzer
-  ClassAnalyzer.create(ClassDeclaration decl) : name = decl.name.toString() {
-    final visitor = ClassDeclVisitor(this);
-    decl.accept(visitor);
-    typeParameters =
-        decl.typeParameters?.typeParameters.map((e) => TypeParameterAnalyzer.create(e)).toList();
-    constructors = visitor.constructorList.nullIfEmpty;
-    properties = visitor.properties.nullIfEmpty;
-    methods = visitor.methods;
-    superclass = TypeAnalyzer.from(decl.extendsClause?.superclass);
-  }
-
-  /// Get the constructor by name
-  ///
-  /// [name] - The name of the constructor to retrieve (null for unnamed constructor)
-  /// Returns the constructor or null if not found
-  ConstructorAnalyzer? constructor(String? name) =>
-      constructors?.firstWhereOrNull((e) => e.name == name);
-
-  /// Get a property by name
-  ///
-  /// [name] - The name of the property to retrieve
-  /// Returns the property or null if not found
-  ClassPropertyDeclAnalyzer? property(String name) =>
-      properties?.firstWhereOrNull((e) => e.name == name);
-
-  /// Get a method by name
-  ///
-  /// [name] - The name of the method to retrieve
-  /// Returns the method or null if not found
-  MethodAnalyzer? method(String name) => methods?.firstWhereOrNull((e) => e.name == name);
-
-  /// String representation of the class with its type parameters and superclass
-  @override
-  String toString() {
-    var result =
-        typeParameters == null ? name : '$name<${typeParameters!.map((e) => e.name).join(',')}>';
-    if (superclass != null) result += ' extends $superclass';
-    return result;
-  }
-
-  /// Get the type representation of this class
-  ///
-  /// Returns a TypeAnalyzer representing this class
-  TypeAnalyzer get type {
-    return TypeAnalyzer(
-      name: name,
-      arguments: typeParameters?.map((e) => TypeAnalyzer(name: e.name)).toList(),
-    );
-  }
-
-  /// Constructor for serialization
-  ///
-  /// [name] - The name of the class
-  /// [properties] - Properties defined in the class
-  /// [constructors] - Constructors defined in the class
-  /// [methods] - Methods defined in the class
-  ClassAnalyzer(this.name, {this.properties, required this.constructors, this.methods});
-
-  /// Create an instance from JSON
-  factory ClassAnalyzer.fromJson(Map<String, dynamic> json) {
-    final result = _$ClassAnalyzerFromJson(json);
-    result.constructors?.forEach((element) => element.parent = result);
-    result.methods?.forEach((element) => element.parent = result);
-    return result;
-  }
-
-  /// Convert this instance to JSON
-  Map<String, dynamic> toJson() => _$ClassAnalyzerToJson(this);
-}
-
-/// Analyzer for mixin declarations
-@JsonSerializable(explicitToJson: true)
-class MixinAnalyzer {
-  /// The name of the mixin
-  final String name;
-
-  /// Factory method to create a MixinAnalyzer from a MixinDeclaration node
-  ///
-  /// [decl] - The AST node representing a mixin declaration
-  MixinAnalyzer.create(MixinDeclaration decl) : name = decl.name.toString();
-
-  /// Constructor for serialization
-  ///
-  /// [name] - The name of the mixin
-  MixinAnalyzer(this.name);
-
-  /// Create an instance from JSON
-  factory MixinAnalyzer.fromJson(Map<String, dynamic> json) {
-    final result = _$MixinAnalyzerFromJson(json);
-    return result;
-  }
-
-  /// Convert this instance to JSON
-  Map<String, dynamic> toJson() => _$MixinAnalyzerToJson(this);
 }
 
 /// Analyzer for class property declarations
@@ -496,7 +497,7 @@ class ConstructorAnalyzer implements ParameterizableAnalyzer {
   /// Reference to the parent class analyzer
   @override
   @JsonKey(includeToJson: false, includeFromJson: false)
-  late final ClassAnalyzer parent;
+  late final ClassMetadata parent;
 
   /// Factory method to create a ConstructorAnalyzer from a ConstructorDeclaration node
   ///
