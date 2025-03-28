@@ -6,57 +6,71 @@ part of 'analyzer.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+TypeMetadata _$TypeMetadataFromJson(Map<String, dynamic> json) => TypeMetadata(
+  file: json['file'] as String?,
+  name: json['name'] as String,
+  arguments: (json['arguments'] as List<dynamic>?)?.map(
+    (e) => TypeMetadata.fromJson(e as Map<String, dynamic>),
+  ),
+);
+
+Map<String, dynamic> _$TypeMetadataToJson(TypeMetadata instance) =>
+    <String, dynamic>{
+      if (instance.file case final value?) 'file': value,
+      'name': instance.name,
+      if (instance.arguments?.map((e) => e.toJson()).toList() case final value?)
+        'arguments': value,
+    };
+
 TypeDefiningMetadata _$TypeDefiningMetadataFromJson(
   Map<String, dynamic> json,
 ) => TypeDefiningMetadata(
-  path: json['path'] as String?,
   name: json['name'] as String,
-  arguments:
-      (json['arguments'] as List<dynamic>?)
-          ?.map(
-            (e) =>
-                TypeParameterizedMetadata.fromJson(e as Map<String, dynamic>),
-          )
-          .toList(),
+  file: json['file'] as String?,
+  arguments: (json['arguments'] as List<dynamic>?)?.map(
+    (e) => TypeMetadata.fromJson(e as Map<String, dynamic>),
+  ),
 );
 
 Map<String, dynamic> _$TypeDefiningMetadataToJson(
   TypeDefiningMetadata instance,
 ) => <String, dynamic>{
-  if (instance.path case final value?) 'path': value,
+  if (instance.file case final value?) 'file': value,
   'name': instance.name,
   if (instance.arguments?.map((e) => e.toJson()).toList() case final value?)
     'arguments': value,
 };
 
-TypeParameterizedMetadata _$TypeParameterizedMetadataFromJson(
+TypeParameterMetadata _$TypeParameterMetadataFromJson(
   Map<String, dynamic> json,
-) => TypeParameterizedMetadata(
-  path: json['path'] as String?,
+) => TypeParameterMetadata(
   name: json['name'] as String,
-  nullable: json['null'] as bool? ?? false,
-  arguments:
-      (json['arguments'] as List<dynamic>?)
-          ?.map(
-            (e) =>
-                TypeParameterizedMetadata.fromJson(e as Map<String, dynamic>),
-          )
-          .toList(),
+  file: json['file'] as String?,
+  arguments: (json['arguments'] as List<dynamic>?)?.map(
+    (e) => TypeMetadata.fromJson(e as Map<String, dynamic>),
+  ),
+  bound:
+      json['bound'] == null
+          ? null
+          : TypeMetadata.fromJson(json['bound'] as Map<String, dynamic>),
 );
 
-Map<String, dynamic> _$TypeParameterizedMetadataToJson(
-  TypeParameterizedMetadata instance,
+Map<String, dynamic> _$TypeParameterMetadataToJson(
+  TypeParameterMetadata instance,
 ) => <String, dynamic>{
-  if (instance.path case final value?) 'path': value,
+  if (instance.file case final value?) 'file': value,
   'name': instance.name,
   if (instance.arguments?.map((e) => e.toJson()).toList() case final value?)
     'arguments': value,
-  'null': instance.nullable,
+  'bound': instance.bound?.toJson(),
 };
 
 ClassMetadata _$ClassMetadataFromJson(Map<String, dynamic> json) =>
     ClassMetadata(
       json['name'] as String,
+      typeParameters: (json['typeParameters'] as List<dynamic>?)?.map(
+        (e) => TypeParameterMetadata.fromJson(e as Map<String, dynamic>),
+      ),
       supertype:
           json['supertype'] == null
               ? null
@@ -68,6 +82,9 @@ ClassMetadata _$ClassMetadataFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$ClassMetadataToJson(ClassMetadata instance) =>
     <String, dynamic>{
       'name': instance.name,
+      if (instance.typeParameters?.map((e) => e.toJson()).toList()
+          case final value?)
+        'typeParameters': value,
       if (instance.supertype?.toJson() case final value?) 'supertype': value,
     };
 

@@ -1,8 +1,12 @@
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:path/path.dart' as path;
 
 part 'analyzer.g.dart';
+
+/// ClassMetadata => ClassElement
+/// ClassTypeMetadata => ClassType
 
 extension on DartType {
   bool get isDartCore =>
@@ -24,19 +28,18 @@ extension on DartType {
       isDartCoreType;
 }
 
-/// Analyzer for type references and annotations
 @JsonSerializable(explicitToJson: true)
-class TypeDefiningMetadata {
+class TypeMetadata {
   /// The declaring file path of the type
   @JsonKey(includeIfNull: false)
-  final String? path;
+  final String? file;
 
   /// The name of the type
   final String name;
 
   /// Type arguments for generic types
   @JsonKey(includeIfNull: false)
-  final List<TypeParameterizedMetadata>? arguments;
+  final Iterable<TypeMetadata>? arguments;
 
   /// String representation of the type with its type arguments
   @override
@@ -45,10 +48,56 @@ class TypeDefiningMetadata {
 
   /// Constructor for serialization
   ///
-  /// [path] - The declaring file path of the type
+  /// [nullable] - Whether the type is nullable
+  TypeMetadata({required this.file, required this.name, this.arguments});
+
+  factory TypeMetadata.fromDartType(DartType type, String projectPath) => TypeMetadata(
+    file:
+        !type.isDartCore ? path.relative(type.element!.source!.fullName, from: projectPath) : null,
+    name: type.getDisplayString(),
+    arguments:
+        type is ParameterizedType
+            ? type.typeArguments.map((e) => TypeMetadata.fromDartType(e, projectPath)).toList()
+            : null,
+  );
+
+  /// Create an instance from JSON
+  factory TypeMetadata.fromJson(Map<String, dynamic> json) => _$TypeMetadataFromJson(json);
+  // factory TypeDefiningMetadata.fromJson(Map<String, dynamic> json) => switch (json) {
+  //   {'name': '_function_'} => FunctionTypeAnalyzer.fromJson(json),
+  //   {'name': '_record_'} => RecordTypeAnalyzer.fromJson(json),
+  //   _ => _$TypeAnalyzerFromJson(json),
+  // };
+
+  /// Convert this instance to JSON
+  Map<String, dynamic> toJson() => _$TypeMetadataToJson(this);
+}
+
+/// Analyzer for type references and annotations
+@JsonSerializable(explicitToJson: true)
+class TypeDefiningMetadata {
+  /// The defining file path of the type
+  @JsonKey(includeIfNull: false)
+  final String? file;
+
+  /// The name of the type
+  final String name;
+
+  /// Type arguments for generic types
+  @JsonKey(includeIfNull: false)
+  final Iterable<TypeMetadata>? arguments;
+
+  /// String representation of the type with its type arguments
+  @override
+  String toString() =>
+      arguments == null ? name : '$name<${arguments!.map((e) => e.name).join(',')}>';
+
+  /// Constructor for serialization
+  ///
   /// [name] - The name of the type
+  /// [file] - The defining file path of the type
   /// [arguments] - Type arguments for generic types
-  TypeDefiningMetadata({required this.name, this.path, this.arguments});
+  TypeDefiningMetadata({required this.name, this.file, this.arguments});
 
   /// Create an instance from JSON
   factory TypeDefiningMetadata.fromJson(Map<String, dynamic> json) =>
@@ -59,53 +108,39 @@ class TypeDefiningMetadata {
 }
 
 @JsonSerializable(explicitToJson: true)
-class TypeParameterizedMetadata extends TypeDefiningMetadata {
-  /// Whether the type is nullable
-  @JsonKey(name: 'null')
-  final bool nullable;
+class TypeParameterMetadata extends TypeDefiningMetadata {
+  final TypeMetadata? bound;
 
   /// String representation of the type with its type arguments
   @override
   String toString() =>
       arguments == null ? name : '$name<${arguments!.map((e) => e.name).join(',')}>';
 
+  factory TypeParameterMetadata.fromTypeParameterElement(
+    TypeParameterElement element,
+    String projectPath,
+  ) => TypeParameterMetadata(
+    name: element.name,
+    file:
+        element.source != null ? path.relative(element.source!.fullName, from: projectPath) : null,
+    bound: element.bound != null ? TypeMetadata.fromDartType(element.bound!, projectPath) : null,
+  );
+
   /// Constructor for serialization
   ///
-  /// [nullable] - Whether the type is nullable
-  TypeParameterizedMetadata({
-    required super.path,
-    required super.name,
-    this.nullable = false,
-    super.arguments,
-  });
-
-  factory TypeParameterizedMetadata.fromDartType(DartType type, String projectPath) =>
-      TypeParameterizedMetadata(
-        path:
-            !type.isDartCore
-                ? path.relative(type.element!.source!.fullName, from: projectPath)
-                : null,
-        name: type.getDisplayString(),
-        arguments:
-            type is ParameterizedType
-                ? type.typeArguments
-                    .map((e) => TypeParameterizedMetadata.fromDartType(e, projectPath))
-                    .toList()
-                : null,
-      );
+  /// [name] - The name of the type
+  /// [file] - The defining file path of the type
+  /// [arguments] - Type arguments for generic types
+  /// [bound] - The bound type of the type parameter
+  TypeParameterMetadata({required super.name, super.file, super.arguments, this.bound});
 
   /// Create an instance from JSON
-  factory TypeParameterizedMetadata.fromJson(Map<String, dynamic> json) =>
-      _$TypeParameterizedMetadataFromJson(json);
-  // factory TypeDefiningMetadata.fromJson(Map<String, dynamic> json) => switch (json) {
-  //   {'name': '_function_'} => FunctionTypeAnalyzer.fromJson(json),
-  //   {'name': '_record_'} => RecordTypeAnalyzer.fromJson(json),
-  //   _ => _$TypeAnalyzerFromJson(json),
-  // };
+  factory TypeParameterMetadata.fromJson(Map<String, dynamic> json) =>
+      _$TypeParameterMetadataFromJson(json);
 
   /// Convert this instance to JSON
   @override
-  Map<String, dynamic> toJson() => _$TypeParameterizedMetadataToJson(this);
+  Map<String, dynamic> toJson() => _$TypeParameterMetadataToJson(this);
 }
 
 /// Analyzer for class declarations
@@ -116,7 +151,7 @@ class ClassMetadata {
 
   /// Type parameters defined on the class, if any
   @JsonKey(includeIfNull: false)
-  late final List<TypeParameterizedMetadata>? typeParameters;
+  late final Iterable<TypeParameterMetadata>? typeParameters;
 
   /// The superclass of this class, if any
   @JsonKey(includeIfNull: false)

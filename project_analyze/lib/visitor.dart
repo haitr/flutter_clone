@@ -28,26 +28,23 @@ class ElementAnalyzer extends ElementVisitor<void> {
 
     TypeDefiningMetadata? supertype;
     if (element.supertype case var type?) {
-      print('-- $type');
-      print('--- ${type.typeArguments}');
+      final element = type.element as ClassElement;
       supertype = TypeDefiningMetadata(
-        path: path.relative(type.element.source.fullName, from: projectPath),
-        name: type.element.name,
+        file: path.relative(element.source.fullName, from: projectPath),
+        name: element.name,
         arguments:
             type.typeArguments.isNotEmpty
-                ? type.typeArguments
-                    .map((e) => TypeParameterizedMetadata.fromDartType(e, projectPath))
-                    .toList()
+                ? type.typeArguments.map((e) => TypeMetadata.fromDartType(e, projectPath))
                 : null,
       );
     }
 
-    List<TypeParameterizedMetadata>? typeParameters;
+    Iterable<TypeParameterMetadata>? typeParameters;
     if (element.typeParameters.isNotEmpty) {
-      typeParameters =
-          element.typeParameters
-              .map((e) => TypeParameterizedMetadata.fromDartType(e.type, projectPath))
-              .toList();
+      print('--- ${element.typeParameters}');
+      typeParameters = element.typeParameters.map(
+        (e) => TypeParameterMetadata.fromTypeParameterElement(e, projectPath),
+      );
     }
 
     // if (element.constructors.isNotEmpty) {
