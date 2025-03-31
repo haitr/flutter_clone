@@ -106,8 +106,8 @@ abstract class ConstructorElementMetadata
   String get name;
 
   bool get isConst;
+  // ConstructorElementMetadata? get superConstructor;
   ConstructorElementMetadata? get redirectedConstructor;
-  ConstructorElementMetadata? get superConstructor;
   bool get isDefaultConstructor;
   bool get isFactory;
   bool get isGenerative;

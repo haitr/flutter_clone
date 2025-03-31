@@ -73,10 +73,7 @@ Future<void> main(List<String> arguments) async {
   final cacheSuffix = '-$flutterVersion';
   final cacheFile = fsOutput.file(path.join('.cache', 'flutter$cacheSuffix.json'));
   final progress = SimpleLogger.progress('Caching Flutter structure...');
-  final contents = result.fold(
-    {},
-    (previousValue, element) => previousValue..addAll(element.toJson()),
-  );
+  final contents = result.fold<Map<String, dynamic>>({}, (map, e) => map..addAll(e.toJson()));
   final jsonEncoder = SelectiveIndentJsonEncoder();
   await cacheFile.writeAsString(jsonEncoder.convert(contents));
   progress.finish(showTiming: true);

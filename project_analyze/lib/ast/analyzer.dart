@@ -9,19 +9,20 @@ import 'package:project_analyze/utils/dummy.dart';
 
 part 'analyzer.element.dart';
 part 'analyzer.g.dart';
+part 'analyzer.json.dart';
 part 'analyzer.type.dart';
 
-class BooleanConverter implements JsonConverter<bool, bool?> {
-  const BooleanConverter();
-
-  @override
-  bool fromJson(bool? json) => json ?? false;
-
-  @override
-  bool? toJson(bool value) => value ? true : null;
-}
-
-@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
+@JsonSerializable(
+  explicitToJson: true,
+  converters: [
+    _BooleanConverter(),
+    _ConstructorElementListConverter(),
+    _FieldElementListConverter(),
+    _MethodElementListConverter(),
+    _TypeParameterListSerializerConverter(),
+  ],
+  includeIfNull: false,
+)
 class ClassElementSerializer implements ClassElementMetadata {
   @override
   final List<ConstructorElementSerializer> constructors;
@@ -145,7 +146,15 @@ class ClassElementSerializer implements ClassElementMetadata {
   }
 }
 
-@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
+@JsonSerializable(
+  explicitToJson: true,
+  converters: [
+    _BooleanConverter(),
+    _TypeParameterElementListConverter(),
+    _ParameterElementListConverter(),
+  ],
+  includeIfNull: false,
+)
 class ConstructorElementSerializer implements ConstructorElementMetadata {
   @override
   final String name;
@@ -187,8 +196,8 @@ class ConstructorElementSerializer implements ConstructorElementMetadata {
   final bool isConst;
   @override
   final ConstructorElementSerializer? redirectedConstructor;
-  @override
-  final ConstructorElementSerializer? superConstructor;
+  // @override
+  // final ConstructorElementSerializer? superConstructor;
   @override
   final bool isDefaultConstructor;
   @override
@@ -222,7 +231,6 @@ class ConstructorElementSerializer implements ConstructorElementMetadata {
     required this.isSynchronous,
     required this.isConst,
     this.redirectedConstructor,
-    this.superConstructor,
     required this.isDefaultConstructor,
     required this.isFactory,
     required this.isGenerative,
@@ -254,10 +262,6 @@ class ConstructorElementSerializer implements ConstructorElementMetadata {
           element.redirectedConstructor != null
               ? ConstructorElementSerializer.from(element.redirectedConstructor!)
               : null,
-      superConstructor:
-          element.superConstructor != null
-              ? ConstructorElementSerializer.from(element.superConstructor!)
-              : null,
       isDefaultConstructor: element.isDefaultConstructor,
       isFactory: element.isFactory,
       isGenerative: element.isGenerative,
@@ -266,10 +270,11 @@ class ConstructorElementSerializer implements ConstructorElementMetadata {
 
   factory ConstructorElementSerializer.fromJson(Map<String, dynamic> json) =>
       _$ConstructorElementSerializerFromJson(json);
+
   Map<String, dynamic> toJson() => _$ConstructorElementSerializerToJson(this);
 }
 
-@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
+@JsonSerializable(explicitToJson: true, converters: [_BooleanConverter()], includeIfNull: false)
 class FieldElementSerializer implements FieldElementMetadata {
   @override
   final String name;
@@ -363,7 +368,15 @@ class FieldElementSerializer implements FieldElementMetadata {
   Map<String, dynamic> toJson() => _$FieldElementSerializerToJson(this);
 }
 
-@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
+@JsonSerializable(
+  explicitToJson: true,
+  converters: [
+    _BooleanConverter(),
+    _TypeParameterListSerializerConverter(),
+    _ParameterElementListConverter(),
+  ],
+  includeIfNull: false,
+)
 class MethodElementSerializer implements MethodElementMetadata {
   @override
   final String name;
@@ -452,7 +465,7 @@ class MethodElementSerializer implements MethodElementMetadata {
   Map<String, dynamic> toJson() => _$MethodElementSerializerToJson(this);
 }
 
-@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
+@JsonSerializable(explicitToJson: true, converters: [_BooleanConverter()], includeIfNull: false)
 class TypeParameterElementSerializer implements TypeParameterElementMetadata {
   @override
   final String name;
@@ -488,7 +501,15 @@ class TypeParameterElementSerializer implements TypeParameterElementMetadata {
   Map<String, dynamic> toJson() => _$TypeParameterElementSerializerToJson(this);
 }
 
-@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
+@JsonSerializable(
+  explicitToJson: true,
+  converters: [
+    _BooleanConverter(),
+    _TypeParameterListSerializerConverter(),
+    _ParameterElementListConverter(),
+  ],
+  includeIfNull: false,
+)
 class ParameterElementSerializer implements ParameterElementMetadata {
   @override
   final String name;
@@ -605,7 +626,7 @@ class ParameterElementSerializer implements ParameterElementMetadata {
   Map<String, dynamic> toJson() => _$ParameterElementSerializerToJson(this);
 }
 
-@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
+@JsonSerializable(explicitToJson: true, converters: [_BooleanConverter()], includeIfNull: false)
 class DartTypeSerializer implements DartTypeMetadata {
   @override
   final String? name;
@@ -641,7 +662,17 @@ class DartTypeSerializer implements DartTypeMetadata {
   Map<String, dynamic> toJson() => _$DartTypeSerializerToJson(this);
 }
 
-@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
+@JsonSerializable(
+  explicitToJson: true,
+  converters: [
+    _BooleanConverter(),
+    _TypeParameterListSerializerConverter(),
+    _ParameterElementListConverter(),
+    _DartTypeListConverter(),
+    _DartTypeMapConverter(),
+  ],
+  includeIfNull: false,
+)
 class FunctionTypeSerializer implements FunctionTypeMetadata {
   @override
   final String? name;
@@ -705,7 +736,15 @@ class FunctionTypeSerializer implements FunctionTypeMetadata {
   Map<String, dynamic> toJson() => _$FunctionTypeSerializerToJson(this);
 }
 
-@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
+@JsonSerializable(
+  explicitToJson: true,
+  converters: [
+    _BooleanConverter(),
+    _TypeParameterListSerializerConverter(),
+    _ParameterElementListConverter(),
+  ],
+  includeIfNull: false,
+)
 class PropertyAccessorElementSerializer implements PropertyAccessorElementMetadata {
   @override
   final String name;

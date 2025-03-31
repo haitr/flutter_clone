@@ -144,18 +144,21 @@ class AnalyzeResult {
   /// Returns a map representation of the analysis result.
   Map<String, dynamic> toJson() {
     return {
-      if (classes.isNotEmpty) 'class': {for (var e in classes) e.name: e.toJson()..remove('name')},
-      // if (mixins.isNotEmpty) 'mixin': {for (var e in mixins) e.name: e.toJson()..remove('name')},
-      if (typeAliases.isNotEmpty) 'alias': typeAliases.toList(),
-      // if (topLevelVariables.isNotEmpty)
-      //   'top-level-variable': {for (var e in topLevelVariables) e.name: e.toJson()..remove('name')},
-      // if (topLevelFunctions.isNotEmpty)
-      //   'top-level-function': {for (var e in topLevelFunctions) e.name: e.toJson()..remove('name')},
-      // if (enums.isNotEmpty) 'enum': enums.toList(),
-      // if (privateClasses.isNotEmpty)
-      //   'private-class': {for (var e in privateClasses) e.name: e.toJson()..remove('name')},
-      // if (privateMixins.isNotEmpty)
-      //   'private-mixin': {for (var e in privateMixins) e.name: e.toJson()..remove('name')},
+      filePath: {
+        if (classes.isNotEmpty)
+          'class': {for (var e in classes) e.name: e.toJson()..remove('name')},
+        // if (mixins.isNotEmpty) 'mixin': {for (var e in mixins) e.name: e.toJson()..remove('name')},
+        if (typeAliases.isNotEmpty) 'alias': typeAliases.toList(),
+        // if (topLevelVariables.isNotEmpty)
+        //   'top-level-variable': {for (var e in topLevelVariables) e.name: e.toJson()..remove('name')},
+        // if (topLevelFunctions.isNotEmpty)
+        //   'top-level-function': {for (var e in topLevelFunctions) e.name: e.toJson()..remove('name')},
+        // if (enums.isNotEmpty) 'enum': enums.toList(),
+        // if (privateClasses.isNotEmpty)
+        //   'private-class': {for (var e in privateClasses) e.name: e.toJson()..remove('name')},
+        // if (privateMixins.isNotEmpty)
+        //   'private-mixin': {for (var e in privateMixins) e.name: e.toJson()..remove('name')},
+      },
     };
   }
 }
