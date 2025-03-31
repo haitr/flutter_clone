@@ -1,5 +1,4 @@
 import 'package:analyzer/dart/element/element.dart';
-import 'package:path/path.dart' as path;
 
 import 'ast/analyzer.dart';
 
@@ -12,8 +11,8 @@ class ElementAnalyzer extends ElementVisitor<void> {
 
   ElementAnalyzer(this.projectPath);
 
-  final classes = <ClassMetadata>[];
-  final mixins = <MixinMetadata>[];
+  final classes = <ClassElementSerializer>[];
+  final mixins = <dynamic>[];
   final privateClasses = <String>[];
   final privateMixins = <String>[];
   final typeAliases = <String, String>{};
@@ -25,46 +24,11 @@ class ElementAnalyzer extends ElementVisitor<void> {
   void visitClassElement(ClassElement element) {
     final className = element.name;
     print('- $className');
-
-    TypeDefiningMetadata? supertype;
-    if (element.supertype case var type?) {
-      final element = type.element as ClassElement;
-      supertype = TypeDefiningMetadata(
-        file: path.relative(element.source.fullName, from: projectPath),
-        name: element.name,
-        arguments:
-            type.typeArguments.isNotEmpty
-                ? type.typeArguments.map((e) => TypeMetadata.fromDartType(e, projectPath))
-                : null,
-      );
-    }
-
-    Iterable<TypeParameterMetadata>? typeParameters;
-    if (element.typeParameters.isNotEmpty) {
-      print('--- ${element.typeParameters}');
-      typeParameters = element.typeParameters.map(
-        (e) => TypeParameterMetadata.fromTypeParameterElement(e, projectPath),
-      );
-    }
-
-    // if (element.constructors.isNotEmpty) {
-    //   for (final constructor in element.constructors) {
-    //     visitConstructorElement(constructor);
-    //   }
-    // }
-
-    // for (final method in element.methods) {
-    //   visitMethodElement(method);
-    // }
-
-    classes.add(ClassMetadata(className, supertype: supertype, typeParameters: typeParameters));
+    classes.add(ClassElementSerializer.from(element));
   }
 
   @override
-  void visitMixinElement(MixinElement element) {
-    final mixinName = element.name;
-    mixins.add(MixinMetadata(mixinName));
-  }
+  void visitMixinElement(MixinElement element) => element.visitChildren(this);
 
   @override
   void visitMethodElement(MethodElement element) => element.visitChildren(this);
@@ -86,12 +50,11 @@ class ElementAnalyzer extends ElementVisitor<void> {
 
   @override
   void visitConstructorElement(ConstructorElement element) {
-    final constructorName = element.name.isEmpty ? 'default' : element.name;
-    final params = element.parameters
-        .map((p) => '${p.isRequired ? '' : '['}${p.type} ${p.name}${p.isRequired ? '' : ']'}')
-        .join(', ');
-
-    print(' - Constructor: $constructorName($params)');
+    // final constructorName = element.name.isEmpty ? 'default' : element.name;
+    // final params = element.parameters
+    //     .map((p) => '${p.isRequired ? '' : '['}${p.type} ${p.name}${p.isRequired ? '' : ']'}')
+    //     .join(', ');
+    // print(' - Constructor: $constructorName($params)');
     element.visitChildren(this);
   }
 

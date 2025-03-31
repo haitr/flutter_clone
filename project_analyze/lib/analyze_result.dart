@@ -1,7 +1,8 @@
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:path/path.dart' as path;
-import 'package:project_analyze/ast/analyzer.dart';
 import 'package:project_analyze/visitor.dart';
+
+import 'ast/analyzer.dart';
 
 /// Represents the result of analyzing Dart files for class, mixin, and other declarations.
 ///
@@ -13,10 +14,10 @@ class AnalyzeResult {
   late final List<String> parts;
 
   /// Map of class mirrors to their corresponding analyzers.
-  late final List<ClassMetadata> classes;
+  late final List<ClassElementSerializer> classes;
 
   /// Map of class mirrors to their corresponding mixin analyzers.
-  late final List<MixinMetadata> mixins;
+  // late final List<dynamic> mixins;
 
   /// Set of type aliases defined in the analyzed file.
   late final Set<String> typeAliases;
@@ -53,7 +54,7 @@ class AnalyzeResult {
     library.element.accept(visitor);
 
     classes = visitor.classes;
-    mixins = visitor.mixins;
+    // mixins = visitor.mixins;
     // privateClasses = [];
     // privateMixins = [];
     typeAliases = {};
@@ -78,7 +79,7 @@ class AnalyzeResult {
     //   }
     // }
 
-    mixins = [];
+    // mixins = [];
     // if (data['mixin'] case Map<String, dynamic> mixinData?) {
     //   for (var element in classList) {
     //     if (mixinData[element.name] case Map<String, dynamic> elementData?) {
@@ -144,7 +145,7 @@ class AnalyzeResult {
   Map<String, dynamic> toJson() {
     return {
       if (classes.isNotEmpty) 'class': {for (var e in classes) e.name: e.toJson()..remove('name')},
-      if (mixins.isNotEmpty) 'mixin': {for (var e in mixins) e.name: e.toJson()..remove('name')},
+      // if (mixins.isNotEmpty) 'mixin': {for (var e in mixins) e.name: e.toJson()..remove('name')},
       if (typeAliases.isNotEmpty) 'alias': typeAliases.toList(),
       // if (topLevelVariables.isNotEmpty)
       //   'top-level-variable': {for (var e in topLevelVariables) e.name: e.toJson()..remove('name')},
