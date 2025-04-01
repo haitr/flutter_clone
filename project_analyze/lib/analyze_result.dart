@@ -17,25 +17,19 @@ class AnalyzeResult {
   late final List<ClassElementSerializer> classes;
 
   /// Map of class mirrors to their corresponding mixin analyzers.
-  // late final List<dynamic> mixins;
+  late final List<MixinElementSerializer> mixins;
 
   /// Set of type aliases defined in the analyzed file.
-  late final Set<String> typeAliases;
+  late final List<TypeAliasElementSerializer> typeAliases;
 
   /// List of top-level variable declarations.
-  // late final List<PropertyDeclAnalyzer> topLevelVariables;
+  late final List<TopLevelVariableElementSerializer> topLevelVariables;
 
   /// List of top-level function declarations.
-  // late final List<LazyDeclAnalyzer> topLevelFunctions;
+  late final List<FunctionElementSerializer> topLevelFunctions;
 
   /// Set of enum type names defined in the analyzed file.
-  late final Set<String> enums;
-
-  /// List of private class declarations.
-  // late final List<LazyClassDeclAnalyzer> privateClasses;
-
-  /// List of private mixin declarations.
-  // late final List<LazyDeclAnalyzer> privateMixins;
+  late final List<EnumElementSerializer> enums;
 
   AnalyzeResult.fromElement(ResolvedLibraryResult library, String projectPath) {
     final element = library.element;
@@ -54,89 +48,68 @@ class AnalyzeResult {
     library.element.accept(visitor);
 
     classes = visitor.classes;
-    // mixins = visitor.mixins;
-    // privateClasses = [];
-    // privateMixins = [];
-    typeAliases = {};
-    // topLevelVariables = [];
-    // topLevelFunctions = [];
-    enums = {};
+    mixins = visitor.mixins;
+    enums = visitor.enums;
+    typeAliases = visitor.typeAliases;
+    topLevelVariables = visitor.topLevelVariables;
+    topLevelFunctions = visitor.topLevelFunctions;
   }
 
   /// Creates an AnalyzeResult from JSON.
   ///
-  /// [importPath] is the path used for importing the file.
-  /// [classList] is the list of class mirrors found in the file.
-  /// [cache] is the cached data to restore from.
+  /// [data] is the JSON data to create the result from.
   AnalyzeResult.fromJson(Map<String, dynamic> data) {
+    // Get the first key as filePath
+    filePath = data.keys.first;
+    final fileData = data[filePath] as Map<String, dynamic>;
+
     classes = [];
-    // if (data['class'] case Map<String, dynamic> classData?) {
-    //   for (var element in classList) {
-    //     if (classData[element.name] case Map<String, dynamic> elementData?) {
-    //       elementData['name'] = element.name;
-    //       classDecls[element] = ClassAnalyzer.fromJson(elementData)..associateWithMirror(element);
-    //     }
-    //   }
-    // }
-
-    // mixins = [];
-    // if (data['mixin'] case Map<String, dynamic> mixinData?) {
-    //   for (var element in classList) {
-    //     if (mixinData[element.name] case Map<String, dynamic> elementData?) {
-    //       elementData['name'] = element.name;
-    //       final analyzer = MixinAnalyzer.fromJson(elementData);
-    //       mixinDecls[element] = analyzer;
-    //     }
-    //   }
-    // }
-
-    typeAliases = {};
-    if (data['alias'] case List<dynamic> aliasData?) {
-      typeAliases.addAll(aliasData.cast<String>().toSet());
+    if (fileData['class'] case Map<String, dynamic> classData) {
+      classes.addAll(
+        classData.entries.map((e) => ClassElementSerializer.fromJson({...e.value, 'name': e.key})),
+      );
     }
 
-    // topLevelVariables = [];
-    // if (data['top-level-variable'] case Map<String, dynamic> topLevelData?) {
-    //   for (var name in topLevelData.keys) {
-    //     if (topLevelData[name] case Map<String, dynamic> data) {
-    //       data['name'] = name;
-    //       topLevelVariables.add(PropertyDeclAnalyzer.fromJson(data));
-    //     }
-    //   }
-    // }
-
-    // topLevelFunctions = [];
-    // if (data['top-level-function'] case Map<String, dynamic> topLevelData?) {
-    //   for (var name in topLevelData.keys) {
-    //     if (topLevelData[name] case Map<String, dynamic> data) {
-    //       data['name'] = name;
-    //       topLevelFunctions.add(LazyDeclAnalyzer.fromJson(data));
-    //     }
-    //   }
-    // }
-
-    enums = {};
-    if (data['enum'] case List<dynamic> enumData) {
-      enums.addAll(enumData.cast<String>().toSet());
+    mixins = [];
+    if (fileData['mixin'] case Map<String, dynamic> mixinData) {
+      mixins.addAll(
+        mixinData.entries.map((e) => MixinElementSerializer.fromJson({...e.value, 'name': e.key})),
+      );
     }
 
-    // privateClasses = [];
-    // if (data['private-class'] case Map<String, dynamic> privateData?) {
-    //   privateClasses.addAll(
-    //     privateData.entries.map(
-    //       (e) => LazyClassDeclAnalyzer.fromJson(e.value..putIfAbsent('name', () => e.key)),
-    //     ),
-    //   );
-    // }
+    typeAliases = [];
+    if (fileData['alias'] case Map<String, dynamic> aliasData) {
+      typeAliases.addAll(
+        aliasData.entries.map(
+          (e) => TypeAliasElementSerializer.fromJson({...e.value, 'name': e.key}),
+        ),
+      );
+    }
 
-    // privateMixins = [];
-    // if (data['private-mixin'] case Map<String, dynamic> privateData?) {
-    //   privateMixins.addAll(
-    //     privateData.entries.map(
-    //       (e) => LazyDeclAnalyzer.fromJson(e.value..putIfAbsent('name', () => e.key)),
-    //     ),
-    //   );
-    // }
+    topLevelVariables = [];
+    if (fileData['top-level-variable'] case Map<String, dynamic> topLevelData) {
+      topLevelVariables.addAll(
+        topLevelData.entries.map(
+          (e) => TopLevelVariableElementSerializer.fromJson({...e.value, 'name': e.key}),
+        ),
+      );
+    }
+
+    topLevelFunctions = [];
+    if (fileData['top-level-function'] case Map<String, dynamic> topLevelData) {
+      topLevelFunctions.addAll(
+        topLevelData.entries.map(
+          (e) => FunctionElementSerializer.fromJson({...e.value, 'name': e.key}),
+        ),
+      );
+    }
+
+    enums = [];
+    if (fileData['enum'] case Map<String, dynamic> enumData) {
+      enums.addAll(
+        enumData.entries.map((e) => EnumElementSerializer.fromJson({...e.value, 'name': e.key})),
+      );
+    }
   }
 
   /// Converts the analysis result to a JSON-serializable map.
@@ -146,18 +119,20 @@ class AnalyzeResult {
     return {
       filePath: {
         if (classes.isNotEmpty)
-          'class': {for (var e in classes) e.name: e.toJson()..remove('name')},
-        // if (mixins.isNotEmpty) 'mixin': {for (var e in mixins) e.name: e.toJson()..remove('name')},
-        if (typeAliases.isNotEmpty) 'alias': typeAliases.toList(),
-        // if (topLevelVariables.isNotEmpty)
-        //   'top-level-variable': {for (var e in topLevelVariables) e.name: e.toJson()..remove('name')},
-        // if (topLevelFunctions.isNotEmpty)
-        //   'top-level-function': {for (var e in topLevelFunctions) e.name: e.toJson()..remove('name')},
-        // if (enums.isNotEmpty) 'enum': enums.toList(),
-        // if (privateClasses.isNotEmpty)
-        //   'private-class': {for (var e in privateClasses) e.name: e.toJson()..remove('name')},
-        // if (privateMixins.isNotEmpty)
-        //   'private-mixin': {for (var e in privateMixins) e.name: e.toJson()..remove('name')},
+          'class': {for (final e in classes) e.name: e.toJson()..remove('name')},
+        if (mixins.isNotEmpty)
+          'mixin': {for (final e in mixins) e.name: e.toJson()..remove('name')},
+        if (enums.isNotEmpty) 'enum': {for (final e in enums) e.name: e.toJson()..remove('name')},
+        if (typeAliases.isNotEmpty)
+          'alias': {for (final e in typeAliases) e.name: e.toJson()..remove('name')},
+        if (topLevelVariables.isNotEmpty)
+          'top-level-variable': {
+            for (var e in topLevelVariables) e.name: e.toJson()..remove('name'),
+          },
+        if (topLevelFunctions.isNotEmpty)
+          'top-level-function': {
+            for (var e in topLevelFunctions) e.name: e.toJson()..remove('name'),
+          },
       },
     };
   }

@@ -12,23 +12,43 @@ class ElementAnalyzer extends ElementVisitor<void> {
   ElementAnalyzer(this.projectPath);
 
   final classes = <ClassElementSerializer>[];
-  final mixins = <dynamic>[];
-  final privateClasses = <String>[];
-  final privateMixins = <String>[];
-  final typeAliases = <String, String>{};
-  final topLevelVariables = <String>[];
-  final topLevelFunctions = <String>[];
-  final enums = <String>[];
+  final mixins = <MixinElementSerializer>[];
+  final typeAliases = <TypeAliasElementSerializer>[];
+  final topLevelVariables = <TopLevelVariableElementSerializer>[];
+  final topLevelFunctions = <FunctionElementSerializer>[];
+  final enums = <EnumElementSerializer>[];
 
   @override
   void visitClassElement(ClassElement element) {
-    final className = element.name;
-    print('- $className');
-    classes.add(ClassElementSerializer.from(element));
+    classes.add(ClassElementSerializer.from(element, projectPath));
   }
 
   @override
-  void visitMixinElement(MixinElement element) => element.visitChildren(this);
+  void visitMixinElement(MixinElement element) {
+    mixins.add(MixinElementSerializer.from(element, projectPath));
+  }
+
+  @override
+  void visitEnumElement(EnumElement element) {
+    enums.add(EnumElementSerializer.from(element, projectPath));
+    element.visitChildren(this);
+  }
+
+  @override
+  void visitTypeAliasElement(TypeAliasElement element) {
+    typeAliases.add(TypeAliasElementSerializer.from(element, projectPath));
+    element.visitChildren(this);
+  }
+
+  @override
+  void visitTopLevelVariableElement(TopLevelVariableElement element) {
+    topLevelVariables.add(TopLevelVariableElementSerializer.from(element, projectPath));
+  }
+
+  @override
+  void visitFunctionElement(FunctionElement element) {
+    topLevelFunctions.add(FunctionElementSerializer.from(element, projectPath));
+  }
 
   @override
   void visitMethodElement(MethodElement element) => element.visitChildren(this);
@@ -40,26 +60,10 @@ class ElementAnalyzer extends ElementVisitor<void> {
   void visitPropertyAccessorElement(PropertyAccessorElement element) => element.visitChildren(this);
 
   @override
-  void visitTopLevelVariableElement(TopLevelVariableElement element) => element.visitChildren(this);
-
-  @override
-  void visitFunctionElement(FunctionElement element) => element.visitChildren(this);
-
-  @override
   void visitCompilationUnitElement(CompilationUnitElement element) => element.visitChildren(this);
 
   @override
-  void visitConstructorElement(ConstructorElement element) {
-    // final constructorName = element.name.isEmpty ? 'default' : element.name;
-    // final params = element.parameters
-    //     .map((p) => '${p.isRequired ? '' : '['}${p.type} ${p.name}${p.isRequired ? '' : ']'}')
-    //     .join(', ');
-    // print(' - Constructor: $constructorName($params)');
-    element.visitChildren(this);
-  }
-
-  @override
-  void visitEnumElement(EnumElement element) => element.visitChildren(this);
+  void visitConstructorElement(ConstructorElement element) => element.visitChildren(this);
 
   @override
   void visitExtensionElement(ExtensionElement element) => element.visitChildren(this);
@@ -105,9 +109,6 @@ class ElementAnalyzer extends ElementVisitor<void> {
   @override
   void visitSuperFormalParameterElement(SuperFormalParameterElement element) =>
       element.visitChildren(this);
-
-  @override
-  void visitTypeAliasElement(TypeAliasElement element) => element.visitChildren(this);
 
   @override
   void visitTypeParameterElement(TypeParameterElement element) => element.visitChildren(this);

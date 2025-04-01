@@ -64,21 +64,20 @@ Future<List<AnalyzeResult>> analyzeProjectWithSymbolResolution(FileSystem input)
   final results = <AnalyzeResult>[];
 
   for (final filePath in dartFiles) {
-    if (path.basename(filePath) != 'text.dart') {
-      continue;
-    }
+    // if (path.basename(filePath) != 'text_painter.dart') {
+    //   continue;
+    // }
 
     // Open the file for analysis first
     final context = collection.contextFor(filePath);
     final library = await context.currentSession.getResolvedLibrary(filePath);
 
     if (library is ResolvedLibraryResult) {
-      final element = library.element;
-      final libraryPath = element.source.fullName;
-
-      SimpleLogger.progress(
-        '\nAnalyzing library: ${path.relative(libraryPath, from: includePaths[0])}',
-      );
+      // final element = library.element;
+      // final libraryPath = element.source.fullName;
+      // SimpleLogger.progress(
+      //   '\nAnalyzing library: ${path.relative(libraryPath, from: includePaths[0])}',
+      // );
 
       // Let the visitor analyze classes and track dependencies
       results.add(AnalyzeResult.fromElement(library, includePaths[0]));

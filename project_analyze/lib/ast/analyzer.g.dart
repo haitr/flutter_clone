@@ -53,7 +53,7 @@ ClassElementSerializer _$ClassElementSerializerFromJson(
     json['methods'] as List<MethodElementSerializer>?,
   ),
   name: json['name'] as String,
-  source: json['source'] as String?,
+  source: json['source'] as String,
   typeParameters: const _TypeParameterListSerializerConverter().fromJson(
     json['typeParameters'] as List<TypeParameterElementSerializer>?,
   ),
@@ -115,14 +115,159 @@ Map<String, dynamic> _$ClassElementSerializerToJson(
       )
       case final value?)
     'typeParameters': value,
-  if (instance.source case final value?) 'source': value,
+  'source': instance.source,
+};
+
+MixinElementSerializer _$MixinElementSerializerFromJson(
+  Map<String, dynamic> json,
+) => MixinElementSerializer(
+  name: json['name'] as String,
+  source: json['source'] as String,
+  isPrivate: const _BooleanConverter().fromJson(json['isPrivate'] as bool?),
+  isPublic: const _BooleanConverter().fromJson(json['isPublic'] as bool?),
+  fields: const _FieldElementListConverter().fromJson(
+    json['fields'] as List<FieldElementSerializer>?,
+  ),
+  methods: const _MethodElementListConverter().fromJson(
+    json['methods'] as List<MethodElementSerializer>?,
+  ),
+  typeParameters: const _TypeParameterListSerializerConverter().fromJson(
+    json['typeParameters'] as List<TypeParameterElementSerializer>?,
+  ),
+  isSimplyBounded: const _BooleanConverter().fromJson(
+    json['isSimplyBounded'] as bool?,
+  ),
+  isBase: const _BooleanConverter().fromJson(json['isBase'] as bool?),
+  constructors: const _ConstructorElementListConverter().fromJson(
+    json['constructors'] as List<ConstructorElementSerializer>?,
+  ),
+);
+
+Map<String, dynamic> _$MixinElementSerializerToJson(
+  MixinElementSerializer instance,
+) => <String, dynamic>{
+  'name': instance.name,
+  'source': instance.source,
+  if (const _BooleanConverter().toJson(instance.isPrivate) case final value?)
+    'isPrivate': value,
+  if (const _BooleanConverter().toJson(instance.isPublic) case final value?)
+    'isPublic': value,
+  if (const _FieldElementListConverter().toJson(instance.fields)
+      case final value?)
+    'fields': value,
+  if (const _MethodElementListConverter().toJson(instance.methods)
+      case final value?)
+    'methods': value,
+  if (const _TypeParameterListSerializerConverter().toJson(
+        instance.typeParameters,
+      )
+      case final value?)
+    'typeParameters': value,
+  if (const _BooleanConverter().toJson(instance.isSimplyBounded)
+      case final value?)
+    'isSimplyBounded': value,
+  if (const _BooleanConverter().toJson(instance.isBase) case final value?)
+    'isBase': value,
+  if (const _ConstructorElementListConverter().toJson(instance.constructors)
+      case final value?)
+    'constructors': value,
+};
+
+EnumElementSerializer _$EnumElementSerializerFromJson(
+  Map<String, dynamic> json,
+) => EnumElementSerializer(
+  name: json['name'] as String,
+  source: json['source'] as String,
+  isPrivate: const _BooleanConverter().fromJson(json['isPrivate'] as bool?),
+  isPublic: const _BooleanConverter().fromJson(json['isPublic'] as bool?),
+  fields: const _FieldElementListConverter().fromJson(
+    json['fields'] as List<FieldElementSerializer>?,
+  ),
+  methods: const _MethodElementListConverter().fromJson(
+    json['methods'] as List<MethodElementSerializer>?,
+  ),
+  typeParameters: const _TypeParameterListSerializerConverter().fromJson(
+    json['typeParameters'] as List<TypeParameterElementSerializer>?,
+  ),
+  isSimplyBounded: const _BooleanConverter().fromJson(
+    json['isSimplyBounded'] as bool?,
+  ),
+  constructors: const _ConstructorElementListConverter().fromJson(
+    json['constructors'] as List<ConstructorElementSerializer>?,
+  ),
+);
+
+Map<String, dynamic> _$EnumElementSerializerToJson(
+  EnumElementSerializer instance,
+) => <String, dynamic>{
+  'name': instance.name,
+  'source': instance.source,
+  if (const _BooleanConverter().toJson(instance.isPrivate) case final value?)
+    'isPrivate': value,
+  if (const _BooleanConverter().toJson(instance.isPublic) case final value?)
+    'isPublic': value,
+  if (const _FieldElementListConverter().toJson(instance.fields)
+      case final value?)
+    'fields': value,
+  if (const _MethodElementListConverter().toJson(instance.methods)
+      case final value?)
+    'methods': value,
+  if (const _TypeParameterListSerializerConverter().toJson(
+        instance.typeParameters,
+      )
+      case final value?)
+    'typeParameters': value,
+  if (const _BooleanConverter().toJson(instance.isSimplyBounded)
+      case final value?)
+    'isSimplyBounded': value,
+  if (const _ConstructorElementListConverter().toJson(instance.constructors)
+      case final value?)
+    'constructors': value,
+};
+
+TypeAliasElementSerializer _$TypeAliasElementSerializerFromJson(
+  Map<String, dynamic> json,
+) => TypeAliasElementSerializer(
+  name: json['name'] as String,
+  source: json['source'] as String,
+  isPrivate: const _BooleanConverter().fromJson(json['isPrivate'] as bool?),
+  isPublic: const _BooleanConverter().fromJson(json['isPublic'] as bool?),
+  isSimplyBounded: const _BooleanConverter().fromJson(
+    json['isSimplyBounded'] as bool?,
+  ),
+  typeParameters: const _TypeParameterListSerializerConverter().fromJson(
+    json['typeParameters'] as List<TypeParameterElementSerializer>?,
+  ),
+  aliasedType: DartTypeSerializer.fromJson(
+    json['aliasedType'] as Map<String, dynamic>,
+  ),
+);
+
+Map<String, dynamic> _$TypeAliasElementSerializerToJson(
+  TypeAliasElementSerializer instance,
+) => <String, dynamic>{
+  'name': instance.name,
+  'source': instance.source,
+  if (const _BooleanConverter().toJson(instance.isPrivate) case final value?)
+    'isPrivate': value,
+  if (const _BooleanConverter().toJson(instance.isPublic) case final value?)
+    'isPublic': value,
+  if (const _BooleanConverter().toJson(instance.isSimplyBounded)
+      case final value?)
+    'isSimplyBounded': value,
+  if (const _TypeParameterListSerializerConverter().toJson(
+        instance.typeParameters,
+      )
+      case final value?)
+    'typeParameters': value,
+  'aliasedType': instance.aliasedType.toJson(),
 };
 
 ConstructorElementSerializer _$ConstructorElementSerializerFromJson(
   Map<String, dynamic> json,
 ) => ConstructorElementSerializer(
   name: json['name'] as String,
-  source: json['source'] as String?,
+  source: json['source'] as String,
   isPrivate: const _BooleanConverter().fromJson(json['isPrivate'] as bool?),
   isPublic: const _BooleanConverter().fromJson(json['isPublic'] as bool?),
   isStatic: const _BooleanConverter().fromJson(json['isStatic'] as bool?),
@@ -132,12 +277,16 @@ ConstructorElementSerializer _$ConstructorElementSerializerFromJson(
   isSimplyBounded: const _BooleanConverter().fromJson(
     json['isSimplyBounded'] as bool?,
   ),
-  typeParameters: const _TypeParameterElementListConverter().fromJson(
+  typeParameters: const _TypeParameterListSerializerConverter().fromJson(
     json['typeParameters'] as List<TypeParameterElementSerializer>?,
   ),
-  parameters: const _ParameterElementListConverter().fromJson(
-    json['parameters'] as List<ParameterElementSerializer>?,
-  ),
+  parameters:
+      (json['parameters'] as List<dynamic>)
+          .map(
+            (e) =>
+                ParameterElementSerializer.fromJson(e as Map<String, dynamic>),
+          )
+          .toList(),
   type: FunctionTypeSerializer.fromJson(json['type'] as Map<String, dynamic>),
   hasImplicitReturnType: const _BooleanConverter().fromJson(
     json['hasImplicitReturnType'] as bool?,
@@ -175,7 +324,7 @@ Map<String, dynamic> _$ConstructorElementSerializerToJson(
   ConstructorElementSerializer instance,
 ) => <String, dynamic>{
   'name': instance.name,
-  if (instance.source case final value?) 'source': value,
+  'source': instance.source,
   if (const _BooleanConverter().toJson(instance.isPrivate) case final value?)
     'isPrivate': value,
   if (const _BooleanConverter().toJson(instance.isPublic) case final value?)
@@ -188,12 +337,12 @@ Map<String, dynamic> _$ConstructorElementSerializerToJson(
   if (const _BooleanConverter().toJson(instance.isSimplyBounded)
       case final value?)
     'isSimplyBounded': value,
-  if (const _TypeParameterElementListConverter().toJson(instance.typeParameters)
+  if (const _TypeParameterListSerializerConverter().toJson(
+        instance.typeParameters,
+      )
       case final value?)
     'typeParameters': value,
-  if (const _ParameterElementListConverter().toJson(instance.parameters)
-      case final value?)
-    'parameters': value,
+  'parameters': instance.parameters.map((e) => e.toJson()).toList(),
   'type': instance.type.toJson(),
   if (const _BooleanConverter().toJson(instance.hasImplicitReturnType)
       case final value?)
@@ -318,7 +467,7 @@ MethodElementSerializer _$MethodElementSerializerFromJson(
   Map<String, dynamic> json,
 ) => MethodElementSerializer(
   name: json['name'] as String,
-  source: json['source'] as String?,
+  source: json['source'] as String,
   isPrivate: const _BooleanConverter().fromJson(json['isPrivate'] as bool?),
   isPublic: const _BooleanConverter().fromJson(json['isPublic'] as bool?),
   isStatic: const _BooleanConverter().fromJson(json['isStatic'] as bool?),
@@ -357,7 +506,7 @@ Map<String, dynamic> _$MethodElementSerializerToJson(
   MethodElementSerializer instance,
 ) => <String, dynamic>{
   'name': instance.name,
-  if (instance.source case final value?) 'source': value,
+  'source': instance.source,
   if (const _BooleanConverter().toJson(instance.isPrivate) case final value?)
     'isPrivate': value,
   if (const _BooleanConverter().toJson(instance.isPublic) case final value?)
@@ -397,6 +546,160 @@ Map<String, dynamic> _$MethodElementSerializerToJson(
   if (const _BooleanConverter().toJson(instance.isSynchronous)
       case final value?)
     'isSynchronous': value,
+};
+
+TopLevelVariableElementSerializer _$TopLevelVariableElementSerializerFromJson(
+  Map<String, dynamic> json,
+) => TopLevelVariableElementSerializer(
+  name: json['name'] as String,
+  source: json['source'] as String?,
+  isPrivate: const _BooleanConverter().fromJson(json['isPrivate'] as bool?),
+  isPublic: const _BooleanConverter().fromJson(json['isPublic'] as bool?),
+  isStatic: const _BooleanConverter().fromJson(json['isStatic'] as bool?),
+  isConstantEvaluated: const _BooleanConverter().fromJson(
+    json['isConstantEvaluated'] as bool?,
+  ),
+  hasImplicitType: const _BooleanConverter().fromJson(
+    json['hasImplicitType'] as bool?,
+  ),
+  isConst: const _BooleanConverter().fromJson(json['isConst'] as bool?),
+  isFinal: const _BooleanConverter().fromJson(json['isFinal'] as bool?),
+  isLate: const _BooleanConverter().fromJson(json['isLate'] as bool?),
+  type: DartTypeSerializer.fromJson(json['type'] as Map<String, dynamic>),
+  hasInitializer: const _BooleanConverter().fromJson(
+    json['hasInitializer'] as bool?,
+  ),
+  getter:
+      json['getter'] == null
+          ? null
+          : PropertyAccessorElementSerializer.fromJson(
+            json['getter'] as Map<String, dynamic>,
+          ),
+  setter:
+      json['setter'] == null
+          ? null
+          : PropertyAccessorElementSerializer.fromJson(
+            json['setter'] as Map<String, dynamic>,
+          ),
+  isExternal: const _BooleanConverter().fromJson(json['isExternal'] as bool?),
+);
+
+Map<String, dynamic> _$TopLevelVariableElementSerializerToJson(
+  TopLevelVariableElementSerializer instance,
+) => <String, dynamic>{
+  'name': instance.name,
+  if (instance.source case final value?) 'source': value,
+  if (const _BooleanConverter().toJson(instance.isPrivate) case final value?)
+    'isPrivate': value,
+  if (const _BooleanConverter().toJson(instance.isPublic) case final value?)
+    'isPublic': value,
+  if (const _BooleanConverter().toJson(instance.isStatic) case final value?)
+    'isStatic': value,
+  if (const _BooleanConverter().toJson(instance.isConstantEvaluated)
+      case final value?)
+    'isConstantEvaluated': value,
+  if (const _BooleanConverter().toJson(instance.hasImplicitType)
+      case final value?)
+    'hasImplicitType': value,
+  if (const _BooleanConverter().toJson(instance.isConst) case final value?)
+    'isConst': value,
+  if (const _BooleanConverter().toJson(instance.isFinal) case final value?)
+    'isFinal': value,
+  if (const _BooleanConverter().toJson(instance.isLate) case final value?)
+    'isLate': value,
+  'type': instance.type.toJson(),
+  if (const _BooleanConverter().toJson(instance.hasInitializer)
+      case final value?)
+    'hasInitializer': value,
+  if (instance.getter?.toJson() case final value?) 'getter': value,
+  if (instance.setter?.toJson() case final value?) 'setter': value,
+  if (const _BooleanConverter().toJson(instance.isExternal) case final value?)
+    'isExternal': value,
+};
+
+FunctionElementSerializer _$FunctionElementSerializerFromJson(
+  Map<String, dynamic> json,
+) => FunctionElementSerializer(
+  name: json['name'] as String,
+  source: json['source'] as String,
+  isPrivate: const _BooleanConverter().fromJson(json['isPrivate'] as bool?),
+  isPublic: const _BooleanConverter().fromJson(json['isPublic'] as bool?),
+  isStatic: const _BooleanConverter().fromJson(json['isStatic'] as bool?),
+  isSimplyBounded: const _BooleanConverter().fromJson(
+    json['isSimplyBounded'] as bool?,
+  ),
+  typeParameters: const _TypeParameterListSerializerConverter().fromJson(
+    json['typeParameters'] as List<TypeParameterElementSerializer>?,
+  ),
+  parameters: const _ParameterElementListConverter().fromJson(
+    json['parameters'] as List<ParameterElementSerializer>?,
+  ),
+  returnType: DartTypeSerializer.fromJson(
+    json['returnType'] as Map<String, dynamic>,
+  ),
+  type: FunctionTypeSerializer.fromJson(json['type'] as Map<String, dynamic>),
+  hasImplicitReturnType: const _BooleanConverter().fromJson(
+    json['hasImplicitReturnType'] as bool?,
+  ),
+  isAbstract: const _BooleanConverter().fromJson(json['isAbstract'] as bool?),
+  isAsynchronous: const _BooleanConverter().fromJson(
+    json['isAsynchronous'] as bool?,
+  ),
+  isExternal: const _BooleanConverter().fromJson(json['isExternal'] as bool?),
+  isGenerator: const _BooleanConverter().fromJson(json['isGenerator'] as bool?),
+  isOperator: const _BooleanConverter().fromJson(json['isOperator'] as bool?),
+  isSynchronous: const _BooleanConverter().fromJson(
+    json['isSynchronous'] as bool?,
+  ),
+  isExtensionTypeMember: const _BooleanConverter().fromJson(
+    json['isExtensionTypeMember'] as bool?,
+  ),
+);
+
+Map<String, dynamic> _$FunctionElementSerializerToJson(
+  FunctionElementSerializer instance,
+) => <String, dynamic>{
+  'name': instance.name,
+  'source': instance.source,
+  if (const _BooleanConverter().toJson(instance.isPrivate) case final value?)
+    'isPrivate': value,
+  if (const _BooleanConverter().toJson(instance.isPublic) case final value?)
+    'isPublic': value,
+  if (const _BooleanConverter().toJson(instance.isStatic) case final value?)
+    'isStatic': value,
+  if (const _BooleanConverter().toJson(instance.isSimplyBounded)
+      case final value?)
+    'isSimplyBounded': value,
+  if (const _TypeParameterListSerializerConverter().toJson(
+        instance.typeParameters,
+      )
+      case final value?)
+    'typeParameters': value,
+  if (const _ParameterElementListConverter().toJson(instance.parameters)
+      case final value?)
+    'parameters': value,
+  'returnType': instance.returnType.toJson(),
+  'type': instance.type.toJson(),
+  if (const _BooleanConverter().toJson(instance.hasImplicitReturnType)
+      case final value?)
+    'hasImplicitReturnType': value,
+  if (const _BooleanConverter().toJson(instance.isAbstract) case final value?)
+    'isAbstract': value,
+  if (const _BooleanConverter().toJson(instance.isAsynchronous)
+      case final value?)
+    'isAsynchronous': value,
+  if (const _BooleanConverter().toJson(instance.isExternal) case final value?)
+    'isExternal': value,
+  if (const _BooleanConverter().toJson(instance.isGenerator) case final value?)
+    'isGenerator': value,
+  if (const _BooleanConverter().toJson(instance.isOperator) case final value?)
+    'isOperator': value,
+  if (const _BooleanConverter().toJson(instance.isSynchronous)
+      case final value?)
+    'isSynchronous': value,
+  if (const _BooleanConverter().toJson(instance.isExtensionTypeMember)
+      case final value?)
+    'isExtensionTypeMember': value,
 };
 
 TypeParameterElementSerializer _$TypeParameterElementSerializerFromJson(
@@ -621,7 +924,7 @@ PropertyAccessorElementSerializer _$PropertyAccessorElementSerializerFromJson(
   Map<String, dynamic> json,
 ) => PropertyAccessorElementSerializer(
   name: json['name'] as String,
-  source: json['source'] as String?,
+  source: json['source'] as String,
   isPrivate: const _BooleanConverter().fromJson(json['isPrivate'] as bool?),
   isPublic: const _BooleanConverter().fromJson(json['isPublic'] as bool?),
   isStatic: const _BooleanConverter().fromJson(json['isStatic'] as bool?),
@@ -662,7 +965,7 @@ Map<String, dynamic> _$PropertyAccessorElementSerializerToJson(
   PropertyAccessorElementSerializer instance,
 ) => <String, dynamic>{
   'name': instance.name,
-  if (instance.source case final value?) 'source': value,
+  'source': instance.source,
   if (const _BooleanConverter().toJson(instance.isPrivate) case final value?)
     'isPrivate': value,
   if (const _BooleanConverter().toJson(instance.isPublic) case final value?)
