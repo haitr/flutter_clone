@@ -30,10 +30,6 @@ class _MapConverter<K, V> implements JsonConverter<Map<K, V>, Map<K, V>?> {
   Map<K, V>? toJson(Map<K, V> object) => object.isEmpty ? null : object;
 }
 
-class _TypeParameterElementListConverter extends _ListConverter<TypeParameterElementSerializer> {
-  const _TypeParameterElementListConverter();
-}
-
 class _ParameterElementListConverter extends _ListConverter<ParameterElementSerializer> {
   const _ParameterElementListConverter();
 }

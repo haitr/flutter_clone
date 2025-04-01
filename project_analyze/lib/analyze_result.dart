@@ -34,7 +34,7 @@ class AnalyzeResult {
   AnalyzeResult.fromElement(ResolvedLibraryResult library, String projectPath) {
     final element = library.element;
 
-    filePath = path.relative(element.source.fullName, from: projectPath);
+    filePath = path.normalize(path.relative(element.source.fullName, from: projectPath));
 
     // Get all parts of the file
     parts = [];
@@ -116,8 +116,9 @@ class AnalyzeResult {
   ///
   /// Returns a map representation of the analysis result.
   Map<String, dynamic> toJson() {
+    final key = path.toUri(filePath).path;
     return {
-      filePath: {
+      key: {
         if (classes.isNotEmpty)
           'class': {for (final e in classes) e.name: e.toJson()..remove('name')},
         if (mixins.isNotEmpty)

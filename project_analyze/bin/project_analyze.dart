@@ -57,8 +57,8 @@ Future<void> main(List<String> arguments) async {
 
   print('Preparing...');
 
-  final fsInput = WorkingDirectoryFileSystem(input);
-  final fsOutput = WorkingDirectoryFileSystem(output);
+  final fsInput = WorkingDirectoryFileSystem(path.normalize(input));
+  final fsOutput = WorkingDirectoryFileSystem(path.normalize(output));
 
   if (fsOutput.directory('.') case final outputDir when !outputDir.existsSync()) {
     outputDir.createSync(recursive: true);

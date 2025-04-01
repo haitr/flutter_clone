@@ -1,6 +1,7 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
+import 'package:analyzer/source/source.dart';
 // ignore: implementation_imports
 import 'package:analyzer/src/dart/constant/evaluation.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -12,6 +13,15 @@ part 'analyzer.element.dart';
 part 'analyzer.g.dart';
 part 'analyzer.json.dart';
 part 'analyzer.type.dart';
+
+String _getPath(Source source, String projectPath) {
+  return path.toUri(path.relative(source.fullName, from: projectPath)).path;
+}
+
+String? _getNullablePath(Source? source, String projectPath) {
+  if (source == null) return null;
+  return path.toUri(path.relative(source.fullName, from: projectPath)).path;
+}
 
 @JsonSerializable(
   explicitToJson: true,
@@ -133,7 +143,7 @@ class ClassElementSerializer implements ClassElementMetadata {
       isValidMixin: element.isValidMixin,
       methods: element.methods.map((e) => MethodElementSerializer.from(e, projectPath)).toList(),
       name: element.name,
-      source: path.relative(element.source.fullName, from: projectPath),
+      source: _getPath(element.source, projectPath),
       typeParameters:
           element.typeParameters
               .map((e) => TypeParameterElementSerializer.from(e, projectPath))
@@ -214,7 +224,7 @@ class MixinElementSerializer implements MixinElementMetadata {
   factory MixinElementSerializer.from(MixinElement element, String projectPath) {
     return MixinElementSerializer(
       name: element.name,
-      source: path.relative(element.source.fullName, from: projectPath),
+      source: _getPath(element.source, projectPath),
       isPrivate: element.isPrivate,
       isPublic: element.isPublic,
       fields: element.fields.map((e) => FieldElementSerializer.from(e, projectPath)).toList(),
@@ -293,7 +303,7 @@ class EnumElementSerializer implements EnumElementMetadata {
   factory EnumElementSerializer.from(EnumElement element, String projectPath) {
     return EnumElementSerializer(
       name: element.name,
-      source: path.relative(element.source.fullName, from: projectPath),
+      source: _getPath(element.source, projectPath),
       isPrivate: element.isPrivate,
       isPublic: element.isPublic,
       fields: element.fields.map((e) => FieldElementSerializer.from(e, projectPath)).toList(),
@@ -353,7 +363,7 @@ class TypeAliasElementSerializer implements TypeAliasElementMetadata {
   factory TypeAliasElementSerializer.from(TypeAliasElement element, String projectPath) {
     return TypeAliasElementSerializer(
       name: element.name,
-      source: path.relative(element.source.fullName, from: projectPath),
+      source: _getPath(element.source, projectPath),
       isPrivate: element.isPrivate,
       isPublic: element.isPublic,
       isSimplyBounded: element.isSimplyBounded,
@@ -378,6 +388,7 @@ class TypeAliasElementSerializer implements TypeAliasElementMetadata {
     _FieldElementListConverter(),
     _MethodElementListConverter(),
     _TypeParameterListSerializerConverter(),
+    _ParameterElementListConverter(),
   ],
   includeIfNull: false,
 )
@@ -465,7 +476,7 @@ class ConstructorElementSerializer implements ConstructorElementMetadata {
   factory ConstructorElementSerializer.from(ConstructorElement element, String projectPath) {
     return ConstructorElementSerializer(
       name: element.name,
-      source: path.relative(element.source.fullName, from: projectPath),
+      source: _getPath(element.source, projectPath),
       isPrivate: element.isPrivate,
       isPublic: element.isPublic,
       isStatic: element.isStatic,
@@ -569,10 +580,7 @@ class FieldElementSerializer implements FieldElementMetadata {
   factory FieldElementSerializer.from(FieldElement element, String projectPath) {
     return FieldElementSerializer(
       name: element.name,
-      source:
-          element.source != null
-              ? path.relative(element.source!.fullName, from: projectPath)
-              : null,
+      source: _getNullablePath(element.source, projectPath),
       isPrivate: element.isPrivate,
       isPublic: element.isPublic,
       isStatic: element.isStatic,
@@ -675,7 +683,7 @@ class MethodElementSerializer implements MethodElementMetadata {
   factory MethodElementSerializer.from(MethodElement element, String projectPath) {
     return MethodElementSerializer(
       name: element.name,
-      source: path.relative(element.source.fullName, from: projectPath),
+      source: _getPath(element.source, projectPath),
       isPrivate: element.isPrivate,
       isPublic: element.isPublic,
       isStatic: element.isStatic,
@@ -761,10 +769,7 @@ class TopLevelVariableElementSerializer implements TopLevelVariableElementMetada
   ) {
     return TopLevelVariableElementSerializer(
       name: element.name,
-      source:
-          element.source != null
-              ? path.relative(element.source!.fullName, from: projectPath)
-              : null,
+      source: _getNullablePath(element.source, projectPath),
       isPrivate: element.isPrivate,
       isPublic: element.isPublic,
       isStatic: element.isStatic,
@@ -873,7 +878,7 @@ class FunctionElementSerializer implements FunctionElementMetadata {
   factory FunctionElementSerializer.from(FunctionElement element, String projectPath) {
     return FunctionElementSerializer(
       name: element.name,
-      source: path.relative(element.source.fullName, from: projectPath),
+      source: _getPath(element.source, projectPath),
       isPrivate: element.isPrivate,
       isPublic: element.isPublic,
       isStatic: element.isStatic,
@@ -926,10 +931,7 @@ class TypeParameterElementSerializer implements TypeParameterElementMetadata {
   factory TypeParameterElementSerializer.from(TypeParameterElement element, String projectPath) {
     return TypeParameterElementSerializer(
       name: element.name,
-      source:
-          element.source != null
-              ? path.relative(element.source!.fullName, from: projectPath)
-              : null,
+      source: _getNullablePath(element.source, projectPath),
       isPrivate: element.isPrivate,
       isPublic: element.isPublic,
       bound: element.bound != null ? DartTypeSerializer.from(element.bound!) : null,
@@ -1033,10 +1035,7 @@ class ParameterElementSerializer implements ParameterElementMetadata {
   factory ParameterElementSerializer.from(ParameterElement element, String projectPath) {
     return ParameterElementSerializer(
       name: element.name,
-      source:
-          element.source != null
-              ? path.relative(element.source!.fullName, from: projectPath)
-              : null,
+      source: _getNullablePath(element.source, projectPath),
       isPrivate: element.isPrivate,
       isPublic: element.isPublic,
       isConstantEvaluated: element.isConstantEvaluated,
@@ -1264,7 +1263,7 @@ class PropertyAccessorElementSerializer implements PropertyAccessorElementMetada
   ) {
     return PropertyAccessorElementSerializer(
       name: element.name,
-      source: path.relative(element.source.fullName, from: projectPath),
+      source: _getPath(element.source, projectPath),
       isPrivate: element.isPrivate,
       isPublic: element.isPublic,
       isStatic: element.isStatic,

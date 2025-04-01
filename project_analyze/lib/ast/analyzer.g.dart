@@ -280,13 +280,9 @@ ConstructorElementSerializer _$ConstructorElementSerializerFromJson(
   typeParameters: const _TypeParameterListSerializerConverter().fromJson(
     json['typeParameters'] as List<TypeParameterElementSerializer>?,
   ),
-  parameters:
-      (json['parameters'] as List<dynamic>)
-          .map(
-            (e) =>
-                ParameterElementSerializer.fromJson(e as Map<String, dynamic>),
-          )
-          .toList(),
+  parameters: const _ParameterElementListConverter().fromJson(
+    json['parameters'] as List<ParameterElementSerializer>?,
+  ),
   type: FunctionTypeSerializer.fromJson(json['type'] as Map<String, dynamic>),
   hasImplicitReturnType: const _BooleanConverter().fromJson(
     json['hasImplicitReturnType'] as bool?,
@@ -342,7 +338,9 @@ Map<String, dynamic> _$ConstructorElementSerializerToJson(
       )
       case final value?)
     'typeParameters': value,
-  'parameters': instance.parameters.map((e) => e.toJson()).toList(),
+  if (const _ParameterElementListConverter().toJson(instance.parameters)
+      case final value?)
+    'parameters': value,
   'type': instance.type.toJson(),
   if (const _BooleanConverter().toJson(instance.hasImplicitReturnType)
       case final value?)

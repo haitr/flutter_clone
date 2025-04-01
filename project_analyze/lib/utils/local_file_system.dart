@@ -14,7 +14,9 @@ class WorkingDirectoryFileSystem implements FileSystem {
   WorkingDirectoryFileSystem(String workingDir) : _workingDir = p.absolute(workingDir);
 
   String _resolvePath(String path) =>
-      p.isAbsolute(path) ? path : p.canonicalize(p.join(_workingDir, path));
+      p.isAbsolute(path)
+          ? path
+          : p.normalize(p.join(_workingDir, path)).replaceAll('/', p.separator);
 
   @override
   File file(dynamic path) => _fs.file(_resolvePath(path.toString()));
