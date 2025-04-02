@@ -3,7 +3,7 @@ part of 'analyzer.dart';
 /// See: [DartType]
 abstract class DartTypeMetadata {
   String? get name;
-  String? get nullabilitySuffix;
+  NullabilitySuffix get nullabilitySuffix;
   bool get isDartCore;
   bool get isDartAsync;
 }
@@ -27,3 +27,28 @@ abstract class ParameterizedTypeMetadata implements DartTypeMetadata {
 abstract class InterfaceTypeMetadata implements ParameterizedTypeMetadata {
   InterfaceElementMetadata get element;
 }
+
+/// See: [TypeParameterType]
+abstract class TypeParameterTypeMetadata implements DartTypeMetadata {
+  DartTypeMetadata get bound;
+  TypeParameterElementMetadata get element;
+}
+
+/// See: [RecordType]
+abstract class RecordTypeMetadata implements DartTypeMetadata {
+  List<RecordTypePositionalFieldMetadata> get positionalFields;
+  List<RecordTypeNamedFieldMetadata> get namedFields;
+}
+
+/// See: [RecordTypeField]
+abstract class RecordTypeFieldMetadata {
+  DartTypeMetadata get type;
+}
+
+/// See: [RecordTypeNamedField]
+abstract class RecordTypeNamedFieldMetadata implements RecordTypeFieldMetadata {
+  String get name;
+}
+
+/// See: [RecordTypePositionalField]
+abstract class RecordTypePositionalFieldMetadata implements RecordTypeFieldMetadata {}

@@ -1,5 +1,23 @@
 part of 'analyzer.dart';
 
+class NullabilitySuffixConverter implements JsonConverter<NullabilitySuffix, String?> {
+  const NullabilitySuffixConverter();
+
+  @override
+  NullabilitySuffix fromJson(String? json) => switch (json) {
+    '?' => NullabilitySuffix.question,
+    '*' => NullabilitySuffix.star,
+    _ => NullabilitySuffix.none,
+  };
+
+  @override
+  String? toJson(NullabilitySuffix object) => switch (object) {
+    NullabilitySuffix.question => '?',
+    NullabilitySuffix.star => '*',
+    NullabilitySuffix.none => null,
+  };
+}
+
 class _BooleanConverter implements JsonConverter<bool, bool?> {
   const _BooleanConverter();
 

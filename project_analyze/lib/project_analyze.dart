@@ -64,9 +64,9 @@ Future<List<AnalyzeResult>> analyzeProjectWithSymbolResolution(FileSystem input)
   final results = <AnalyzeResult>[];
 
   for (final filePath in dartFiles) {
-    // if (path.basename(filePath) != 'ticker.dart') {
-    //   continue;
-    // }
+    if (path.basename(filePath) != 'theme_data.dart') {
+      continue;
+    }
 
     // Open the file for analysis first
     final context = collection.contextFor(filePath);
