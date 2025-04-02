@@ -66,14 +66,18 @@ class AnalyzeResult {
     classes = [];
     if (fileData['class'] case Map<String, dynamic> classData) {
       classes.addAll(
-        classData.entries.map((e) => ClassElementSerializer.fromJson({...e.value, 'name': e.key})),
+        classData.entries.map(
+          (e) => ClassElementSerializer.fromJson({...e.value, 'name': e.key})..setRef(filePath),
+        ),
       );
     }
 
     mixins = [];
     if (fileData['mixin'] case Map<String, dynamic> mixinData) {
       mixins.addAll(
-        mixinData.entries.map((e) => MixinElementSerializer.fromJson({...e.value, 'name': e.key})),
+        mixinData.entries.map(
+          (e) => MixinElementSerializer.fromJson({...e.value, 'name': e.key})..setRef(filePath),
+        ),
       );
     }
 
@@ -81,7 +85,7 @@ class AnalyzeResult {
     if (fileData['alias'] case Map<String, dynamic> aliasData) {
       typeAliases.addAll(
         aliasData.entries.map(
-          (e) => TypeAliasElementSerializer.fromJson({...e.value, 'name': e.key}),
+          (e) => TypeAliasElementSerializer.fromJson({...e.value, 'name': e.key})..setRef(filePath),
         ),
       );
     }
@@ -90,7 +94,9 @@ class AnalyzeResult {
     if (fileData['top-level-variable'] case Map<String, dynamic> topLevelData) {
       topLevelVariables.addAll(
         topLevelData.entries.map(
-          (e) => TopLevelVariableElementSerializer.fromJson({...e.value, 'name': e.key}),
+          (e) =>
+              TopLevelVariableElementSerializer.fromJson({...e.value, 'name': e.key})
+                ..setRef(filePath),
         ),
       );
     }
@@ -99,7 +105,7 @@ class AnalyzeResult {
     if (fileData['top-level-function'] case Map<String, dynamic> topLevelData) {
       topLevelFunctions.addAll(
         topLevelData.entries.map(
-          (e) => FunctionElementSerializer.fromJson({...e.value, 'name': e.key}),
+          (e) => FunctionElementSerializer.fromJson({...e.value, 'name': e.key})..setRef(filePath),
         ),
       );
     }
@@ -107,7 +113,9 @@ class AnalyzeResult {
     enums = [];
     if (fileData['enum'] case Map<String, dynamic> enumData) {
       enums.addAll(
-        enumData.entries.map((e) => EnumElementSerializer.fromJson({...e.value, 'name': e.key})),
+        enumData.entries.map(
+          (e) => EnumElementSerializer.fromJson({...e.value, 'name': e.key})..setRef(filePath),
+        ),
       );
     }
   }
@@ -120,19 +128,20 @@ class AnalyzeResult {
     return {
       key: {
         if (classes.isNotEmpty)
-          'class': {for (final e in classes) e.name: e.toJson()..remove('name')},
+          'class': {for (final e in classes) e.name: (e..setRef(key)).toJson()..remove('name')},
         if (mixins.isNotEmpty)
-          'mixin': {for (final e in mixins) e.name: e.toJson()..remove('name')},
-        if (enums.isNotEmpty) 'enum': {for (final e in enums) e.name: e.toJson()..remove('name')},
+          'mixin': {for (final e in mixins) e.name: (e..setRef(key)).toJson()..remove('name')},
+        if (enums.isNotEmpty)
+          'enum': {for (final e in enums) e.name: (e..setRef(key)).toJson()..remove('name')},
         if (typeAliases.isNotEmpty)
-          'alias': {for (final e in typeAliases) e.name: e.toJson()..remove('name')},
+          'alias': {for (final e in typeAliases) e.name: (e..setRef(key)).toJson()..remove('name')},
         if (topLevelVariables.isNotEmpty)
           'top-level-variable': {
-            for (var e in topLevelVariables) e.name: e.toJson()..remove('name'),
+            for (var e in topLevelVariables) e.name: (e..setRef(key)).toJson()..remove('name'),
           },
         if (topLevelFunctions.isNotEmpty)
           'top-level-function': {
-            for (var e in topLevelFunctions) e.name: e.toJson()..remove('name'),
+            for (var e in topLevelFunctions) e.name: (e..setRef(key)).toJson()..remove('name'),
           },
       },
     };

@@ -4,3 +4,5 @@
 pubspec.lock
 dependencies
 generated
+log
+project_analyze/**/*.g.dart

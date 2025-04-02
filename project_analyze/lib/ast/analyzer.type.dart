@@ -1,6 +1,6 @@
 part of 'analyzer.dart';
 
-@Shortcut(type: DartType)
+/// See: [DartType]
 abstract class DartTypeMetadata {
   String? get name;
   String? get nullabilitySuffix;
@@ -8,7 +8,7 @@ abstract class DartTypeMetadata {
   bool get isDartAsync;
 }
 
-@Shortcut(type: FunctionType)
+/// See: [FunctionType]
 abstract class FunctionTypeMetadata implements DartTypeMetadata {
   Map<String, DartTypeMetadata> get namedParameterTypes;
   List<DartTypeMetadata> get normalParameterTypes;
@@ -18,27 +18,12 @@ abstract class FunctionTypeMetadata implements DartTypeMetadata {
   List<TypeParameterElementMetadata> get typeFormals;
 }
 
-@Shortcut(type: ParameterizedType)
+/// See: [ParameterizedType]
 abstract class ParameterizedTypeMetadata implements DartTypeMetadata {
   List<DartTypeMetadata> get typeArguments;
 }
 
-@Shortcut(type: InterfaceType)
-abstract class InterfaceTypeMetadata implements ParameterizedTypeMetadata {}
-
-class _InterfaceType implements InterfaceTypeMetadata {
-  @override
-  bool get isDartCore => throw UnimplementedError();
-
-  @override
-  bool get isDartAsync => throw UnimplementedError();
-
-  @override
-  String? get name => throw UnimplementedError();
-
-  @override
-  String? get nullabilitySuffix => throw UnimplementedError();
-
-  @override
-  List<DartTypeMetadata> get typeArguments => throw UnimplementedError();
+/// See: [InterfaceType]
+abstract class InterfaceTypeMetadata implements ParameterizedTypeMetadata {
+  InterfaceElementMetadata get element;
 }

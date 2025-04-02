@@ -1,12 +1,12 @@
 part of 'analyzer.dart';
 
-@Shortcut(type: ConstantEvaluationTarget)
+/// See: [ConstantEvaluationTarget]
 abstract class ConstantEvaluationTargetMetadata {
   /// See: [ConstantEvaluationTarget.isConstantEvaluated]
   late bool isConstantEvaluated;
 }
 
-@Shortcut(type: Element)
+/// See: [Element]
 abstract class ElementMetadata {
   /// See: [Element.isPrivate]
   bool get isPrivate;
@@ -27,7 +27,7 @@ abstract class _ExistingElementMetadata implements ElementMetadata {
   String get source;
 }
 
-@Shortcut(type: PropertyInducingElement)
+/// See: [PropertyInducingElement]
 abstract class PropertyInducingElementMetadata implements VariableElementMetadata {
   /// See: [PropertyInducingElement.hasInitializer]
   bool get hasInitializer;
@@ -43,7 +43,7 @@ abstract class PropertyInducingElementMetadata implements VariableElementMetadat
   PropertyAccessorElementMetadata? get setter;
 }
 
-@Shortcut(type: VariableElement)
+/// See: [VariableElement]
 abstract class VariableElementMetadata
     implements ElementMetadata, ConstantEvaluationTargetMetadata {
   /// See: [VariableElement.hasImplicitType]
@@ -65,7 +65,7 @@ abstract class VariableElementMetadata
   DartTypeMetadata get type;
 }
 
-@Shortcut(type: FunctionElement)
+/// See: [FunctionElement]
 abstract class FunctionElementMetadata implements ExecutableElementMetadata, LocalElementMetadata {
   /// See: [FunctionElement.isDartCoreIdentical]
   bool get isDartCoreIdentical;
@@ -74,7 +74,7 @@ abstract class FunctionElementMetadata implements ExecutableElementMetadata, Loc
   bool get isEntryPoint;
 }
 
-@Shortcut(type: TypeParameterizedElement)
+/// See: [TypeParameterizedElement]
 abstract class TypeParameterizedElementMetadata implements _ExistingElementMetadata {
   /// See: [TypeParameterizedElement.isSimplyBounded]
   bool get isSimplyBounded;
@@ -83,14 +83,14 @@ abstract class TypeParameterizedElementMetadata implements _ExistingElementMetad
   List<TypeParameterElementMetadata> get typeParameters;
 }
 
-@Shortcut(type: TypeDefiningElement)
+/// See: [TypeDefiningElement]
 abstract class TypeDefiningElementMetadata implements ElementMetadata {
   /// See: [TypeDefiningElement.name]
   @override
   String get name;
 }
 
-@Shortcut(type: FunctionTypedElement)
+/// See: [FunctionTypedElement]
 abstract class FunctionTypedElementMetadata implements TypeParameterizedElementMetadata {
   /// See: [FunctionTypedElement.parameters]
   List<ParameterElementMetadata> get parameters;
@@ -102,7 +102,7 @@ abstract class FunctionTypedElementMetadata implements TypeParameterizedElementM
   FunctionTypeMetadata get type;
 }
 
-@Shortcut(type: ExecutableElement)
+/// See: [ExecutableElement]
 abstract class ExecutableElementMetadata implements FunctionTypedElementMetadata {
   /// See: [ExecutableElement.name]
   @override
@@ -136,13 +136,13 @@ abstract class ExecutableElementMetadata implements FunctionTypedElementMetadata
   bool get isSynchronous;
 }
 
-@Shortcut(type: ClassMemberElement)
+/// See: [ClassMemberElement]
 abstract class ClassMemberElementMetadata implements ElementMetadata {
   /// See: [ClassMemberElement.isStatic]
   bool get isStatic;
 }
 
-@Shortcut(type: PropertyAccessorElement)
+/// See: [PropertyAccessorElement]
 abstract class PropertyAccessorElementMetadata implements ExecutableElementMetadata {
   /// See: [PropertyAccessorElement.isGetter]
   bool get isGetter;
@@ -151,7 +151,7 @@ abstract class PropertyAccessorElementMetadata implements ExecutableElementMetad
   bool get isSetter;
 }
 
-@Shortcut(type: FieldElement)
+/// See: [FieldElement]
 abstract class FieldElementMetadata
     implements ClassMemberElementMetadata, PropertyInducingElementMetadata {
   /// See: [FieldElement.isAbstract]
@@ -170,7 +170,7 @@ abstract class FieldElementMetadata
   bool get isPromotable;
 }
 
-@Shortcut(type: InstanceElement)
+/// See: [InstanceElement]
 abstract class InstanceElementMetadata
     implements TypeDefiningElementMetadata, TypeParameterizedElementMetadata {
   /// See: [InstanceElement.fields]
@@ -180,7 +180,7 @@ abstract class InstanceElementMetadata
   List<MethodElementMetadata> get methods;
 }
 
-@Shortcut(type: ConstructorElement)
+/// See: [ConstructorElement]
 abstract class ConstructorElementMetadata
     implements
         ClassMemberElementMetadata,
@@ -213,7 +213,7 @@ abstract class ConstructorElementMetadata
   InterfaceTypeMetadata get returnType;
 }
 
-@Shortcut(type: InterfaceElement)
+/// See: [InterfaceElement]
 abstract class InterfaceElementMetadata implements InstanceElementMetadata {
   /// See: [InterfaceElement.constructors]
   List<ConstructorElementMetadata> get constructors;
@@ -228,7 +228,7 @@ abstract class InterfaceElementMetadata implements InstanceElementMetadata {
   InterfaceElementMetadata? get supertype;
 }
 
-@Shortcut(type: ClassElement)
+/// See: [ClassElement]
 abstract class ClassElementMetadata implements InterfaceElementMetadata {
   /// See: [ClassElement.hasNonFinalField]
   bool get hasNonFinalField;
@@ -270,7 +270,7 @@ abstract class ClassElementMetadata implements InterfaceElementMetadata {
   bool get isValidMixin;
 }
 
-@Shortcut(type: MixinElement)
+/// See: [MixinElement]
 abstract class MixinElementMetadata implements InterfaceElementMetadata {
   /// See: [MixinElement.isBase]
   bool get isBase;
@@ -279,10 +279,10 @@ abstract class MixinElementMetadata implements InterfaceElementMetadata {
   List<InterfaceTypeMetadata> get superclassConstraints;
 }
 
-@Shortcut(type: EnumElement)
+/// See: [EnumElement]
 abstract class EnumElementMetadata implements InterfaceElementMetadata {}
 
-@Shortcut(type: TypeAliasElement)
+/// See: [TypeAliasElement]
 abstract class TypeAliasElementMetadata
     implements TypeParameterizedElementMetadata, TypeDefiningElementMetadata {
   /// See: [TypeAliasElement.aliasedType]
@@ -293,25 +293,25 @@ abstract class TypeAliasElementMetadata
   String get name;
 }
 
-@Shortcut(type: TopLevelVariableElement)
+/// See: [TopLevelVariableElement]
 abstract class TopLevelVariableElementMetadata implements PropertyInducingElementMetadata {
   /// See: [TopLevelVariableElement.isExternal]
   bool get isExternal;
 }
 
-@Shortcut(type: TypeParameterElement)
+/// See: [TypeParameterElement]
 abstract class TypeParameterElementMetadata implements TypeDefiningElementMetadata {
   /// See: [TypeParameterElement.bound]
   DartTypeMetadata? get bound;
 }
 
-@Shortcut(type: MethodElement)
+/// See: [MethodElement]
 abstract class MethodElementMetadata
     implements ClassMemberElementMetadata, ExecutableElementMetadata {
   //
 }
 
-@Shortcut(type: ParameterElement)
+/// See: [ParameterElement]
 abstract class ParameterElementMetadata
     implements PromotableElementMetadata, ConstantEvaluationTargetMetadata {
   /// See: [ParameterElement.hasDefaultValue]
@@ -357,12 +357,12 @@ abstract class ParameterElementMetadata
   List<TypeParameterElementMetadata> get typeParameters;
 }
 
-@Shortcut(type: PromotableElement)
+/// See: [PromotableElement]
 abstract class PromotableElementMetadata implements LocalElementMetadata, VariableElementMetadata {
   /// See: [PromotableElement.name]
   @override
   String get name;
 }
 
-@Shortcut(type: LocalElement)
+/// See: [LocalElement]
 abstract class LocalElementMetadata implements ElementMetadata {}

@@ -7,21 +7,12 @@ import 'package:analyzer/src/dart/constant/evaluation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:path/path.dart' as path;
 import 'package:project_analyze/extensions/extensions.dart';
-import 'package:project_analyze/utils/dummy.dart';
 
 part 'analyzer.element.dart';
 part 'analyzer.g.dart';
 part 'analyzer.json.dart';
 part 'analyzer.type.dart';
-
-String _getPath(Source source, String projectPath) {
-  return path.toUri(path.relative(source.fullName, from: projectPath)).path;
-}
-
-String? _getNullablePath(Source? source, String projectPath) {
-  if (source == null) return null;
-  return path.toUri(path.relative(source.fullName, from: projectPath)).path;
-}
+part 'analyzer.util.dart';
 
 @JsonSerializable(
   explicitToJson: true,
@@ -34,7 +25,9 @@ String? _getNullablePath(Source? source, String projectPath) {
   ],
   includeIfNull: false,
 )
-class ClassElementSerializer implements ClassElementMetadata {
+class ClassElementSerializer with _SourceSerializer<String> implements ClassElementMetadata {
+  @override
+  final String name;
   @override
   final List<ConstructorElementSerializer> constructors;
   @override
@@ -74,11 +67,7 @@ class ClassElementSerializer implements ClassElementMetadata {
   @override
   final List<MethodElementSerializer> methods;
   @override
-  final String name;
-  @override
   final List<TypeParameterElementSerializer> typeParameters;
-  @override
-  final String source;
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
@@ -90,11 +79,21 @@ class ClassElementSerializer implements ClassElementMetadata {
   @override
   final InterfaceElementMetadata? supertype = null;
 
+  @override
+  List<_SourceSerializer> get _refList => [
+    ...constructors,
+    ...fields,
+    ...methods,
+    ...typeParameters,
+  ];
+
   ClassElementSerializer({
+    required String source,
+    required this.name,
     required this.constructors,
     required this.fields,
+    required this.methods,
     required this.hasNonFinalField,
-    // required this.interfaces,
     required this.isAbstract,
     required this.isBase,
     required this.isConstructable,
@@ -110,15 +109,17 @@ class ClassElementSerializer implements ClassElementMetadata {
     required this.isSealed,
     required this.isSimplyBounded,
     required this.isValidMixin,
-    required this.methods,
-    // required this.mixins,
-    required this.name,
-    required this.source,
-    // this.supertype,
     required this.typeParameters,
-  });
+  }) {
+    setSource(source);
+  }
 
   factory ClassElementSerializer.from(ClassElement element, String projectPath) {
+    print('- ${element.name}');
+    print(
+      '  + ${element.interfaces.map((e) => '${e.getDisplayString()}-${e.runtimeType}').join(',')}',
+    );
+    print('  + ${element.mixins.map((e) => '${e.getDisplayString()}-${e.runtimeType}').join(',')}');
     return ClassElementSerializer(
       constructors:
           element.constructors
@@ -173,15 +174,13 @@ class ClassElementSerializer implements ClassElementMetadata {
   ],
   includeIfNull: false,
 )
-class MixinElementSerializer implements MixinElementMetadata {
+class InterfaceElementSerializer
+    with _SourceSerializer<String>
+    implements InterfaceElementMetadata {
   @override
   final String name;
   @override
-  final String source;
-  @override
-  final bool isPrivate;
-  @override
-  final bool isPublic;
+  final List<ConstructorElementSerializer> constructors;
   @override
   final List<FieldElementSerializer> fields;
   @override
@@ -189,11 +188,99 @@ class MixinElementSerializer implements MixinElementMetadata {
   @override
   final List<TypeParameterElementSerializer> typeParameters;
   @override
+  final bool isPrivate;
+  @override
+  final bool isPublic;
+  @override
+  final bool isSimplyBounded;
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  final List<InterfaceElementMetadata> interfaces = [];
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  final List<InterfaceElementMetadata> mixins = [];
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  final InterfaceElementMetadata? supertype = null;
+
+  @override
+  List<_SourceSerializer> get _refList => [
+    ...constructors,
+    ...fields,
+    ...methods,
+    ...typeParameters,
+  ];
+
+  InterfaceElementSerializer({
+    required String source,
+    required this.name,
+    required this.isPrivate,
+    required this.isPublic,
+    required this.fields,
+    required this.methods,
+    required this.typeParameters,
+    required this.isSimplyBounded,
+    required this.constructors,
+  }) {
+    setSource(source);
+  }
+
+  factory InterfaceElementSerializer.from(InterfaceElement element, String projectPath) {
+    return InterfaceElementSerializer(
+      name: element.name,
+      source: _getPath(element.source, projectPath),
+      isPrivate: element.isPrivate,
+      isPublic: element.isPublic,
+      fields: element.fields.map((e) => FieldElementSerializer.from(e, projectPath)).toList(),
+      methods: element.methods.map((e) => MethodElementSerializer.from(e, projectPath)).toList(),
+      typeParameters:
+          element.typeParameters
+              .map((e) => TypeParameterElementSerializer.from(e, projectPath))
+              .toList(),
+      isSimplyBounded: element.isSimplyBounded,
+      constructors:
+          element.constructors
+              .map((e) => ConstructorElementSerializer.from(e, projectPath))
+              .toList(),
+    );
+  }
+
+  factory InterfaceElementSerializer.fromJson(Map<String, dynamic> json) =>
+      _$InterfaceElementSerializerFromJson(json);
+  Map<String, dynamic> toJson() => _$InterfaceElementSerializerToJson(this);
+}
+
+@JsonSerializable(
+  explicitToJson: true,
+  converters: [
+    _BooleanConverter(),
+    _ConstructorElementListConverter(),
+    _FieldElementListConverter(),
+    _MethodElementListConverter(),
+    _TypeParameterListSerializerConverter(),
+  ],
+  includeIfNull: false,
+)
+class MixinElementSerializer with _SourceSerializer<String> implements MixinElementMetadata {
+  @override
+  final String name;
+  @override
+  final List<FieldElementSerializer> fields;
+  @override
+  final List<MethodElementSerializer> methods;
+  @override
+  final List<TypeParameterElementSerializer> typeParameters;
+  @override
+  final List<ConstructorElementSerializer> constructors;
+  @override
+  final bool isPrivate;
+  @override
+  final bool isPublic;
+  @override
   final bool isSimplyBounded;
   @override
   final bool isBase;
-  @override
-  final List<ConstructorElementSerializer> constructors;
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
@@ -208,9 +295,17 @@ class MixinElementSerializer implements MixinElementMetadata {
   @override
   final InterfaceElementMetadata? supertype = null;
 
+  @override
+  List<_SourceSerializer> get _refList => [
+    ...constructors,
+    ...fields,
+    ...methods,
+    ...typeParameters,
+  ];
+
   MixinElementSerializer({
+    required String source,
     required this.name,
-    required this.source,
     required this.isPrivate,
     required this.isPublic,
     required this.fields,
@@ -219,7 +314,9 @@ class MixinElementSerializer implements MixinElementMetadata {
     required this.isSimplyBounded,
     required this.isBase,
     required this.constructors,
-  });
+  }) {
+    setSource(source);
+  }
 
   factory MixinElementSerializer.from(MixinElement element, String projectPath) {
     return MixinElementSerializer(
@@ -258,15 +355,9 @@ class MixinElementSerializer implements MixinElementMetadata {
   ],
   includeIfNull: false,
 )
-class EnumElementSerializer implements EnumElementMetadata {
+class EnumElementSerializer with _SourceSerializer<String> implements EnumElementMetadata {
   @override
   final String name;
-  @override
-  final String source;
-  @override
-  final bool isPrivate;
-  @override
-  final bool isPublic;
   @override
   final List<FieldElementSerializer> fields;
   @override
@@ -274,9 +365,13 @@ class EnumElementSerializer implements EnumElementMetadata {
   @override
   final List<TypeParameterElementSerializer> typeParameters;
   @override
-  final bool isSimplyBounded;
-  @override
   final List<ConstructorElementSerializer> constructors;
+  @override
+  final bool isPrivate;
+  @override
+  final bool isPublic;
+  @override
+  final bool isSimplyBounded;
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
@@ -288,9 +383,17 @@ class EnumElementSerializer implements EnumElementMetadata {
   @override
   final InterfaceElementMetadata? supertype = null;
 
+  @override
+  List<_SourceSerializer> get _refList => [
+    ...constructors,
+    ...fields,
+    ...methods,
+    ...typeParameters,
+  ];
+
   EnumElementSerializer({
+    required String source,
     required this.name,
-    required this.source,
     required this.isPrivate,
     required this.isPublic,
     required this.fields,
@@ -298,7 +401,9 @@ class EnumElementSerializer implements EnumElementMetadata {
     required this.typeParameters,
     required this.isSimplyBounded,
     required this.constructors,
-  });
+  }) {
+    setSource(source);
+  }
 
   factory EnumElementSerializer.from(EnumElement element, String projectPath) {
     return EnumElementSerializer(
@@ -334,11 +439,11 @@ class EnumElementSerializer implements EnumElementMetadata {
   ],
   includeIfNull: false,
 )
-class TypeAliasElementSerializer implements TypeAliasElementMetadata {
+class TypeAliasElementSerializer
+    with _SourceSerializer<String>
+    implements TypeAliasElementMetadata {
   @override
   final String name;
-  @override
-  final String source;
   @override
   final bool isPrivate;
   @override
@@ -350,15 +455,20 @@ class TypeAliasElementSerializer implements TypeAliasElementMetadata {
   @override
   final DartTypeSerializer aliasedType;
 
+  @override
+  List<_SourceSerializer> get _refList => [...typeParameters];
+
   TypeAliasElementSerializer({
+    required String source,
     required this.name,
-    required this.source,
     required this.isPrivate,
     required this.isPublic,
     required this.isSimplyBounded,
     required this.typeParameters,
     required this.aliasedType,
-  });
+  }) {
+    setSource(source);
+  }
 
   factory TypeAliasElementSerializer.from(TypeAliasElement element, String projectPath) {
     return TypeAliasElementSerializer(
@@ -392,11 +502,15 @@ class TypeAliasElementSerializer implements TypeAliasElementMetadata {
   ],
   includeIfNull: false,
 )
-class ConstructorElementSerializer implements ConstructorElementMetadata {
+class ConstructorElementSerializer
+    with _SourceSerializer<String>
+    implements ConstructorElementMetadata {
   @override
   final String name;
   @override
-  final String source;
+  final List<TypeParameterElementSerializer> typeParameters;
+  @override
+  final List<ParameterElementSerializer> parameters;
   @override
   final bool isPrivate;
   @override
@@ -407,10 +521,6 @@ class ConstructorElementSerializer implements ConstructorElementMetadata {
   bool isConstantEvaluated;
   @override
   final bool isSimplyBounded;
-  @override
-  final List<TypeParameterElementSerializer> typeParameters;
-  @override
-  final List<ParameterElementSerializer> parameters;
   @override
   final FunctionTypeSerializer type;
   @override
@@ -433,6 +543,9 @@ class ConstructorElementSerializer implements ConstructorElementMetadata {
   final bool isConst;
   @override
   final ConstructorElementSerializer? redirectedConstructor;
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  InterfaceTypeMetadata get returnType => throw UnimplementedError();
   // @override
   // final ConstructorElementSerializer? superConstructor;
   @override
@@ -442,13 +555,16 @@ class ConstructorElementSerializer implements ConstructorElementMetadata {
   @override
   final bool isGenerative;
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  final InterfaceTypeMetadata returnType = _InterfaceType();
+  List<_SourceSerializer> get _refList => [
+    ...typeParameters,
+    ...parameters,
+    if (redirectedConstructor != null) ...[redirectedConstructor!],
+  ];
 
   ConstructorElementSerializer({
+    required String source,
     required this.name,
-    required this.source,
     required this.isPrivate,
     required this.isPublic,
     required this.isStatic,
@@ -456,7 +572,6 @@ class ConstructorElementSerializer implements ConstructorElementMetadata {
     required this.isSimplyBounded,
     required this.typeParameters,
     required this.parameters,
-    // required this.returnType,
     required this.type,
     required this.hasImplicitReturnType,
     required this.isAbstract,
@@ -471,7 +586,9 @@ class ConstructorElementSerializer implements ConstructorElementMetadata {
     required this.isDefaultConstructor,
     required this.isFactory,
     required this.isGenerative,
-  });
+  }) {
+    setSource(source);
+  }
 
   factory ConstructorElementSerializer.from(ConstructorElement element, String projectPath) {
     return ConstructorElementSerializer(
@@ -515,11 +632,13 @@ class ConstructorElementSerializer implements ConstructorElementMetadata {
 }
 
 @JsonSerializable(explicitToJson: true, converters: [_BooleanConverter()], includeIfNull: false)
-class FieldElementSerializer implements FieldElementMetadata {
+class FieldElementSerializer with _SourceSerializer<String?> implements FieldElementMetadata {
   @override
   final String name;
   @override
-  final String? source;
+  final PropertyAccessorElementSerializer? getter;
+  @override
+  final PropertyAccessorElementSerializer? setter;
   @override
   final bool isPrivate;
   @override
@@ -541,10 +660,6 @@ class FieldElementSerializer implements FieldElementMetadata {
   @override
   final bool hasInitializer;
   @override
-  final PropertyAccessorElementSerializer? getter;
-  @override
-  final PropertyAccessorElementSerializer? setter;
-  @override
   final bool isAbstract;
   @override
   final bool isCovariant;
@@ -555,9 +670,15 @@ class FieldElementSerializer implements FieldElementMetadata {
   @override
   final bool isPromotable;
 
+  @override
+  List<_SourceSerializer> get _refList => [
+    if (getter != null) ...[getter!],
+    if (setter != null) ...[setter!],
+  ];
+
   FieldElementSerializer({
+    String? source,
     required this.name,
-    this.source,
     required this.isPrivate,
     required this.isPublic,
     required this.isStatic,
@@ -575,7 +696,9 @@ class FieldElementSerializer implements FieldElementMetadata {
     required this.isEnumConstant,
     required this.isExternal,
     required this.isPromotable,
-  });
+  }) {
+    setSource(source);
+  }
 
   factory FieldElementSerializer.from(FieldElement element, String projectPath) {
     return FieldElementSerializer(
@@ -621,11 +744,13 @@ class FieldElementSerializer implements FieldElementMetadata {
   ],
   includeIfNull: false,
 )
-class MethodElementSerializer implements MethodElementMetadata {
+class MethodElementSerializer with _SourceSerializer<String> implements MethodElementMetadata {
   @override
   final String name;
   @override
-  final String source;
+  final List<TypeParameterElementSerializer> typeParameters;
+  @override
+  final List<ParameterElementSerializer> parameters;
   @override
   final bool isPrivate;
   @override
@@ -634,10 +759,6 @@ class MethodElementSerializer implements MethodElementMetadata {
   final bool isStatic;
   @override
   final bool isSimplyBounded;
-  @override
-  final List<TypeParameterElementSerializer> typeParameters;
-  @override
-  final List<ParameterElementSerializer> parameters;
   @override
   final DartTypeSerializer returnType;
   @override
@@ -659,9 +780,12 @@ class MethodElementSerializer implements MethodElementMetadata {
   @override
   final bool isSynchronous;
 
+  @override
+  List<_SourceSerializer> get _refList => [...typeParameters, ...parameters];
+
   MethodElementSerializer({
+    required String source,
     required this.name,
-    required this.source,
     required this.isPrivate,
     required this.isPublic,
     required this.isStatic,
@@ -678,7 +802,9 @@ class MethodElementSerializer implements MethodElementMetadata {
     required this.isGenerator,
     required this.isOperator,
     required this.isSynchronous,
-  });
+  }) {
+    setSource(source);
+  }
 
   factory MethodElementSerializer.from(MethodElement element, String projectPath) {
     return MethodElementSerializer(
@@ -713,11 +839,15 @@ class MethodElementSerializer implements MethodElementMetadata {
 }
 
 @JsonSerializable(explicitToJson: true, converters: [_BooleanConverter()], includeIfNull: false)
-class TopLevelVariableElementSerializer implements TopLevelVariableElementMetadata {
+class TopLevelVariableElementSerializer
+    with _SourceSerializer<String?>
+    implements TopLevelVariableElementMetadata {
   @override
   final String name;
   @override
-  final String? source;
+  final PropertyAccessorElementSerializer? getter;
+  @override
+  final PropertyAccessorElementSerializer? setter;
   @override
   final bool isPrivate;
   @override
@@ -739,15 +869,17 @@ class TopLevelVariableElementSerializer implements TopLevelVariableElementMetada
   @override
   final bool hasInitializer;
   @override
-  final PropertyAccessorElementSerializer? getter;
-  @override
-  final PropertyAccessorElementSerializer? setter;
-  @override
   final bool isExternal;
+
+  @override
+  List<_SourceSerializer> get _refList => [
+    if (getter != null) ...[getter!],
+    if (setter != null) ...[setter!],
+  ];
 
   TopLevelVariableElementSerializer({
     required this.name,
-    this.source,
+    String? source,
     required this.isPrivate,
     required this.isPublic,
     required this.isStatic,
@@ -761,7 +893,9 @@ class TopLevelVariableElementSerializer implements TopLevelVariableElementMetada
     this.getter,
     this.setter,
     required this.isExternal,
-  });
+  }) {
+    setSource(source);
+  }
 
   factory TopLevelVariableElementSerializer.from(
     TopLevelVariableElement element,
@@ -806,11 +940,13 @@ class TopLevelVariableElementSerializer implements TopLevelVariableElementMetada
   ],
   includeIfNull: false,
 )
-class FunctionElementSerializer implements FunctionElementMetadata {
+class FunctionElementSerializer with _SourceSerializer<String> implements FunctionElementMetadata {
   @override
   final String name;
   @override
-  final String source;
+  final List<TypeParameterElementSerializer> typeParameters;
+  @override
+  final List<ParameterElementSerializer> parameters;
   @override
   final bool isPrivate;
   @override
@@ -819,10 +955,6 @@ class FunctionElementSerializer implements FunctionElementMetadata {
   final bool isStatic;
   @override
   final bool isSimplyBounded;
-  @override
-  final List<TypeParameterElementSerializer> typeParameters;
-  @override
-  final List<ParameterElementSerializer> parameters;
   @override
   final DartTypeSerializer returnType;
   @override
@@ -844,19 +976,22 @@ class FunctionElementSerializer implements FunctionElementMetadata {
   @override
   final bool isExtensionTypeMember;
 
-  /// Actually it isn't used in the analysis.
+  /// It isn't used in the analysis.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   final bool isDartCoreIdentical = false;
 
-  /// Actually it isn't used in the analysis.
+  /// It isn't used in the analysis.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   final bool isEntryPoint = false;
 
+  @override
+  List<_SourceSerializer> get _refList => [...typeParameters, ...parameters];
+
   FunctionElementSerializer({
+    required String source,
     required this.name,
-    required this.source,
     required this.isPrivate,
     required this.isPublic,
     required this.isStatic,
@@ -873,7 +1008,9 @@ class FunctionElementSerializer implements FunctionElementMetadata {
     required this.isOperator,
     required this.isSynchronous,
     required this.isExtensionTypeMember,
-  });
+  }) {
+    setSource(source);
+  }
 
   factory FunctionElementSerializer.from(FunctionElement element, String projectPath) {
     return FunctionElementSerializer(
@@ -908,11 +1045,11 @@ class FunctionElementSerializer implements FunctionElementMetadata {
 }
 
 @JsonSerializable(explicitToJson: true, converters: [_BooleanConverter()], includeIfNull: false)
-class TypeParameterElementSerializer implements TypeParameterElementMetadata {
+class TypeParameterElementSerializer
+    with _SourceSerializer<String?>
+    implements TypeParameterElementMetadata {
   @override
   final String name;
-  @override
-  final String? source;
   @override
   final bool isPrivate;
   @override
@@ -920,13 +1057,18 @@ class TypeParameterElementSerializer implements TypeParameterElementMetadata {
   @override
   final DartTypeSerializer? bound;
 
+  @override
+  List<_SourceSerializer> get _refList => [];
+
   TypeParameterElementSerializer({
     required this.name,
-    this.source,
+    String? source,
     required this.isPrivate,
     required this.isPublic,
     this.bound,
-  });
+  }) {
+    setSource(source);
+  }
 
   factory TypeParameterElementSerializer.from(TypeParameterElement element, String projectPath) {
     return TypeParameterElementSerializer(
@@ -952,11 +1094,15 @@ class TypeParameterElementSerializer implements TypeParameterElementMetadata {
   ],
   includeIfNull: false,
 )
-class ParameterElementSerializer implements ParameterElementMetadata {
+class ParameterElementSerializer
+    with _SourceSerializer<String?>
+    implements ParameterElementMetadata {
   @override
   final String name;
   @override
-  final String? source;
+  final List<ParameterElementSerializer> parameters;
+  @override
+  final List<TypeParameterElementSerializer> typeParameters;
   @override
   final bool isPrivate;
   @override
@@ -999,14 +1145,13 @@ class ParameterElementSerializer implements ParameterElementMetadata {
   final bool isRequiredPositional;
   @override
   final bool isSuperFormal;
+
   @override
-  final List<ParameterElementSerializer> parameters;
-  @override
-  final List<TypeParameterElementSerializer> typeParameters;
+  List<_SourceSerializer> get _refList => [...parameters, ...typeParameters];
 
   ParameterElementSerializer({
     required this.name,
-    this.source,
+    String? source,
     required this.isPrivate,
     required this.isPublic,
     required this.isConstantEvaluated,
@@ -1030,7 +1175,9 @@ class ParameterElementSerializer implements ParameterElementMetadata {
     required this.isSuperFormal,
     required this.parameters,
     required this.typeParameters,
-  });
+  }) {
+    setSource(source);
+  }
 
   factory ParameterElementSerializer.from(ParameterElement element, String projectPath) {
     return ParameterElementSerializer(
@@ -1071,6 +1218,122 @@ class ParameterElementSerializer implements ParameterElementMetadata {
   Map<String, dynamic> toJson() => _$ParameterElementSerializerToJson(this);
 }
 
+@JsonSerializable(
+  explicitToJson: true,
+  converters: [
+    _BooleanConverter(),
+    _TypeParameterListSerializerConverter(),
+    _ParameterElementListConverter(),
+  ],
+  includeIfNull: false,
+)
+class PropertyAccessorElementSerializer
+    with _SourceSerializer<String>
+    implements PropertyAccessorElementMetadata {
+  @override
+  final String name;
+  @override
+  final List<TypeParameterElementSerializer> typeParameters;
+  @override
+  final List<ParameterElementSerializer> parameters;
+  @override
+  final bool isPrivate;
+  @override
+  final bool isPublic;
+  @override
+  final bool isStatic;
+  @override
+  final bool isSimplyBounded;
+  @override
+  final DartTypeSerializer returnType;
+  @override
+  final FunctionTypeSerializer type;
+  @override
+  final bool hasImplicitReturnType;
+  @override
+  final bool isAbstract;
+  @override
+  final bool isAsynchronous;
+  @override
+  final bool isExtensionTypeMember;
+  @override
+  final bool isExternal;
+  @override
+  final bool isGenerator;
+  @override
+  final bool isOperator;
+  @override
+  final bool isSynchronous;
+  @override
+  final bool isGetter;
+  @override
+  final bool isSetter;
+
+  @override
+  List<_SourceSerializer> get _refList => [...typeParameters, ...parameters];
+
+  PropertyAccessorElementSerializer({
+    required String source,
+    required this.name,
+    required this.isPrivate,
+    required this.isPublic,
+    required this.isStatic,
+    required this.isSimplyBounded,
+    required this.typeParameters,
+    required this.parameters,
+    required this.returnType,
+    required this.type,
+    required this.hasImplicitReturnType,
+    required this.isAbstract,
+    required this.isAsynchronous,
+    required this.isExtensionTypeMember,
+    required this.isExternal,
+    required this.isGenerator,
+    required this.isOperator,
+    required this.isSynchronous,
+    required this.isGetter,
+    required this.isSetter,
+  }) {
+    setSource(source);
+  }
+
+  factory PropertyAccessorElementSerializer.from(
+    PropertyAccessorElement element,
+    String projectPath,
+  ) {
+    return PropertyAccessorElementSerializer(
+      name: element.name,
+      source: _getPath(element.source, projectPath),
+      isPrivate: element.isPrivate,
+      isPublic: element.isPublic,
+      isStatic: element.isStatic,
+      isSimplyBounded: element.isSimplyBounded,
+      typeParameters:
+          element.typeParameters
+              .map((e) => TypeParameterElementSerializer.from(e, projectPath))
+              .toList(),
+      parameters:
+          element.parameters.map((e) => ParameterElementSerializer.from(e, projectPath)).toList(),
+      returnType: DartTypeSerializer.from(element.returnType),
+      type: FunctionTypeSerializer.from(element.type, projectPath),
+      hasImplicitReturnType: element.hasImplicitReturnType,
+      isAbstract: element.isAbstract,
+      isAsynchronous: element.isAsynchronous,
+      isExtensionTypeMember: element.isExtensionTypeMember,
+      isExternal: element.isExternal,
+      isGenerator: element.isGenerator,
+      isOperator: element.isOperator,
+      isSynchronous: element.isSynchronous,
+      isGetter: element.isGetter,
+      isSetter: element.isSetter,
+    );
+  }
+
+  factory PropertyAccessorElementSerializer.fromJson(Map<String, dynamic> json) =>
+      _$PropertyAccessorElementSerializerFromJson(json);
+  Map<String, dynamic> toJson() => _$PropertyAccessorElementSerializerToJson(this);
+}
+
 @JsonSerializable(explicitToJson: true, converters: [_BooleanConverter()], includeIfNull: false)
 class DartTypeSerializer implements DartTypeMetadata {
   @override
@@ -1091,6 +1354,7 @@ class DartTypeSerializer implements DartTypeMetadata {
 
   factory DartTypeSerializer.from(DartType type) {
     return DartTypeSerializer(
+      // ignore: deprecated_member_use
       name: type.getDisplayString(withNullability: false),
       nullabilitySuffix: switch (type.nullabilitySuffix) {
         NullabilitySuffix.question => '?',
@@ -1155,6 +1419,7 @@ class FunctionTypeSerializer implements FunctionTypeMetadata {
 
   factory FunctionTypeSerializer.from(FunctionType type, String projectPath) {
     return FunctionTypeSerializer(
+      // ignore: deprecated_member_use
       name: type.getDisplayString(withNullability: false),
       nullabilitySuffix: switch (type.nullabilitySuffix) {
         NullabilitySuffix.question => '?',
@@ -1189,107 +1454,96 @@ class FunctionTypeSerializer implements FunctionTypeMetadata {
     _BooleanConverter(),
     _TypeParameterListSerializerConverter(),
     _ParameterElementListConverter(),
+    _DartTypeListConverter(),
+    _DartTypeMapConverter(),
   ],
   includeIfNull: false,
 )
-class PropertyAccessorElementSerializer implements PropertyAccessorElementMetadata {
+class ParameterizedTypeSerializer implements ParameterizedTypeMetadata {
   @override
-  final String name;
+  final String? name;
   @override
-  final String source;
+  final String? nullabilitySuffix;
   @override
-  final bool isPrivate;
+  final bool isDartCore;
   @override
-  final bool isPublic;
+  final bool isDartAsync;
   @override
-  final bool isStatic;
-  @override
-  final bool isSimplyBounded;
-  @override
-  final List<TypeParameterElementSerializer> typeParameters;
-  @override
-  final List<ParameterElementSerializer> parameters;
-  @override
-  final DartTypeSerializer returnType;
-  @override
-  final FunctionTypeSerializer type;
-  @override
-  final bool hasImplicitReturnType;
-  @override
-  final bool isAbstract;
-  @override
-  final bool isAsynchronous;
-  @override
-  final bool isExtensionTypeMember;
-  @override
-  final bool isExternal;
-  @override
-  final bool isGenerator;
-  @override
-  final bool isOperator;
-  @override
-  final bool isSynchronous;
-  @override
-  final bool isGetter;
-  @override
-  final bool isSetter;
+  final List<DartTypeSerializer> typeArguments;
 
-  PropertyAccessorElementSerializer({
-    required this.name,
-    required this.source,
-    required this.isPrivate,
-    required this.isPublic,
-    required this.isStatic,
-    required this.isSimplyBounded,
-    required this.typeParameters,
-    required this.parameters,
-    required this.returnType,
-    required this.type,
-    required this.hasImplicitReturnType,
-    required this.isAbstract,
-    required this.isAsynchronous,
-    required this.isExtensionTypeMember,
-    required this.isExternal,
-    required this.isGenerator,
-    required this.isOperator,
-    required this.isSynchronous,
-    required this.isGetter,
-    required this.isSetter,
+  ParameterizedTypeSerializer({
+    this.name,
+    this.nullabilitySuffix,
+    required this.isDartCore,
+    required this.isDartAsync,
+    required this.typeArguments,
   });
 
-  factory PropertyAccessorElementSerializer.from(
-    PropertyAccessorElement element,
-    String projectPath,
-  ) {
-    return PropertyAccessorElementSerializer(
-      name: element.name,
-      source: _getPath(element.source, projectPath),
-      isPrivate: element.isPrivate,
-      isPublic: element.isPublic,
-      isStatic: element.isStatic,
-      isSimplyBounded: element.isSimplyBounded,
-      typeParameters:
-          element.typeParameters
-              .map((e) => TypeParameterElementSerializer.from(e, projectPath))
-              .toList(),
-      parameters:
-          element.parameters.map((e) => ParameterElementSerializer.from(e, projectPath)).toList(),
-      returnType: DartTypeSerializer.from(element.returnType),
-      type: FunctionTypeSerializer.from(element.type, projectPath),
-      hasImplicitReturnType: element.hasImplicitReturnType,
-      isAbstract: element.isAbstract,
-      isAsynchronous: element.isAsynchronous,
-      isExtensionTypeMember: element.isExtensionTypeMember,
-      isExternal: element.isExternal,
-      isGenerator: element.isGenerator,
-      isOperator: element.isOperator,
-      isSynchronous: element.isSynchronous,
-      isGetter: element.isGetter,
-      isSetter: element.isSetter,
+  factory ParameterizedTypeSerializer.from(ParameterizedType type) {
+    return ParameterizedTypeSerializer(
+      // ignore: deprecated_member_use
+      name: type.getDisplayString(withNullability: false),
+      nullabilitySuffix: switch (type.nullabilitySuffix) {
+        NullabilitySuffix.question => '?',
+        NullabilitySuffix.star => '*',
+        NullabilitySuffix.none => null,
+      },
+      isDartCore: type.isDartCore,
+      isDartAsync: type.isDartAsync,
+      typeArguments: type.typeArguments.map((e) => DartTypeSerializer.from(e)).toList(),
     );
   }
 
-  factory PropertyAccessorElementSerializer.fromJson(Map<String, dynamic> json) =>
-      _$PropertyAccessorElementSerializerFromJson(json);
-  Map<String, dynamic> toJson() => _$PropertyAccessorElementSerializerToJson(this);
+  factory ParameterizedTypeSerializer.fromJson(Map<String, dynamic> json) =>
+      _$ParameterizedTypeSerializerFromJson(json);
+  Map<String, dynamic> toJson() => _$ParameterizedTypeSerializerToJson(this);
+}
+
+@JsonSerializable(
+  explicitToJson: true,
+  converters: [_BooleanConverter(), _DartTypeListConverter()],
+  includeIfNull: false,
+)
+class InterfaceTypeSerializer implements InterfaceTypeMetadata {
+  @override
+  final String? name;
+  @override
+  final String? nullabilitySuffix;
+  @override
+  final bool isDartCore;
+  @override
+  final bool isDartAsync;
+  @override
+  final List<DartTypeSerializer> typeArguments;
+  @override
+  final InterfaceElementSerializer element;
+
+  InterfaceTypeSerializer({
+    this.name,
+    this.nullabilitySuffix,
+    required this.isDartCore,
+    required this.isDartAsync,
+    required this.typeArguments,
+    required this.element,
+  });
+
+  factory InterfaceTypeSerializer.from(InterfaceType type, String projectPath) {
+    return InterfaceTypeSerializer(
+      // ignore: deprecated_member_use
+      name: type.getDisplayString(withNullability: false),
+      nullabilitySuffix: switch (type.nullabilitySuffix) {
+        NullabilitySuffix.question => '?',
+        NullabilitySuffix.star => '*',
+        NullabilitySuffix.none => null,
+      },
+      isDartCore: type.isDartCore,
+      isDartAsync: type.isDartAsync,
+      typeArguments: type.typeArguments.map((e) => DartTypeSerializer.from(e)).toList(),
+      element: InterfaceElementSerializer.from(type.element, projectPath),
+    );
+  }
+
+  factory InterfaceTypeSerializer.fromJson(Map<String, dynamic> json) =>
+      _$InterfaceTypeSerializerFromJson(json);
+  Map<String, dynamic> toJson() => _$InterfaceTypeSerializerToJson(this);
 }
