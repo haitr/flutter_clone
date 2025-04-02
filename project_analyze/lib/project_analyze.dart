@@ -4,6 +4,7 @@ import 'package:file/file.dart';
 import 'package:glob/glob.dart';
 import 'package:glob/list_local_fs.dart';
 import 'package:path/path.dart' as path;
+import 'package:project_analyze/ast/analyzer.dart';
 import 'package:project_analyze/utils/log.dart';
 import 'package:yaml/yaml.dart';
 
@@ -62,6 +63,7 @@ Future<List<AnalyzeResult>> analyzeProjectWithSymbolResolution(FileSystem input)
   SimpleLogger.info('Found ${dartFiles.length} Dart files');
 
   final results = <AnalyzeResult>[];
+  final parsingContext = AnalyzerContext(projectPath: includePaths[0]);
 
   for (final filePath in dartFiles) {
     if (path.basename(filePath) != 'theme_data.dart') {
@@ -79,7 +81,7 @@ Future<List<AnalyzeResult>> analyzeProjectWithSymbolResolution(FileSystem input)
       );
 
       // Let the visitor analyze classes and track dependencies
-      results.add(AnalyzeResult.fromElement(library, includePaths[0]));
+      results.add(AnalyzeResult.fromElement(library, parsingContext));
 
       //   for (final part in element.units) {
       //     if (part != element.definingCompilationUnit) {

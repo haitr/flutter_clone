@@ -8,6 +8,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:path/path.dart' as path;
 import 'package:project_analyze/extensions/extensions.dart';
 
+part 'analyzer.context.dart';
 part 'analyzer.element.dart';
 part 'analyzer.g.dart';
 part 'analyzer.json.dart';
@@ -114,14 +115,12 @@ class ClassElementSerializer with _SourceSerializer<String> implements ClassElem
     setSource(source);
   }
 
-  factory ClassElementSerializer.from(ClassElement element, String projectPath) {
+  factory ClassElementSerializer.from(ClassElement element, AnalyzerContext context) {
     print('- ${element.name}');
     return ClassElementSerializer(
       constructors:
-          element.constructors
-              .map((e) => ConstructorElementSerializer.from(e, projectPath))
-              .toList(),
-      fields: element.fields.map((e) => FieldElementSerializer.from(e, projectPath)).toList(),
+          element.constructors.map((e) => ConstructorElementSerializer.from(e, context)).toList(),
+      fields: element.fields.map((e) => FieldElementSerializer.from(e, context)).toList(),
       hasNonFinalField: element.hasNonFinalField,
       isAbstract: element.isAbstract,
       isBase: element.isBase,
@@ -138,12 +137,12 @@ class ClassElementSerializer with _SourceSerializer<String> implements ClassElem
       isSealed: element.isSealed,
       isSimplyBounded: element.isSimplyBounded,
       isValidMixin: element.isValidMixin,
-      methods: element.methods.map((e) => MethodElementSerializer.from(e, projectPath)).toList(),
+      methods: element.methods.map((e) => MethodElementSerializer.from(e, context)).toList(),
       name: element.name,
-      source: _getPath(element.source, projectPath),
+      source: _getPath(element.source, context.projectPath),
       typeParameters:
           element.typeParameters
-              .map((e) => TypeParameterElementSerializer.from(e, projectPath))
+              .map((e) => TypeParameterElementSerializer.from(e, context))
               .toList(),
     );
   }
@@ -222,23 +221,21 @@ class InterfaceElementSerializer
     setSource(source);
   }
 
-  factory InterfaceElementSerializer.from(InterfaceElement element, String projectPath) {
+  factory InterfaceElementSerializer.from(InterfaceElement element, AnalyzerContext context) {
     return InterfaceElementSerializer(
       name: element.name,
-      source: _getPath(element.source, projectPath),
+      source: _getPath(element.source, context.projectPath),
       isPrivate: element.isPrivate,
       isPublic: element.isPublic,
-      fields: element.fields.map((e) => FieldElementSerializer.from(e, projectPath)).toList(),
-      methods: element.methods.map((e) => MethodElementSerializer.from(e, projectPath)).toList(),
+      fields: element.fields.map((e) => FieldElementSerializer.from(e, context)).toList(),
+      methods: element.methods.map((e) => MethodElementSerializer.from(e, context)).toList(),
       typeParameters:
           element.typeParameters
-              .map((e) => TypeParameterElementSerializer.from(e, projectPath))
+              .map((e) => TypeParameterElementSerializer.from(e, context))
               .toList(),
       isSimplyBounded: element.isSimplyBounded,
       constructors:
-          element.constructors
-              .map((e) => ConstructorElementSerializer.from(e, projectPath))
-              .toList(),
+          element.constructors.map((e) => ConstructorElementSerializer.from(e, context)).toList(),
     );
   }
 
@@ -314,24 +311,22 @@ class MixinElementSerializer with _SourceSerializer<String> implements MixinElem
     setSource(source);
   }
 
-  factory MixinElementSerializer.from(MixinElement element, String projectPath) {
+  factory MixinElementSerializer.from(MixinElement element, AnalyzerContext context) {
     return MixinElementSerializer(
       name: element.name,
-      source: _getPath(element.source, projectPath),
+      source: _getPath(element.source, context.projectPath),
       isPrivate: element.isPrivate,
       isPublic: element.isPublic,
-      fields: element.fields.map((e) => FieldElementSerializer.from(e, projectPath)).toList(),
-      methods: element.methods.map((e) => MethodElementSerializer.from(e, projectPath)).toList(),
+      fields: element.fields.map((e) => FieldElementSerializer.from(e, context)).toList(),
+      methods: element.methods.map((e) => MethodElementSerializer.from(e, context)).toList(),
       typeParameters:
           element.typeParameters
-              .map((e) => TypeParameterElementSerializer.from(e, projectPath))
+              .map((e) => TypeParameterElementSerializer.from(e, context))
               .toList(),
       isSimplyBounded: element.isSimplyBounded,
       isBase: element.isBase,
       constructors:
-          element.constructors
-              .map((e) => ConstructorElementSerializer.from(e, projectPath))
-              .toList(),
+          element.constructors.map((e) => ConstructorElementSerializer.from(e, context)).toList(),
     );
   }
 
@@ -401,23 +396,21 @@ class EnumElementSerializer with _SourceSerializer<String> implements EnumElemen
     setSource(source);
   }
 
-  factory EnumElementSerializer.from(EnumElement element, String projectPath) {
+  factory EnumElementSerializer.from(EnumElement element, AnalyzerContext context) {
     return EnumElementSerializer(
       name: element.name,
-      source: _getPath(element.source, projectPath),
+      source: _getPath(element.source, context.projectPath),
       isPrivate: element.isPrivate,
       isPublic: element.isPublic,
-      fields: element.fields.map((e) => FieldElementSerializer.from(e, projectPath)).toList(),
-      methods: element.methods.map((e) => MethodElementSerializer.from(e, projectPath)).toList(),
+      fields: element.fields.map((e) => FieldElementSerializer.from(e, context)).toList(),
+      methods: element.methods.map((e) => MethodElementSerializer.from(e, context)).toList(),
       typeParameters:
           element.typeParameters
-              .map((e) => TypeParameterElementSerializer.from(e, projectPath))
+              .map((e) => TypeParameterElementSerializer.from(e, context))
               .toList(),
       isSimplyBounded: element.isSimplyBounded,
       constructors:
-          element.constructors
-              .map((e) => ConstructorElementSerializer.from(e, projectPath))
-              .toList(),
+          element.constructors.map((e) => ConstructorElementSerializer.from(e, context)).toList(),
     );
   }
 
@@ -466,18 +459,18 @@ class TypeAliasElementSerializer
     setSource(source);
   }
 
-  factory TypeAliasElementSerializer.from(TypeAliasElement element, String projectPath) {
+  factory TypeAliasElementSerializer.from(TypeAliasElement element, AnalyzerContext context) {
     return TypeAliasElementSerializer(
       name: element.name,
-      source: _getPath(element.source, projectPath),
+      source: _getPath(element.source, context.projectPath),
       isPrivate: element.isPrivate,
       isPublic: element.isPublic,
       isSimplyBounded: element.isSimplyBounded,
       typeParameters:
           element.typeParameters
-              .map((e) => TypeParameterElementSerializer.from(e, projectPath))
+              .map((e) => TypeParameterElementSerializer.from(e, context))
               .toList(),
-      aliasedType: DartTypeSerializer.from(element.aliasedType, projectPath),
+      aliasedType: DartTypeSerializer.from(element.aliasedType, context),
     );
   }
 
@@ -586,11 +579,11 @@ class ConstructorElementSerializer
     setSource(source);
   }
 
-  factory ConstructorElementSerializer.from(ConstructorElement element, String projectPath) {
+  factory ConstructorElementSerializer.from(ConstructorElement element, AnalyzerContext context) {
     print('-- constructor ${element.name}');
     return ConstructorElementSerializer(
       name: element.name,
-      source: _getPath(element.source, projectPath),
+      source: _getPath(element.source, context.projectPath),
       isPrivate: element.isPrivate,
       isPublic: element.isPublic,
       isStatic: element.isStatic,
@@ -598,10 +591,10 @@ class ConstructorElementSerializer
       isSimplyBounded: element.isSimplyBounded,
       typeParameters:
           element.typeParameters
-              .map((e) => TypeParameterElementSerializer.from(e, projectPath))
+              .map((e) => TypeParameterElementSerializer.from(e, context))
               .toList(),
       parameters:
-          element.parameters.map((e) => ParameterElementSerializer.from(e, projectPath)).toList(),
+          element.parameters.map((e) => ParameterElementSerializer.from(e, context)).toList(),
       hasImplicitReturnType: element.hasImplicitReturnType,
       isAbstract: element.isAbstract,
       isAsynchronous: element.isAsynchronous,
@@ -613,7 +606,7 @@ class ConstructorElementSerializer
       isConst: element.isConst,
       redirectedConstructor:
           element.redirectedConstructor != null
-              ? ConstructorElementSerializer.from(element.redirectedConstructor!, projectPath)
+              ? ConstructorElementSerializer.from(element.redirectedConstructor!, context)
               : null,
       isDefaultConstructor: element.isDefaultConstructor,
       isFactory: element.isFactory,
@@ -696,11 +689,11 @@ class FieldElementSerializer with _SourceSerializer<String?> implements FieldEle
     setSource(source);
   }
 
-  factory FieldElementSerializer.from(FieldElement element, String projectPath) {
+  factory FieldElementSerializer.from(FieldElement element, AnalyzerContext context) {
     print('--- field ${element.name}');
     return FieldElementSerializer(
       name: element.name,
-      source: _getNullablePath(element.source, projectPath),
+      source: _getNullablePath(element.source, context.projectPath),
       isPrivate: element.isPrivate,
       isPublic: element.isPublic,
       isStatic: element.isStatic,
@@ -709,15 +702,15 @@ class FieldElementSerializer with _SourceSerializer<String?> implements FieldEle
       isConst: element.isConst,
       isFinal: element.isFinal,
       isLate: element.isLate,
-      type: DartTypeSerializer.from(element.type, projectPath),
+      type: DartTypeSerializer.from(element.type, context),
       hasInitializer: element.hasInitializer,
       getter:
           element.getter != null
-              ? PropertyAccessorElementSerializer.from(element.getter!, projectPath)
+              ? PropertyAccessorElementSerializer.from(element.getter!, context)
               : null,
       setter:
           element.setter != null
-              ? PropertyAccessorElementSerializer.from(element.setter!, projectPath)
+              ? PropertyAccessorElementSerializer.from(element.setter!, context)
               : null,
       isAbstract: element.isAbstract,
       isCovariant: element.isCovariant,
@@ -803,25 +796,25 @@ class MethodElementSerializer with _SourceSerializer<String> implements MethodEl
     setSource(source);
   }
 
-  factory MethodElementSerializer.from(MethodElement element, String projectPath) {
+  factory MethodElementSerializer.from(MethodElement element, AnalyzerContext context) {
     print('-- method ${element.name}');
     print('--- parse func type');
-    FunctionTypeSerializer.from(element.type, projectPath);
+    FunctionTypeSerializer.from(element.type, context);
     print('--- done');
     return MethodElementSerializer(
       name: element.name,
-      source: _getPath(element.source, projectPath),
+      source: _getPath(element.source, context.projectPath),
       isPrivate: element.isPrivate,
       isPublic: element.isPublic,
       isStatic: element.isStatic,
       isSimplyBounded: element.isSimplyBounded,
       typeParameters:
           element.typeParameters
-              .map((e) => TypeParameterElementSerializer.from(e, projectPath))
+              .map((e) => TypeParameterElementSerializer.from(e, context))
               .toList(),
       parameters:
-          element.parameters.map((e) => ParameterElementSerializer.from(e, projectPath)).toList(),
-      type: FunctionTypeSerializer.from(element.type, projectPath),
+          element.parameters.map((e) => ParameterElementSerializer.from(e, context)).toList(),
+      type: FunctionTypeSerializer.from(element.type, context),
       hasImplicitReturnType: element.hasImplicitReturnType,
       isAbstract: element.isAbstract,
       isAsynchronous: element.isAsynchronous,
@@ -899,11 +892,11 @@ class TopLevelVariableElementSerializer
 
   factory TopLevelVariableElementSerializer.from(
     TopLevelVariableElement element,
-    String projectPath,
+    AnalyzerContext context,
   ) {
     return TopLevelVariableElementSerializer(
       name: element.name,
-      source: _getNullablePath(element.source, projectPath),
+      source: _getNullablePath(element.source, context.projectPath),
       isPrivate: element.isPrivate,
       isPublic: element.isPublic,
       isStatic: element.isStatic,
@@ -912,15 +905,15 @@ class TopLevelVariableElementSerializer
       isConst: element.isConst,
       isFinal: element.isFinal,
       isLate: element.isLate,
-      type: DartTypeSerializer.from(element.type, projectPath),
+      type: DartTypeSerializer.from(element.type, context),
       hasInitializer: element.hasInitializer,
       getter:
           element.getter != null
-              ? PropertyAccessorElementSerializer.from(element.getter!, projectPath)
+              ? PropertyAccessorElementSerializer.from(element.getter!, context)
               : null,
       setter:
           element.setter != null
-              ? PropertyAccessorElementSerializer.from(element.setter!, projectPath)
+              ? PropertyAccessorElementSerializer.from(element.setter!, context)
               : null,
       isExternal: element.isExternal,
     );
@@ -1012,22 +1005,22 @@ class FunctionElementSerializer with _SourceSerializer<String> implements Functi
     setSource(source);
   }
 
-  factory FunctionElementSerializer.from(FunctionElement element, String projectPath) {
+  factory FunctionElementSerializer.from(FunctionElement element, AnalyzerContext context) {
     return FunctionElementSerializer(
       name: element.name,
-      source: _getPath(element.source, projectPath),
+      source: _getPath(element.source, context.projectPath),
       isPrivate: element.isPrivate,
       isPublic: element.isPublic,
       isStatic: element.isStatic,
       isSimplyBounded: element.isSimplyBounded,
       typeParameters:
           element.typeParameters
-              .map((e) => TypeParameterElementSerializer.from(e, projectPath))
+              .map((e) => TypeParameterElementSerializer.from(e, context))
               .toList(),
       parameters:
-          element.parameters.map((e) => ParameterElementSerializer.from(e, projectPath)).toList(),
-      returnType: DartTypeSerializer.from(element.returnType, projectPath),
-      type: FunctionTypeSerializer.from(element.type, projectPath),
+          element.parameters.map((e) => ParameterElementSerializer.from(e, context)).toList(),
+      returnType: DartTypeSerializer.from(element.returnType, context),
+      type: FunctionTypeSerializer.from(element.type, context),
       hasImplicitReturnType: element.hasImplicitReturnType,
       isAbstract: element.isAbstract,
       isAsynchronous: element.isAsynchronous,
@@ -1070,14 +1063,17 @@ class TypeParameterElementSerializer
     setSource(source);
   }
 
-  factory TypeParameterElementSerializer.from(TypeParameterElement element, String projectPath) {
+  factory TypeParameterElementSerializer.from(
+    TypeParameterElement element,
+    AnalyzerContext context,
+  ) {
     print('--- type parameter ${element.name}');
     return TypeParameterElementSerializer(
       name: element.name,
-      source: _getNullablePath(element.source, projectPath),
+      source: _getNullablePath(element.source, context.projectPath),
       isPrivate: element.isPrivate,
       isPublic: element.isPublic,
-      bound: element.bound != null ? DartTypeSerializer.from(element.bound!, projectPath) : null,
+      bound: element.bound != null ? DartTypeSerializer.from(element.bound!, context) : null,
     );
   }
 
@@ -1180,10 +1176,10 @@ class ParameterElementSerializer
     setSource(source);
   }
 
-  factory ParameterElementSerializer.from(ParameterElement element, String projectPath) {
+  factory ParameterElementSerializer.from(ParameterElement element, AnalyzerContext context) {
     return ParameterElementSerializer(
       name: element.name,
-      source: _getNullablePath(element.source, projectPath),
+      source: _getNullablePath(element.source, context.projectPath),
       isPrivate: element.isPrivate,
       isPublic: element.isPublic,
       isConstantEvaluated: element.isConstantEvaluated,
@@ -1192,7 +1188,7 @@ class ParameterElementSerializer
       isFinal: element.isFinal,
       isLate: element.isLate,
       isStatic: element.isStatic,
-      type: DartTypeSerializer.from(element.type, projectPath),
+      type: DartTypeSerializer.from(element.type, context),
       hasDefaultValue: element.hasDefaultValue,
       isCovariant: element.isCovariant,
       isInitializingFormal: element.isInitializingFormal,
@@ -1206,10 +1202,10 @@ class ParameterElementSerializer
       isRequiredPositional: element.isRequiredPositional,
       isSuperFormal: element.isSuperFormal,
       parameters:
-          element.parameters.map((e) => ParameterElementSerializer.from(e, projectPath)).toList(),
+          element.parameters.map((e) => ParameterElementSerializer.from(e, context)).toList(),
       typeParameters:
           element.typeParameters
-              .map((e) => TypeParameterElementSerializer.from(e, projectPath))
+              .map((e) => TypeParameterElementSerializer.from(e, context))
               .toList(),
     );
   }
@@ -1300,23 +1296,23 @@ class PropertyAccessorElementSerializer
 
   factory PropertyAccessorElementSerializer.from(
     PropertyAccessorElement element,
-    String projectPath,
+    AnalyzerContext context,
   ) {
     return PropertyAccessorElementSerializer(
       name: element.name,
-      source: _getPath(element.source, projectPath),
+      source: _getPath(element.source, context.projectPath),
       isPrivate: element.isPrivate,
       isPublic: element.isPublic,
       isStatic: element.isStatic,
       isSimplyBounded: element.isSimplyBounded,
       typeParameters:
           element.typeParameters
-              .map((e) => TypeParameterElementSerializer.from(e, projectPath))
+              .map((e) => TypeParameterElementSerializer.from(e, context))
               .toList(),
       parameters:
-          element.parameters.map((e) => ParameterElementSerializer.from(e, projectPath)).toList(),
-      returnType: DartTypeSerializer.from(element.returnType, projectPath),
-      type: FunctionTypeSerializer.from(element.type, projectPath),
+          element.parameters.map((e) => ParameterElementSerializer.from(e, context)).toList(),
+      returnType: DartTypeSerializer.from(element.returnType, context),
+      type: FunctionTypeSerializer.from(element.type, context),
       hasImplicitReturnType: element.hasImplicitReturnType,
       isAbstract: element.isAbstract,
       isAsynchronous: element.isAsynchronous,
@@ -1359,14 +1355,14 @@ class DartTypeSerializer implements DartTypeMetadata {
     required this.isDartAsync,
   });
 
-  factory DartTypeSerializer.from(DartType type, String projectPath) {
+  factory DartTypeSerializer.from(DartType type, AnalyzerContext context) {
     print('- ${type.runtimeType} - ${type.name}');
     return switch (type) {
-      FunctionType() => FunctionTypeSerializer.from(type, projectPath),
+      FunctionType() => FunctionTypeSerializer.from(type, context),
       // InterfaceType() => InterfaceTypeSerializer.from(type, projectPath),
-      ParameterizedType() => ParameterizedTypeSerializer.from(type, projectPath),
-      TypeParameterType() => TypeParameterTypeSerializer.from(type, projectPath),
-      RecordType() => RecordTypeSerializer.from(type, projectPath),
+      ParameterizedType() => ParameterizedTypeSerializer.from(type, context),
+      TypeParameterType() => TypeParameterTypeSerializer.from(type, context),
+      RecordType() => RecordTypeSerializer.from(type, context),
       VoidType() => VoidTypeSerializer(),
       DynamicType() => DynamicTypeSerializer(),
       NeverType() => NeverTypeSerializer(),
@@ -1459,7 +1455,7 @@ class FunctionTypeSerializer implements FunctionTypeMetadata, DartTypeSerializer
     required this.typeFormals,
   });
 
-  factory FunctionTypeSerializer.from(FunctionType type, String projectPath) {
+  factory FunctionTypeSerializer.from(FunctionType type, AnalyzerContext context) {
     return FunctionTypeSerializer(
       // ignore: deprecated_member_use
       name: type.getDisplayString(withNullability: false),
@@ -1467,17 +1463,16 @@ class FunctionTypeSerializer implements FunctionTypeMetadata, DartTypeSerializer
       isDartCore: type.isDartCore,
       isDartAsync: type.isDartAsync,
       namedParameterTypes: type.namedParameterTypes.map(
-        (key, value) => MapEntry(key, DartTypeSerializer.from(value, projectPath)),
+        (key, value) => MapEntry(key, DartTypeSerializer.from(value, context)),
       ),
       normalParameterTypes:
-          type.normalParameterTypes.map((e) => DartTypeSerializer.from(e, projectPath)).toList(),
+          type.normalParameterTypes.map((e) => DartTypeSerializer.from(e, context)).toList(),
       optionalParameterTypes:
-          type.optionalParameterTypes.map((e) => DartTypeSerializer.from(e, projectPath)).toList(),
-      parameters:
-          type.parameters.map((e) => ParameterElementSerializer.from(e, projectPath)).toList(),
-      returnType: DartTypeSerializer.from(type.returnType, projectPath),
+          type.optionalParameterTypes.map((e) => DartTypeSerializer.from(e, context)).toList(),
+      parameters: type.parameters.map((e) => ParameterElementSerializer.from(e, context)).toList(),
+      returnType: DartTypeSerializer.from(type.returnType, context),
       typeFormals:
-          type.typeFormals.map((e) => TypeParameterElementSerializer.from(e, projectPath)).toList(),
+          type.typeFormals.map((e) => TypeParameterElementSerializer.from(e, context)).toList(),
     );
   }
 
@@ -1522,15 +1517,14 @@ class ParameterizedTypeSerializer implements ParameterizedTypeMetadata, DartType
     required this.typeArguments,
   });
 
-  factory ParameterizedTypeSerializer.from(ParameterizedType type, String projectPath) {
+  factory ParameterizedTypeSerializer.from(ParameterizedType type, AnalyzerContext context) {
     return ParameterizedTypeSerializer(
       // ignore: deprecated_member_use
       name: type.getDisplayString(withNullability: false),
       nullabilitySuffix: type.nullabilitySuffix,
       isDartCore: type.isDartCore,
       isDartAsync: type.isDartAsync,
-      typeArguments:
-          type.typeArguments.map((e) => DartTypeSerializer.from(e, projectPath)).toList(),
+      typeArguments: type.typeArguments.map((e) => DartTypeSerializer.from(e, context)).toList(),
     );
   }
 
@@ -1572,15 +1566,14 @@ class InterfaceTypeSerializer implements InterfaceTypeMetadata, DartTypeSerializ
     // required this.element,
   });
 
-  factory InterfaceTypeSerializer.from(InterfaceType type, String projectPath) {
+  factory InterfaceTypeSerializer.from(InterfaceType type, AnalyzerContext context) {
     return InterfaceTypeSerializer(
       // ignore: deprecated_member_use
       name: type.getDisplayString(withNullability: false),
       nullabilitySuffix: type.nullabilitySuffix,
       isDartCore: type.isDartCore,
       isDartAsync: type.isDartAsync,
-      typeArguments:
-          type.typeArguments.map((e) => DartTypeSerializer.from(e, projectPath)).toList(),
+      typeArguments: type.typeArguments.map((e) => DartTypeSerializer.from(e, context)).toList(),
       // element: InterfaceElementSerializer.from(type.element, projectPath),
     );
   }
@@ -1623,7 +1616,7 @@ class TypeParameterTypeSerializer implements TypeParameterTypeMetadata, DartType
     required this.bound,
   });
 
-  factory TypeParameterTypeSerializer.from(TypeParameterType type, String projectPath) {
+  factory TypeParameterTypeSerializer.from(TypeParameterType type, AnalyzerContext context) {
     return TypeParameterTypeSerializer(
       // ignore: deprecated_member_use
       name: type.getDisplayString(withNullability: false),
@@ -1631,7 +1624,7 @@ class TypeParameterTypeSerializer implements TypeParameterTypeMetadata, DartType
       isDartCore: type.isDartCore,
       isDartAsync: type.isDartAsync,
       // element: TypeParameterElementSerializer.from(type.element, projectPath),
-      bound: DartTypeSerializer.from(type.bound, projectPath),
+      bound: DartTypeSerializer.from(type.bound, context),
     );
   }
 
@@ -1672,7 +1665,7 @@ class RecordTypeSerializer implements RecordTypeMetadata, DartTypeSerializer {
     required this.namedFields,
   });
 
-  factory RecordTypeSerializer.from(RecordType type, String projectPath) {
+  factory RecordTypeSerializer.from(RecordType type, AnalyzerContext context) {
     return RecordTypeSerializer(
       // ignore: deprecated_member_use
       name: type.getDisplayString(withNullability: false),
@@ -1681,10 +1674,10 @@ class RecordTypeSerializer implements RecordTypeMetadata, DartTypeSerializer {
       isDartAsync: type.isDartAsync,
       positionalFields:
           type.positionalFields
-              .map((e) => RecordTypePositionalFieldSerializer.from(e, projectPath))
+              .map((e) => RecordTypePositionalFieldSerializer.from(e, context))
               .toList(),
       namedFields:
-          type.namedFields.map((e) => RecordTypeNamedFieldSerializer.from(e, projectPath)).toList(),
+          type.namedFields.map((e) => RecordTypeNamedFieldSerializer.from(e, context)).toList(),
     );
   }
 
@@ -1703,9 +1696,9 @@ class RecordTypeNamedFieldSerializer implements RecordTypeNamedFieldMetadata {
 
   RecordTypeNamedFieldSerializer({required this.type, required this.name});
 
-  factory RecordTypeNamedFieldSerializer.from(RecordTypeNamedField field, String projectPath) {
+  factory RecordTypeNamedFieldSerializer.from(RecordTypeNamedField field, AnalyzerContext context) {
     return RecordTypeNamedFieldSerializer(
-      type: DartTypeSerializer.from(field.type, projectPath),
+      type: DartTypeSerializer.from(field.type, context),
       name: field.name,
     );
   }
@@ -1724,11 +1717,9 @@ class RecordTypePositionalFieldSerializer implements RecordTypePositionalFieldMe
 
   factory RecordTypePositionalFieldSerializer.from(
     RecordTypePositionalField field,
-    String projectPath,
+    AnalyzerContext context,
   ) {
-    return RecordTypePositionalFieldSerializer(
-      type: DartTypeSerializer.from(field.type, projectPath),
-    );
+    return RecordTypePositionalFieldSerializer(type: DartTypeSerializer.from(field.type, context));
   }
 
   factory RecordTypePositionalFieldSerializer.fromJson(Map<String, dynamic> json) =>

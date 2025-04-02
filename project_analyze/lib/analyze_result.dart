@@ -31,20 +31,20 @@ class AnalyzeResult {
   /// Set of enum type names defined in the analyzed file.
   late final List<EnumElementSerializer> enums;
 
-  AnalyzeResult.fromElement(ResolvedLibraryResult library, String projectPath) {
+  AnalyzeResult.fromElement(ResolvedLibraryResult library, AnalyzerContext context) {
     final element = library.element;
 
-    filePath = path.normalize(path.relative(element.source.fullName, from: projectPath));
+    filePath = path.normalize(path.relative(element.source.fullName, from: context.projectPath));
 
     // Get all parts of the file
     parts = [];
     for (final part in element.units) {
       if (part != element.definingCompilationUnit) {
-        parts.add(path.relative(part.source.fullName, from: projectPath));
+        parts.add(path.relative(part.source.fullName, from: context.projectPath));
       }
     }
 
-    final visitor = ElementAnalyzer(projectPath);
+    final visitor = ElementAnalyzer(context);
     library.element.accept(visitor);
 
     classes = visitor.classes;

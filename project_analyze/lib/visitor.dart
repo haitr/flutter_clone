@@ -7,9 +7,9 @@ import 'ast/analyzer.dart';
 /// Tracks dependencies between files by visiting elements and
 /// recording references to types defined in other files.
 class ElementAnalyzer extends ElementVisitor<void> {
-  final String projectPath;
+  final AnalyzerContext context;
 
-  ElementAnalyzer(this.projectPath);
+  ElementAnalyzer(this.context);
 
   final classes = <ClassElementSerializer>[];
   final mixins = <MixinElementSerializer>[];
@@ -20,34 +20,34 @@ class ElementAnalyzer extends ElementVisitor<void> {
 
   @override
   void visitClassElement(ClassElement element) {
-    classes.add(ClassElementSerializer.from(element, projectPath));
+    classes.add(ClassElementSerializer.from(element, context));
   }
 
   @override
   void visitMixinElement(MixinElement element) {
-    mixins.add(MixinElementSerializer.from(element, projectPath));
+    mixins.add(MixinElementSerializer.from(element, context));
   }
 
   @override
   void visitEnumElement(EnumElement element) {
-    enums.add(EnumElementSerializer.from(element, projectPath));
+    enums.add(EnumElementSerializer.from(element, context));
     element.visitChildren(this);
   }
 
   @override
   void visitTypeAliasElement(TypeAliasElement element) {
-    typeAliases.add(TypeAliasElementSerializer.from(element, projectPath));
+    typeAliases.add(TypeAliasElementSerializer.from(element, context));
     element.visitChildren(this);
   }
 
   @override
   void visitTopLevelVariableElement(TopLevelVariableElement element) {
-    topLevelVariables.add(TopLevelVariableElementSerializer.from(element, projectPath));
+    topLevelVariables.add(TopLevelVariableElementSerializer.from(element, context));
   }
 
   @override
   void visitFunctionElement(FunctionElement element) {
-    topLevelFunctions.add(FunctionElementSerializer.from(element, projectPath));
+    topLevelFunctions.add(FunctionElementSerializer.from(element, context));
   }
 
   @override
