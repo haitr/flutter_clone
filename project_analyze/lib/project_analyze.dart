@@ -10,9 +10,19 @@ import 'package:yaml/yaml.dart';
 
 import 'analyze_result.dart';
 
-List<String> _getLocalPackages(FileSystem input) {
+YamlMap _loadPubspec(FileSystem input) {
   final file = input.file('pubspec.yaml');
   final pubspec = loadYaml(file.readAsStringSync()) as YamlMap;
+  return pubspec;
+}
+
+String _getProjectName(FileSystem input) {
+  final pubspec = _loadPubspec(input);
+  return pubspec['name'] as String;
+}
+
+List<String> _getLocalPackages(FileSystem input) {
+  final pubspec = _loadPubspec(input);
   final dependencies = pubspec['dependencies'] as YamlMap?;
   final overrides = pubspec['dependency_overrides'] as YamlMap?;
 
@@ -63,7 +73,11 @@ Future<List<AnalyzeResult>> analyzeProjectWithSymbolResolution(FileSystem input)
   SimpleLogger.info('Found ${dartFiles.length} Dart files');
 
   final results = <AnalyzeResult>[];
-  final parsingContext = AnalyzerContext(projectPath: includePaths[0]);
+  final parsingContext = AnalyzerContext(
+    projectPath: includePaths[0],
+    currentFilePath: '',
+    projectName: _getProjectName(input),
+  );
 
   for (final filePath in dartFiles) {
     if (path.basename(filePath) != 'theme_data.dart') {
@@ -76,12 +90,19 @@ Future<List<AnalyzeResult>> analyzeProjectWithSymbolResolution(FileSystem input)
 
     if (library is ResolvedLibraryResult) {
       final libraryPath = library.element.source.fullName;
+
+      final context = parsingContext.copyWith(
+        currentFilePath: path.normalize(
+          path.relative(libraryPath, from: parsingContext.projectPath),
+        ),
+      );
+
       SimpleLogger.progress(
         '\nAnalyzing library: ${path.relative(libraryPath, from: includePaths[0])}',
       );
 
       // Let the visitor analyze classes and track dependencies
-      results.add(AnalyzeResult.fromElement(library, parsingContext));
+      results.add(AnalyzeResult.fromElement(library, context));
 
       //   for (final part in element.units) {
       //     if (part != element.definingCompilationUnit) {
