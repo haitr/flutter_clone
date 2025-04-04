@@ -1,7 +1,7 @@
 part of 'analyzer.dart';
 
 class AnalyzerContext {
-  static final _elementRef = <int>{};
+  static final _typeRef = <int, DartTypeSerializer>{};
 
   final String projectPath;
   final String currentFilePath;
@@ -13,26 +13,36 @@ class AnalyzerContext {
     required this.projectName,
   });
 
-  AnalyzerContext copyWith({String? projectPath, String? currentFilePath, String? projectName}) {
-    return AnalyzerContext(
-      projectPath: projectPath ?? this.projectPath,
-      currentFilePath: currentFilePath ?? this.currentFilePath,
-      projectName: projectName ?? this.projectName,
-    );
-  }
+  AnalyzerContext copyWith({String? projectPath, String? currentFilePath, String? projectName}) =>
+      AnalyzerContext(
+        projectPath: projectPath ?? this.projectPath,
+        currentFilePath: currentFilePath ?? this.currentFilePath,
+        projectName: projectName ?? this.projectName,
+      );
 
-  String getElementRef(InterfaceElement element) {
-    if (!_elementRef.contains(element.hashCode)) {
-      _elementRef.add(element.hashCode);
-      return '${element.hashCode}';
+  String getElementRef(InterfaceElement element) => '#${element.hashCode}';
+
+  DartTypeRefSerializer getTypeRef(DartType type) {
+    final ref = type.hashCode;
+    if (!_typeRef.containsKey(ref)) {
+      // Create a placeholder serializer first
+      final placeholder = DartTypeSerializer(
+        name: type.getDisplayString(withNullability: false),
+        nullabilitySuffix: type.nullabilitySuffix,
+        isDartCore: type.isDartCore,
+        isDartAsync: type.isDartAsync,
+        jsonType: '__placeholder__',
+      );
+
+      // Add the placeholder to cache immediately
+      _typeRef[ref] = placeholder;
+
+      // Now create the full serializer - any recursive calls will find the placeholder
+      final fullSerializer = DartTypeSerializer.from(type, this);
+
+      // Update the cache with the complete serializer
+      _typeRef[ref] = fullSerializer;
     }
-    return '#${element.hashCode}';
+    return DartTypeRefSerializer(ref: '#$ref');
   }
-
-  // String? getTypeRef(DartType type) {
-  //   if (type.element case var element? when element is InterfaceElement) {
-  //     return getElementRef(element);
-  //   }
-  //   return null;
-  // }
 }

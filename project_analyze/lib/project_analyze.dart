@@ -80,9 +80,9 @@ Future<List<AnalyzeResult>> analyzeProjectWithSymbolResolution(FileSystem input)
   );
 
   for (final filePath in dartFiles) {
-    if (path.basename(filePath) != 'theme_data.dart') {
-      continue;
-    }
+    // if (path.basename(filePath) != 'theme_data.dart') {
+    //   continue;
+    // }
 
     // Open the file for analysis first
     final context = collection.contextFor(filePath);
@@ -103,13 +103,6 @@ Future<List<AnalyzeResult>> analyzeProjectWithSymbolResolution(FileSystem input)
 
       // Let the visitor analyze classes and track dependencies
       results.add(AnalyzeResult.fromElement(library, context));
-
-      //   for (final part in element.units) {
-      //     if (part != element.definingCompilationUnit) {
-      //       final partPath = part.source.fullName;
-      //       SimpleLogger.info(' - Part: ${path.relative(partPath, from: includePaths[0])}');
-      //     }
-      //   }
     }
   }
 

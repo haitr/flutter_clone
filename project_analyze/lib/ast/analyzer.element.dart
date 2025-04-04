@@ -219,13 +219,13 @@ abstract class InterfaceElementMetadata implements InstanceElementMetadata {
   List<ConstructorElementMetadata> get constructors;
 
   /// See: [InterfaceElement.interfaces]
-  List<InterfaceElementMetadata> get interfaces;
+  List<InterfaceTypeMetadata> get interfaces;
 
   /// See: [InterfaceElement.mixins]
-  List<InterfaceElementMetadata> get mixins;
+  List<InterfaceTypeMetadata> get mixins;
 
   /// See: [InterfaceElement.supertype]
-  InterfaceElementMetadata? get supertype;
+  InterfaceTypeMetadata? get supertype;
 }
 
 /// See: [ClassElement]
