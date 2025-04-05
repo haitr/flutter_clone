@@ -1,6 +1,50 @@
 part of 'analyzer.dart';
 
 const _refJsonType = '__type_ref__';
+const _refJsonElement = '__element_ref__';
+const _refJsonInternalElement = '__internal_element_ref__';
+const _placeholderJsonType = '__placeholder__';
+
+@JsonSerializable(
+  explicitToJson: true,
+  includeIfNull: false,
+  converters: [
+    _BooleanConverter(),
+    _ConstructorElementListConverter(),
+    _FieldElementListConverter(),
+    _MethodElementListConverter(),
+    _TypeParameterListConverter(),
+    _InterfaceTypeRefListConverter(),
+  ],
+)
+class InterfaceElementRefSerializer extends InterfaceElementSerializer {
+  final String ref;
+  final String jsonType;
+
+  InterfaceElementRefSerializer({
+    required this.ref,
+    required this.jsonType,
+    required super.source,
+    required super.name,
+  }) : super(
+         isPrivate: false,
+         isPublic: false,
+         fields: [],
+         methods: [],
+         typeParameters: [],
+         isSimplyBounded: false,
+         constructors: [],
+         interfaces: [],
+         mixins: [],
+         supertype: null,
+       );
+
+  factory InterfaceElementRefSerializer.fromJson(Map<String, dynamic> json) =>
+      _$InterfaceElementRefSerializerFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$InterfaceElementRefSerializerToJson(this);
+}
 
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class DartTypeRefSerializer extends DartTypeSerializer {
@@ -23,6 +67,12 @@ class InterfaceTypeRefSerializer extends InterfaceTypeSerializer {
   InterfaceTypeRefSerializer({required this.ref, super.jsonType = _refJsonType})
     : super(
         typeArguments: [],
+        element: InterfaceElementRefSerializer(
+          ref: '',
+          jsonType: _refJsonElement,
+          source: '',
+          name: '',
+        ),
         nullabilitySuffix: NullabilitySuffix.none,
         isDartCore: false,
         isDartAsync: false,
@@ -162,7 +212,7 @@ class NeverTypeSerializer extends DartTypeSerializer {
   explicitToJson: true,
   converters: [
     _BooleanConverter(),
-    _TypeParameterListSerializerConverter(),
+    _TypeParameterListConverter(),
     _ParameterElementListConverter(),
     _DartTypeListConverter(),
     _DartTypeMapConverter(),
@@ -233,9 +283,7 @@ class InterfaceTypeSerializer extends DartTypeSerializer implements InterfaceTyp
   @override
   final List<DartTypeSerializer> typeArguments;
   @override
-  // final InterfaceElementSerializer element;
-  @JsonKey(includeToJson: false, includeFromJson: false)
-  InterfaceElementMetadata get element => throw UnimplementedError();
+  final InterfaceElementRefSerializer element;
 
   InterfaceTypeSerializer({
     super.jsonType = '__interface_type__',
@@ -244,14 +292,10 @@ class InterfaceTypeSerializer extends DartTypeSerializer implements InterfaceTyp
     required super.isDartCore,
     required super.isDartAsync,
     required this.typeArguments,
-    // required this.element,
+    required this.element,
   });
 
   factory InterfaceTypeSerializer.from(InterfaceType type, AnalyzerContext context) {
-    final uri = type.element.source.uri;
-    print(
-      '-- uri properties: scheme=${uri.scheme}, userInfo=${uri.userInfo}, host=${uri.host}, port=${uri.port}, path=${uri.path}, query=${uri.query}, fragment=${uri.fragment}',
-    );
     return InterfaceTypeSerializer(
       // ignore: deprecated_member_use
       name: type.getDisplayString(withNullability: false),
@@ -259,7 +303,7 @@ class InterfaceTypeSerializer extends DartTypeSerializer implements InterfaceTyp
       isDartCore: type.isDartCore,
       isDartAsync: type.isDartAsync,
       typeArguments: type.typeArguments.map((e) => DartTypeSerializer.from(e, context)).toList(),
-      // element: InterfaceElementSerializer.from(type.element, projectPath),
+      element: context.getElementRef(type.element),
     );
   }
 

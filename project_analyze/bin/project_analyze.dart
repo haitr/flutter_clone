@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:args/args.dart';
 import 'package:chalkdart/chalkstrings.dart';
 import 'package:file/file.dart';
@@ -11,7 +9,6 @@ import 'package:project_analyze/utils/log.dart';
 import 'package:project_analyze/utils/selective_indent_json_encoder.dart';
 
 // The process is straightforward:
-// 	-	Examine the flutter directory and store the analysis results in [analyzingResults].
 // 	-	Create wrappers in the –output directory. The logic for generating these wrappers can be implemented in generate.wrapper.dart.
 /// Main entry point for the generator
 /// Takes command line arguments and orchestrates the generation process:
@@ -73,9 +70,8 @@ Future<void> main(List<String> arguments) async {
   final cacheSuffix = '-$flutterVersion';
   final cacheFile = fsOutput.file(path.join('.cache', 'flutter$cacheSuffix.json'));
   final progress = SimpleLogger.progress('Caching Flutter structure...');
-  final contents = result.fold<Map<String, dynamic>>({}, (map, e) => map..addAll(e.toJson()));
   final jsonEncoder = SelectiveIndentJsonEncoder();
-  await cacheFile.writeAsString(jsonEncoder.convert(contents));
+  await cacheFile.writeAsString(jsonEncoder.convert(result.toJson()));
   progress.finish(showTiming: true);
   print('Cache size: ${(cacheFile.lengthSync() / 1024 / 1024).toStringAsFixed(2)} MB');
 }
@@ -86,8 +82,8 @@ Future<void> main(List<String> arguments) async {
 ///
 /// The results are stored in [analyzingResults] for later use in generation.
 /// Also handles cleaning of output files if --delete-outputs flag is set.
-Future<List<AnalyzeResult>> _parseResult(FileSystem input, FileSystem output, bool clean) async {
-  var result = <AnalyzeResult>[];
+Future<AnalyzeResult> _parseResult(FileSystem input, FileSystem output, bool clean) async {
+  AnalyzeResult result;
 
   // Retrieve Flutter version from the input directory
   final versionFile = input.file(path.join('flutter', 'version'));
@@ -123,17 +119,18 @@ Future<List<AnalyzeResult>> _parseResult(FileSystem input, FileSystem output, bo
 /// This significantly speeds up subsequent runs by avoiding re-analysis
 ///
 /// [cacheFile] - The File object pointing to the cached JSON data
-/// Returns a List of [AnalyzeResult] objects reconstructed from the cache
-Future<List<AnalyzeResult>> _loadFromCache(File cacheFile) async {
-  final raw = jsonDecode(cacheFile.readAsStringSync()) as Map<String, dynamic>;
-  return raw.entries.map((e) => AnalyzeResult.fromJson(e.value)).toList();
+/// Returns a List of [FileAnalyzeResult] objects reconstructed from the cache
+Future<AnalyzeResult> _loadFromCache(File cacheFile) async {
+  throw UnimplementedError();
+  // final raw = jsonDecode(cacheFile.readAsStringSync()) as Map<String, dynamic>;
+  // return raw.entries.map((e) => FileAnalyzeResult.fromJson(e.value)).toList();
 }
 
 /// Performs fresh analysis of project source files
 /// This is slower than loading from cache but necessary for initial run
 /// or when cache is invalidated
 ///
-/// Returns a List of [AnalyzeResult] objects containing the analysis results
+/// Returns a List of [FileAnalyzeResult] objects containing the analysis results
 /// The results include class declarations and their analyzed structure
-Future<List<AnalyzeResult>> _loadFromScratch(FileSystem input) =>
+Future<AnalyzeResult> _loadFromScratch(FileSystem input) =>
     analyzeProjectWithSymbolResolution(input);

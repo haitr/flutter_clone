@@ -64,12 +64,16 @@ class _MethodElementListConverter extends _ListConverter<MethodElementSerializer
   const _MethodElementListConverter();
 }
 
-class _TypeParameterListSerializerConverter extends _ListConverter<TypeParameterElementSerializer> {
-  const _TypeParameterListSerializerConverter();
+class _TypeParameterListConverter extends _ListConverter<TypeParameterElementSerializer> {
+  const _TypeParameterListConverter();
 }
 
 class _DartTypeListConverter extends _ListConverter<DartTypeSerializer> {
   const _DartTypeListConverter();
+}
+
+class _InterfaceTypeRefListConverter extends _ListConverter<InterfaceTypeRefSerializer> {
+  const _InterfaceTypeRefListConverter();
 }
 
 class _DartTypeMapConverter extends _MapConverter<String, DartTypeSerializer> {

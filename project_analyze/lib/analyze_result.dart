@@ -8,7 +8,7 @@ import 'ast/analyzer.dart';
 ///
 /// This class stores information about classes, mixins, top-level variables, functions,
 /// enums, and other declarations found during static analysis of Dart source files.
-class AnalyzeResult {
+class FileAnalyzeResult {
   late final String filePath;
 
   late final List<String> parts;
@@ -31,7 +31,7 @@ class AnalyzeResult {
   /// Set of enum type names defined in the analyzed file.
   late final List<EnumElementSerializer> enums;
 
-  AnalyzeResult.fromElement(ResolvedLibraryResult library, AnalyzerContext context) {
+  FileAnalyzeResult.fromElement(ResolvedLibraryResult library, AnalyzerContext context) {
     final element = library.element;
     filePath = context.currentFilePath;
 
@@ -57,7 +57,7 @@ class AnalyzeResult {
   /// Creates an AnalyzeResult from JSON.
   ///
   /// [data] is the JSON data to create the result from.
-  AnalyzeResult.fromJson(Map<String, dynamic> data) {
+  FileAnalyzeResult.fromJson(Map<String, dynamic> data) {
     // Get the first key as filePath
     filePath = data.keys.first;
     final fileData = data[filePath] as Map<String, dynamic>;
@@ -157,6 +157,32 @@ class AnalyzeResult {
             for (var e in topLevelFunctions)
               e.name: (e..setSourceRef(key)).toJson()..remove('name'),
           },
+      },
+    };
+  }
+}
+
+class AnalyzeResult {
+  final List<FileAnalyzeResult> files;
+  final Map<int, DartTypeSerializer> typeRef;
+  final Map<int, InterfaceElementSerializer> elementRef;
+
+  AnalyzeResult({required this.files, required this.typeRef, required this.elementRef});
+
+  factory AnalyzeResult.fromJson(Map<String, dynamic> data) {
+    return AnalyzeResult(
+      files: data.entries.map((e) => FileAnalyzeResult.fromJson(e.value)).toList(),
+      typeRef: data['type_ref'],
+      elementRef: data['element_ref'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'files': files.map((e) => e.toJson()).toList(),
+      'type_ref': {for (var entry in typeRef.entries) entry.key.toString(): entry.value.toJson()},
+      'element_ref': {
+        for (var entry in elementRef.entries) entry.key.toString(): entry.value.toJson(),
       },
     };
   }

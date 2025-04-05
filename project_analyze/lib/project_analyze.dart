@@ -49,7 +49,7 @@ List<String> _getLocalPackages(FileSystem input) {
   return localPackages.toList()..sort();
 }
 
-Future<List<AnalyzeResult>> analyzeProjectWithSymbolResolution(FileSystem input) async {
+Future<AnalyzeResult> analyzeProjectWithSymbolResolution(FileSystem input) async {
   final localPackages = _getLocalPackages(input);
 
   SimpleLogger.info('Analyzing project at: ${input.currentDirectory.path}');
@@ -72,10 +72,9 @@ Future<List<AnalyzeResult>> analyzeProjectWithSymbolResolution(FileSystem input)
 
   SimpleLogger.info('Found ${dartFiles.length} Dart files');
 
-  final results = <AnalyzeResult>[];
+  final results = <FileAnalyzeResult>[];
   final parsingContext = AnalyzerContext(
     projectPath: includePaths[0],
-    currentFilePath: '',
     projectName: _getProjectName(input),
   );
 
@@ -91,20 +90,21 @@ Future<List<AnalyzeResult>> analyzeProjectWithSymbolResolution(FileSystem input)
     if (library is ResolvedLibraryResult) {
       final libraryPath = library.element.source.fullName;
 
-      final context = parsingContext.copyWith(
-        currentFilePath: path.normalize(
-          path.relative(libraryPath, from: parsingContext.projectPath),
-        ),
+      parsingContext.currentFilePath = path.normalize(
+        path.relative(libraryPath, from: parsingContext.projectPath),
       );
 
-      SimpleLogger.progress(
-        '\nAnalyzing library: ${path.relative(libraryPath, from: includePaths[0])}',
-      );
+      // SimpleLogger.progress(
+      //   '\nAnalyzing library: ${path.relative(libraryPath, from: includePaths[0])}',
+      // );
 
       // Let the visitor analyze classes and track dependencies
-      results.add(AnalyzeResult.fromElement(library, context));
+      results.add(FileAnalyzeResult.fromElement(library, parsingContext));
     }
   }
-
-  return results;
+  return AnalyzeResult(
+    files: results,
+    typeRef: parsingContext.typeRef,
+    elementRef: parsingContext.elementRef,
+  );
 }
