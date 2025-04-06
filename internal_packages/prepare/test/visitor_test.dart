@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/analysis/utilities.dart';
-import 'package:prepare/visitor.dart';
+import 'package:prepare/src/visitor.dart';
 import 'package:test/test.dart';
 
 void main() {

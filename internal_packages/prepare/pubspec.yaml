@@ -1,6 +1,7 @@
 name: prepare
 description: A tool to prepare and process Dart/Flutter source code for cloning and code generation.
 version: 0.0.1
+publish_to: none
 
 environment:
   sdk: ">=3.4.0 <4.0.0"
@@ -14,8 +15,9 @@ dependencies:
   analyzer: ^7.3.0
   collection: ^1.18.0
   code_builder: ^4.10.0
-  fs_shim: ^2.3.4
   glob: ^2.1.3
+  file_system:
+    path: ../file_system
 
 dev_dependencies:
   lints: ^5.1.1

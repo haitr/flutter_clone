@@ -1,15 +1,15 @@
-import 'package:fs_shim/fs_memory.dart';
+import 'package:file_system/file_system.dart';
+import 'package:prepare/prepare.dart';
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
-
-// Import the functions to test
-import '../bin/prepare.dart' show modifyFlutter, modifyPubspec, modifySkyEngine;
 
 void main() {
   group('modifySkyEngine tests', () {
     late FileSystem fsSkyEngine;
+    late Directory skyEngineDir;
     setUp(() async {
-      fsSkyEngine = newFileSystemMemory();
+      fsSkyEngine = MemoryFileSystem();
+      skyEngineDir = fsSkyEngine.directory('.');
       await fsSkyEngine.directory('lib').create(recursive: true);
       await fsSkyEngine.file('pubspec.yaml').writeAsString('''
         name: sky_engine
@@ -20,7 +20,7 @@ void main() {
 
     test('should rename package to cooked_sky_engine in pubspec.yaml', () async {
       // Execute
-      await modifySkyEngine(fsSkyEngine);
+      await modifySkyEngine(skyEngineDir);
 
       // Verify
       final pubspec = await fsSkyEngine.file('pubspec.yaml').readAsString();
@@ -44,7 +44,7 @@ void main() {
       ''');
 
       // Execute
-      await modifySkyEngine(fsSkyEngine);
+      await modifySkyEngine(skyEngineDir);
 
       // Verify
       final content = await fsSkyEngine.file('lib/ui/ui.dart').readAsString();
@@ -89,7 +89,7 @@ void main() {
       ''');
 
       // Execute
-      await modifySkyEngine(fsSkyEngine);
+      await modifySkyEngine(skyEngineDir);
 
       // Verify
       final content = await fsSkyEngine.file('lib/ui/class_types.dart').readAsString();
@@ -113,8 +113,10 @@ void main() {
 
   group('modifyFlutter tests', () {
     late FileSystem fsFlutter;
+    late Directory flutterDir;
     setUp(() async {
-      fsFlutter = newFileSystemMemory();
+      fsFlutter = MemoryFileSystem();
+      flutterDir = fsFlutter.directory('.');
       await fsFlutter.directory('lib').create(recursive: true);
     });
 
@@ -131,7 +133,7 @@ void main() {
       ''');
 
       // Execute
-      await modifyFlutter(fsFlutter);
+      await modifyFlutter(flutterDir);
 
       // Verify
       final pubspec = await fsFlutter.file('pubspec.yaml').readAsString();
@@ -162,7 +164,7 @@ void main() {
       ''');
 
       // Execute
-      await modifyFlutter(fsFlutter);
+      await modifyFlutter(flutterDir);
 
       // Verify
       final content = await fsFlutter.file('lib/material.dart').readAsString();
@@ -194,7 +196,7 @@ void main() {
       ''');
 
       // Execute
-      await modifyFlutter(fsFlutter);
+      await modifyFlutter(flutterDir);
 
       // Verify
       final content = await fsFlutter.file('lib/complex_imports.dart').readAsString();
@@ -209,40 +211,6 @@ void main() {
           content,
           contains(
               "import 'package:cooked_sky_engine/ui_web/ui_web.dart' show PlatformViewRegistry"));
-    });
-  });
-
-  group('modifyPubspec tests', () {
-    late FileSystem fs;
-    final outputPath = '/path/to/flutter';
-
-    setUp(() async {
-      // Create a fresh memory file system for each test
-      fs = newFileSystemMemory();
-      await fs.file('pubspec.yaml').writeAsString('''
-        name: flutter_clone
-        description: Dummy Flutter project
-        version: 1.0.0
-
-        dependencies:
-          flutter:
-            sdk: flutter
-          some_package: ^1.0.0
-      ''');
-    });
-
-    test('should update main pubspec.yaml to use local Flutter', () async {
-      // Execute our testable version
-      await modifyPubspec(fs, outputPath);
-
-      // Verify
-      final pubspec = await fs.file('pubspec.yaml').readAsString();
-      print(pubspec);
-      final yaml = loadYaml(pubspec);
-
-      // Check that Flutter dependency is updated to use local path
-      expect(yaml['dependencies']['flutter'], isMap);
-      expect(yaml['dependencies']['flutter']['path'], equals(outputPath));
     });
   });
 }

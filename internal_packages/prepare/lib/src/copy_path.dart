@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:file_system/file_system.dart';
 import 'package:glob/glob.dart';
 import 'package:path/path.dart' as path;
 
@@ -7,17 +6,17 @@ import 'package:path/path.dart' as path;
 ///
 /// Preserves the directory structure and handles files, directories and symlinks.
 ///
-/// @param from Source directory path
-/// @param to Destination directory path
+/// @param from Source directory
+/// @param to Destination directory
 Future<void> copyPath(
-  String from,
-  String to, {
+  Directory from,
+  Directory to, {
   List<String> includes = const ['**/*'],
   List<String>? excludes,
 }) async {
-  await Directory(to).create(recursive: true);
-  await for (final file in Directory(from).list(recursive: true)) {
-    final relativePath = path.relative(file.path, from: from);
+  await to.create(recursive: true);
+  await for (final file in from.list(recursive: true)) {
+    final relativePath = path.relative(file.path, from: from.path);
 
     var shouldCopy = false;
     // Check if the file should be included based on includes patterns
@@ -42,19 +41,17 @@ Future<void> copyPath(
       continue;
     }
 
-    final copyTo = path.join(to, relativePath);
+    final copyTo = to.fileSystem.file(path.join(to.path, relativePath));
     if (file is Directory) {
-      await Directory(copyTo).create(recursive: true);
+      await copyTo.parent.create(recursive: true);
     } else if (file is File) {
       // Create parent directory before copying file
-      final parent = path.dirname(copyTo);
-      await Directory(parent).create(recursive: true);
-      await File(file.path).copy(copyTo);
+      await copyTo.parent.create(recursive: true);
+      await file.copy(copyTo.path);
     } else if (file is Link) {
       // Create parent directory before creating link
-      final parent = path.dirname(copyTo);
-      await Directory(parent).create(recursive: true);
-      await Link(copyTo).create(await file.target(), recursive: true);
+      await copyTo.parent.create(recursive: true);
+      await copyTo.fileSystem.link(copyTo.path).create(await file.target(), recursive: true);
     }
   }
 }
