@@ -5,8 +5,8 @@ import 'package:path/path.dart' as path;
 import 'package:project_analyze/analyze_result.dart';
 import 'package:project_analyze/project_analyze.dart';
 import 'package:project_analyze/utils/local_file_system.dart';
-import 'package:project_analyze/utils/log.dart';
 import 'package:project_analyze/utils/selective_indent_json_encoder.dart';
+import 'package:simple_logger/simple_logger.dart';
 
 // The process is straightforward:
 // 	-	Create wrappers in the –output directory. The logic for generating these wrappers can be implemented in generate.wrapper.dart.
@@ -52,7 +52,7 @@ Future<void> main(List<String> arguments) async {
 
   SimpleLogger.setVerbose(verbose);
 
-  print('Preparing...');
+  SimpleLogger.info('Preparing...');
 
   final fsInput = WorkingDirectoryFileSystem(path.normalize(input));
   final fsOutput = WorkingDirectoryFileSystem(path.normalize(output));
@@ -70,10 +70,9 @@ Future<void> main(List<String> arguments) async {
   final cacheSuffix = '-$flutterVersion';
   final cacheFile = fsOutput.file(path.join('.cache', 'flutter$cacheSuffix.json'));
   final progress = SimpleLogger.progress('Caching Flutter structure...');
-  final jsonEncoder = SelectiveIndentJsonEncoder();
-  await cacheFile.writeAsString(jsonEncoder.convert(result.toJson()));
+  await saveToCache(result, cacheFile, encoder: const SelectiveIndentJsonEncoder());
   progress.finish(showTiming: true);
-  print('Cache size: ${(cacheFile.lengthSync() / 1024 / 1024).toStringAsFixed(2)} MB');
+  SimpleLogger.info('Cache size: ${(cacheFile.lengthSync() / 1024 / 1024).toStringAsFixed(2)} MB');
 }
 
 /// Prepares the analysis results by either:
@@ -90,7 +89,7 @@ Future<AnalyzeResult> _parseResult(FileSystem input, FileSystem output, bool cle
   var cacheSuffix = '';
   if (await versionFile.exists()) {
     final flutterVersion = await versionFile.readAsString();
-    print('Current Flutter version: ${flutterVersion.yellow}');
+    SimpleLogger.info('Current Flutter version: ${flutterVersion.yellow}');
     cacheSuffix = '-$flutterVersion';
   }
 
@@ -100,7 +99,7 @@ Future<AnalyzeResult> _parseResult(FileSystem input, FileSystem output, bool cle
 
   if (await cacheFile.exists()) {
     final size = (await cacheFile.stat()).size / 1024 / 1024;
-    print(
+    SimpleLogger.info(
       'Found cache at ${path.relative(cacheFile.path, from: path.current).yellowBright} | Cache size: $size Mb...',
     );
     final progress = SimpleLogger.progress('Loading from cache...');
@@ -120,11 +119,7 @@ Future<AnalyzeResult> _parseResult(FileSystem input, FileSystem output, bool cle
 ///
 /// [cacheFile] - The File object pointing to the cached JSON data
 /// Returns a List of [FileAnalyzeResult] objects reconstructed from the cache
-Future<AnalyzeResult> _loadFromCache(File cacheFile) async {
-  throw UnimplementedError();
-  // final raw = jsonDecode(cacheFile.readAsStringSync()) as Map<String, dynamic>;
-  // return raw.entries.map((e) => FileAnalyzeResult.fromJson(e.value)).toList();
-}
+Future<AnalyzeResult> _loadFromCache(File cacheFile) async => loadFromCache(cacheFile);
 
 /// Performs fresh analysis of project source files
 /// This is slower than loading from cache but necessary for initial run

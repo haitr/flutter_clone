@@ -1,0 +1,26 @@
+name: flutter_clone
+description: A sample command-line application.
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: ^3.7.2
+
+# Add regular dependencies here.
+dependencies:
+  path: ^1.8.0
+  cli_util: ^0.4.1
+  console_bars: ^1.2.0
+  chalkdart: ^3.0.4
+  code_builder: ^4.10.0
+  args: ^2.5.0
+  file_system:
+    path: ../internal_packages/file_system
+  prepare:
+    path: ../internal_packages/prepare
+  simple_logger:
+    path: ../internal_packages/simple_logger
+
+dev_dependencies:
+  lints: ^5.0.0
+  test: ^1.24.0

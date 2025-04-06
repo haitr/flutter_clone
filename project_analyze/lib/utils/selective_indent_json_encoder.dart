@@ -4,7 +4,7 @@ class SelectiveIndentJsonEncoder extends Converter<Object?, String> {
   final int thresholdLength;
   final String indent;
 
-  SelectiveIndentJsonEncoder({this.thresholdLength = 80, this.indent = '  '});
+  const SelectiveIndentJsonEncoder({this.thresholdLength = 80, this.indent = '  '});
 
   @override
   String convert(Object? object) {

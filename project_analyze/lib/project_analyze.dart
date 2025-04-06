@@ -1,14 +1,16 @@
+import 'dart:convert';
+
 import 'package:analyzer/dart/analysis/analysis_context_collection.dart';
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:file/file.dart';
 import 'package:glob/glob.dart';
 import 'package:glob/list_local_fs.dart';
 import 'package:path/path.dart' as path;
-import 'package:project_analyze/ast/analyzer.dart';
-import 'package:project_analyze/utils/log.dart';
+import 'package:simple_logger/simple_logger.dart';
 import 'package:yaml/yaml.dart';
 
 import 'analyze_result.dart';
+import 'ast/analyzer.dart';
 
 YamlMap _loadPubspec(FileSystem input) {
   final file = input.file('pubspec.yaml');
@@ -48,6 +50,16 @@ List<String> _getLocalPackages(FileSystem input) {
 
   return localPackages.toList()..sort();
 }
+
+AnalyzeResult loadFromCache(File cacheFile) {
+  return AnalyzeResult.fromJson(jsonDecode(cacheFile.readAsStringSync()) as Map<String, dynamic>);
+}
+
+Future<void> saveToCache(
+  AnalyzeResult result,
+  File cacheFile, {
+  Converter<Object?, String> encoder = const JsonEncoder(),
+}) async => await cacheFile.writeAsString(encoder.convert(result.toJson()));
 
 Future<AnalyzeResult> analyzeProjectWithSymbolResolution(FileSystem input) async {
   final localPackages = _getLocalPackages(input);

@@ -2,7 +2,7 @@
 
 import 'package:args/args.dart';
 import 'package:file_system/file_system.dart';
-import 'package:prepare/prepare.dart';
+import 'package:prepare/src/prepare.dart';
 
 void main(List<String> args) async {
   // Command line argument parser configuration
