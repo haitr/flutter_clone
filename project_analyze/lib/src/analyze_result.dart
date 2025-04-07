@@ -1,6 +1,6 @@
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:path/path.dart' as path;
-import 'package:project_analyze/visitor.dart';
+import 'package:project_analyze/src/ast/visitor.dart';
 
 import 'ast/analyzer.dart';
 
@@ -171,9 +171,13 @@ class AnalyzeResult {
 
   factory AnalyzeResult.fromJson(Map<String, dynamic> data) {
     return AnalyzeResult(
-      files: data.entries.map((e) => FileAnalyzeResult.fromJson(e.value)).toList(),
-      typeRef: data['type_ref'],
-      elementRef: data['element_ref'],
+      files: (data['files'] as List).map((e) => FileAnalyzeResult.fromJson(e)).toList(),
+      typeRef: (data['type_ref'] as Map).map(
+        (key, value) => MapEntry(int.parse(key), DartTypeSerializer.fromJson(value)),
+      ),
+      elementRef: (data['element_ref'] as Map).map(
+        (key, value) => MapEntry(int.parse(key), InterfaceElementSerializer.fromJson(value)),
+      ),
     );
   }
 

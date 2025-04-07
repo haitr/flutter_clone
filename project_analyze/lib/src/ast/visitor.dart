@@ -1,6 +1,6 @@
 import 'package:analyzer/dart/element/element.dart';
 
-import 'ast/analyzer.dart';
+import 'analyzer.dart';
 
 /// Analyzes cross-references between Dart files in a project.
 ///

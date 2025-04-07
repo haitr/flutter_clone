@@ -1,11 +1,10 @@
 import 'package:args/args.dart';
-import 'package:chalkdart/chalkstrings.dart';
 import 'package:file/file.dart';
+import 'package:file/local.dart';
 import 'package:path/path.dart' as path;
-import 'package:project_analyze/analyze_result.dart';
 import 'package:project_analyze/project_analyze.dart';
-import 'package:project_analyze/utils/local_file_system.dart';
-import 'package:project_analyze/utils/selective_indent_json_encoder.dart';
+import 'package:project_analyze/src/utils/local_file_system.dart';
+import 'package:project_analyze/src/utils/selective_indent_json_encoder.dart';
 import 'package:simple_logger/simple_logger.dart';
 
 // The process is straightforward:
@@ -22,19 +21,8 @@ Future<void> main(List<String> arguments) async {
   final parser =
       ArgParser()
         ..addFlag('verbose', abbr: 'v', help: 'Enable verbose output', negatable: false)
-        ..addOption('output', abbr: 'o', help: 'Output directory', defaultsTo: './generated')
-        ..addOption(
-          'input',
-          abbr: 'i',
-          help: 'Input dependencies directory',
-          defaultsTo: './dependencies',
-        )
-        ..addFlag(
-          'delete-outputs',
-          abbr: 'd',
-          help: 'Delete all output and cache files',
-          negatable: false,
-        )
+        ..addOption('output', abbr: 'o', help: 'Output json file', defaultsTo: './generated.json')
+        ..addOption('input', abbr: 'i', help: 'Input dependencies', defaultsTo: './dependencies')
         ..addFlag('help', abbr: 'h', help: 'Help command', negatable: false);
 
   // Parse arguments
@@ -48,84 +36,32 @@ Future<void> main(List<String> arguments) async {
   final bool verbose = cmds['verbose']; // Whether to enable verbose logging
   final String input = cmds['input']; // Input directory path
   final String output = cmds['output']; // Output directory path
-  final bool clean = cmds['delete-outputs']; // Whether to clean output files
 
   SimpleLogger.setVerbose(verbose);
 
-  SimpleLogger.info('Preparing...');
-
-  final fsInput = WorkingDirectoryFileSystem(path.normalize(input));
-  final fsOutput = WorkingDirectoryFileSystem(path.normalize(output));
-
-  if (fsOutput.directory('.') case final outputDir when !outputDir.existsSync()) {
-    outputDir.createSync(recursive: true);
-  }
-
-  final result = await _parseResult(fsInput, fsOutput, clean);
-
-  if (fsOutput.directory('.cache') case final cacheDir when !cacheDir.existsSync()) {
-    cacheDir.createSync();
-  }
-  final flutterVersion = await fsInput.file('version').readAsString();
-  final cacheSuffix = '-$flutterVersion';
-  final cacheFile = fsOutput.file(path.join('.cache', 'flutter$cacheSuffix.json'));
   final progress = SimpleLogger.progress('Caching Flutter structure...');
+
+  final inputFs = WorkingDirectoryFileSystem(path.normalize(input));
+  final result = await _loadFromScratch(inputFs);
+  final outputFs = LocalFileSystem();
+  final cacheFile = outputFs.currentDirectory.childFile(output);
+
+  if (cacheFile.existsSync()) {
+    cacheFile.deleteSync();
+  } else {
+    cacheFile.createSync();
+  }
+
   await saveToCache(result, cacheFile, encoder: const SelectiveIndentJsonEncoder());
   progress.finish(showTiming: true);
   SimpleLogger.info('Cache size: ${(cacheFile.lengthSync() / 1024 / 1024).toStringAsFixed(2)} MB');
 }
 
-/// Prepares the analysis results by either:
-/// - Loading from cached JSON if available (.cache/flutter-{version}.json)
-/// - Performing fresh analysis of Flutter source files
-///
-/// The results are stored in [analyzingResults] for later use in generation.
-/// Also handles cleaning of output files if --delete-outputs flag is set.
-Future<AnalyzeResult> _parseResult(FileSystem input, FileSystem output, bool clean) async {
-  AnalyzeResult result;
-
-  // Retrieve Flutter version from the input directory
-  final versionFile = input.file(path.join('flutter', 'version'));
-  var cacheSuffix = '';
-  if (await versionFile.exists()) {
-    final flutterVersion = await versionFile.readAsString();
-    SimpleLogger.info('Current Flutter version: ${flutterVersion.yellow}');
-    cacheSuffix = '-$flutterVersion';
-  }
-
-  // Check for existing cache
-  final cacheFile = output.file(path.join('.cache', 'flutter$cacheSuffix.json'));
-  if (clean && await cacheFile.exists()) await cacheFile.delete();
-
-  if (await cacheFile.exists()) {
-    final size = (await cacheFile.stat()).size / 1024 / 1024;
-    SimpleLogger.info(
-      'Found cache at ${path.relative(cacheFile.path, from: path.current).yellowBright} | Cache size: $size Mb...',
-    );
-    final progress = SimpleLogger.progress('Loading from cache...');
-    result = await _loadFromCache(cacheFile);
-    progress.finish(showTiming: true);
-  } else {
-    final progress = SimpleLogger.progress('Cache not found. Load from scratch...');
-    result = await _loadFromScratch(input);
-    progress.finish(showTiming: true);
-  }
-
-  return result;
-}
-
-/// Loads analysis results from a previously cached JSON file
-/// This significantly speeds up subsequent runs by avoiding re-analysis
-///
-/// [cacheFile] - The File object pointing to the cached JSON data
-/// Returns a List of [FileAnalyzeResult] objects reconstructed from the cache
-Future<AnalyzeResult> _loadFromCache(File cacheFile) async => loadFromCache(cacheFile);
-
 /// Performs fresh analysis of project source files
 /// This is slower than loading from cache but necessary for initial run
 /// or when cache is invalidated
 ///
-/// Returns a List of [FileAnalyzeResult] objects containing the analysis results
+/// Returns a List of [AnalyzeResult] objects containing the analysis results
 /// The results include class declarations and their analyzed structure
 Future<AnalyzeResult> _loadFromScratch(FileSystem input) =>
     analyzeProjectWithSymbolResolution(input);

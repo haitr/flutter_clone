@@ -20,6 +20,8 @@ dependencies:
     path: ../internal_packages/prepare
   simple_logger:
     path: ../internal_packages/simple_logger
+  project_analyze:
+    path: ../project_analyze
 
 dev_dependencies:
   lints: ^5.0.0

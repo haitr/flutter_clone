@@ -20,17 +20,20 @@ final String output = 'output';
 /// 1. Copies required Flutter dependencies
 /// 2. Modifies sky_engine package
 /// 3. Updates Flutter package references
-/// 4. Updates project pubspec.yaml
 Future<void> cloneFlutter(FileSystem fs) async {
   await copyDependencies(fs);
 
   // modify sky_engine
   final skyEngineDir = fs.directory(path.join(fs.currentDirectory.path, 'sky_engine'));
   modifySkyEngine(skyEngineDir);
+  // Run pub get for sky_engine
+  await io.Process.run('dart', ['pub', 'get'], workingDirectory: skyEngineDir.path);
 
   // modify flutter
   final flutterDir = fs.directory(path.join(fs.currentDirectory.path, 'flutter'));
   modifyFlutter(flutterDir);
+  // Run pub get for flutter
+  await io.Process.run('dart', ['pub', 'get'], workingDirectory: flutterDir.path);
 }
 
 /// Determines the Flutter SDK installation directory path.

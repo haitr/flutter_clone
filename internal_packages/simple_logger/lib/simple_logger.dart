@@ -14,4 +14,8 @@ class SimpleLogger {
   static void info(String message) {
     return _instance.stdout('[INFO] $message');
   }
+
+  static void error(String message) {
+    return _instance.stderr('[ERROR] $message');
+  }
 }

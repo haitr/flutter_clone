@@ -6,7 +6,7 @@ import 'package:analyzer/source/source.dart';
 import 'package:analyzer/src/dart/constant/evaluation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:path/path.dart' as path;
-import 'package:project_analyze/extensions/extensions.dart';
+import 'package:project_analyze/src/extensions/extensions.dart';
 
 part 'analyzer.context.dart';
 part 'analyzer.element.dart';

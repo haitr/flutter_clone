@@ -17,11 +17,7 @@ scripts:
     description: Run analyzer in all packages.
     run: melos exec -- dart analyze .
 
-  prepare:
-    description: Prepare all packages for cloning.
+  clone:
+    description: Clone Flutter.
     steps:
-      - dart run internal_packages/prepare/bin/prepare.dart
-
-  xx:
-    steps:
-      - dart run project_analyze/bin/project_analyze.dart -i dependencies/flutter
+      - dart run flutter_clone/bin/flutter_clone.dart

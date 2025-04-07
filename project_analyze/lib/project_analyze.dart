@@ -9,8 +9,12 @@ import 'package:path/path.dart' as path;
 import 'package:simple_logger/simple_logger.dart';
 import 'package:yaml/yaml.dart';
 
-import 'analyze_result.dart';
-import 'ast/analyzer.dart';
+import 'src/analyze_result.dart';
+import 'src/ast/analyzer.dart';
+
+export 'src/analyze_result.dart';
+export 'src/ast/analyzer.dart';
+export 'src/utils/selective_indent_json_encoder.dart';
 
 YamlMap _loadPubspec(FileSystem input) {
   final file = input.file('pubspec.yaml');
@@ -106,9 +110,9 @@ Future<AnalyzeResult> analyzeProjectWithSymbolResolution(FileSystem input) async
         path.relative(libraryPath, from: parsingContext.projectPath),
       );
 
-      SimpleLogger.progress(
-        '\nAnalyzing library: ${path.relative(libraryPath, from: includePaths[0])}',
-      );
+      // SimpleLogger.progress(
+      //   '\nAnalyzing library: ${path.relative(libraryPath, from: includePaths[0])}',
+      // );
 
       // Let the visitor analyze classes and track dependencies
       results.add(FileAnalyzeResult.fromElement(library, parsingContext));
