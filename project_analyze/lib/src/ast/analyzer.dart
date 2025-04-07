@@ -8,25 +8,16 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:path/path.dart' as path;
 import 'package:project_analyze/src/extensions/extensions.dart';
 
+import '../utils/json_utils.dart';
+
 part 'analyzer.context.dart';
 part 'analyzer.element.dart';
 part 'analyzer.g.dart';
-part 'analyzer.json.dart';
 part 'analyzer.serializer.type.dart';
 part 'analyzer.type.dart';
 part 'analyzer.util.dart';
 
-@JsonSerializable(
-  explicitToJson: true,
-  converters: [
-    _BooleanConverter(),
-    _ConstructorElementListConverter(),
-    _FieldElementListConverter(),
-    _MethodElementListConverter(),
-    _TypeParameterListConverter(),
-  ],
-  includeIfNull: false,
-)
+@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class ClassElementSerializer
     with _SourceSerializer<String>, _ReferenceableSerializer
     implements ClassElementMetadata {
@@ -40,6 +31,14 @@ class ClassElementSerializer
   final List<MethodElementSerializer> methods;
   @override
   final List<TypeParameterElementSerializer> typeParameters;
+  @override
+  final List<InterfaceTypeRefSerializer> interfaces;
+  @override
+  final List<InterfaceTypeRefSerializer> mixins;
+  @override
+  final InterfaceTypeRefSerializer? supertype;
+  @override
+  final List<InterfaceTypeRefSerializer> allSupertypes;
   @override
   final bool hasNonFinalField;
   @override
@@ -72,14 +71,6 @@ class ClassElementSerializer
   final bool isSimplyBounded;
   @override
   final bool isValidMixin;
-  @override
-  final List<InterfaceTypeRefSerializer> interfaces;
-  @override
-  final List<InterfaceTypeRefSerializer> mixins;
-  @override
-  final InterfaceTypeRefSerializer? supertype;
-  @override
-  final List<InterfaceTypeRefSerializer> allSupertypes;
 
   @override
   List<_SourceSerializer> get _refList => [
@@ -169,18 +160,7 @@ class ClassElementSerializer
   }
 }
 
-@JsonSerializable(
-  explicitToJson: true,
-  converters: [
-    _BooleanConverter(),
-    _ConstructorElementListConverter(),
-    _FieldElementListConverter(),
-    _MethodElementListConverter(),
-    _TypeParameterListConverter(),
-    _InterfaceTypeRefListConverter(),
-  ],
-  includeIfNull: false,
-)
+@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class InterfaceElementSerializer
     with _SourceSerializer<String>
     implements InterfaceElementMetadata {
@@ -262,17 +242,7 @@ class InterfaceElementSerializer
   Map<String, dynamic> toJson() => _$InterfaceElementSerializerToJson(this);
 }
 
-@JsonSerializable(
-  explicitToJson: true,
-  converters: [
-    _BooleanConverter(),
-    _ConstructorElementListConverter(),
-    _FieldElementListConverter(),
-    _MethodElementListConverter(),
-    _TypeParameterListConverter(),
-  ],
-  includeIfNull: false,
-)
+@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class MixinElementSerializer
     with _SourceSerializer<String>, _ReferenceableSerializer
     implements MixinElementMetadata {
@@ -287,14 +257,6 @@ class MixinElementSerializer
   @override
   final List<ConstructorElementSerializer> constructors;
   @override
-  final bool isPrivate;
-  @override
-  final bool isPublic;
-  @override
-  final bool isSimplyBounded;
-  @override
-  final bool isBase;
-  @override
   final List<InterfaceTypeRefSerializer> superclassConstraints;
   @override
   final List<InterfaceTypeRefSerializer> interfaces;
@@ -304,6 +266,14 @@ class MixinElementSerializer
   final InterfaceTypeRefSerializer? supertype;
   @override
   final List<InterfaceTypeRefSerializer> allSupertypes;
+  @override
+  final bool isPrivate;
+  @override
+  final bool isPublic;
+  @override
+  final bool isSimplyBounded;
+  @override
+  final bool isBase;
   @override
   List<_SourceSerializer> get _refList => [
     ...constructors,
@@ -365,17 +335,7 @@ class MixinElementSerializer
   Map<String, dynamic> toJson() => _$MixinElementSerializerToJson(this);
 }
 
-@JsonSerializable(
-  explicitToJson: true,
-  converters: [
-    _BooleanConverter(),
-    _ConstructorElementListConverter(),
-    _FieldElementListConverter(),
-    _MethodElementListConverter(),
-    _TypeParameterListConverter(),
-  ],
-  includeIfNull: false,
-)
+@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class EnumElementSerializer
     with _SourceSerializer<String>, _ReferenceableSerializer
     implements EnumElementMetadata {
@@ -390,12 +350,6 @@ class EnumElementSerializer
   @override
   final List<ConstructorElementSerializer> constructors;
   @override
-  final bool isPrivate;
-  @override
-  final bool isPublic;
-  @override
-  final bool isSimplyBounded;
-  @override
   final List<InterfaceTypeRefSerializer> interfaces;
   @override
   final List<InterfaceTypeRefSerializer> mixins;
@@ -403,6 +357,12 @@ class EnumElementSerializer
   final InterfaceTypeRefSerializer? supertype;
   @override
   final List<InterfaceTypeRefSerializer> allSupertypes;
+  @override
+  final bool isPrivate;
+  @override
+  final bool isPublic;
+  @override
+  final bool isSimplyBounded;
 
   @override
   List<_SourceSerializer> get _refList => [
@@ -460,28 +420,20 @@ class EnumElementSerializer
   Map<String, dynamic> toJson() => _$EnumElementSerializerToJson(this);
 }
 
-@JsonSerializable(
-  explicitToJson: true,
-  converters: [
-    _BooleanConverter(),
-    _TypeParameterListConverter(),
-    _ParameterElementListConverter(),
-  ],
-  includeIfNull: false,
-)
+@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class TypeAliasElementSerializer
     with _SourceSerializer<String>
     implements TypeAliasElementMetadata {
   @override
   final String name;
   @override
+  final List<TypeParameterElementSerializer> typeParameters;
+  @override
   final bool isPrivate;
   @override
   final bool isPublic;
   @override
   final bool isSimplyBounded;
-  @override
-  final List<TypeParameterElementSerializer> typeParameters;
   @override
   final DartTypeRefSerializer aliasedType;
 
@@ -520,18 +472,7 @@ class TypeAliasElementSerializer
   Map<String, dynamic> toJson() => _$TypeAliasElementSerializerToJson(this);
 }
 
-@JsonSerializable(
-  explicitToJson: true,
-  converters: [
-    _BooleanConverter(),
-    _ConstructorElementListConverter(),
-    _FieldElementListConverter(),
-    _MethodElementListConverter(),
-    _TypeParameterListConverter(),
-    _ParameterElementListConverter(),
-  ],
-  includeIfNull: false,
-)
+@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class ConstructorElementSerializer
     with _SourceSerializer<String>
     implements ConstructorElementMetadata {
@@ -545,6 +486,10 @@ class ConstructorElementSerializer
   final ConstructorElementSerializer? redirectedConstructor;
   @override
   final FunctionTypeRefSerializer type;
+  @override
+  final InterfaceTypeRefSerializer returnType;
+  @override
+  final ConstructorElementSerializer? superConstructor;
   @override
   final bool isPrivate;
   @override
@@ -573,10 +518,6 @@ class ConstructorElementSerializer
   final bool isSynchronous;
   @override
   final bool isConst;
-  @override
-  final InterfaceTypeRefSerializer returnType;
-  @override
-  final ConstructorElementSerializer? superConstructor;
   @override
   final bool isDefaultConstructor;
   @override
@@ -664,7 +605,7 @@ class ConstructorElementSerializer
   Map<String, dynamic> toJson() => _$ConstructorElementSerializerToJson(this);
 }
 
-@JsonSerializable(explicitToJson: true, converters: [_BooleanConverter()], includeIfNull: false)
+@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class FieldElementSerializer with _SourceSerializer<String?> implements FieldElementMetadata {
   @override
   final String name;
@@ -672,6 +613,8 @@ class FieldElementSerializer with _SourceSerializer<String?> implements FieldEle
   final PropertyAccessorElementSerializer? getter;
   @override
   final PropertyAccessorElementSerializer? setter;
+  @override
+  final DartTypeRefSerializer type;
   @override
   final bool isPrivate;
   @override
@@ -688,8 +631,6 @@ class FieldElementSerializer with _SourceSerializer<String?> implements FieldEle
   final bool isFinal;
   @override
   final bool isLate;
-  @override
-  final DartTypeRefSerializer type;
   @override
   final bool hasInitializer;
   @override
@@ -768,15 +709,7 @@ class FieldElementSerializer with _SourceSerializer<String?> implements FieldEle
   Map<String, dynamic> toJson() => _$FieldElementSerializerToJson(this);
 }
 
-@JsonSerializable(
-  explicitToJson: true,
-  converters: [
-    _BooleanConverter(),
-    _TypeParameterListConverter(),
-    _ParameterElementListConverter(),
-  ],
-  includeIfNull: false,
-)
+@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class MethodElementSerializer with _SourceSerializer<String> implements MethodElementMetadata {
   @override
   final String name;
@@ -785,6 +718,10 @@ class MethodElementSerializer with _SourceSerializer<String> implements MethodEl
   @override
   final List<ParameterElementSerializer> parameters;
   @override
+  final DartTypeRefSerializer returnType;
+  @override
+  final FunctionTypeRefSerializer type;
+  @override
   final bool isPrivate;
   @override
   final bool isPublic;
@@ -792,10 +729,6 @@ class MethodElementSerializer with _SourceSerializer<String> implements MethodEl
   final bool isStatic;
   @override
   final bool isSimplyBounded;
-  @override
-  final DartTypeRefSerializer returnType;
-  @override
-  final FunctionTypeRefSerializer type;
   @override
   final bool hasImplicitReturnType;
   @override
@@ -871,7 +804,7 @@ class MethodElementSerializer with _SourceSerializer<String> implements MethodEl
   Map<String, dynamic> toJson() => _$MethodElementSerializerToJson(this);
 }
 
-@JsonSerializable(explicitToJson: true, converters: [_BooleanConverter()], includeIfNull: false)
+@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class TopLevelVariableElementSerializer
     with _SourceSerializer<String?>
     implements TopLevelVariableElementMetadata {
@@ -881,6 +814,8 @@ class TopLevelVariableElementSerializer
   final PropertyAccessorElementSerializer? getter;
   @override
   final PropertyAccessorElementSerializer? setter;
+  @override
+  final DartTypeRefSerializer type;
   @override
   final bool isPrivate;
   @override
@@ -897,8 +832,6 @@ class TopLevelVariableElementSerializer
   final bool isFinal;
   @override
   final bool isLate;
-  @override
-  final DartTypeRefSerializer type;
   @override
   final bool hasInitializer;
   @override
@@ -964,15 +897,7 @@ class TopLevelVariableElementSerializer
   Map<String, dynamic> toJson() => _$TopLevelVariableElementSerializerToJson(this);
 }
 
-@JsonSerializable(
-  explicitToJson: true,
-  converters: [
-    _BooleanConverter(),
-    _TypeParameterListConverter(),
-    _ParameterElementListConverter(),
-  ],
-  includeIfNull: false,
-)
+@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class FunctionElementSerializer with _SourceSerializer<String> implements FunctionElementMetadata {
   @override
   final String name;
@@ -981,6 +906,10 @@ class FunctionElementSerializer with _SourceSerializer<String> implements Functi
   @override
   final List<ParameterElementSerializer> parameters;
   @override
+  final DartTypeRefSerializer returnType;
+  @override
+  final FunctionTypeRefSerializer type;
+  @override
   final bool isPrivate;
   @override
   final bool isPublic;
@@ -988,10 +917,6 @@ class FunctionElementSerializer with _SourceSerializer<String> implements Functi
   final bool isStatic;
   @override
   final bool isSimplyBounded;
-  @override
-  final DartTypeRefSerializer returnType;
-  @override
-  final FunctionTypeRefSerializer type;
   @override
   final bool hasImplicitReturnType;
   @override
@@ -1073,18 +998,18 @@ class FunctionElementSerializer with _SourceSerializer<String> implements Functi
   Map<String, dynamic> toJson() => _$FunctionElementSerializerToJson(this);
 }
 
-@JsonSerializable(explicitToJson: true, converters: [_BooleanConverter()], includeIfNull: false)
+@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class TypeParameterElementSerializer
     with _SourceSerializer<String?>
     implements TypeParameterElementMetadata {
   @override
   final String name;
   @override
+  final DartTypeRefSerializer? bound;
+  @override
   final bool isPrivate;
   @override
   final bool isPublic;
-  @override
-  final DartTypeRefSerializer? bound;
 
   @override
   List<_SourceSerializer> get _refList => [];
@@ -1117,15 +1042,7 @@ class TypeParameterElementSerializer
   Map<String, dynamic> toJson() => _$TypeParameterElementSerializerToJson(this);
 }
 
-@JsonSerializable(
-  explicitToJson: true,
-  converters: [
-    _BooleanConverter(),
-    _TypeParameterListConverter(),
-    _ParameterElementListConverter(),
-  ],
-  includeIfNull: false,
-)
+@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class ParameterElementSerializer
     with _SourceSerializer<String?>
     implements ParameterElementMetadata {
@@ -1137,6 +1054,8 @@ class ParameterElementSerializer
   final List<ParameterElementSerializer> parameters;
   @override
   final List<TypeParameterElementSerializer> typeParameters;
+  @override
+  final DartTypeRefSerializer type;
   @override
   final bool isPrivate;
   @override
@@ -1153,8 +1072,6 @@ class ParameterElementSerializer
   final bool isLate;
   @override
   final bool isStatic;
-  @override
-  final DartTypeRefSerializer type;
   @override
   final bool hasDefaultValue;
   @override
@@ -1254,15 +1171,7 @@ class ParameterElementSerializer
   Map<String, dynamic> toJson() => _$ParameterElementSerializerToJson(this);
 }
 
-@JsonSerializable(
-  explicitToJson: true,
-  converters: [
-    _BooleanConverter(),
-    _TypeParameterListConverter(),
-    _ParameterElementListConverter(),
-  ],
-  includeIfNull: false,
-)
+@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class PropertyAccessorElementSerializer
     with _SourceSerializer<String>
     implements PropertyAccessorElementMetadata {
@@ -1273,6 +1182,10 @@ class PropertyAccessorElementSerializer
   @override
   final List<ParameterElementSerializer> parameters;
   @override
+  final DartTypeRefSerializer returnType;
+  @override
+  final FunctionTypeRefSerializer type;
+  @override
   final bool isPrivate;
   @override
   final bool isPublic;
@@ -1280,10 +1193,6 @@ class PropertyAccessorElementSerializer
   final bool isStatic;
   @override
   final bool isSimplyBounded;
-  @override
-  final DartTypeRefSerializer returnType;
-  @override
-  final FunctionTypeRefSerializer type;
   @override
   final bool hasImplicitReturnType;
   @override

@@ -5,18 +5,7 @@ const _refJsonElement = '__element_ref__';
 const _refJsonInternalElement = '__internal_element_ref__';
 const _placeholderJsonType = '__placeholder__';
 
-@JsonSerializable(
-  explicitToJson: true,
-  includeIfNull: false,
-  converters: [
-    _BooleanConverter(),
-    _ConstructorElementListConverter(),
-    _FieldElementListConverter(),
-    _MethodElementListConverter(),
-    _TypeParameterListConverter(),
-    _InterfaceTypeRefListConverter(),
-  ],
-)
+@JsonSerializable(explicitToJson: true, includeIfNull: false, converters: [BooleanConverter()])
 class InterfaceElementRefSerializer extends InterfaceElementSerializer {
   final String ref;
   final String jsonType;
@@ -122,7 +111,7 @@ class FunctionTypeRefSerializer extends FunctionTypeSerializer {
 
 @JsonSerializable(
   explicitToJson: true,
-  converters: [_BooleanConverter(), NullabilitySuffixConverter()],
+  converters: [BooleanConverter(), NullabilitySuffixConverter()],
   includeIfNull: false,
 )
 class DartTypeSerializer implements DartTypeMetadata {
@@ -215,14 +204,7 @@ class NeverTypeSerializer extends DartTypeSerializer {
 
 @JsonSerializable(
   explicitToJson: true,
-  converters: [
-    _BooleanConverter(),
-    _TypeParameterListConverter(),
-    _ParameterElementListConverter(),
-    _DartTypeListConverter(),
-    _DartTypeMapConverter(),
-    NullabilitySuffixConverter(),
-  ],
+  converters: [BooleanConverter(), NullabilitySuffixConverter()],
   includeIfNull: false,
 )
 class FunctionTypeSerializer extends DartTypeSerializer implements FunctionTypeMetadata {
@@ -281,7 +263,7 @@ class FunctionTypeSerializer extends DartTypeSerializer implements FunctionTypeM
 
 @JsonSerializable(
   explicitToJson: true,
-  converters: [_BooleanConverter(), _DartTypeListConverter(), NullabilitySuffixConverter()],
+  converters: [BooleanConverter(), NullabilitySuffixConverter()],
   includeIfNull: false,
 )
 class InterfaceTypeSerializer extends DartTypeSerializer implements InterfaceTypeMetadata {
@@ -320,7 +302,7 @@ class InterfaceTypeSerializer extends DartTypeSerializer implements InterfaceTyp
 
 @JsonSerializable(
   explicitToJson: true,
-  converters: [_BooleanConverter(), NullabilitySuffixConverter()],
+  converters: [BooleanConverter(), NullabilitySuffixConverter()],
   includeIfNull: false,
 )
 class TypeParameterTypeSerializer extends DartTypeSerializer implements TypeParameterTypeMetadata {
@@ -361,7 +343,7 @@ class TypeParameterTypeSerializer extends DartTypeSerializer implements TypePara
 
 @JsonSerializable(
   explicitToJson: true,
-  converters: [_BooleanConverter(), _DartTypeListConverter(), NullabilitySuffixConverter()],
+  converters: [BooleanConverter(), NullabilitySuffixConverter()],
   includeIfNull: false,
 )
 class RecordTypeSerializer extends DartTypeSerializer implements RecordTypeMetadata {
@@ -402,7 +384,7 @@ class RecordTypeSerializer extends DartTypeSerializer implements RecordTypeMetad
   Map<String, dynamic> toJson() => _$RecordTypeSerializerToJson(this);
 }
 
-@JsonSerializable(explicitToJson: true, converters: [_BooleanConverter()], includeIfNull: false)
+@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class RecordTypeNamedFieldSerializer implements RecordTypeNamedFieldMetadata {
   @override
   final DartTypeSerializer type;
@@ -423,7 +405,7 @@ class RecordTypeNamedFieldSerializer implements RecordTypeNamedFieldMetadata {
   Map<String, dynamic> toJson() => _$RecordTypeNamedFieldSerializerToJson(this);
 }
 
-@JsonSerializable(explicitToJson: true, converters: [_BooleanConverter()], includeIfNull: false)
+@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class RecordTypePositionalFieldSerializer implements RecordTypePositionalFieldMetadata {
   @override
   final DartTypeSerializer type;

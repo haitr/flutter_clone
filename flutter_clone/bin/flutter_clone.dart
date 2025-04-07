@@ -1,6 +1,7 @@
 import 'package:args/args.dart';
 import 'package:chalkdart/chalkstrings.dart';
 import 'package:file_system/file_system.dart';
+import 'package:flutter_clone/flutter_clone.dart';
 import 'package:path/path.dart' as path;
 import 'package:prepare/prepare.dart';
 import 'package:project_analyze/project_analyze.dart';
@@ -15,6 +16,12 @@ void main(List<String> arguments) async {
         ..addFlag('verbose', abbr: 'v', help: 'Enable verbose output', negatable: false)
         ..addFlag('no-cache', abbr: 'x', help: 'Do not cache parsed results', negatable: false)
         ..addFlag('dry-run', abbr: 'd', help: 'Dry run the generation', negatable: false)
+        ..addOption(
+          'widget',
+          abbr: 'w',
+          help: 'Target widgets using glob pattern (e.g. Text or Text,Container or Text,*Button)',
+          defaultsTo: '*',
+        )
         ..addFlag('help', abbr: 'h', help: 'Help command', negatable: false);
 
   // Parse arguments
@@ -28,75 +35,67 @@ void main(List<String> arguments) async {
   final bool dry = cmds['dry-run']; // Whether to clean output files
   final bool noCache = cmds['no-cache']; // Whether to use caching
   final bool verbose = cmds['verbose']; // Whether to enable verbose logging
+  final String widget = cmds['widget']; // Target widgets using glob pattern
 
   SimpleLogger.setVerbose(verbose);
 
   final progress = SimpleLogger.progress('Preparing...');
 
   try {
+    AnalyzeResult result;
     final outputFs = WorkingDirectoryFileSystem(output);
 
     if (outputFs.directory('.') case final outputDir when !outputDir.existsSync()) {
       outputDir.createSync(recursive: true);
     }
 
-    // Copy Flutter and dependencies to a temporary directory
-    final tempDir = outputFs.currentDirectory.createTempSync();
-    final tempFs = WorkingDirectoryFileSystem(tempDir.path);
-    await cloneFlutter(tempFs);
-
-    // Retrieve Flutter version from the input directory
-    final flutterFs = WorkingDirectoryFileSystem(
-      path.join(tempFs.currentDirectory.path, 'flutter'),
-    );
-    final versionFile = flutterFs.file(path.join('version'));
-    print(versionFile.path);
     var cacheSuffix = '';
-    if (versionFile.existsSync()) {
-      final flutterVersion = versionFile.readAsStringSync();
-      SimpleLogger.info('Current Flutter version: ${flutterVersion.yellow}');
+    if (await getFlutterVersion() case final flutterVersion?) {
       cacheSuffix = '-$flutterVersion';
     }
-
-    AnalyzeResult result;
     final cacheFile = outputFs.file(path.join('.cache', 'flutter$cacheSuffix.json'));
 
-    if (dry) {
+    if (!cacheFile.existsSync() || dry) {
+      final progress = SimpleLogger.progress('Cache not found. Load from scratch...');
+      // Copy Flutter and dependencies to a temporary directory
+      final tempDir = outputFs.currentDirectory.createTempSync();
+      final tempFs = WorkingDirectoryFileSystem(tempDir.path);
+      await cloneFlutter(tempFs);
+
+      // Retrieve Flutter version from the input directory
+      final flutterFs = WorkingDirectoryFileSystem(
+        path.normalize(path.join(tempFs.currentDirectory.path, 'flutter')),
+      );
+
       result = await _loadFromScratch(flutterFs);
-    } else {
-      /// Prepares the analysis results by either:
-      /// - Loading from cached JSON if available (.cache/flutter-{version}.json)
-      /// - Performing fresh analysis of Flutter source files
-      ///
-      /// The results are stored in [analyzingResults] for later use in generation.
-      /// Also handles cleaning of output files if --delete-outputs flag is set.
-      if (await cacheFile.exists()) {
+
+      // Clean up temporary directory after loading
+      tempFs.currentDirectory.deleteSync(recursive: true);
+
+      if (!dry && !noCache) {
+        SimpleLogger.info('Saving cache...');
+        if (cacheFile.existsSync()) {
+          cacheFile.deleteSync();
+        }
+        cacheFile.createSync(recursive: true);
+        await saveToCache(result, cacheFile, encoder: SelectiveIndentJsonEncoder());
         final size = (await cacheFile.stat()).size / 1024 / 1024;
         SimpleLogger.info(
-          'Found cache at ${path.relative(cacheFile.path, from: path.current).yellowBright} | Cache size: $size Mb...',
+          'Saved at ${path.relative(cacheFile.path, from: path.current).yellowBright} | Cache size: ${size.toStringAsFixed(2).yellowBright} Mb...',
         );
-        final progress = SimpleLogger.progress('Loading from cache...');
-        result = await _loadFromCache(cacheFile);
-        progress.finish(showTiming: true);
-      } else {
-        final progress = SimpleLogger.progress('Cache not found. Load from scratch...');
-        result = await _loadFromScratch(flutterFs);
-        progress.finish(showTiming: true);
       }
+
+      progress.finish(showTiming: true);
+    } else {
+      final size = (await cacheFile.stat()).size / 1024 / 1024;
+      SimpleLogger.info(
+        'Found cache at ${path.relative(cacheFile.path, from: path.current).yellowBright} | Cache size: ${size.toStringAsFixed(2).yellowBright} Mb...',
+      );
+      final progress = SimpleLogger.progress('Loading from cache...');
+      result = await _loadFromCache(cacheFile);
+      progress.finish(showTiming: true);
     }
-
-    // Delete everything in outputFs except .cache directory
-    tempFs.currentDirectory.deleteSync(recursive: true);
-
-    if (!noCache) {
-      if (cacheFile.existsSync()) {
-        cacheFile.deleteSync();
-      }
-      cacheFile.createSync(recursive: true);
-      await saveToCache(result, cacheFile, encoder: SelectiveIndentJsonEncoder());
-    }
-
-    _process(result);
+    _process(result, widget);
 
     // analyze project
   } catch (e, trace) {
@@ -126,12 +125,20 @@ Future<AnalyzeResult> _loadFromCache(File cacheFile) async => loadFromCache(cach
 Future<AnalyzeResult> _loadFromScratch(FileSystem input) =>
     analyzeProjectWithSymbolResolution(input);
 
-void _process(AnalyzeResult result) {
+void _process(AnalyzeResult result, String pattern) {
   final clazzes = <ClassElementMetadata>[];
   for (var file in result.files) {
-    print('Scanning ${file.filePath}');
+    if (path.basename(file.filePath).startsWith('_')) continue;
+    // print('Scanning ${file.filePath}');
     clazzes.addAll(
-      file.classes.where((e) => e.allSupertypes.any((e) => e.name == 'Widget')).toList(),
+      file.classes
+          .where(
+            (e) => e.allSupertypes
+                .map((e) => result.fromTypeRef(e.ref))
+                .whereType<InterfaceTypeSerializer>()
+                .any((e) => e.name == 'Widget'),
+          )
+          .toList(),
     );
   }
   print(clazzes.map((e) => e.name).join(','));

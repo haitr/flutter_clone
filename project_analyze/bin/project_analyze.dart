@@ -4,7 +4,6 @@ import 'package:file/local.dart';
 import 'package:path/path.dart' as path;
 import 'package:project_analyze/project_analyze.dart';
 import 'package:project_analyze/src/utils/local_file_system.dart';
-import 'package:project_analyze/src/utils/selective_indent_json_encoder.dart';
 import 'package:simple_logger/simple_logger.dart';
 
 // The process is straightforward:

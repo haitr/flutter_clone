@@ -190,4 +190,14 @@ class AnalyzeResult {
       },
     };
   }
+
+  DartTypeSerializer? fromTypeRef(String fromRef) {
+    final ref = int.parse(fromRef.substring(1));
+    return typeRef[ref];
+  }
+
+  InterfaceElementSerializer? fromElementRef(InterfaceElementRefSerializer fromElementRef) {
+    final ref = int.parse(fromElementRef.ref.substring(1));
+    return elementRef[ref];
+  }
 }

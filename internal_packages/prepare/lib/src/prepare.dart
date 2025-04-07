@@ -24,14 +24,14 @@ Future<void> cloneFlutter(FileSystem fs) async {
   await copyDependencies(fs);
 
   // modify sky_engine
-  final skyEngineDir = fs.directory(path.join(fs.currentDirectory.path, 'sky_engine'));
-  modifySkyEngine(skyEngineDir);
+  final skyEngineDir = fs.currentDirectory.childDirectory('sky_engine');
+  await modifySkyEngine(skyEngineDir);
   // Run pub get for sky_engine
   await io.Process.run('dart', ['pub', 'get'], workingDirectory: skyEngineDir.path);
 
   // modify flutter
-  final flutterDir = fs.directory(path.join(fs.currentDirectory.path, 'flutter'));
-  modifyFlutter(flutterDir);
+  final flutterDir = fs.currentDirectory.childDirectory('flutter');
+  await modifyFlutter(flutterDir);
   // Run pub get for flutter
   await io.Process.run('dart', ['pub', 'get'], workingDirectory: flutterDir.path);
 }
