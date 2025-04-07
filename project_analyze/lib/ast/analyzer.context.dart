@@ -33,6 +33,10 @@ class AnalyzerContext {
         jsonType: _refJsonInternalElement,
         source: _getPath(element.source, projectPath),
         name: element.name,
+        interfaces: [],
+        mixins: [],
+        supertype: null,
+        allSupertypes: [],
       );
     } else {
       // Create a placeholder serializer first
@@ -49,6 +53,7 @@ class AnalyzerContext {
         interfaces: [],
         mixins: [],
         supertype: null,
+        allSupertypes: [],
       );
 
       // Add the placeholder to cache immediately
@@ -65,6 +70,10 @@ class AnalyzerContext {
         jsonType: _refJsonElement,
         source: _getPath(element.source, projectPath),
         name: element.name,
+        interfaces: [],
+        mixins: [],
+        supertype: null,
+        allSupertypes: [],
       );
     }
   }
@@ -105,6 +114,10 @@ class AnalyzerContext {
           jsonType: _refJsonElement,
           source: '',
           name: '',
+          interfaces: [],
+          mixins: [],
+          supertype: null,
+          allSupertypes: [],
         ),
         nullabilitySuffix: type.nullabilitySuffix,
         isDartCore: type.isDartCore,

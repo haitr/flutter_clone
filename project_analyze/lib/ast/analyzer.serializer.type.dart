@@ -26,6 +26,10 @@ class InterfaceElementRefSerializer extends InterfaceElementSerializer {
     required this.jsonType,
     required super.source,
     required super.name,
+    required super.interfaces,
+    required super.mixins,
+    required super.supertype,
+    required super.allSupertypes,
   }) : super(
          isPrivate: false,
          isPublic: false,
@@ -34,9 +38,6 @@ class InterfaceElementRefSerializer extends InterfaceElementSerializer {
          typeParameters: [],
          isSimplyBounded: false,
          constructors: [],
-         interfaces: [],
-         mixins: [],
-         supertype: null,
        );
 
   factory InterfaceElementRefSerializer.fromJson(Map<String, dynamic> json) =>
@@ -72,6 +73,10 @@ class InterfaceTypeRefSerializer extends InterfaceTypeSerializer {
           jsonType: _refJsonElement,
           source: '',
           name: '',
+          interfaces: [],
+          mixins: [],
+          supertype: null,
+          allSupertypes: [],
         ),
         nullabilitySuffix: NullabilitySuffix.none,
         isDartCore: false,

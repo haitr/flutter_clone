@@ -194,7 +194,7 @@ abstract class ConstructorElementMetadata
   bool get isConst;
 
   /// See: [ConstructorElement.superConstructor]
-  // ConstructorElementMetadata? get superConstructor;
+  ConstructorElementMetadata? get superConstructor;
 
   /// See: [ConstructorElement.redirectedConstructor]
   ConstructorElementMetadata? get redirectedConstructor;
@@ -226,6 +226,9 @@ abstract class InterfaceElementMetadata implements InstanceElementMetadata {
 
   /// See: [InterfaceElement.supertype]
   InterfaceTypeMetadata? get supertype;
+
+  /// See: [InterfaceElement.allSupertypes]
+  List<InterfaceTypeMetadata> get allSupertypes;
 }
 
 /// See: [ClassElement]
@@ -314,6 +317,9 @@ abstract class MethodElementMetadata
 /// See: [ParameterElement]
 abstract class ParameterElementMetadata
     implements PromotableElementMetadata, ConstantEvaluationTargetMetadata {
+  /// See: [ParameterElement.defaultValueCode]
+  String? get defaultValueCode;
+
   /// See: [ParameterElement.hasDefaultValue]
   bool get hasDefaultValue;
 

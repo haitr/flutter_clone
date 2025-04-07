@@ -73,11 +73,13 @@ class ClassElementSerializer
   @override
   final bool isValidMixin;
   @override
-  final List<InterfaceTypeRefSerializer> interfaces = [];
+  final List<InterfaceTypeRefSerializer> interfaces;
   @override
-  final List<InterfaceTypeRefSerializer> mixins = [];
+  final List<InterfaceTypeRefSerializer> mixins;
   @override
-  final InterfaceTypeRefSerializer? supertype = null;
+  final InterfaceTypeRefSerializer? supertype;
+  @override
+  final List<InterfaceTypeRefSerializer> allSupertypes;
 
   @override
   List<_SourceSerializer> get _refList => [
@@ -111,6 +113,10 @@ class ClassElementSerializer
     required this.isSimplyBounded,
     required this.isValidMixin,
     required this.typeParameters,
+    required this.interfaces,
+    required this.mixins,
+    required this.supertype,
+    required this.allSupertypes,
   }) {
     setSource(source);
     setRef(ref);
@@ -145,6 +151,10 @@ class ClassElementSerializer
           element.typeParameters
               .map((e) => TypeParameterElementSerializer.from(e, context))
               .toList(),
+      interfaces: element.interfaces.map((e) => context.getInterfaceTypeRef(e)).toList(),
+      mixins: element.mixins.map((e) => context.getInterfaceTypeRef(e)).toList(),
+      supertype: element.supertype != null ? context.getInterfaceTypeRef(element.supertype!) : null,
+      allSupertypes: element.allSupertypes.map((e) => context.getInterfaceTypeRef(e)).toList(),
     );
   }
 
@@ -191,6 +201,8 @@ class InterfaceElementSerializer
   @override
   final InterfaceTypeRefSerializer? supertype;
   @override
+  final List<InterfaceTypeRefSerializer> allSupertypes;
+  @override
   final bool isPrivate;
   @override
   final bool isPublic;
@@ -218,6 +230,7 @@ class InterfaceElementSerializer
     required this.interfaces,
     required this.mixins,
     required this.supertype,
+    required this.allSupertypes,
   }) {
     setSource(source);
   }
@@ -237,10 +250,10 @@ class InterfaceElementSerializer
       isSimplyBounded: element.isSimplyBounded,
       constructors:
           element.constructors.map((e) => ConstructorElementSerializer.from(e, context)).toList(),
-      interfaces:
-          element.interfaces.map((e) => InterfaceTypeRefSerializer.from(e, context)).toList(),
-      mixins: element.mixins.map((e) => InterfaceTypeRefSerializer.from(e, context)).toList(),
+      interfaces: element.interfaces.map((e) => context.getInterfaceTypeRef(e)).toList(),
+      mixins: element.mixins.map((e) => context.getInterfaceTypeRef(e)).toList(),
       supertype: element.supertype != null ? context.getInterfaceTypeRef(element.supertype!) : null,
+      allSupertypes: element.allSupertypes.map((e) => context.getInterfaceTypeRef(e)).toList(),
     );
   }
 
@@ -282,14 +295,15 @@ class MixinElementSerializer
   @override
   final bool isBase;
   @override
-  final List<InterfaceTypeRefSerializer> superclassConstraints = [];
+  final List<InterfaceTypeRefSerializer> superclassConstraints;
   @override
-  final List<InterfaceTypeRefSerializer> interfaces = [];
+  final List<InterfaceTypeRefSerializer> interfaces;
   @override
-  final List<InterfaceTypeRefSerializer> mixins = [];
+  final List<InterfaceTypeRefSerializer> mixins;
   @override
-  final InterfaceTypeRefSerializer? supertype = null;
-
+  final InterfaceTypeRefSerializer? supertype;
+  @override
+  final List<InterfaceTypeRefSerializer> allSupertypes;
   @override
   List<_SourceSerializer> get _refList => [
     ...constructors,
@@ -310,6 +324,11 @@ class MixinElementSerializer
     required this.isSimplyBounded,
     required this.isBase,
     required this.constructors,
+    required this.interfaces,
+    required this.mixins,
+    required this.supertype,
+    required this.allSupertypes,
+    required this.superclassConstraints,
   }) {
     setSource(source);
     setRef(ref);
@@ -330,8 +349,14 @@ class MixinElementSerializer
               .toList(),
       isSimplyBounded: element.isSimplyBounded,
       isBase: element.isBase,
+      superclassConstraints:
+          element.superclassConstraints.map((e) => context.getInterfaceTypeRef(e)).toList(),
       constructors:
           element.constructors.map((e) => ConstructorElementSerializer.from(e, context)).toList(),
+      interfaces: element.interfaces.map((e) => context.getInterfaceTypeRef(e)).toList(),
+      mixins: element.mixins.map((e) => context.getInterfaceTypeRef(e)).toList(),
+      supertype: element.supertype != null ? context.getInterfaceTypeRef(element.supertype!) : null,
+      allSupertypes: element.allSupertypes.map((e) => context.getInterfaceTypeRef(e)).toList(),
     );
   }
 
@@ -371,11 +396,13 @@ class EnumElementSerializer
   @override
   final bool isSimplyBounded;
   @override
-  final List<InterfaceTypeRefSerializer> interfaces = [];
+  final List<InterfaceTypeRefSerializer> interfaces;
   @override
-  final List<InterfaceTypeRefSerializer> mixins = [];
+  final List<InterfaceTypeRefSerializer> mixins;
   @override
-  final InterfaceTypeRefSerializer? supertype = null;
+  final InterfaceTypeRefSerializer? supertype;
+  @override
+  final List<InterfaceTypeRefSerializer> allSupertypes;
 
   @override
   List<_SourceSerializer> get _refList => [
@@ -396,6 +423,10 @@ class EnumElementSerializer
     required this.typeParameters,
     required this.isSimplyBounded,
     required this.constructors,
+    required this.interfaces,
+    required this.mixins,
+    required this.supertype,
+    required this.allSupertypes,
   }) {
     setSource(source);
     setRef(ref);
@@ -417,6 +448,10 @@ class EnumElementSerializer
       isSimplyBounded: element.isSimplyBounded,
       constructors:
           element.constructors.map((e) => ConstructorElementSerializer.from(e, context)).toList(),
+      interfaces: element.interfaces.map((e) => context.getInterfaceTypeRef(e)).toList(),
+      mixins: element.mixins.map((e) => context.getInterfaceTypeRef(e)).toList(),
+      supertype: element.supertype != null ? context.getInterfaceTypeRef(element.supertype!) : null,
+      allSupertypes: element.allSupertypes.map((e) => context.getInterfaceTypeRef(e)).toList(),
     );
   }
 
@@ -540,8 +575,8 @@ class ConstructorElementSerializer
   final bool isConst;
   @override
   final InterfaceTypeRefSerializer returnType;
-  // @override
-  // final ConstructorElementSerializer? superConstructor;
+  @override
+  final ConstructorElementSerializer? superConstructor;
   @override
   final bool isDefaultConstructor;
   @override
@@ -581,6 +616,7 @@ class ConstructorElementSerializer
     required this.isFactory,
     required this.isGenerative,
     required this.returnType,
+    required this.superConstructor,
   }) {
     setSource(source);
   }
@@ -618,6 +654,7 @@ class ConstructorElementSerializer
       isDefaultConstructor: element.isDefaultConstructor,
       isFactory: element.isFactory,
       isGenerative: element.isGenerative,
+      superConstructor: null,
     );
   }
 
@@ -1095,6 +1132,8 @@ class ParameterElementSerializer
   @override
   final String name;
   @override
+  final String? defaultValueCode;
+  @override
   final List<ParameterElementSerializer> parameters;
   @override
   final List<TypeParameterElementSerializer> typeParameters;
@@ -1170,6 +1209,7 @@ class ParameterElementSerializer
     required this.isSuperFormal,
     required this.parameters,
     required this.typeParameters,
+    this.defaultValueCode,
   }) {
     setSource(source);
   }
@@ -1205,6 +1245,7 @@ class ParameterElementSerializer
           element.typeParameters
               .map((e) => TypeParameterElementSerializer.from(e, context))
               .toList(),
+      defaultValueCode: element.defaultValueCode,
     );
   }
 

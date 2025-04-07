@@ -106,9 +106,9 @@ Future<AnalyzeResult> analyzeProjectWithSymbolResolution(FileSystem input) async
         path.relative(libraryPath, from: parsingContext.projectPath),
       );
 
-      // SimpleLogger.progress(
-      //   '\nAnalyzing library: ${path.relative(libraryPath, from: includePaths[0])}',
-      // );
+      SimpleLogger.progress(
+        '\nAnalyzing library: ${path.relative(libraryPath, from: includePaths[0])}',
+      );
 
       // Let the visitor analyze classes and track dependencies
       results.add(FileAnalyzeResult.fromElement(library, parsingContext));
