@@ -5,8 +5,21 @@ const _refJsonElement = '__element_ref__';
 const _refJsonInternalElement = '__internal_element_ref__';
 const _placeholderJsonType = '__placeholder__';
 
+const _voidJsonType = '__void_type__';
+const _dynamicJsonType = '__dynamic_type__';
+const _neverJsonType = '__never_type__';
+const _functionJsonType = '__function_type__';
+const _interfaceJsonType = '__interface_type__';
+const _typeParameterJsonType = '__type_parameter_type__';
+const _recordJsonType = '__record_type__';
+
+mixin ReferenceableSerializer {
+  String get ref;
+}
+
 @JsonSerializable(explicitToJson: true, includeIfNull: false, converters: [BooleanConverter()])
-class InterfaceElementRefSerializer extends InterfaceElementSerializer {
+class InterfaceElementRefSerializer extends InterfaceElementSerializer with ReferenceableSerializer {
+  @override
   final String ref;
   final String jsonType;
 
@@ -36,26 +49,32 @@ class InterfaceElementRefSerializer extends InterfaceElementSerializer {
   Map<String, dynamic> toJson() => _$InterfaceElementRefSerializerToJson(this);
 }
 
+/// Note: in analyzer 7.3.0,
+/// [DartType]s with different nullability suffixes are same hash code.
+/// So we need to explicitly specify the nullability suffix in the serializer.
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
-class DartTypeRefSerializer extends DartTypeSerializer {
+class DartTypeRefSerializer extends DartTypeSerializer with ReferenceableSerializer {
+  @override
   final String ref;
 
-  DartTypeRefSerializer({required this.ref, super.jsonType = _refJsonType})
-    : super(nullabilitySuffix: NullabilitySuffix.none, isDartCore: false, isDartAsync: false);
+  DartTypeRefSerializer({required this.ref, required super.nullabilitySuffix, super.jsonType = _refJsonType})
+    : super(name: '', isDartCore: false, isDartAsync: false);
 
-  factory DartTypeRefSerializer.fromJson(Map<String, dynamic> json) =>
-      _$DartTypeRefSerializerFromJson(json);
+  factory DartTypeRefSerializer.fromJson(Map<String, dynamic> json) => _$DartTypeRefSerializerFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$DartTypeRefSerializerToJson(this);
 }
 
+/// Notes: See [DartTypeRefSerializer] note
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
-class InterfaceTypeRefSerializer extends InterfaceTypeSerializer {
+class InterfaceTypeRefSerializer extends InterfaceTypeSerializer with ReferenceableSerializer {
+  @override
   final String ref;
 
-  InterfaceTypeRefSerializer({required this.ref, super.jsonType = _refJsonType})
+  InterfaceTypeRefSerializer({required this.ref, required super.nullabilitySuffix, super.jsonType = _refJsonType})
     : super(
+        name: '',
         typeArguments: [],
         element: InterfaceElementRefSerializer(
           ref: '',
@@ -67,58 +86,56 @@ class InterfaceTypeRefSerializer extends InterfaceTypeSerializer {
           supertype: null,
           allSupertypes: [],
         ),
-        nullabilitySuffix: NullabilitySuffix.none,
         isDartCore: false,
         isDartAsync: false,
       );
 
-  factory InterfaceTypeRefSerializer.from(InterfaceType type, AnalyzerContext context) =>
-      InterfaceTypeRefSerializer(ref: context.getTypeRef(type).ref);
+  factory InterfaceTypeRefSerializer.from(InterfaceType type, AnalyzerContext context) => InterfaceTypeRefSerializer(
+    ref: context.getTypeRef(type).ref,
+    nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
+  );
 
-  factory InterfaceTypeRefSerializer.fromJson(Map<String, dynamic> json) =>
-      _$InterfaceTypeRefSerializerFromJson(json);
+  factory InterfaceTypeRefSerializer.fromJson(Map<String, dynamic> json) => _$InterfaceTypeRefSerializerFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$InterfaceTypeRefSerializerToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
-class FunctionTypeRefSerializer extends FunctionTypeSerializer {
+class FunctionTypeRefSerializer extends FunctionTypeSerializer with ReferenceableSerializer {
+  @override
   final String ref;
 
-  FunctionTypeRefSerializer({required this.ref, super.jsonType = _refJsonType})
+  FunctionTypeRefSerializer({required this.ref, required super.nullabilitySuffix, super.jsonType = _refJsonType})
     : super(
+        name: '',
         namedParameterTypes: {},
         normalParameterTypes: [],
         optionalParameterTypes: [],
         parameters: [],
-        returnType: DartTypeRefSerializer(ref: '', jsonType: _refJsonType),
+        returnType: DartTypeRefSerializer(ref: '', jsonType: _refJsonType, nullabilitySuffix: null),
         typeFormals: [],
-        nullabilitySuffix: NullabilitySuffix.none,
         isDartCore: false,
         isDartAsync: false,
       );
 
-  factory FunctionTypeRefSerializer.from(FunctionType type, AnalyzerContext context) =>
-      FunctionTypeRefSerializer(ref: context.getTypeRef(type).ref);
+  factory FunctionTypeRefSerializer.from(FunctionType type, AnalyzerContext context) => FunctionTypeRefSerializer(
+    ref: context.getTypeRef(type).ref,
+    nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
+  );
 
-  factory FunctionTypeRefSerializer.fromJson(Map<String, dynamic> json) =>
-      _$FunctionTypeRefSerializerFromJson(json);
+  factory FunctionTypeRefSerializer.fromJson(Map<String, dynamic> json) => _$FunctionTypeRefSerializerFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$FunctionTypeRefSerializerToJson(this);
 }
 
-@JsonSerializable(
-  explicitToJson: true,
-  converters: [BooleanConverter(), NullabilitySuffixConverter()],
-  includeIfNull: false,
-)
+@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class DartTypeSerializer implements DartTypeMetadata {
   @override
-  final String? name;
+  final String name;
   @override
-  final NullabilitySuffix nullabilitySuffix;
+  final String? nullabilitySuffix;
   @override
   final bool isDartCore;
   @override
@@ -129,7 +146,7 @@ class DartTypeSerializer implements DartTypeMetadata {
 
   DartTypeSerializer({
     this.jsonType = _refJsonType,
-    this.name,
+    required this.name,
     required this.nullabilitySuffix,
     required this.isDartCore,
     required this.isDartAsync,
@@ -155,7 +172,7 @@ class DartTypeSerializer implements DartTypeMetadata {
         return DartTypeSerializer(
           // ignore: deprecated_member_use
           name: type.getDisplayString(withNullability: false),
-          nullabilitySuffix: type.nullabilitySuffix,
+          nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
           isDartCore: type.isDartCore,
           isDartAsync: type.isDartAsync,
           // ignore: deprecated_member_use
@@ -164,49 +181,53 @@ class DartTypeSerializer implements DartTypeMetadata {
     }
   }
 
-  factory DartTypeSerializer.fromJson(Map<String, dynamic> json) =>
-      _$DartTypeSerializerFromJson(json);
+  factory DartTypeSerializer.fromJson(Map<String, dynamic> json) {
+    switch (json['_t_']) {
+      case _voidJsonType:
+        return VoidTypeSerializer.fromJson(json);
+      case _dynamicJsonType:
+        return DynamicTypeSerializer.fromJson(json);
+      case _neverJsonType:
+        return NeverTypeSerializer.fromJson(json);
+      case _functionJsonType:
+        return FunctionTypeSerializer.fromJson(json);
+      case _interfaceJsonType:
+        return InterfaceTypeSerializer.fromJson(json);
+      case _typeParameterJsonType:
+        return TypeParameterTypeSerializer.fromJson(json);
+      case _recordJsonType:
+        return RecordTypeSerializer.fromJson(json);
+    }
+    return _$DartTypeSerializerFromJson(json);
+  }
   Map<String, dynamic> toJson() => _$DartTypeSerializerToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class VoidTypeSerializer extends DartTypeSerializer {
   VoidTypeSerializer()
-    : super(
-        jsonType: '__void_type__',
-        isDartCore: true,
-        isDartAsync: false,
-        nullabilitySuffix: NullabilitySuffix.none,
-      );
+    : super(name: 'void', jsonType: _voidJsonType, isDartCore: true, isDartAsync: false, nullabilitySuffix: null);
+
+  factory VoidTypeSerializer.fromJson(Map<String, dynamic> json) => _$VoidTypeSerializerFromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class DynamicTypeSerializer extends DartTypeSerializer {
   DynamicTypeSerializer()
-    : super(
-        jsonType: '__dynamic_type__',
-        isDartCore: true,
-        isDartAsync: false,
-        nullabilitySuffix: NullabilitySuffix.none,
-      );
+    : super(name: 'dynamic', jsonType: _dynamicJsonType, isDartCore: true, isDartAsync: false, nullabilitySuffix: null);
+
+  factory DynamicTypeSerializer.fromJson(Map<String, dynamic> json) => _$DynamicTypeSerializerFromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class NeverTypeSerializer extends DartTypeSerializer {
   NeverTypeSerializer()
-    : super(
-        jsonType: '__never_type__',
-        isDartCore: true,
-        isDartAsync: false,
-        nullabilitySuffix: NullabilitySuffix.none,
-      );
+    : super(name: 'Never', jsonType: _neverJsonType, isDartCore: true, isDartAsync: false, nullabilitySuffix: null);
+
+  factory NeverTypeSerializer.fromJson(Map<String, dynamic> json) => _$NeverTypeSerializerFromJson(json);
 }
 
-@JsonSerializable(
-  explicitToJson: true,
-  converters: [BooleanConverter(), NullabilitySuffixConverter()],
-  includeIfNull: false,
-)
+@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class FunctionTypeSerializer extends DartTypeSerializer implements FunctionTypeMetadata {
   @override
   final Map<String, DartTypeRefSerializer> namedParameterTypes;
@@ -222,8 +243,8 @@ class FunctionTypeSerializer extends DartTypeSerializer implements FunctionTypeM
   final List<TypeParameterElementSerializer> typeFormals;
 
   FunctionTypeSerializer({
-    super.jsonType = '__function_type__',
-    super.name,
+    super.jsonType = _functionJsonType,
+    required super.name,
     required super.nullabilitySuffix,
     required super.isDartCore,
     required super.isDartAsync,
@@ -239,33 +260,24 @@ class FunctionTypeSerializer extends DartTypeSerializer implements FunctionTypeM
     return FunctionTypeSerializer(
       // ignore: deprecated_member_use
       name: type.getDisplayString(withNullability: false),
-      nullabilitySuffix: type.nullabilitySuffix,
+      nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
       isDartCore: type.isDartCore,
       isDartAsync: type.isDartAsync,
       returnType: context.getTypeRef(type.returnType),
-      namedParameterTypes: type.namedParameterTypes.map(
-        (key, value) => MapEntry(key, context.getTypeRef(value)),
-      ),
+      namedParameterTypes: type.namedParameterTypes.map((key, value) => MapEntry(key, context.getTypeRef(value))),
       normalParameterTypes: type.normalParameterTypes.map((e) => context.getTypeRef(e)).toList(),
-      optionalParameterTypes:
-          type.optionalParameterTypes.map((e) => context.getTypeRef(e)).toList(),
+      optionalParameterTypes: type.optionalParameterTypes.map((e) => context.getTypeRef(e)).toList(),
       parameters: type.parameters.map((e) => ParameterElementSerializer.from(e, context)).toList(),
-      typeFormals:
-          type.typeFormals.map((e) => TypeParameterElementSerializer.from(e, context)).toList(),
+      typeFormals: type.typeFormals.map((e) => TypeParameterElementSerializer.from(e, context)).toList(),
     );
   }
 
-  factory FunctionTypeSerializer.fromJson(Map<String, dynamic> json) =>
-      _$FunctionTypeSerializerFromJson(json);
+  factory FunctionTypeSerializer.fromJson(Map<String, dynamic> json) => _$FunctionTypeSerializerFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$FunctionTypeSerializerToJson(this);
 }
 
-@JsonSerializable(
-  explicitToJson: true,
-  converters: [BooleanConverter(), NullabilitySuffixConverter()],
-  includeIfNull: false,
-)
+@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class InterfaceTypeSerializer extends DartTypeSerializer implements InterfaceTypeMetadata {
   @override
   final List<DartTypeSerializer> typeArguments;
@@ -273,8 +285,8 @@ class InterfaceTypeSerializer extends DartTypeSerializer implements InterfaceTyp
   final InterfaceElementRefSerializer element;
 
   InterfaceTypeSerializer({
-    super.jsonType = '__interface_type__',
-    super.name,
+    super.jsonType = _interfaceJsonType,
+    required super.name,
     required super.nullabilitySuffix,
     required super.isDartCore,
     required super.isDartAsync,
@@ -286,7 +298,7 @@ class InterfaceTypeSerializer extends DartTypeSerializer implements InterfaceTyp
     return InterfaceTypeSerializer(
       // ignore: deprecated_member_use
       name: type.getDisplayString(withNullability: false),
-      nullabilitySuffix: type.nullabilitySuffix,
+      nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
       isDartCore: type.isDartCore,
       isDartAsync: type.isDartAsync,
       typeArguments: type.typeArguments.map((e) => DartTypeSerializer.from(e, context)).toList(),
@@ -294,17 +306,12 @@ class InterfaceTypeSerializer extends DartTypeSerializer implements InterfaceTyp
     );
   }
 
-  factory InterfaceTypeSerializer.fromJson(Map<String, dynamic> json) =>
-      _$InterfaceTypeSerializerFromJson(json);
+  factory InterfaceTypeSerializer.fromJson(Map<String, dynamic> json) => _$InterfaceTypeSerializerFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$InterfaceTypeSerializerToJson(this);
 }
 
-@JsonSerializable(
-  explicitToJson: true,
-  converters: [BooleanConverter(), NullabilitySuffixConverter()],
-  includeIfNull: false,
-)
+@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class TypeParameterTypeSerializer extends DartTypeSerializer implements TypeParameterTypeMetadata {
   @override
   final DartTypeRefSerializer bound;
@@ -314,8 +321,8 @@ class TypeParameterTypeSerializer extends DartTypeSerializer implements TypePara
   TypeParameterElementSerializer get element => throw UnimplementedError();
 
   TypeParameterTypeSerializer({
-    super.jsonType = '__type_parameter_type__',
-    super.name,
+    super.jsonType = _typeParameterJsonType,
+    required super.name,
     required super.nullabilitySuffix,
     required super.isDartCore,
     required super.isDartAsync,
@@ -327,7 +334,7 @@ class TypeParameterTypeSerializer extends DartTypeSerializer implements TypePara
     return TypeParameterTypeSerializer(
       // ignore: deprecated_member_use
       name: type.getDisplayString(withNullability: false),
-      nullabilitySuffix: type.nullabilitySuffix,
+      nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
       isDartCore: type.isDartCore,
       isDartAsync: type.isDartAsync,
       // element: TypeParameterElementSerializer.from(type.element, projectPath),
@@ -341,11 +348,7 @@ class TypeParameterTypeSerializer extends DartTypeSerializer implements TypePara
   Map<String, dynamic> toJson() => _$TypeParameterTypeSerializerToJson(this);
 }
 
-@JsonSerializable(
-  explicitToJson: true,
-  converters: [BooleanConverter(), NullabilitySuffixConverter()],
-  includeIfNull: false,
-)
+@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class RecordTypeSerializer extends DartTypeSerializer implements RecordTypeMetadata {
   @override
   final List<RecordTypePositionalFieldSerializer> positionalFields;
@@ -353,8 +356,8 @@ class RecordTypeSerializer extends DartTypeSerializer implements RecordTypeMetad
   final List<RecordTypeNamedFieldSerializer> namedFields;
 
   RecordTypeSerializer({
-    super.jsonType = '__record_type__',
-    super.name,
+    super.jsonType = _recordJsonType,
+    required super.name,
     required super.nullabilitySuffix,
     required super.isDartCore,
     required super.isDartAsync,
@@ -366,20 +369,15 @@ class RecordTypeSerializer extends DartTypeSerializer implements RecordTypeMetad
     return RecordTypeSerializer(
       // ignore: deprecated_member_use
       name: type.getDisplayString(withNullability: false),
-      nullabilitySuffix: type.nullabilitySuffix,
+      nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
       isDartCore: type.isDartCore,
       isDartAsync: type.isDartAsync,
-      positionalFields:
-          type.positionalFields
-              .map((e) => RecordTypePositionalFieldSerializer.from(e, context))
-              .toList(),
-      namedFields:
-          type.namedFields.map((e) => RecordTypeNamedFieldSerializer.from(e, context)).toList(),
+      positionalFields: type.positionalFields.map((e) => RecordTypePositionalFieldSerializer.from(e, context)).toList(),
+      namedFields: type.namedFields.map((e) => RecordTypeNamedFieldSerializer.from(e, context)).toList(),
     );
   }
 
-  factory RecordTypeSerializer.fromJson(Map<String, dynamic> json) =>
-      _$RecordTypeSerializerFromJson(json);
+  factory RecordTypeSerializer.fromJson(Map<String, dynamic> json) => _$RecordTypeSerializerFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$RecordTypeSerializerToJson(this);
 }
@@ -394,10 +392,7 @@ class RecordTypeNamedFieldSerializer implements RecordTypeNamedFieldMetadata {
   RecordTypeNamedFieldSerializer({required this.type, required this.name});
 
   factory RecordTypeNamedFieldSerializer.from(RecordTypeNamedField field, AnalyzerContext context) {
-    return RecordTypeNamedFieldSerializer(
-      type: DartTypeSerializer.from(field.type, context),
-      name: field.name,
-    );
+    return RecordTypeNamedFieldSerializer(type: DartTypeSerializer.from(field.type, context), name: field.name);
   }
 
   factory RecordTypeNamedFieldSerializer.fromJson(Map<String, dynamic> json) =>
@@ -412,10 +407,7 @@ class RecordTypePositionalFieldSerializer implements RecordTypePositionalFieldMe
 
   RecordTypePositionalFieldSerializer({required this.type});
 
-  factory RecordTypePositionalFieldSerializer.from(
-    RecordTypePositionalField field,
-    AnalyzerContext context,
-  ) {
+  factory RecordTypePositionalFieldSerializer.from(RecordTypePositionalField field, AnalyzerContext context) {
     return RecordTypePositionalFieldSerializer(type: DartTypeSerializer.from(field.type, context));
   }
 

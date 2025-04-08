@@ -15,11 +15,11 @@ void main(List<String> arguments) async {
         ..addOption('output', abbr: 'o', help: 'Output directory', defaultsTo: './generated')
         ..addFlag('verbose', abbr: 'v', help: 'Enable verbose output', negatable: false)
         ..addFlag('no-cache', abbr: 'x', help: 'Do not cache parsed results', negatable: false)
-        ..addFlag('dry-run', abbr: 'd', help: 'Dry run the generation', negatable: false)
+        ..addFlag('dry-run', abbr: 'd', help: 'Dry run', negatable: false)
         ..addOption(
           'widget',
           abbr: 'w',
-          help: 'Target widgets using glob pattern (e.g. Text or Text,Container or Text,*Button)',
+          help: 'Target widgets using glob pattern (e.g. Text or *Button or {Text|*Button})',
           defaultsTo: '*',
         )
         ..addFlag('help', abbr: 'h', help: 'Help command', negatable: false);
@@ -32,10 +32,10 @@ void main(List<String> arguments) async {
   }
 
   final String output = cmds['output']; // Output directory path
-  final bool dry = cmds['dry-run']; // Whether to clean output files
+  final bool dryRun = cmds['dry-run']; // Whether to dry run
   final bool noCache = cmds['no-cache']; // Whether to use caching
   final bool verbose = cmds['verbose']; // Whether to enable verbose logging
-  final String widget = cmds['widget']; // Target widgets using glob pattern
+  final String patterns = cmds['widget']; // Target widgets using glob pattern
 
   SimpleLogger.setVerbose(verbose);
 
@@ -55,7 +55,7 @@ void main(List<String> arguments) async {
     }
     final cacheFile = outputFs.file(path.join('.cache', 'flutter$cacheSuffix.json'));
 
-    if (!cacheFile.existsSync() || dry) {
+    if (!cacheFile.existsSync() || dryRun) {
       final progress = SimpleLogger.progress('Cache not found. Load from scratch...');
       // Copy Flutter and dependencies to a temporary directory
       final tempDir = outputFs.currentDirectory.createTempSync();
@@ -63,16 +63,14 @@ void main(List<String> arguments) async {
       await cloneFlutter(tempFs);
 
       // Retrieve Flutter version from the input directory
-      final flutterFs = WorkingDirectoryFileSystem(
-        path.normalize(path.join(tempFs.currentDirectory.path, 'flutter')),
-      );
+      final flutterFs = WorkingDirectoryFileSystem(path.normalize(path.join(tempFs.currentDirectory.path, 'flutter')));
 
       result = await _loadFromScratch(flutterFs);
 
       // Clean up temporary directory after loading
       tempFs.currentDirectory.deleteSync(recursive: true);
 
-      if (!dry && !noCache) {
+      if (!dryRun && !noCache) {
         SimpleLogger.info('Saving cache...');
         if (cacheFile.existsSync()) {
           cacheFile.deleteSync();
@@ -95,7 +93,8 @@ void main(List<String> arguments) async {
       result = await _loadFromCache(cacheFile);
       progress.finish(showTiming: true);
     }
-    _process(result, widget);
+
+    process(outputFs, result, patterns);
 
     // analyze project
   } catch (e, trace) {
@@ -122,24 +121,4 @@ Future<AnalyzeResult> _loadFromCache(File cacheFile) async => loadFromCache(cach
 ///
 /// Returns a List of [FileAnalyzeResult] objects containing the analysis results
 /// The results include class declarations and their analyzed structure
-Future<AnalyzeResult> _loadFromScratch(FileSystem input) =>
-    analyzeProjectWithSymbolResolution(input);
-
-void _process(AnalyzeResult result, String pattern) {
-  final clazzes = <ClassElementMetadata>[];
-  for (var file in result.files) {
-    if (path.basename(file.filePath).startsWith('_')) continue;
-    // print('Scanning ${file.filePath}');
-    clazzes.addAll(
-      file.classes
-          .where(
-            (e) => e.allSupertypes
-                .map((e) => result.fromTypeRef(e.ref))
-                .whereType<InterfaceTypeSerializer>()
-                .any((e) => e.name == 'Widget'),
-          )
-          .toList(),
-    );
-  }
-  print(clazzes.map((e) => e.name).join(','));
-}
+Future<AnalyzeResult> _loadFromScratch(FileSystem input) => analyzeProjectWithSymbolResolution(input);

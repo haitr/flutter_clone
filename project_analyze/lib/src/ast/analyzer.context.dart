@@ -11,9 +11,7 @@ class AnalyzerContext {
   AnalyzerContext({required this.projectPath, required this.projectName});
 
   String get currentFilePath =>
-      _currentFilePath.isEmpty
-          ? throw ArgumentError('currentFilePath cannot be empty')
-          : _currentFilePath;
+      _currentFilePath.isEmpty ? throw ArgumentError('currentFilePath cannot be empty') : _currentFilePath;
 
   set currentFilePath(String value) {
     if (value.isEmpty) {
@@ -26,8 +24,7 @@ class AnalyzerContext {
     final ref = element.hashCode;
     // if in project => hashCode
     // if in library => cache and return hashCode
-    if (element.source.uri.scheme == 'package' &&
-        path.split(element.source.uri.path).first == projectName) {
+    if (element.source.uri.scheme == 'package' && path.split(element.source.uri.path).first == projectName) {
       return InterfaceElementRefSerializer(
         ref: '#$ref',
         jsonType: _refJsonInternalElement,
@@ -83,8 +80,9 @@ class AnalyzerContext {
     if (!typeRef.containsKey(ref)) {
       // Create a placeholder serializer first
       final placeholder = DartTypeSerializer(
+        // ignore: deprecated_member_use
         name: type.getDisplayString(withNullability: false),
-        nullabilitySuffix: type.nullabilitySuffix,
+        nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
         isDartCore: type.isDartCore,
         isDartAsync: type.isDartAsync,
         jsonType: _placeholderJsonType,
@@ -100,7 +98,11 @@ class AnalyzerContext {
       typeRef[ref] = fullSerializer;
     }
     final refStr = '#$ref';
-    return DartTypeRefSerializer(ref: refStr, jsonType: _refJsonType);
+    return DartTypeRefSerializer(
+      ref: refStr,
+      jsonType: _refJsonType,
+      nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
+    );
   }
 
   InterfaceTypeRefSerializer getInterfaceTypeRef(InterfaceType type) {
@@ -108,6 +110,7 @@ class AnalyzerContext {
     if (!typeRef.containsKey(ref)) {
       // Create a placeholder serializer first
       final placeholder = InterfaceTypeSerializer(
+        name: '',
         typeArguments: [],
         element: InterfaceElementRefSerializer(
           ref: '',
@@ -119,7 +122,7 @@ class AnalyzerContext {
           supertype: null,
           allSupertypes: [],
         ),
-        nullabilitySuffix: type.nullabilitySuffix,
+        nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
         isDartCore: type.isDartCore,
         isDartAsync: type.isDartAsync,
         jsonType: _placeholderJsonType,
@@ -135,6 +138,10 @@ class AnalyzerContext {
       typeRef[ref] = fullSerializer;
     }
     final refStr = '#$ref';
-    return InterfaceTypeRefSerializer(ref: refStr, jsonType: _refJsonType);
+    return InterfaceTypeRefSerializer(
+      ref: refStr,
+      jsonType: _refJsonType,
+      nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
+    );
   }
 }

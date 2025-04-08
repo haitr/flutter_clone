@@ -2,8 +2,8 @@ part of 'analyzer.dart';
 
 /// See: [DartType]
 abstract class DartTypeMetadata {
-  String? get name;
-  NullabilitySuffix get nullabilitySuffix;
+  String get name;
+  String? get nullabilitySuffix;
   bool get isDartCore;
   bool get isDartAsync;
 }

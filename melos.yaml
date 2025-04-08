@@ -20,4 +20,9 @@ scripts:
   clone:
     description: Clone Flutter.
     steps:
-      - dart run flutter_clone/bin/flutter_clone.dart
+      - dart run flutter_clone/bin/flutter_clone.dart --output=flutter_example/generated --widget=Text
+
+  dry_clone:
+    description: Dry run clone Flutter.
+    steps:
+      - dart run flutter_clone/bin/flutter_clone.dart --dry-run --output=flutter_example/generated --widget=Text

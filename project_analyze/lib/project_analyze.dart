@@ -77,27 +77,20 @@ Future<AnalyzeResult> analyzeProjectWithSymbolResolution(FileSystem input) async
   final collection = AnalysisContextCollection(includedPaths: includePaths);
 
   SimpleLogger.info('Analysis context created with paths:');
-  collection.contexts
-      .map((context) => ' - ${context.contextRoot.root.path}')
-      .forEach(SimpleLogger.info);
+  collection.contexts.map((context) => ' - ${context.contextRoot.root.path}').forEach(SimpleLogger.info);
 
   final dartFiles =
-      Glob(
-        '**/*.dart',
-      ).listSync(root: includePaths[0]).whereType<File>().map((file) => file.path).toList();
+      Glob('**/*.dart').listSync(root: includePaths[0]).whereType<File>().map((file) => file.path).toList();
 
   SimpleLogger.info('Found ${dartFiles.length} Dart files');
 
   final results = <FileAnalyzeResult>[];
-  final parsingContext = AnalyzerContext(
-    projectPath: includePaths[0],
-    projectName: _getProjectName(input),
-  );
+  final parsingContext = AnalyzerContext(projectPath: includePaths[0], projectName: _getProjectName(input));
 
   for (final filePath in dartFiles) {
-    // if (path.basename(filePath) != 'theme_data.dart') {
-    //   continue;
-    // }
+    if (path.basename(filePath) != 'text.dart') {
+      continue;
+    }
 
     // Open the file for analysis first
     final context = collection.contextFor(filePath);
@@ -106,9 +99,7 @@ Future<AnalyzeResult> analyzeProjectWithSymbolResolution(FileSystem input) async
     if (library is ResolvedLibraryResult) {
       final libraryPath = library.element.source.fullName;
 
-      parsingContext.currentFilePath = path.normalize(
-        path.relative(libraryPath, from: parsingContext.projectPath),
-      );
+      parsingContext.currentFilePath = path.normalize(path.relative(libraryPath, from: parsingContext.projectPath));
 
       // SimpleLogger.progress(
       //   '\nAnalyzing library: ${path.relative(libraryPath, from: includePaths[0])}',
@@ -118,9 +109,5 @@ Future<AnalyzeResult> analyzeProjectWithSymbolResolution(FileSystem input) async
       results.add(FileAnalyzeResult.fromElement(library, parsingContext));
     }
   }
-  return AnalyzeResult(
-    files: results,
-    typeRef: parsingContext.typeRef,
-    elementRef: parsingContext.elementRef,
-  );
+  return AnalyzeResult(files: results, typeRef: parsingContext.typeRef, elementRef: parsingContext.elementRef);
 }
