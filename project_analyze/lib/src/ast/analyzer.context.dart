@@ -11,7 +11,9 @@ class AnalyzerContext {
   AnalyzerContext({required this.projectPath, required this.projectName});
 
   String get currentFilePath =>
-      _currentFilePath.isEmpty ? throw ArgumentError('currentFilePath cannot be empty') : _currentFilePath;
+      _currentFilePath.isEmpty
+          ? throw ArgumentError('currentFilePath cannot be empty')
+          : _currentFilePath;
 
   set currentFilePath(String value) {
     if (value.isEmpty) {
@@ -24,7 +26,8 @@ class AnalyzerContext {
     final ref = element.hashCode;
     // if in project => hashCode
     // if in library => cache and return hashCode
-    if (element.source.uri.scheme == 'package' && path.split(element.source.uri.path).first == projectName) {
+    if (element.source.uri.scheme == 'package' &&
+        path.split(element.source.uri.path).first == projectName) {
       return InterfaceElementRefSerializer(
         ref: '#$ref',
         jsonType: _refJsonInternalElement,
@@ -82,6 +85,7 @@ class AnalyzerContext {
       final placeholder = DartTypeSerializer(
         // ignore: deprecated_member_use
         name: type.getDisplayString(withNullability: false),
+        source: null,
         nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
         isDartCore: type.isDartCore,
         isDartAsync: type.isDartAsync,
@@ -111,6 +115,7 @@ class AnalyzerContext {
       // Create a placeholder serializer first
       final placeholder = InterfaceTypeSerializer(
         name: '',
+        source: null,
         typeArguments: [],
         element: InterfaceElementRefSerializer(
           ref: '',

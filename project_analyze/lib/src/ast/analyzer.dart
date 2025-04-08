@@ -17,7 +17,9 @@ part 'analyzer.type.dart';
 part 'analyzer.util.dart';
 
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
-class ClassElementSerializer with _SourceSerializer<String>, _ReferenceableSerializer implements ClassElementMetadata {
+class ClassElementSerializer
+    with _SourceSerializer<String>, _ReferenceableSerializer
+    implements ClassElementMetadata {
   @override
   final String name;
   @override
@@ -70,7 +72,12 @@ class ClassElementSerializer with _SourceSerializer<String>, _ReferenceableSeria
   final bool isValidMixin;
 
   @override
-  List<_SourceSerializer> get _refList => [...constructors, ...fields, ...methods, ...typeParameters];
+  List<_SourceSerializer> get _refList => [
+    ...constructors,
+    ...fields,
+    ...methods,
+    ...typeParameters,
+  ];
 
   ClassElementSerializer({
     required String ref,
@@ -106,10 +113,10 @@ class ClassElementSerializer with _SourceSerializer<String>, _ReferenceableSeria
   }
 
   factory ClassElementSerializer.from(ClassElement element, AnalyzerContext context) {
-    print('-- class ${element.name}');
     return ClassElementSerializer(
       ref: context.getElementRef(element).ref,
-      constructors: element.constructors.map((e) => ConstructorElementSerializer.from(e, context)).toList(),
+      constructors:
+          element.constructors.map((e) => ConstructorElementSerializer.from(e, context)).toList(),
       fields: element.fields.map((e) => FieldElementSerializer.from(e, context)).toList(),
       hasNonFinalField: element.hasNonFinalField,
       isAbstract: element.isAbstract,
@@ -130,7 +137,10 @@ class ClassElementSerializer with _SourceSerializer<String>, _ReferenceableSeria
       methods: element.methods.map((e) => MethodElementSerializer.from(e, context)).toList(),
       name: element.name,
       source: _getPath(element.source, context.projectPath),
-      typeParameters: element.typeParameters.map((e) => TypeParameterElementSerializer.from(e, context)).toList(),
+      typeParameters:
+          element.typeParameters
+              .map((e) => TypeParameterElementSerializer.from(e, context))
+              .toList(),
       interfaces: element.interfaces.map((e) => context.getInterfaceTypeRef(e)).toList(),
       mixins: element.mixins.map((e) => context.getInterfaceTypeRef(e)).toList(),
       supertype: element.supertype != null ? context.getInterfaceTypeRef(element.supertype!) : null,
@@ -138,7 +148,8 @@ class ClassElementSerializer with _SourceSerializer<String>, _ReferenceableSeria
     );
   }
 
-  factory ClassElementSerializer.fromJson(Map<String, dynamic> json) => _$ClassElementSerializerFromJson(json);
+  factory ClassElementSerializer.fromJson(Map<String, dynamic> json) =>
+      _$ClassElementSerializerFromJson(json);
 
   Map<String, dynamic> toJson() {
     final json = _$ClassElementSerializerToJson(this);
@@ -149,7 +160,9 @@ class ClassElementSerializer with _SourceSerializer<String>, _ReferenceableSeria
 }
 
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
-class InterfaceElementSerializer with _SourceSerializer<String> implements InterfaceElementMetadata {
+class InterfaceElementSerializer
+    with _SourceSerializer<String>
+    implements InterfaceElementMetadata {
   @override
   final String name;
   @override
@@ -176,7 +189,12 @@ class InterfaceElementSerializer with _SourceSerializer<String> implements Inter
   final bool isSimplyBounded;
 
   @override
-  List<_SourceSerializer> get _refList => [...constructors, ...fields, ...methods, ...typeParameters];
+  List<_SourceSerializer> get _refList => [
+    ...constructors,
+    ...fields,
+    ...methods,
+    ...typeParameters,
+  ];
 
   InterfaceElementSerializer({
     required String source,
@@ -204,9 +222,13 @@ class InterfaceElementSerializer with _SourceSerializer<String> implements Inter
       isPublic: element.isPublic,
       fields: element.fields.map((e) => FieldElementSerializer.from(e, context)).toList(),
       methods: element.methods.map((e) => MethodElementSerializer.from(e, context)).toList(),
-      typeParameters: element.typeParameters.map((e) => TypeParameterElementSerializer.from(e, context)).toList(),
+      typeParameters:
+          element.typeParameters
+              .map((e) => TypeParameterElementSerializer.from(e, context))
+              .toList(),
       isSimplyBounded: element.isSimplyBounded,
-      constructors: element.constructors.map((e) => ConstructorElementSerializer.from(e, context)).toList(),
+      constructors:
+          element.constructors.map((e) => ConstructorElementSerializer.from(e, context)).toList(),
       interfaces: element.interfaces.map((e) => context.getInterfaceTypeRef(e)).toList(),
       mixins: element.mixins.map((e) => context.getInterfaceTypeRef(e)).toList(),
       supertype: element.supertype != null ? context.getInterfaceTypeRef(element.supertype!) : null,
@@ -214,12 +236,15 @@ class InterfaceElementSerializer with _SourceSerializer<String> implements Inter
     );
   }
 
-  factory InterfaceElementSerializer.fromJson(Map<String, dynamic> json) => _$InterfaceElementSerializerFromJson(json);
+  factory InterfaceElementSerializer.fromJson(Map<String, dynamic> json) =>
+      _$InterfaceElementSerializerFromJson(json);
   Map<String, dynamic> toJson() => _$InterfaceElementSerializerToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
-class MixinElementSerializer with _SourceSerializer<String>, _ReferenceableSerializer implements MixinElementMetadata {
+class MixinElementSerializer
+    with _SourceSerializer<String>, _ReferenceableSerializer
+    implements MixinElementMetadata {
   @override
   final String name;
   @override
@@ -249,7 +274,12 @@ class MixinElementSerializer with _SourceSerializer<String>, _ReferenceableSeria
   @override
   final bool isBase;
   @override
-  List<_SourceSerializer> get _refList => [...constructors, ...fields, ...methods, ...typeParameters];
+  List<_SourceSerializer> get _refList => [
+    ...constructors,
+    ...fields,
+    ...methods,
+    ...typeParameters,
+  ];
 
   MixinElementSerializer({
     required String ref,
@@ -282,11 +312,16 @@ class MixinElementSerializer with _SourceSerializer<String>, _ReferenceableSeria
       isPublic: element.isPublic,
       fields: element.fields.map((e) => FieldElementSerializer.from(e, context)).toList(),
       methods: element.methods.map((e) => MethodElementSerializer.from(e, context)).toList(),
-      typeParameters: element.typeParameters.map((e) => TypeParameterElementSerializer.from(e, context)).toList(),
+      typeParameters:
+          element.typeParameters
+              .map((e) => TypeParameterElementSerializer.from(e, context))
+              .toList(),
       isSimplyBounded: element.isSimplyBounded,
       isBase: element.isBase,
-      superclassConstraints: element.superclassConstraints.map((e) => context.getInterfaceTypeRef(e)).toList(),
-      constructors: element.constructors.map((e) => ConstructorElementSerializer.from(e, context)).toList(),
+      superclassConstraints:
+          element.superclassConstraints.map((e) => context.getInterfaceTypeRef(e)).toList(),
+      constructors:
+          element.constructors.map((e) => ConstructorElementSerializer.from(e, context)).toList(),
       interfaces: element.interfaces.map((e) => context.getInterfaceTypeRef(e)).toList(),
       mixins: element.mixins.map((e) => context.getInterfaceTypeRef(e)).toList(),
       supertype: element.supertype != null ? context.getInterfaceTypeRef(element.supertype!) : null,
@@ -294,12 +329,15 @@ class MixinElementSerializer with _SourceSerializer<String>, _ReferenceableSeria
     );
   }
 
-  factory MixinElementSerializer.fromJson(Map<String, dynamic> json) => _$MixinElementSerializerFromJson(json);
+  factory MixinElementSerializer.fromJson(Map<String, dynamic> json) =>
+      _$MixinElementSerializerFromJson(json);
   Map<String, dynamic> toJson() => _$MixinElementSerializerToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
-class EnumElementSerializer with _SourceSerializer<String>, _ReferenceableSerializer implements EnumElementMetadata {
+class EnumElementSerializer
+    with _SourceSerializer<String>, _ReferenceableSerializer
+    implements EnumElementMetadata {
   @override
   final String name;
   @override
@@ -326,7 +364,12 @@ class EnumElementSerializer with _SourceSerializer<String>, _ReferenceableSerial
   final bool isSimplyBounded;
 
   @override
-  List<_SourceSerializer> get _refList => [...constructors, ...fields, ...methods, ...typeParameters];
+  List<_SourceSerializer> get _refList => [
+    ...constructors,
+    ...fields,
+    ...methods,
+    ...typeParameters,
+  ];
 
   EnumElementSerializer({
     required String ref,
@@ -357,9 +400,13 @@ class EnumElementSerializer with _SourceSerializer<String>, _ReferenceableSerial
       isPublic: element.isPublic,
       fields: element.fields.map((e) => FieldElementSerializer.from(e, context)).toList(),
       methods: element.methods.map((e) => MethodElementSerializer.from(e, context)).toList(),
-      typeParameters: element.typeParameters.map((e) => TypeParameterElementSerializer.from(e, context)).toList(),
+      typeParameters:
+          element.typeParameters
+              .map((e) => TypeParameterElementSerializer.from(e, context))
+              .toList(),
       isSimplyBounded: element.isSimplyBounded,
-      constructors: element.constructors.map((e) => ConstructorElementSerializer.from(e, context)).toList(),
+      constructors:
+          element.constructors.map((e) => ConstructorElementSerializer.from(e, context)).toList(),
       interfaces: element.interfaces.map((e) => context.getInterfaceTypeRef(e)).toList(),
       mixins: element.mixins.map((e) => context.getInterfaceTypeRef(e)).toList(),
       supertype: element.supertype != null ? context.getInterfaceTypeRef(element.supertype!) : null,
@@ -367,12 +414,15 @@ class EnumElementSerializer with _SourceSerializer<String>, _ReferenceableSerial
     );
   }
 
-  factory EnumElementSerializer.fromJson(Map<String, dynamic> json) => _$EnumElementSerializerFromJson(json);
+  factory EnumElementSerializer.fromJson(Map<String, dynamic> json) =>
+      _$EnumElementSerializerFromJson(json);
   Map<String, dynamic> toJson() => _$EnumElementSerializerToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
-class TypeAliasElementSerializer with _SourceSerializer<String> implements TypeAliasElementMetadata {
+class TypeAliasElementSerializer
+    with _SourceSerializer<String>
+    implements TypeAliasElementMetadata {
   @override
   final String name;
   @override
@@ -408,17 +458,23 @@ class TypeAliasElementSerializer with _SourceSerializer<String> implements TypeA
       isPrivate: element.isPrivate,
       isPublic: element.isPublic,
       isSimplyBounded: element.isSimplyBounded,
-      typeParameters: element.typeParameters.map((e) => TypeParameterElementSerializer.from(e, context)).toList(),
+      typeParameters:
+          element.typeParameters
+              .map((e) => TypeParameterElementSerializer.from(e, context))
+              .toList(),
       aliasedType: context.getTypeRef(element.aliasedType),
     );
   }
 
-  factory TypeAliasElementSerializer.fromJson(Map<String, dynamic> json) => _$TypeAliasElementSerializerFromJson(json);
+  factory TypeAliasElementSerializer.fromJson(Map<String, dynamic> json) =>
+      _$TypeAliasElementSerializerFromJson(json);
   Map<String, dynamic> toJson() => _$TypeAliasElementSerializerToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
-class ConstructorElementSerializer with _SourceSerializer<String> implements ConstructorElementMetadata {
+class ConstructorElementSerializer
+    with _SourceSerializer<String>
+    implements ConstructorElementMetadata {
   @override
   final String name;
   @override
@@ -506,7 +562,6 @@ class ConstructorElementSerializer with _SourceSerializer<String> implements Con
   }
 
   factory ConstructorElementSerializer.from(ConstructorElement element, AnalyzerContext context) {
-    print('----- constructor ${element.name}');
     return ConstructorElementSerializer(
       name: element.name,
       source: _getPath(element.source, context.projectPath),
@@ -516,8 +571,12 @@ class ConstructorElementSerializer with _SourceSerializer<String> implements Con
       isConstantEvaluated: element.isConstantEvaluated,
       isSimplyBounded: element.isSimplyBounded,
       type: FunctionTypeRefSerializer.from(element.type, context),
-      typeParameters: element.typeParameters.map((e) => TypeParameterElementSerializer.from(e, context)).toList(),
-      parameters: element.parameters.map((e) => ParameterElementSerializer.from(e, context)).toList(),
+      typeParameters:
+          element.typeParameters
+              .map((e) => TypeParameterElementSerializer.from(e, context))
+              .toList(),
+      parameters:
+          element.parameters.map((e) => ParameterElementSerializer.from(e, context)).toList(),
       returnType: InterfaceTypeRefSerializer.from(element.returnType, context),
       hasImplicitReturnType: element.hasImplicitReturnType,
       isAbstract: element.isAbstract,
@@ -628,8 +687,14 @@ class FieldElementSerializer with _SourceSerializer<String?> implements FieldEle
       isLate: element.isLate,
       type: context.getTypeRef(element.type),
       hasInitializer: element.hasInitializer,
-      getter: element.getter != null ? PropertyAccessorElementSerializer.from(element.getter!, context) : null,
-      setter: element.setter != null ? PropertyAccessorElementSerializer.from(element.setter!, context) : null,
+      getter:
+          element.getter != null
+              ? PropertyAccessorElementSerializer.from(element.getter!, context)
+              : null,
+      setter:
+          element.setter != null
+              ? PropertyAccessorElementSerializer.from(element.setter!, context)
+              : null,
       isAbstract: element.isAbstract,
       isCovariant: element.isCovariant,
       isEnumConstant: element.isEnumConstant,
@@ -638,7 +703,8 @@ class FieldElementSerializer with _SourceSerializer<String?> implements FieldEle
     );
   }
 
-  factory FieldElementSerializer.fromJson(Map<String, dynamic> json) => _$FieldElementSerializerFromJson(json);
+  factory FieldElementSerializer.fromJson(Map<String, dynamic> json) =>
+      _$FieldElementSerializerFromJson(json);
   Map<String, dynamic> toJson() => _$FieldElementSerializerToJson(this);
 }
 
@@ -713,8 +779,12 @@ class MethodElementSerializer with _SourceSerializer<String> implements MethodEl
       isPublic: element.isPublic,
       isStatic: element.isStatic,
       isSimplyBounded: element.isSimplyBounded,
-      typeParameters: element.typeParameters.map((e) => TypeParameterElementSerializer.from(e, context)).toList(),
-      parameters: element.parameters.map((e) => ParameterElementSerializer.from(e, context)).toList(),
+      typeParameters:
+          element.typeParameters
+              .map((e) => TypeParameterElementSerializer.from(e, context))
+              .toList(),
+      parameters:
+          element.parameters.map((e) => ParameterElementSerializer.from(e, context)).toList(),
       returnType: context.getTypeRef(element.returnType),
       type: FunctionTypeRefSerializer.from(element.type, context),
       hasImplicitReturnType: element.hasImplicitReturnType,
@@ -728,12 +798,15 @@ class MethodElementSerializer with _SourceSerializer<String> implements MethodEl
     );
   }
 
-  factory MethodElementSerializer.fromJson(Map<String, dynamic> json) => _$MethodElementSerializerFromJson(json);
+  factory MethodElementSerializer.fromJson(Map<String, dynamic> json) =>
+      _$MethodElementSerializerFromJson(json);
   Map<String, dynamic> toJson() => _$MethodElementSerializerToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
-class TopLevelVariableElementSerializer with _SourceSerializer<String?> implements TopLevelVariableElementMetadata {
+class TopLevelVariableElementSerializer
+    with _SourceSerializer<String?>
+    implements TopLevelVariableElementMetadata {
   @override
   final String name;
   @override
@@ -789,7 +862,10 @@ class TopLevelVariableElementSerializer with _SourceSerializer<String?> implemen
     setSource(source);
   }
 
-  factory TopLevelVariableElementSerializer.from(TopLevelVariableElement element, AnalyzerContext context) {
+  factory TopLevelVariableElementSerializer.from(
+    TopLevelVariableElement element,
+    AnalyzerContext context,
+  ) {
     return TopLevelVariableElementSerializer(
       name: element.name,
       source: _getNullablePath(element.source, context.projectPath),
@@ -803,8 +879,14 @@ class TopLevelVariableElementSerializer with _SourceSerializer<String?> implemen
       isLate: element.isLate,
       type: context.getTypeRef(element.type),
       hasInitializer: element.hasInitializer,
-      getter: element.getter != null ? PropertyAccessorElementSerializer.from(element.getter!, context) : null,
-      setter: element.setter != null ? PropertyAccessorElementSerializer.from(element.setter!, context) : null,
+      getter:
+          element.getter != null
+              ? PropertyAccessorElementSerializer.from(element.getter!, context)
+              : null,
+      setter:
+          element.setter != null
+              ? PropertyAccessorElementSerializer.from(element.setter!, context)
+              : null,
       isExternal: element.isExternal,
     );
   }
@@ -891,8 +973,12 @@ class FunctionElementSerializer with _SourceSerializer<String> implements Functi
       isPublic: element.isPublic,
       isStatic: element.isStatic,
       isSimplyBounded: element.isSimplyBounded,
-      typeParameters: element.typeParameters.map((e) => TypeParameterElementSerializer.from(e, context)).toList(),
-      parameters: element.parameters.map((e) => ParameterElementSerializer.from(e, context)).toList(),
+      typeParameters:
+          element.typeParameters
+              .map((e) => TypeParameterElementSerializer.from(e, context))
+              .toList(),
+      parameters:
+          element.parameters.map((e) => ParameterElementSerializer.from(e, context)).toList(),
       returnType: context.getTypeRef(element.returnType),
       type: FunctionTypeRefSerializer.from(element.type, context),
       hasImplicitReturnType: element.hasImplicitReturnType,
@@ -906,12 +992,15 @@ class FunctionElementSerializer with _SourceSerializer<String> implements Functi
     );
   }
 
-  factory FunctionElementSerializer.fromJson(Map<String, dynamic> json) => _$FunctionElementSerializerFromJson(json);
+  factory FunctionElementSerializer.fromJson(Map<String, dynamic> json) =>
+      _$FunctionElementSerializerFromJson(json);
   Map<String, dynamic> toJson() => _$FunctionElementSerializerToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
-class TypeParameterElementSerializer with _SourceSerializer<String?> implements TypeParameterElementMetadata {
+class TypeParameterElementSerializer
+    with _SourceSerializer<String?>
+    implements TypeParameterElementMetadata {
   @override
   final String name;
   @override
@@ -934,7 +1023,10 @@ class TypeParameterElementSerializer with _SourceSerializer<String?> implements 
     setSource(source);
   }
 
-  factory TypeParameterElementSerializer.from(TypeParameterElement element, AnalyzerContext context) {
+  factory TypeParameterElementSerializer.from(
+    TypeParameterElement element,
+    AnalyzerContext context,
+  ) {
     return TypeParameterElementSerializer(
       name: element.name,
       source: _getNullablePath(element.source, context.projectPath),
@@ -950,7 +1042,9 @@ class TypeParameterElementSerializer with _SourceSerializer<String?> implements 
 }
 
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
-class ParameterElementSerializer with _SourceSerializer<String?> implements ParameterElementMetadata {
+class ParameterElementSerializer
+    with _SourceSerializer<String?>
+    implements ParameterElementMetadata {
   @override
   final String name;
   @override
@@ -1037,11 +1131,6 @@ class ParameterElementSerializer with _SourceSerializer<String?> implements Para
   }
 
   factory ParameterElementSerializer.from(ParameterElement element, AnalyzerContext context) {
-    if (element.type.getDisplayString().startsWith('TextStyle')) {
-      print(
-        '${element.type.hashCode} ${element.name} ${element.type} ${element.type.name} ${element.type.nullabilitySuffix}',
-      );
-    }
     return ParameterElementSerializer(
       name: element.name,
       source: _getNullablePath(element.source, context.projectPath),
@@ -1066,18 +1155,25 @@ class ParameterElementSerializer with _SourceSerializer<String?> implements Para
       isRequiredNamed: element.isRequiredNamed,
       isRequiredPositional: element.isRequiredPositional,
       isSuperFormal: element.isSuperFormal,
-      parameters: element.parameters.map((e) => ParameterElementSerializer.from(e, context)).toList(),
-      typeParameters: element.typeParameters.map((e) => TypeParameterElementSerializer.from(e, context)).toList(),
+      parameters:
+          element.parameters.map((e) => ParameterElementSerializer.from(e, context)).toList(),
+      typeParameters:
+          element.typeParameters
+              .map((e) => TypeParameterElementSerializer.from(e, context))
+              .toList(),
       defaultValueCode: element.defaultValueCode,
     );
   }
 
-  factory ParameterElementSerializer.fromJson(Map<String, dynamic> json) => _$ParameterElementSerializerFromJson(json);
+  factory ParameterElementSerializer.fromJson(Map<String, dynamic> json) =>
+      _$ParameterElementSerializerFromJson(json);
   Map<String, dynamic> toJson() => _$ParameterElementSerializerToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
-class PropertyAccessorElementSerializer with _SourceSerializer<String> implements PropertyAccessorElementMetadata {
+class PropertyAccessorElementSerializer
+    with _SourceSerializer<String>
+    implements PropertyAccessorElementMetadata {
   @override
   final String name;
   @override
@@ -1145,7 +1241,10 @@ class PropertyAccessorElementSerializer with _SourceSerializer<String> implement
     setSource(source);
   }
 
-  factory PropertyAccessorElementSerializer.from(PropertyAccessorElement element, AnalyzerContext context) {
+  factory PropertyAccessorElementSerializer.from(
+    PropertyAccessorElement element,
+    AnalyzerContext context,
+  ) {
     return PropertyAccessorElementSerializer(
       name: element.name,
       source: _getPath(element.source, context.projectPath),
@@ -1153,8 +1252,12 @@ class PropertyAccessorElementSerializer with _SourceSerializer<String> implement
       isPublic: element.isPublic,
       isStatic: element.isStatic,
       isSimplyBounded: element.isSimplyBounded,
-      typeParameters: element.typeParameters.map((e) => TypeParameterElementSerializer.from(e, context)).toList(),
-      parameters: element.parameters.map((e) => ParameterElementSerializer.from(e, context)).toList(),
+      typeParameters:
+          element.typeParameters
+              .map((e) => TypeParameterElementSerializer.from(e, context))
+              .toList(),
+      parameters:
+          element.parameters.map((e) => ParameterElementSerializer.from(e, context)).toList(),
       returnType: context.getTypeRef(element.returnType),
       type: FunctionTypeRefSerializer.from(element.type, context),
       hasImplicitReturnType: element.hasImplicitReturnType,

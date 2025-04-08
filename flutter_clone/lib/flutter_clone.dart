@@ -30,7 +30,9 @@ Future<String?> getFlutterVersion() async {
     print(e.toString());
   }
 
-  throw Exception('Could not determine Flutter version. Ensure Flutter is installed and in your PATH.');
+  throw Exception(
+    'Could not determine Flutter version. Ensure Flutter is installed and in your PATH.',
+  );
 }
 
 void process(FileSystem fileSystem, AnalyzeResult result, String pattern) {
@@ -47,7 +49,7 @@ void process(FileSystem fileSystem, AnalyzeResult result, String pattern) {
         (e) =>
             glob.matches(e.name) &&
             e.allSupertypes
-                .map((e) => result.fromTypeRef(e))
+                .map((e) => result.fromTypeRef(e, e.nullabilitySuffix))
                 .nonNulls
                 .whereType<InterfaceTypeSerializer>()
                 .any((e) => e.name == 'Widget'),
@@ -65,16 +67,52 @@ void process(FileSystem fileSystem, AnalyzeResult result, String pattern) {
   }
 }
 
-void generateWrapper(AnalyzeResult result, FileSystem fileSystem, File file, ClassElementSerializer clazz) {
-  final emitter = DartEmitter(orderDirectives: true, useNullSafetySyntax: true, allocator: Allocator.simplePrefixing());
+String? _getImportPathFromType(DartTypeSerializer type) {
+  if (type.source case var source?) {
+    if (type.isDartCore) return null;
+    if (type.isDartAsync) return 'dart:async';
+    final paths = path.split(source);
+    if (paths.contains('sky_engine')) {
+      final category = paths[paths.indexOf('lib') + 1];
+      return 'dart:$category';
+    }
+    if (path.isRelative(source)) {
+      final category = paths[paths.indexOf('src') + 1];
+      return 'package:flutter/$category.dart';
+    }
+    throw ArgumentError('Unknown import path: $source');
+  }
+  return null;
+}
+
+String? _getImportPathFromElement(ClassElementSerializer element) {
+  final paths = path.split(element.source);
+  final category = paths[paths.indexOf('src') + 1];
+  return 'package:flutter/$category.dart';
+}
+
+void generateWrapper(
+  AnalyzeResult result,
+  FileSystem fileSystem,
+  File file,
+  ClassElementSerializer clazz,
+) {
+  final emitter = DartEmitter(
+    orderDirectives: true,
+    useNullSafetySyntax: true,
+    allocator: Allocator.simplePrefixing(),
+  );
   final library = Library((libraryBuilder) {
     final wrapperFile = fileSystem.file('wrapper.dart');
-    final wrapperPath = path.relative(wrapperFile.path, from: file.parent.path);
+    final wrapperPath = Uri.file(path.relative(wrapperFile.path, from: file.parent.path)).path;
     //
     libraryBuilder.body.add(
       Class((classBuilder) {
         // Add shortcut to original class
-        classBuilder.docs.add('/// See [${clazz.name}]');
+        final classRef = emitter.allocator.allocate(
+          refer(clazz.name, _getImportPathFromElement(clazz)),
+        );
+        classBuilder.docs.add('/// See [$classRef]');
         // Add generated class name
         classBuilder.name = '\$${clazz.name}';
         // extend from Wrapper
@@ -89,7 +127,7 @@ void generateWrapper(AnalyzeResult result, FileSystem fileSystem, File file, Cla
               final constructorName = constructor.name.isEmpty ? null : constructor.name;
               final positionalParams = constructor.parameters.where((e) => e.isPositional).toList();
               final namedParams = constructor.parameters.where((e) => e.isNamed).toList();
-              final optionalParams = constructor.parameters.where((e) => e.isOptional).toList();
+              // final optionalParams = constructor.parameters.where((e) => e.isOptional).toList();
 
               // Put constructor name if it exists
               constructorBuilder.name = constructorName;
@@ -101,10 +139,12 @@ void generateWrapper(AnalyzeResult result, FileSystem fileSystem, File file, Cla
                 positionalParams.map(
                   (parameter) => Parameter((parameterBuilder) {
                     parameterBuilder.name = parameter.name;
-                    final type = result.fromTypeRef(parameter.type)!;
+                    final type =
+                        result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
                     parameterBuilder.type = TypeReference((typeBuilder) {
                       typeBuilder.symbol = type.name;
                       typeBuilder.isNullable = type.nullabilitySuffix == '?';
+                      typeBuilder.url = type.source == null ? null : _getImportPathFromType(type);
                     });
                   }),
                 ),
@@ -112,15 +152,19 @@ void generateWrapper(AnalyzeResult result, FileSystem fileSystem, File file, Cla
               constructorBuilder.optionalParameters.addAll(
                 namedParams.map(
                   (parameter) => Parameter((parameterBuilder) {
+                    parameterBuilder.name = parameter.name;
+                    if (parameter.name == 'key') {
+                      parameterBuilder.toSuper = true;
+                      return;
+                    }
                     parameterBuilder.required = parameter.isRequired;
                     parameterBuilder.named = parameter.isNamed;
-                    parameterBuilder.name = parameter.name;
-                    print('${parameter.name} ${parameter.type.ref}');
-                    final type = result.fromTypeRef(parameter.type)!;
+                    final type =
+                        result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
                     parameterBuilder.type = TypeReference((typeBuilder) {
-                      print('${type.name} ${type.nullabilitySuffix}');
                       typeBuilder.symbol = type.name;
                       typeBuilder.isNullable = type.nullabilitySuffix == '?';
+                      typeBuilder.url = type.source == null ? null : _getImportPathFromType(type);
                     });
                   }),
                 ),
@@ -131,7 +175,9 @@ void generateWrapper(AnalyzeResult result, FileSystem fileSystem, File file, Cla
                   refer('super'),
                   [
                     InvokeExpression.newOf(refer('Argument', wrapperPath), [
-                      literalMap({for (final p in constructor.parameters) refer('#${p.name}'): refer(p.name)}),
+                      literalMap({
+                        for (final p in constructor.parameters) refer('#${p.name}'): refer(p.name),
+                      }),
                     ]),
                   ],
                   {
@@ -146,10 +192,39 @@ void generateWrapper(AnalyzeResult result, FileSystem fileSystem, File file, Cla
                           );
                           builder.body =
                               InvokeExpression.newOf(
-                                refer(clazz.name, 'package:flutter/widgets.dart'),
-                                positionalParams.map((e) => refer('args').call([refer('#${e.name}')])).toList(),
+                                refer(clazz.name, _getImportPathFromElement(clazz)),
+                                positionalParams.map((parameter) {
+                                  final type =
+                                      result.fromTypeRef(
+                                        parameter.type,
+                                        parameter.type.nullabilitySuffix,
+                                      )!;
+                                  final url =
+                                      type.source == null ? null : _getImportPathFromType(type);
+                                  return refer('args').call(
+                                    [refer('#${parameter.name}')],
+                                    {},
+                                    [refer(type.name, url)],
+                                  );
+                                }).toList(),
                                 Map.fromEntries(
-                                  namedParams.map((e) => MapEntry(e.name, refer('args').call([refer('#${e.name}')]))),
+                                  namedParams.map((parameter) {
+                                    final type =
+                                        result.fromTypeRef(
+                                          parameter.type,
+                                          parameter.type.nullabilitySuffix,
+                                        )!;
+                                    final url =
+                                        type.source == null ? null : _getImportPathFromType(type);
+                                    return MapEntry(
+                                      parameter.name,
+                                      refer('args').call(
+                                        [refer('#${parameter.name}')],
+                                        {},
+                                        [refer(type.name, url)],
+                                      ),
+                                    );
+                                  }),
                                 ),
                                 [],
                                 constructorName,
@@ -165,6 +240,8 @@ void generateWrapper(AnalyzeResult result, FileSystem fileSystem, File file, Cla
     );
   });
   var code = library.accept(emitter);
-  final str = DartFormatter(languageVersion: DartFormatter.latestLanguageVersion).format(code.toString());
+  final str = DartFormatter(
+    languageVersion: DartFormatter.latestLanguageVersion,
+  ).format(code.toString());
   file.writeAsStringSync(str, mode: FileMode.write);
 }

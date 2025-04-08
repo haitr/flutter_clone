@@ -3,6 +3,7 @@ part of 'analyzer.dart';
 /// See: [DartType]
 abstract class DartTypeMetadata {
   String get name;
+  String? get source;
   String? get nullabilitySuffix;
   bool get isDartCore;
   bool get isDartAsync;
@@ -10,6 +11,8 @@ abstract class DartTypeMetadata {
 
 /// See: [FunctionType]
 abstract class FunctionTypeMetadata implements DartTypeMetadata {
+  @override
+  Null get source;
   Map<String, DartTypeMetadata> get namedParameterTypes;
   List<DartTypeMetadata> get normalParameterTypes;
   List<DartTypeMetadata> get optionalParameterTypes;
@@ -36,6 +39,8 @@ abstract class TypeParameterTypeMetadata implements DartTypeMetadata {
 
 /// See: [RecordType]
 abstract class RecordTypeMetadata implements DartTypeMetadata {
+  @override
+  Null get source;
   List<RecordTypePositionalFieldMetadata> get positionalFields;
   List<RecordTypeNamedFieldMetadata> get namedFields;
 }
