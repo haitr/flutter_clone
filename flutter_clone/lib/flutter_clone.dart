@@ -30,9 +30,7 @@ Future<String?> getFlutterVersion() async {
     print(e.toString());
   }
 
-  throw Exception(
-    'Could not determine Flutter version. Ensure Flutter is installed and in your PATH.',
-  );
+  throw Exception('Could not determine Flutter version. Ensure Flutter is installed and in your PATH.');
 }
 
 void process(FileSystem fileSystem, AnalyzeResult result, String pattern) {
@@ -47,7 +45,11 @@ void process(FileSystem fileSystem, AnalyzeResult result, String pattern) {
     clazzes.addAll(
       file.classes.where(
         (e) =>
+            // ignore private classes
+            !e.name.startsWith('_') &&
+            // match the pattern
             glob.matches(e.name) &&
+            // implement Widget
             e.allSupertypes
                 .map((e) => result.fromTypeRef(e, e.nullabilitySuffix))
                 .nonNulls
@@ -91,17 +93,9 @@ String? _getImportPathFromElement(ClassElementSerializer element) {
   return 'package:flutter/$category.dart';
 }
 
-void generateWrapper(
-  AnalyzeResult result,
-  FileSystem fileSystem,
-  File file,
-  ClassElementSerializer clazz,
-) {
-  final emitter = DartEmitter(
-    orderDirectives: true,
-    useNullSafetySyntax: true,
-    allocator: Allocator.simplePrefixing(),
-  );
+// code_builder style is unreadable, I need to refactor it
+void generateWrapper(AnalyzeResult result, FileSystem fileSystem, File file, ClassElementSerializer clazz) {
+  final emitter = DartEmitter(orderDirectives: true, useNullSafetySyntax: true, allocator: Allocator.simplePrefixing());
   final library = Library((libraryBuilder) {
     final wrapperFile = fileSystem.file('wrapper.dart');
     final wrapperPath = Uri.file(path.relative(wrapperFile.path, from: file.parent.path)).path;
@@ -109,9 +103,7 @@ void generateWrapper(
     libraryBuilder.body.add(
       Class((classBuilder) {
         // Add shortcut to original class
-        final classRef = emitter.allocator.allocate(
-          refer(clazz.name, _getImportPathFromElement(clazz)),
-        );
+        final classRef = emitter.allocator.allocate(refer(clazz.name, _getImportPathFromElement(clazz)));
         classBuilder.docs.add('/// See [$classRef]');
         // Add generated class name
         classBuilder.name = '\$${clazz.name}';
@@ -122,126 +114,115 @@ void generateWrapper(
         });
         // constructor
         classBuilder.constructors.addAll(
-          clazz.constructors.map(
-            (constructor) => Constructor((constructorBuilder) {
-              final constructorName = constructor.name.isEmpty ? null : constructor.name;
-              final positionalParams = constructor.parameters.where((e) => e.isPositional).toList();
-              final namedParams = constructor.parameters.where((e) => e.isNamed).toList();
-              // final optionalParams = constructor.parameters.where((e) => e.isOptional).toList();
+          clazz.constructors
+              // ignore private constructors
+              .where((e) => !e.name.startsWith('_'))
+              .map(
+                (constructor) => Constructor((constructorBuilder) {
+                  final constructorName = constructor.name.isEmpty ? null : constructor.name;
+                  final positionalParams = constructor.parameters.where((e) => e.isPositional).toList();
+                  final namedParams = constructor.parameters.where((e) => e.isNamed).toList();
+                  // Move 'child' parameter to the end of the list if it exists
+                  namedParams.sort((a, b) => a.name == 'child' ? 1 : 0);
+                  // final optionalParams = constructor.parameters.where((e) => e.isOptional).toList();
 
-              // Put constructor name if it exists
-              constructorBuilder.name = constructorName;
+                  // Put constructor name if it exists
+                  constructorBuilder.name = constructorName;
 
-              /// [ConstructorBuilder.requiredParameters] and [ConstructorBuilder.optionalParameters] are NOT similar to [Constructor.parameters]
-              /// Add parameters
-              ///
-              constructorBuilder.requiredParameters.addAll(
-                positionalParams.map(
-                  (parameter) => Parameter((parameterBuilder) {
-                    parameterBuilder.name = parameter.name;
-                    final type =
-                        result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
-                    parameterBuilder.type = TypeReference((typeBuilder) {
-                      typeBuilder.symbol = type.name;
-                      typeBuilder.isNullable = type.nullabilitySuffix == '?';
-                      typeBuilder.url = type.source == null ? null : _getImportPathFromType(type);
-                    });
-                  }),
-                ),
-              );
-              constructorBuilder.optionalParameters.addAll(
-                namedParams.map(
-                  (parameter) => Parameter((parameterBuilder) {
-                    parameterBuilder.name = parameter.name;
-                    if (parameter.name == 'key') {
-                      parameterBuilder.toSuper = true;
-                      return;
-                    }
-                    parameterBuilder.required = parameter.isRequired;
-                    parameterBuilder.named = parameter.isNamed;
-                    final type =
-                        result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
-                    parameterBuilder.type = TypeReference((typeBuilder) {
-                      typeBuilder.symbol = type.name;
-                      typeBuilder.isNullable = type.nullabilitySuffix == '?';
-                      typeBuilder.url = type.source == null ? null : _getImportPathFromType(type);
-                    });
-                  }),
-                ),
-              );
-              // Initialize super with Argument and builder
-              constructorBuilder.initializers.add(
-                InvokeExpression.newOf(
-                  refer('super'),
-                  [
-                    InvokeExpression.newOf(refer('Argument', wrapperPath), [
-                      literalMap({
-                        for (final p in constructor.parameters) refer('#${p.name}'): refer(p.name),
+                  /// Add parameters
+                  // [ConstructorBuilder.requiredParameters] and [ConstructorBuilder.optionalParameters] are NOT similar to [Constructor.parameters]
+                  constructorBuilder.requiredParameters.addAll(
+                    positionalParams.map(
+                      (parameter) => Parameter((parameterBuilder) {
+                        parameterBuilder.name = parameter.name;
+                        final type = result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
+                        parameterBuilder.type = TypeReference((typeBuilder) {
+                          typeBuilder.symbol = type.name;
+                          typeBuilder.isNullable = type.nullabilitySuffix == '?';
+                          typeBuilder.url = type.source == null ? null : _getImportPathFromType(type);
+                        });
                       }),
-                    ]),
-                  ],
-                  {
-                    'builder':
-                        Method((builder) {
-                          builder.lambda = true;
-                          builder.requiredParameters.add(
-                            Parameter((builder) {
-                              builder.name = 'args';
-                              builder.named = false;
-                            }),
-                          );
-                          builder.body =
-                              InvokeExpression.newOf(
-                                refer(clazz.name, _getImportPathFromElement(clazz)),
-                                positionalParams.map((parameter) {
-                                  final type =
-                                      result.fromTypeRef(
-                                        parameter.type,
-                                        parameter.type.nullabilitySuffix,
-                                      )!;
-                                  final url =
-                                      type.source == null ? null : _getImportPathFromType(type);
-                                  return refer('args').call(
-                                    [refer('#${parameter.name}')],
-                                    {},
-                                    [refer(type.name, url)],
-                                  );
-                                }).toList(),
-                                Map.fromEntries(
-                                  namedParams.map((parameter) {
-                                    final type =
-                                        result.fromTypeRef(
-                                          parameter.type,
-                                          parameter.type.nullabilitySuffix,
-                                        )!;
-                                    final url =
-                                        type.source == null ? null : _getImportPathFromType(type);
-                                    return MapEntry(
-                                      parameter.name,
-                                      refer('args').call(
-                                        [refer('#${parameter.name}')],
-                                        {},
-                                        [refer(type.name, url)],
-                                      ),
-                                    );
-                                  }),
-                                ),
-                                [],
-                                constructorName,
-                              ).code;
-                        }).closure,
-                  },
-                ).code,
-              );
-            }),
-          ),
+                    ),
+                  );
+                  constructorBuilder.optionalParameters.addAll(
+                    namedParams.map(
+                      (parameter) => Parameter((parameterBuilder) {
+                        parameterBuilder.name = parameter.name;
+                        if (parameter.name == 'key') {
+                          parameterBuilder.toSuper = true;
+                          return;
+                        }
+                        parameterBuilder.required = parameter.isRequired;
+                        parameterBuilder.named = parameter.isNamed;
+                        if (parameter.defaultValueCode case var defaultValueCode?) {
+                          parameterBuilder.defaultTo = Code(defaultValueCode);
+                        }
+                        final type = result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
+                        parameterBuilder.type = TypeReference((typeBuilder) {
+                          typeBuilder.symbol = type.name;
+                          typeBuilder.isNullable = type.nullabilitySuffix == '?';
+                          typeBuilder.url = type.source == null ? null : _getImportPathFromType(type);
+                        });
+                      }),
+                    ),
+                  );
+                  // Initialize super with Argument and builder
+                  constructorBuilder.initializers.add(
+                    InvokeExpression.newOf(
+                      refer('super'),
+                      [
+                        InvokeExpression.newOf(refer('Argument', wrapperPath), [
+                          literalMap({for (final p in constructor.parameters) refer('#${p.name}'): refer(p.name)}),
+                        ]),
+                      ],
+                      {
+                        'builder':
+                            Method((builder) {
+                              builder.lambda = true;
+                              builder.requiredParameters.add(
+                                Parameter((builder) {
+                                  builder.name = 'args';
+                                  builder.named = false;
+                                }),
+                              );
+                              builder.body =
+                                  InvokeExpression.newOf(
+                                    refer(clazz.name, _getImportPathFromElement(clazz)),
+                                    positionalParams.map((parameter) {
+                                      final type =
+                                          result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
+                                      final url = type.source == null ? null : _getImportPathFromType(type);
+                                      return refer(
+                                        'args',
+                                      ).call([refer('#${parameter.name}')], {}, [refer(type.name, url)]);
+                                    }).toList(),
+                                    Map.fromEntries(
+                                      namedParams.map((parameter) {
+                                        final type =
+                                            result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
+                                        final url = type.source == null ? null : _getImportPathFromType(type);
+                                        return MapEntry(
+                                          parameter.name,
+                                          refer(
+                                            'args',
+                                          ).call([refer('#${parameter.name}')], {}, [refer(type.name, url)]),
+                                        );
+                                      }),
+                                    ),
+                                    [],
+                                    constructorName,
+                                  ).code;
+                            }).closure,
+                      },
+                    ).code,
+                  );
+                }),
+              ),
         );
       }),
     );
   });
   var code = library.accept(emitter);
-  final str = DartFormatter(
-    languageVersion: DartFormatter.latestLanguageVersion,
-  ).format(code.toString());
+  final str = DartFormatter(languageVersion: DartFormatter.latestLanguageVersion).format(code.toString());
   file.writeAsStringSync(str, mode: FileMode.write);
 }

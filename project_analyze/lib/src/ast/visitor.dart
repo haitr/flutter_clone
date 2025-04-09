@@ -72,12 +72,10 @@ class ElementAnalyzer extends ElementVisitor<void> {
   void visitExtensionTypeElement(ExtensionTypeElement element) => element.visitChildren(this);
 
   @override
-  void visitFieldFormalParameterElement(FieldFormalParameterElement element) =>
-      element.visitChildren(this);
+  void visitFieldFormalParameterElement(FieldFormalParameterElement element) => element.visitChildren(this);
 
   @override
-  void visitGenericFunctionTypeElement(GenericFunctionTypeElement element) =>
-      element.visitChildren(this);
+  void visitGenericFunctionTypeElement(GenericFunctionTypeElement element) => element.visitChildren(this);
 
   @override
   void visitLabelElement(LabelElement element) => element.visitChildren(this);
@@ -107,8 +105,7 @@ class ElementAnalyzer extends ElementVisitor<void> {
   void visitPrefixElement(PrefixElement element) => element.visitChildren(this);
 
   @override
-  void visitSuperFormalParameterElement(SuperFormalParameterElement element) =>
-      element.visitChildren(this);
+  void visitSuperFormalParameterElement(SuperFormalParameterElement element) => element.visitChildren(this);
 
   @override
   void visitTypeParameterElement(TypeParameterElement element) => element.visitChildren(this);

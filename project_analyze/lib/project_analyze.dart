@@ -88,7 +88,7 @@ Future<AnalyzeResult> analyzeProjectWithSymbolResolution(FileSystem input) async
   final parsingContext = AnalyzerContext(projectPath: includePaths[0], projectName: _getProjectName(input));
 
   for (final filePath in dartFiles) {
-    if (path.basename(filePath) != 'text.dart') {
+    if (path.basename(filePath) != 'button.dart') {
       continue;
     }
 
@@ -109,5 +109,6 @@ Future<AnalyzeResult> analyzeProjectWithSymbolResolution(FileSystem input) async
       results.add(FileAnalyzeResult.fromElement(library, parsingContext));
     }
   }
+
   return AnalyzeResult(files: results, typeRef: parsingContext.typeRef, elementRef: parsingContext.elementRef);
 }
