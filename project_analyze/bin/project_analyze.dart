@@ -1,6 +1,5 @@
 import 'package:args/args.dart';
 import 'package:file/file.dart';
-import 'package:file/local.dart';
 import 'package:path/path.dart' as path;
 import 'package:project_analyze/project_analyze.dart';
 import 'package:project_analyze/src/utils/local_file_system.dart';
@@ -20,7 +19,7 @@ Future<void> main(List<String> arguments) async {
   final parser =
       ArgParser()
         ..addFlag('verbose', abbr: 'v', help: 'Enable verbose output', negatable: false)
-        ..addOption('output', abbr: 'o', help: 'Output json file', defaultsTo: './generated.json')
+        ..addOption('output', abbr: 'o', help: 'Output json file')
         ..addOption('input', abbr: 'i', help: 'Input dependencies', defaultsTo: './dependencies')
         ..addFlag('help', abbr: 'h', help: 'Help command', negatable: false);
 
@@ -34,7 +33,7 @@ Future<void> main(List<String> arguments) async {
   // Store parsed command line arguments and provide convenient getters
   final bool verbose = cmds['verbose']; // Whether to enable verbose logging
   final String input = cmds['input']; // Input directory path
-  final String output = cmds['output']; // Output directory path
+  final String? output = cmds['output']; // Output directory path
 
   SimpleLogger.setVerbose(verbose);
 
@@ -42,18 +41,19 @@ Future<void> main(List<String> arguments) async {
 
   final inputFs = WorkingDirectoryFileSystem(path.normalize(input));
   final result = await _loadFromScratch(inputFs);
-  final outputFs = LocalFileSystem();
-  final cacheFile = outputFs.currentDirectory.childFile(output);
+  if (output != null) {
+    final outputFs = WorkingDirectoryFileSystem(path.normalize(output));
+    final cacheFile = outputFs.currentDirectory.childFile(output);
+    if (cacheFile.existsSync()) {
+      cacheFile.deleteSync();
+    } else {
+      cacheFile.createSync();
+    }
 
-  if (cacheFile.existsSync()) {
-    cacheFile.deleteSync();
-  } else {
-    cacheFile.createSync();
+    await saveToCache(result, cacheFile, encoder: const SelectiveIndentJsonEncoder());
+    progress.finish(showTiming: true);
+    SimpleLogger.info('Cache size: ${(cacheFile.lengthSync() / 1024 / 1024).toStringAsFixed(2)} MB');
   }
-
-  await saveToCache(result, cacheFile, encoder: const SelectiveIndentJsonEncoder());
-  progress.finish(showTiming: true);
-  SimpleLogger.info('Cache size: ${(cacheFile.lengthSync() / 1024 / 1024).toStringAsFixed(2)} MB');
 }
 
 /// Performs fresh analysis of project source files
@@ -62,5 +62,4 @@ Future<void> main(List<String> arguments) async {
 ///
 /// Returns a List of [AnalyzeResult] objects containing the analysis results
 /// The results include class declarations and their analyzed structure
-Future<AnalyzeResult> _loadFromScratch(FileSystem input) =>
-    analyzeProjectWithSymbolResolution(input);
+Future<AnalyzeResult> _loadFromScratch(FileSystem input) => analyzeProjectWithSymbolResolution(input);

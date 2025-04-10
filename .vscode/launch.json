@@ -5,22 +5,26 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "[root]Prepare",
-            "cwd": "clone/prepare",
+            "name": "[root]Analyze only",
+            "cwd": "project_analyze",
+            "program": "bin/project_analyze.dart",
             "request": "launch",
             "type": "dart",
-            "program": "bin/prepare.dart",
             "args": [
-                "--output",
-                "../dependencies",
+                "-i",
+                "../generated/flutter",
             ],
         },
         {
             "name": "[root]Clone",
-            "cwd": "clone",
+            "cwd": "flutter_clone",
+            "program": "bin/flutter_clone.dart",
             "request": "launch",
             "type": "dart",
-            "program": "bin/generate.dart",
+            "args": [
+                "--output=../flutter_example/generated",
+                "--widget=CupertinoButton",
+            ],
         },
         {
             "name": "[rxflutter] Counter example",

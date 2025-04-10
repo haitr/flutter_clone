@@ -88,9 +88,9 @@ Future<AnalyzeResult> analyzeProjectWithSymbolResolution(FileSystem input) async
   final parsingContext = AnalyzerContext(projectPath: includePaths[0], projectName: _getProjectName(input));
 
   for (final filePath in dartFiles) {
-    if (path.basename(filePath) != 'button.dart') {
-      continue;
-    }
+    // if (path.basename(filePath) != 'button.dart') {
+    //   continue;
+    // }
 
     // Open the file for analysis first
     final context = collection.contextFor(filePath);
@@ -101,9 +101,7 @@ Future<AnalyzeResult> analyzeProjectWithSymbolResolution(FileSystem input) async
 
       parsingContext.currentFilePath = path.normalize(path.relative(libraryPath, from: parsingContext.projectPath));
 
-      // SimpleLogger.progress(
-      //   '\nAnalyzing library: ${path.relative(libraryPath, from: includePaths[0])}',
-      // );
+      // SimpleLogger.progress('\nAnalyzing library: ${path.relative(libraryPath, from: includePaths[0])}');
 
       // Let the visitor analyze classes and track dependencies
       results.add(FileAnalyzeResult.fromElement(library, parsingContext));

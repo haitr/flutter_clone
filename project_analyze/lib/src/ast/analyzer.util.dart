@@ -1,17 +1,8 @@
 part of 'analyzer.dart';
 
-String _getPath(Source source, String projectPath) {
-  return path.toUri(path.relative(source.fullName, from: projectPath)).path;
-}
-
-String? _getNullablePath(Source? source, String projectPath) {
-  if (source == null) return null;
-  return path.toUri(path.relative(source.fullName, from: projectPath)).path;
-}
-
 const thisRef = '#this';
 
-mixin _SourceSerializer<T extends String?> {
+mixin SourceSerializer<T extends String?> {
   T _source = (T == String ? '' : null) as T;
 
   T get source => _source;
@@ -31,7 +22,7 @@ mixin _SourceSerializer<T extends String?> {
     }
   }
 
-  List<_SourceSerializer> get _refList;
+  List<SourceSerializer> get _refList;
 }
 
 mixin _ReferenceableSerializer {

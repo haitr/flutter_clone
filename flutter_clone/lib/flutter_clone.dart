@@ -50,11 +50,7 @@ void process(FileSystem fileSystem, AnalyzeResult result, String pattern) {
             // match the pattern
             glob.matches(e.name) &&
             // implement Widget
-            e.allSupertypes
-                .map((e) => result.fromTypeRef(e, e.nullabilitySuffix))
-                .nonNulls
-                .whereType<InterfaceTypeSerializer>()
-                .any((e) => e.name == 'Widget'),
+            e.allSupertypes.map((e) => result.fromTypeRef(e, e.nullabilitySuffix)).nonNulls.whereType<InterfaceTypeSerializer>().any((e) => e.name == 'Widget'),
       ),
     );
   }
@@ -87,8 +83,8 @@ String? _getImportPathFromType(DartTypeSerializer type) {
   return null;
 }
 
-String? _getImportPathFromElement(ClassElementSerializer element) {
-  final paths = path.split(element.source);
+String? _getImportPathFromElement(SourceSerializer element) {
+  final paths = path.split(element.source!);
   final category = paths[paths.indexOf('src') + 1];
   return 'package:flutter/$category.dart';
 }
@@ -154,8 +150,9 @@ void generateWrapper(AnalyzeResult result, FileSystem fileSystem, File file, Cla
                         }
                         parameterBuilder.required = parameter.isRequired;
                         parameterBuilder.named = parameter.isNamed;
-                        if (parameter.defaultValueCode case var defaultValueCode?) {
-                          parameterBuilder.defaultTo = Code(defaultValueCode);
+                        if (parameter.initializer case var initializer?) {
+                          // parameterBuilder.defaultTo = Code(parameter.defaultValueCode!);
+                          parameterBuilder.defaultTo = Code(_getInitializerCode(initializer, result, (ref) => emitter.allocator.allocate(ref)));
                         }
                         final type = result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
                         parameterBuilder.type = TypeReference((typeBuilder) {
@@ -189,24 +186,15 @@ void generateWrapper(AnalyzeResult result, FileSystem fileSystem, File file, Cla
                                   InvokeExpression.newOf(
                                     refer(clazz.name, _getImportPathFromElement(clazz)),
                                     positionalParams.map((parameter) {
-                                      final type =
-                                          result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
+                                      final type = result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
                                       final url = type.source == null ? null : _getImportPathFromType(type);
-                                      return refer(
-                                        'args',
-                                      ).call([refer('#${parameter.name}')], {}, [refer(type.name, url)]);
+                                      return refer('args').call([refer('#${parameter.name}')], {}, [refer(type.name, url)]);
                                     }).toList(),
                                     Map.fromEntries(
                                       namedParams.map((parameter) {
-                                        final type =
-                                            result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
+                                        final type = result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
                                         final url = type.source == null ? null : _getImportPathFromType(type);
-                                        return MapEntry(
-                                          parameter.name,
-                                          refer(
-                                            'args',
-                                          ).call([refer('#${parameter.name}')], {}, [refer(type.name, url)]),
-                                        );
+                                        return MapEntry(parameter.name, refer('args').call([refer('#${parameter.name}')], {}, [refer(type.name, url)]));
                                       }),
                                     ),
                                     [],
@@ -225,4 +213,59 @@ void generateWrapper(AnalyzeResult result, FileSystem fileSystem, File file, Cla
   var code = library.accept(emitter);
   final str = DartFormatter(languageVersion: DartFormatter.latestLanguageVersion).format(code.toString());
   file.writeAsStringSync(str, mode: FileMode.write);
+}
+
+String _getInitializerCode(InitializerSerializer initializer, AnalyzeResult result, String Function(Reference) scope) {
+  switch (initializer) {
+    case NamedExpressionInitializerSerializer():
+      return '${initializer.name}: ${_getInitializerCode(initializer.value, result, scope)}';
+    case LiteralInitializerSerializer():
+      return initializer.value;
+    case PrefixExpressionInitializerSerializer():
+      if (initializer.operand is BinaryExpressionInitializerSerializer) {
+        return '${initializer.operator}(${_getInitializerCode(initializer.operand, result, scope)})';
+      }
+      return '${initializer.operator}${_getInitializerCode(initializer.operand, result, scope)}';
+    case PrefixedIdentifierInitializerSerializer():
+      final target = initializer.prefixElement != null ? result.fromElementRef(initializer.prefixElement!) : null;
+      final name = scope(refer(target!.name, _getImportPathFromElement(target)));
+      return '$name.${initializer.identifier}';
+    case SimpleIdentifierInitializerSerializer():
+      return scope(refer(initializer.identifier, initializer.source));
+    case BinaryExpressionInitializerSerializer():
+      return '${_getInitializerCode(initializer.left, result, scope)} ${initializer.operator} ${_getInitializerCode(initializer.right, result, scope)}';
+    case InstanceCreationInitializerSerializer():
+      final code = StringBuffer();
+      if (initializer.isConst) code.write('const ');
+      final type = initializer.type != null ? result.fromTypeRef(initializer.type!, initializer.type?.nullabilitySuffix) : null;
+      code.write(type!.name);
+      if (initializer.constructorName != null) code.write('.${initializer.constructorName}');
+      code.write('(');
+      code.write(initializer.arguments.map((e) => _getInitializerCode(e, result, scope)).join(', '));
+      code.write(')');
+      return code.toString();
+    case ListLiteralInitializerSerializer():
+      final code = StringBuffer();
+      if (initializer.isConst) code.write('const ');
+      code.write('[');
+      code.write(initializer.elements.map((e) => _getInitializerCode(e, result, scope)).join(', '));
+      code.write(']');
+      return code.toString();
+    case SetLiteralInitializerSerializer():
+      final code = StringBuffer();
+      if (initializer.isConst) code.write('const ');
+      code.write('{');
+      code.write(initializer.elements.map((e) => _getInitializerCode(e, result, scope)).join(', '));
+      code.write('}');
+      return code.toString();
+    case MapLiteralInitializerSerializer():
+      final code = StringBuffer();
+      if (initializer.isConst) code.write('const ');
+      code.write('{');
+      code.write(initializer.elements.map((e) => _getInitializerCode(e, result, scope)).join(', '));
+      code.write('}');
+      return code.toString();
+    default:
+      return throw UnimplementedError();
+  }
 }

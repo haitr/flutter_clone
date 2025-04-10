@@ -11,9 +11,7 @@ class AnalyzerContext {
   AnalyzerContext({required this.projectPath, required this.projectName});
 
   String get currentFilePath =>
-      _currentFilePath.isEmpty
-          ? throw ArgumentError('currentFilePath cannot be empty')
-          : _currentFilePath;
+      _currentFilePath.isEmpty ? throw ArgumentError('currentFilePath cannot be empty') : _currentFilePath;
 
   set currentFilePath(String value) {
     if (value.isEmpty) {
@@ -22,16 +20,20 @@ class AnalyzerContext {
     _currentFilePath = value;
   }
 
+  String? getPath(Source? source) {
+    if (source == null) return null;
+    return path.toUri(path.relative(source.fullName, from: projectPath)).path;
+  }
+
   InterfaceElementRefSerializer getElementRef(InterfaceElement element) {
     final ref = element.hashCode;
     // if in project => hashCode
     // if in library => cache and return hashCode
-    if (element.source.uri.scheme == 'package' &&
-        path.split(element.source.uri.path).first == projectName) {
+    if (element.source.uri.scheme == 'package' && path.split(element.source.uri.path).first == projectName) {
       return InterfaceElementRefSerializer(
         ref: '#$ref',
         jsonType: _refJsonInternalElement,
-        source: _getPath(element.source, projectPath),
+        source: getPath(element.source)!,
         name: element.name,
         interfaces: [],
         mixins: [],
@@ -41,7 +43,7 @@ class AnalyzerContext {
     } else {
       // Create a placeholder serializer first
       final placeholder = InterfaceElementSerializer(
-        source: _getPath(element.source, projectPath),
+        source: getPath(element.source)!,
         name: element.name,
         isPrivate: element.isPrivate,
         isPublic: element.isPublic,
@@ -68,7 +70,7 @@ class AnalyzerContext {
       return InterfaceElementRefSerializer(
         ref: '#$ref',
         jsonType: _refJsonElement,
-        source: _getPath(element.source, projectPath),
+        source: getPath(element.source)!,
         name: element.name,
         interfaces: [],
         mixins: [],
