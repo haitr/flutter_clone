@@ -57,6 +57,8 @@ class InitializerSerializer {
     switch (expression) {
       case PrefixExpression():
         return PrefixExpressionInitializerSerializer.from(expression, context);
+      case BinaryExpression():
+        return BinaryExpressionInitializerSerializer.from(expression, context);
       case StringLiteral():
       case BooleanLiteral():
       case IntegerLiteral():
@@ -72,13 +74,13 @@ class InitializerSerializer {
       case InstanceCreationExpression():
         return InstanceCreationInitializerSerializer.from(expression, context);
       case SimpleIdentifier():
-        return SimpleIdentifierInitializerSerializer.from(expression, context);
-      case PrefixedIdentifier():
+        return SimpleIdentifierInitializerSerializer.fromSimpleIdentifier(expression, context);
+      case PrefixedIdentifier(prefix: var prefix) when prefix.staticElement is PrefixElement:
+        return SimpleIdentifierInitializerSerializer.fromPrefixedIdentifier(expression, context);
+      case PrefixedIdentifier(prefix: var prefix) when prefix.staticElement is InterfaceElement:
         return PrefixedIdentifierInitializerSerializer.fromPrefixedIdentifier(expression, context);
       case PropertyAccess():
         return PrefixedIdentifierInitializerSerializer.fromPropertyAccess(expression, context);
-      case BinaryExpression():
-        return BinaryExpressionInitializerSerializer.from(expression, context);
       // internal use only
       case NamedExpression():
         return NamedExpressionInitializerSerializer.from(expression, context);
@@ -118,48 +120,26 @@ class InitializerSerializer {
   Map<String, dynamic> toJson() => throw UnimplementedError('--- $runtimeType');
 }
 
-/// See [SetOrMapLiteral]
+/// See [NamedExpression]
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
-final class SetLiteralInitializerSerializer extends InitializerSerializer {
-  final List<DartTypeRefSerializer>? typeArguments;
-  final bool isConst;
-  final List<InitializerSerializer> elements;
+final class NamedExpressionInitializerSerializer extends InitializerSerializer {
+  final String name;
+  final InitializerSerializer value;
 
-  SetLiteralInitializerSerializer({required this.typeArguments, required this.isConst, required this.elements, required super.jsonType});
+  NamedExpressionInitializerSerializer({required this.name, required this.value, required super.jsonType});
 
-  factory SetLiteralInitializerSerializer.from(SetOrMapLiteral expression, AnalyzerContext context) {
-    final isConst = expression.isConst;
-    final typeArguments = expression.typeArguments?.arguments.map((e) => e.type).nonNulls.map((e) => context.getTypeRef(e)).toList();
-    final elements = expression.elements.map((e) => InitializerSerializer.from(e as Expression, context)).toList();
-    return SetLiteralInitializerSerializer(jsonType: InitializerType.set, typeArguments: typeArguments, isConst: isConst, elements: elements);
+  factory NamedExpressionInitializerSerializer.from(NamedExpression expression, AnalyzerContext context) {
+    return NamedExpressionInitializerSerializer(
+      name: expression.name.label.toString(),
+      value: InitializerSerializer.from(expression.expression, context),
+      jsonType: InitializerType.named,
+    );
   }
 
-  factory SetLiteralInitializerSerializer.fromJson(Map<String, dynamic> json) => _$SetLiteralInitializerSerializerFromJson(json);
+  factory NamedExpressionInitializerSerializer.fromJson(Map<String, dynamic> json) => _$NamedExpressionInitializerSerializerFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$SetLiteralInitializerSerializerToJson(this);
-}
-
-/// See [SetOrMapLiteral]
-@JsonSerializable(explicitToJson: true, includeIfNull: false)
-final class MapLiteralInitializerSerializer extends InitializerSerializer {
-  final List<DartTypeRefSerializer>? typeArguments;
-  final bool isConst;
-  final List<InitializerSerializer> elements;
-
-  MapLiteralInitializerSerializer({required this.typeArguments, required this.isConst, required this.elements, required super.jsonType});
-
-  factory MapLiteralInitializerSerializer.from(SetOrMapLiteral expression, AnalyzerContext context) {
-    final isConst = expression.isConst;
-    final typeArguments = expression.typeArguments?.arguments.map((e) => e.type).nonNulls.map((e) => context.getTypeRef(e)).toList();
-    final elements = expression.elements.map((e) => InitializerSerializer.from(e as Expression, context)).toList();
-    return MapLiteralInitializerSerializer(typeArguments: typeArguments, isConst: isConst, elements: elements, jsonType: InitializerType.map);
-  }
-
-  factory MapLiteralInitializerSerializer.fromJson(Map<String, dynamic> json) => _$MapLiteralInitializerSerializerFromJson(json);
-
-  @override
-  Map<String, dynamic> toJson() => _$MapLiteralInitializerSerializerToJson(this);
+  Map<String, dynamic> toJson() => _$NamedExpressionInitializerSerializerToJson(this);
 }
 
 /// See [BinaryExpression]
@@ -208,6 +188,50 @@ final class PrefixExpressionInitializerSerializer extends InitializerSerializer 
   Map<String, dynamic> toJson() => _$PrefixExpressionInitializerSerializerToJson(this);
 }
 
+/// See [SetOrMapLiteral]
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
+final class SetLiteralInitializerSerializer extends InitializerSerializer {
+  final List<DartTypeRefSerializer>? typeArguments;
+  final bool isConst;
+  final List<InitializerSerializer> elements;
+
+  SetLiteralInitializerSerializer({required this.typeArguments, required this.isConst, required this.elements, required super.jsonType});
+
+  factory SetLiteralInitializerSerializer.from(SetOrMapLiteral expression, AnalyzerContext context) {
+    final isConst = expression.isConst;
+    final typeArguments = expression.typeArguments?.arguments.map((e) => e.type).nonNulls.map((e) => context.getTypeRef(e)).toList();
+    final elements = expression.elements.map((e) => InitializerSerializer.from(e as Expression, context)).toList();
+    return SetLiteralInitializerSerializer(jsonType: InitializerType.set, typeArguments: typeArguments, isConst: isConst, elements: elements);
+  }
+
+  factory SetLiteralInitializerSerializer.fromJson(Map<String, dynamic> json) => _$SetLiteralInitializerSerializerFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$SetLiteralInitializerSerializerToJson(this);
+}
+
+/// See [SetOrMapLiteral]
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
+final class MapLiteralInitializerSerializer extends InitializerSerializer {
+  final List<DartTypeRefSerializer>? typeArguments;
+  final bool isConst;
+  final List<InitializerSerializer> elements;
+
+  MapLiteralInitializerSerializer({required this.typeArguments, required this.isConst, required this.elements, required super.jsonType});
+
+  factory MapLiteralInitializerSerializer.from(SetOrMapLiteral expression, AnalyzerContext context) {
+    final isConst = expression.isConst;
+    final typeArguments = expression.typeArguments?.arguments.map((e) => e.type).nonNulls.map((e) => context.getTypeRef(e)).toList();
+    final elements = expression.elements.map((e) => InitializerSerializer.from(e as Expression, context)).toList();
+    return MapLiteralInitializerSerializer(typeArguments: typeArguments, isConst: isConst, elements: elements, jsonType: InitializerType.map);
+  }
+
+  factory MapLiteralInitializerSerializer.fromJson(Map<String, dynamic> json) => _$MapLiteralInitializerSerializerFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$MapLiteralInitializerSerializerToJson(this);
+}
+
 /// See [ListLiteral]
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 final class ListLiteralInitializerSerializer extends InitializerSerializer {
@@ -230,26 +254,21 @@ final class ListLiteralInitializerSerializer extends InitializerSerializer {
   Map<String, dynamic> toJson() => _$ListLiteralInitializerSerializerToJson(this);
 }
 
-/// See [NamedExpression]
+/// See [Literal]
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
-final class NamedExpressionInitializerSerializer extends InitializerSerializer {
-  final String name;
-  final InitializerSerializer value;
+final class LiteralInitializerSerializer extends InitializerSerializer {
+  final String value;
 
-  NamedExpressionInitializerSerializer({required this.name, required this.value, required super.jsonType});
+  LiteralInitializerSerializer({required this.value, required super.jsonType});
 
-  factory NamedExpressionInitializerSerializer.from(NamedExpression expression, AnalyzerContext context) {
-    return NamedExpressionInitializerSerializer(
-      name: expression.name.toString(),
-      value: InitializerSerializer.from(expression.expression, context),
-      jsonType: InitializerType.named,
-    );
+  factory LiteralInitializerSerializer.from(Literal expression) {
+    return LiteralInitializerSerializer(value: expression.toSource(), jsonType: InitializerType.literal);
   }
 
-  factory NamedExpressionInitializerSerializer.fromJson(Map<String, dynamic> json) => _$NamedExpressionInitializerSerializerFromJson(json);
+  factory LiteralInitializerSerializer.fromJson(Map<String, dynamic> json) => _$LiteralInitializerSerializerFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$NamedExpressionInitializerSerializerToJson(this);
+  Map<String, dynamic> toJson() => _$LiteralInitializerSerializerToJson(this);
 }
 
 /// See [InstanceCreationExpression]
@@ -290,15 +309,37 @@ final class InstanceCreationInitializerSerializer extends InitializerSerializer 
 
 /// See [SimpleIdentifier]
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
-final class SimpleIdentifierInitializerSerializer extends InitializerSerializer {
+final class SimpleIdentifierInitializerSerializer extends InitializerSerializer with SourceSerializer<String?> {
   final String identifier;
+
+  @override
   final String? source;
+
+  @override
+  final List<SourceSerializer> _refList = [];
 
   SimpleIdentifierInitializerSerializer({required this.identifier, required this.source, required super.jsonType});
 
-  factory SimpleIdentifierInitializerSerializer.from(SimpleIdentifier expression, AnalyzerContext context) {
+  factory SimpleIdentifierInitializerSerializer.fromSimpleIdentifier(SimpleIdentifier expression, AnalyzerContext context) {
     final source = context.getPath(expression.staticElement?.source);
     return SimpleIdentifierInitializerSerializer(identifier: expression.toSource(), source: source, jsonType: InitializerType.identifier);
+  }
+
+  /// See 'package:analyzer/src/dart/element/display_string_builder.dart' [ElementDisplayStringBuilder._writeDirectiveUri]
+  factory SimpleIdentifierInitializerSerializer.fromPrefixedIdentifier(PrefixedIdentifier expression, AnalyzerContext context) {
+    final name = expression.identifier.name;
+    final element = expression.prefix.staticElement as PrefixElement;
+    if (element.imports.length == 1) {
+      final uri = element.imports.last.uri;
+      var source = '<unknown>';
+      if (uri is DirectiveUriWithUnit) {
+        source = 'unit ${uri.unit.source.uri}';
+      } else if (uri is DirectiveUriWithSource) {
+        source = 'source ${uri.source}';
+      }
+      return SimpleIdentifierInitializerSerializer(jsonType: InitializerType.identifier, identifier: name, source: source);
+    }
+    throw ArgumentError('--- ${expression.toSource()}');
   }
 
   factory SimpleIdentifierInitializerSerializer.fromJson(Map<String, dynamic> json) => _$SimpleIdentifierInitializerSerializerFromJson(json);
@@ -307,36 +348,17 @@ final class SimpleIdentifierInitializerSerializer extends InitializerSerializer 
   Map<String, dynamic> toJson() => _$SimpleIdentifierInitializerSerializerToJson(this);
 }
 
-/// See [Literal]
-@JsonSerializable(explicitToJson: true, includeIfNull: false)
-final class LiteralInitializerSerializer extends InitializerSerializer {
-  final String value;
-
-  LiteralInitializerSerializer({required this.value, required super.jsonType});
-
-  factory LiteralInitializerSerializer.from(Literal expression) {
-    return LiteralInitializerSerializer(value: expression.toSource(), jsonType: InitializerType.literal);
-  }
-
-  factory LiteralInitializerSerializer.fromJson(Map<String, dynamic> json) => _$LiteralInitializerSerializerFromJson(json);
-
-  @override
-  Map<String, dynamic> toJson() => _$LiteralInitializerSerializerToJson(this);
-}
-
 /// See [PrefixedIdentifier]
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 final class PrefixedIdentifierInitializerSerializer extends InitializerSerializer {
   final InterfaceElementRefSerializer? prefixElement;
   final String identifier;
 
-  PrefixedIdentifierInitializerSerializer({required this.prefixElement, required this.identifier, required super.jsonType});
+  PrefixedIdentifierInitializerSerializer({this.prefixElement, required this.identifier, required super.jsonType});
 
   factory PrefixedIdentifierInitializerSerializer.fromPrefixedIdentifier(PrefixedIdentifier expression, AnalyzerContext context) {
     final name = expression.identifier.name;
-    if (expression.prefix.staticElement case PrefixElement element) {
-      print(element.imports.last.source);
-    }
+
     if (expression.prefix.staticElement case InterfaceElement element) {
       final prefixElement = context.getElementRef(element);
       return PrefixedIdentifierInitializerSerializer(jsonType: InitializerType.prefixIdentifier, prefixElement: prefixElement, identifier: name);
@@ -352,7 +374,6 @@ final class PrefixedIdentifierInitializerSerializer extends InitializerSerialize
       return PrefixedIdentifierInitializerSerializer(jsonType: InitializerType.prefixIdentifier, prefixElement: prefixElement, identifier: name);
     }
     throw UnimplementedError('--- ${expression.toSource()}');
-    // return PrefixedIdentifierInitializerSerializer(prefixType: prefixType, identifier: name, jsonType: InitializerType.prefixIdentifier);
   }
 
   factory PrefixedIdentifierInitializerSerializer.fromJson(Map<String, dynamic> json) => _$PrefixedIdentifierInitializerSerializerFromJson(json);

@@ -20,7 +20,7 @@ scripts:
   clone:
     description: Clone Flutter.
     steps:
-      - dart run flutter_clone/bin/flutter_clone.dart --output=flutter_example/generated --widget=CupertinoButton
+      - dart run flutter_clone/bin/flutter_clone.dart --output=flutter_example/generated --widget=RawMaterialButton
 
   dry_clone:
     description: Dry run clone Flutter.

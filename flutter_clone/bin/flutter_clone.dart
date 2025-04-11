@@ -16,12 +16,7 @@ void main(List<String> arguments) async {
         ..addFlag('verbose', abbr: 'v', help: 'Enable verbose output', negatable: false)
         ..addFlag('no-cache', abbr: 'x', help: 'Do not cache parsed results', negatable: false)
         ..addFlag('dry-run', abbr: 'd', help: 'Dry run', negatable: false)
-        ..addOption(
-          'widget',
-          abbr: 'w',
-          help: 'Target widgets using glob pattern (e.g. Text or *Button or {Text|*Button})',
-          defaultsTo: '*',
-        )
+        ..addOption('widget', abbr: 'w', help: 'Target widgets using glob pattern (e.g. Text or *Button or {Text|*Button})', defaultsTo: '*')
         ..addFlag('help', abbr: 'h', help: 'Help command', negatable: false);
 
   // Parse arguments
@@ -63,9 +58,7 @@ void main(List<String> arguments) async {
       await cloneFlutter(tempFs);
 
       // Retrieve Flutter version from the input directory
-      final flutterFs = WorkingDirectoryFileSystem(
-        path.normalize(path.join(tempFs.currentDirectory.path, 'flutter')),
-      );
+      final flutterFs = WorkingDirectoryFileSystem(path.normalize(path.join(tempFs.currentDirectory.path, 'flutter')));
 
       result = await _loadFromScratch(flutterFs);
 
@@ -86,15 +79,16 @@ void main(List<String> arguments) async {
       }
 
       progress.finish(showTiming: true);
-    } else {
-      final size = (await cacheFile.stat()).size / 1024 / 1024;
-      SimpleLogger.info(
-        'Found cache at ${path.relative(cacheFile.path, from: path.current).yellowBright} | Cache size: ${size.toStringAsFixed(2).yellowBright} Mb...',
-      );
-      final progress = SimpleLogger.progress('Loading from cache...');
-      result = await _loadFromCache(cacheFile);
-      progress.finish(showTiming: true);
     }
+
+    // Load from cache
+    final size = (await cacheFile.stat()).size / 1024 / 1024;
+    SimpleLogger.info(
+      'Found cache at ${path.relative(cacheFile.path, from: path.current).yellowBright} | Cache size: ${size.toStringAsFixed(2).yellowBright} Mb...',
+    );
+    final progress = SimpleLogger.progress('Loading from cache...');
+    result = await _loadFromCache(cacheFile);
+    progress.finish(showTiming: true);
 
     process(outputFs, result, patterns);
 
@@ -123,5 +117,4 @@ Future<AnalyzeResult> _loadFromCache(File cacheFile) async => loadFromCache(cach
 ///
 /// Returns a List of [FileAnalyzeResult] objects containing the analysis results
 /// The results include class declarations and their analyzed structure
-Future<AnalyzeResult> _loadFromScratch(FileSystem input) =>
-    analyzeProjectWithSymbolResolution(input);
+Future<AnalyzeResult> _loadFromScratch(FileSystem input) => analyzeProjectWithSymbolResolution(input);

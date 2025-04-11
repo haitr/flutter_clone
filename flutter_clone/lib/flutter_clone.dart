@@ -7,6 +7,9 @@ import 'package:file_system/file_system.dart';
 import 'package:glob/glob.dart';
 import 'package:path/path.dart' as path;
 import 'package:project_analyze/project_analyze.dart';
+import 'package:simple_logger/simple_logger.dart';
+
+final formatter = DartFormatter(languageVersion: DartFormatter.latestLanguageVersion);
 
 Future<String?> getFlutterVersion() async {
   try {
@@ -65,10 +68,13 @@ void process(FileSystem fileSystem, AnalyzeResult result, String pattern) {
   }
 }
 
-String? _getImportPathFromType(DartTypeSerializer type) {
-  if (type.source case var source?) {
-    if (type.isDartCore) return null;
-    if (type.isDartAsync) return 'dart:async';
+String? _getImportPath(SourceSerializer element) {
+  if (element.source case var source?) {
+    print('source: $source');
+    if (element is DartTypeSerializer) {
+      if (element.isDartCore) return null;
+      if (element.isDartAsync) return 'dart:async';
+    }
     final paths = path.split(source);
     if (paths.contains('sky_engine')) {
       final category = paths[paths.indexOf('lib') + 1];
@@ -83,12 +89,6 @@ String? _getImportPathFromType(DartTypeSerializer type) {
   return null;
 }
 
-String? _getImportPathFromElement(SourceSerializer element) {
-  final paths = path.split(element.source!);
-  final category = paths[paths.indexOf('src') + 1];
-  return 'package:flutter/$category.dart';
-}
-
 // code_builder style is unreadable, I need to refactor it
 void generateWrapper(AnalyzeResult result, FileSystem fileSystem, File file, ClassElementSerializer clazz) {
   final emitter = DartEmitter(orderDirectives: true, useNullSafetySyntax: true, allocator: Allocator.simplePrefixing());
@@ -99,7 +99,7 @@ void generateWrapper(AnalyzeResult result, FileSystem fileSystem, File file, Cla
     libraryBuilder.body.add(
       Class((classBuilder) {
         // Add shortcut to original class
-        final classRef = emitter.allocator.allocate(refer(clazz.name, _getImportPathFromElement(clazz)));
+        final classRef = emitter.allocator.allocate(refer(clazz.name, _getImportPath(clazz)));
         classBuilder.docs.add('/// See [$classRef]');
         // Add generated class name
         classBuilder.name = '\$${clazz.name}';
@@ -135,7 +135,7 @@ void generateWrapper(AnalyzeResult result, FileSystem fileSystem, File file, Cla
                         parameterBuilder.type = TypeReference((typeBuilder) {
                           typeBuilder.symbol = type.name;
                           typeBuilder.isNullable = type.nullabilitySuffix == '?';
-                          typeBuilder.url = type.source == null ? null : _getImportPathFromType(type);
+                          typeBuilder.url = type.source == null ? null : _getImportPath(type);
                         });
                       }),
                     ),
@@ -158,7 +158,7 @@ void generateWrapper(AnalyzeResult result, FileSystem fileSystem, File file, Cla
                         parameterBuilder.type = TypeReference((typeBuilder) {
                           typeBuilder.symbol = type.name;
                           typeBuilder.isNullable = type.nullabilitySuffix == '?';
-                          typeBuilder.url = type.source == null ? null : _getImportPathFromType(type);
+                          typeBuilder.url = type.source == null ? null : _getImportPath(type);
                         });
                       }),
                     ),
@@ -184,16 +184,16 @@ void generateWrapper(AnalyzeResult result, FileSystem fileSystem, File file, Cla
                               );
                               builder.body =
                                   InvokeExpression.newOf(
-                                    refer(clazz.name, _getImportPathFromElement(clazz)),
+                                    refer(clazz.name, _getImportPath(clazz)),
                                     positionalParams.map((parameter) {
                                       final type = result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
-                                      final url = type.source == null ? null : _getImportPathFromType(type);
+                                      final url = type.source == null ? null : _getImportPath(type);
                                       return refer('args').call([refer('#${parameter.name}')], {}, [refer(type.name, url)]);
                                     }).toList(),
                                     Map.fromEntries(
                                       namedParams.map((parameter) {
                                         final type = result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
-                                        final url = type.source == null ? null : _getImportPathFromType(type);
+                                        final url = type.source == null ? null : _getImportPath(type);
                                         return MapEntry(parameter.name, refer('args').call([refer('#${parameter.name}')], {}, [refer(type.name, url)]));
                                       }),
                                     ),
@@ -210,9 +210,15 @@ void generateWrapper(AnalyzeResult result, FileSystem fileSystem, File file, Cla
       }),
     );
   });
-  var code = library.accept(emitter);
-  final str = DartFormatter(languageVersion: DartFormatter.latestLanguageVersion).format(code.toString());
-  file.writeAsStringSync(str, mode: FileMode.write);
+  var code = library.accept(emitter).toString();
+  try {
+    final str = formatter.format(code);
+    file.writeAsStringSync(str, mode: FileMode.write);
+  } catch (e) {
+    SimpleLogger.error('Error formatting code: ${file.path}');
+    SimpleLogger.error(e.toString());
+    file.writeAsStringSync(code, mode: FileMode.write);
+  }
 }
 
 String _getInitializerCode(InitializerSerializer initializer, AnalyzeResult result, String Function(Reference) scope) {
@@ -227,18 +233,18 @@ String _getInitializerCode(InitializerSerializer initializer, AnalyzeResult resu
       }
       return '${initializer.operator}${_getInitializerCode(initializer.operand, result, scope)}';
     case PrefixedIdentifierInitializerSerializer():
-      final target = initializer.prefixElement != null ? result.fromElementRef(initializer.prefixElement!) : null;
-      final name = scope(refer(target!.name, _getImportPathFromElement(target)));
+      final target = initializer.prefixElement!;
+      final name = scope(refer(target.name, _getImportPath(target)));
       return '$name.${initializer.identifier}';
     case SimpleIdentifierInitializerSerializer():
-      return scope(refer(initializer.identifier, initializer.source));
+      return scope(refer(initializer.identifier, _getImportPath(initializer)));
     case BinaryExpressionInitializerSerializer():
       return '${_getInitializerCode(initializer.left, result, scope)} ${initializer.operator} ${_getInitializerCode(initializer.right, result, scope)}';
     case InstanceCreationInitializerSerializer():
       final code = StringBuffer();
       if (initializer.isConst) code.write('const ');
       final type = initializer.type != null ? result.fromTypeRef(initializer.type!, initializer.type?.nullabilitySuffix) : null;
-      code.write(type!.name);
+      code.write(scope(refer(type!.name, _getImportPath(type))));
       if (initializer.constructorName != null) code.write('.${initializer.constructorName}');
       code.write('(');
       code.write(initializer.arguments.map((e) => _getInitializerCode(e, result, scope)).join(', '));

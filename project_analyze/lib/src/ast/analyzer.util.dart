@@ -1,6 +1,6 @@
 part of 'analyzer.dart';
 
-const thisRef = '#this';
+const _thisRef = '#this';
 
 mixin SourceSerializer<T extends String?> {
   T _source = (T == String ? '' : null) as T;
@@ -13,8 +13,8 @@ mixin SourceSerializer<T extends String?> {
 
   void setSourceRef(String currentFileRef) {
     if (_source == currentFileRef) {
-      _source = thisRef as T;
-    } else if (_source == thisRef) {
+      _source = _thisRef as T;
+    } else if (_source == _thisRef) {
       _source = currentFileRef as T;
     }
     for (var e in _refList) {

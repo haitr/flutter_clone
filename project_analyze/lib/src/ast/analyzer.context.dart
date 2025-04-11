@@ -10,8 +10,7 @@ class AnalyzerContext {
 
   AnalyzerContext({required this.projectPath, required this.projectName});
 
-  String get currentFilePath =>
-      _currentFilePath.isEmpty ? throw ArgumentError('currentFilePath cannot be empty') : _currentFilePath;
+  String get currentFilePath => _currentFilePath.isEmpty ? throw ArgumentError('currentFilePath cannot be empty') : _currentFilePath;
 
   set currentFilePath(String value) {
     if (value.isEmpty) {
@@ -32,7 +31,7 @@ class AnalyzerContext {
     if (element.source.uri.scheme == 'package' && path.split(element.source.uri.path).first == projectName) {
       return InterfaceElementRefSerializer(
         ref: '#$ref',
-        jsonType: _refJsonInternalElement,
+        jsonType: refJsonInternalElement,
         source: getPath(element.source)!,
         name: element.name,
         interfaces: [],
@@ -69,7 +68,7 @@ class AnalyzerContext {
 
       return InterfaceElementRefSerializer(
         ref: '#$ref',
-        jsonType: _refJsonElement,
+        jsonType: refJsonElement,
         source: getPath(element.source)!,
         name: element.name,
         interfaces: [],
@@ -104,11 +103,7 @@ class AnalyzerContext {
       typeRef[ref] = fullSerializer;
     }
     final refStr = '#$ref';
-    return DartTypeRefSerializer(
-      ref: refStr,
-      jsonType: _refJsonType,
-      nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
-    );
+    return DartTypeRefSerializer(ref: refStr, jsonType: refJsonType, nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix));
   }
 
   InterfaceTypeRefSerializer getInterfaceTypeRef(InterfaceType type) {
@@ -121,7 +116,7 @@ class AnalyzerContext {
         typeArguments: [],
         element: InterfaceElementRefSerializer(
           ref: '',
-          jsonType: _refJsonElement,
+          jsonType: refJsonElement,
           source: '',
           name: '',
           interfaces: [],
@@ -145,10 +140,6 @@ class AnalyzerContext {
       typeRef[ref] = fullSerializer;
     }
     final refStr = '#$ref';
-    return InterfaceTypeRefSerializer(
-      ref: refStr,
-      jsonType: _refJsonType,
-      nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
-    );
+    return InterfaceTypeRefSerializer(ref: refStr, jsonType: refJsonType, nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix));
   }
 }
