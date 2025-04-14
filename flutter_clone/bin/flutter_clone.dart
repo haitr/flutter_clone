@@ -14,9 +14,13 @@ void main(List<String> arguments) async {
       ArgParser()
         ..addOption('output', abbr: 'o', help: 'Output directory', defaultsTo: './generated')
         ..addFlag('verbose', abbr: 'v', help: 'Enable verbose output', negatable: false)
-        ..addFlag('no-cache', abbr: 'x', help: 'Do not cache parsed results', negatable: false)
         ..addFlag('dry-run', abbr: 'd', help: 'Dry run', negatable: false)
-        ..addOption('widget', abbr: 'w', help: 'Target widgets using glob pattern (e.g. Text or *Button or {Text|*Button})', defaultsTo: '*')
+        ..addOption(
+          'widget',
+          abbr: 'w',
+          help: 'Target widgets using glob pattern (e.g. Text or *Button or {Text|*Button})',
+          defaultsTo: '*',
+        )
         ..addFlag('help', abbr: 'h', help: 'Help command', negatable: false);
 
   // Parse arguments
@@ -28,7 +32,6 @@ void main(List<String> arguments) async {
 
   final String output = path.normalize(cmds['output']); // Output directory path
   final bool dryRun = cmds['dry-run']; // Whether to dry run
-  final bool noCache = cmds['no-cache']; // Whether to use caching
   final bool verbose = cmds['verbose']; // Whether to enable verbose logging
   final String patterns = cmds['widget']; // Target widgets using glob pattern
 
@@ -38,6 +41,7 @@ void main(List<String> arguments) async {
 
   try {
     AnalyzeResult result;
+    // final outputFs = dryRun ? MemoryFileSystem() : WorkingDirectoryFileSystem(output);
     final outputFs = WorkingDirectoryFileSystem(output);
 
     if (outputFs.directory('.') case final outputDir when !outputDir.existsSync()) {
@@ -50,7 +54,7 @@ void main(List<String> arguments) async {
     }
     final cacheFile = outputFs.file(path.join('.cache', 'flutter$cacheSuffix.json'));
 
-    if (!cacheFile.existsSync() || dryRun) {
+    if (!cacheFile.existsSync()) {
       final progress = SimpleLogger.progress('Cache not found. Load from scratch...');
       // Copy Flutter and dependencies to a temporary directory
       final tempDir = outputFs.currentDirectory.createTempSync();
@@ -65,18 +69,16 @@ void main(List<String> arguments) async {
       // Clean up temporary directory after loading
       tempFs.currentDirectory.deleteSync(recursive: true);
 
-      if (!dryRun && !noCache) {
-        SimpleLogger.info('Saving cache...');
-        if (cacheFile.existsSync()) {
-          cacheFile.deleteSync();
-        }
-        cacheFile.createSync(recursive: true);
-        await saveToCache(result, cacheFile, encoder: SelectiveIndentJsonEncoder());
-        final size = (await cacheFile.stat()).size / 1024 / 1024;
-        SimpleLogger.info(
-          'Saved at ${path.relative(cacheFile.path, from: path.current).yellowBright} | Cache size: ${size.toStringAsFixed(2).yellowBright} Mb...',
-        );
+      SimpleLogger.info('Saving cache...');
+      if (cacheFile.existsSync()) {
+        cacheFile.deleteSync();
       }
+      cacheFile.createSync(recursive: true);
+      await saveToCache(result, cacheFile, encoder: SelectiveIndentJsonEncoder());
+      final size = (await cacheFile.stat()).size / 1024 / 1024;
+      SimpleLogger.info(
+        'Saved at ${path.relative(cacheFile.path, from: path.current).yellowBright} | Cache size: ${size.toStringAsFixed(2).yellowBright} Mb...',
+      );
 
       progress.finish(showTiming: true);
     }

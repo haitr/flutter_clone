@@ -3,11 +3,15 @@ part of 'analyzer.dart';
 const _thisRef = '#this';
 
 mixin SourceSerializer<T extends String?> {
+  @mustBeOverridden
+  AnalyzerContext? get context;
+
   T _source = (T == String ? '' : null) as T;
 
   T get source => _source;
 
   void setSource(T value) {
+    print(context!.sdkPath);
     _source = value;
   }
 

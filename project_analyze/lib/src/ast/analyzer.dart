@@ -9,6 +9,7 @@ import 'package:analyzer/src/dart/constant/evaluation.dart';
 import 'package:analyzer/src/dart/element/element.dart';
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
 import 'package:path/path.dart' as path;
 import 'package:project_analyze/src/extensions/extensions.dart';
 
@@ -24,6 +25,10 @@ part 'analyzer.util.dart';
 
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class ClassElementSerializer with SourceSerializer<String>, _ReferenceableSerializer implements ClassElementMetadata {
+  @override
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  AnalyzerContext? context;
+
   @override
   final String name;
   @override
@@ -79,6 +84,7 @@ class ClassElementSerializer with SourceSerializer<String>, _ReferenceableSerial
   List<SourceSerializer> get _refList => [...constructors, ...fields, ...methods, ...typeParameters];
 
   ClassElementSerializer({
+    this.context,
     required String ref,
     required String source,
     required this.name,
@@ -156,6 +162,10 @@ class ClassElementSerializer with SourceSerializer<String>, _ReferenceableSerial
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class InterfaceElementSerializer with SourceSerializer<String> implements InterfaceElementMetadata {
   @override
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  AnalyzerContext? context;
+
+  @override
   final String name;
   @override
   final List<ConstructorElementSerializer> constructors;
@@ -184,6 +194,7 @@ class InterfaceElementSerializer with SourceSerializer<String> implements Interf
   List<SourceSerializer> get _refList => [...constructors, ...fields, ...methods, ...typeParameters];
 
   InterfaceElementSerializer({
+    this.context,
     required String source,
     required this.name,
     required this.isPrivate,
@@ -226,6 +237,10 @@ class InterfaceElementSerializer with SourceSerializer<String> implements Interf
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class MixinElementSerializer with SourceSerializer<String>, _ReferenceableSerializer implements MixinElementMetadata {
   @override
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  AnalyzerContext? context;
+
+  @override
   final String name;
   @override
   final List<FieldElementSerializer> fields;
@@ -257,6 +272,7 @@ class MixinElementSerializer with SourceSerializer<String>, _ReferenceableSerial
   List<SourceSerializer> get _refList => [...constructors, ...fields, ...methods, ...typeParameters];
 
   MixinElementSerializer({
+    this.context,
     required String ref,
     required String source,
     required this.name,
@@ -306,6 +322,9 @@ class MixinElementSerializer with SourceSerializer<String>, _ReferenceableSerial
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class EnumElementSerializer with SourceSerializer<String>, _ReferenceableSerializer implements EnumElementMetadata {
   @override
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  AnalyzerContext? context;
+  @override
   final String name;
   @override
   final List<FieldElementSerializer> fields;
@@ -334,6 +353,7 @@ class EnumElementSerializer with SourceSerializer<String>, _ReferenceableSeriali
   List<SourceSerializer> get _refList => [...constructors, ...fields, ...methods, ...typeParameters];
 
   EnumElementSerializer({
+    this.context,
     required String ref,
     required String source,
     required this.name,
@@ -379,6 +399,9 @@ class EnumElementSerializer with SourceSerializer<String>, _ReferenceableSeriali
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class TypeAliasElementSerializer with SourceSerializer<String> implements TypeAliasElementMetadata {
   @override
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  AnalyzerContext? context;
+  @override
   final String name;
   @override
   final List<TypeParameterElementSerializer> typeParameters;
@@ -395,6 +418,7 @@ class TypeAliasElementSerializer with SourceSerializer<String> implements TypeAl
   List<SourceSerializer> get _refList => [...typeParameters];
 
   TypeAliasElementSerializer({
+    this.context,
     required String source,
     required this.name,
     required this.isPrivate,
@@ -424,6 +448,9 @@ class TypeAliasElementSerializer with SourceSerializer<String> implements TypeAl
 
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class ConstructorElementSerializer with SourceSerializer<String> implements ConstructorElementMetadata {
+  @override
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  AnalyzerContext? context;
   @override
   final String name;
   @override
@@ -481,6 +508,7 @@ class ConstructorElementSerializer with SourceSerializer<String> implements Cons
   ];
 
   ConstructorElementSerializer({
+    this.context,
     required String source,
     required this.name,
     required this.type,
@@ -532,7 +560,10 @@ class ConstructorElementSerializer with SourceSerializer<String> implements Cons
       isOperator: element.isOperator,
       isSynchronous: element.isSynchronous,
       isConst: element.isConst,
-      redirectedConstructor: element.redirectedConstructor != null ? ConstructorElementSerializer.from(element.redirectedConstructor!, context) : null,
+      redirectedConstructor:
+          element.redirectedConstructor != null
+              ? ConstructorElementSerializer.from(element.redirectedConstructor!, context)
+              : null,
       isDefaultConstructor: element.isDefaultConstructor,
       isFactory: element.isFactory,
       isGenerative: element.isGenerative,
@@ -540,13 +571,17 @@ class ConstructorElementSerializer with SourceSerializer<String> implements Cons
     );
   }
 
-  factory ConstructorElementSerializer.fromJson(Map<String, dynamic> json) => _$ConstructorElementSerializerFromJson(json);
+  factory ConstructorElementSerializer.fromJson(Map<String, dynamic> json) =>
+      _$ConstructorElementSerializerFromJson(json);
 
   Map<String, dynamic> toJson() => _$ConstructorElementSerializerToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class FieldElementSerializer with SourceSerializer<String?> implements FieldElementMetadata {
+  @override
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  AnalyzerContext? context;
   @override
   final String name;
   @override
@@ -591,6 +626,7 @@ class FieldElementSerializer with SourceSerializer<String?> implements FieldElem
   ];
 
   FieldElementSerializer({
+    this.context,
     String? source,
     required this.name,
     required this.isPrivate,
@@ -645,6 +681,9 @@ class FieldElementSerializer with SourceSerializer<String?> implements FieldElem
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class MethodElementSerializer with SourceSerializer<String> implements MethodElementMetadata {
   @override
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  AnalyzerContext? context;
+  @override
   final String name;
   @override
   final List<TypeParameterElementSerializer> typeParameters;
@@ -683,6 +722,7 @@ class MethodElementSerializer with SourceSerializer<String> implements MethodEle
   List<SourceSerializer> get _refList => [...typeParameters, ...parameters];
 
   MethodElementSerializer({
+    this.context,
     required String source,
     required this.name,
     required this.isPrivate,
@@ -734,6 +774,9 @@ class MethodElementSerializer with SourceSerializer<String> implements MethodEle
 
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class TopLevelVariableElementSerializer with SourceSerializer<String?> implements TopLevelVariableElementMetadata {
+  @override
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  AnalyzerContext? context;
   @override
   final String name;
   @override
@@ -809,12 +852,16 @@ class TopLevelVariableElementSerializer with SourceSerializer<String?> implement
     );
   }
 
-  factory TopLevelVariableElementSerializer.fromJson(Map<String, dynamic> json) => _$TopLevelVariableElementSerializerFromJson(json);
+  factory TopLevelVariableElementSerializer.fromJson(Map<String, dynamic> json) =>
+      _$TopLevelVariableElementSerializerFromJson(json);
   Map<String, dynamic> toJson() => _$TopLevelVariableElementSerializerToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class FunctionElementSerializer with SourceSerializer<String> implements FunctionElementMetadata {
+  @override
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  AnalyzerContext? context;
   @override
   final String name;
   @override
@@ -860,6 +907,7 @@ class FunctionElementSerializer with SourceSerializer<String> implements Functio
   List<SourceSerializer> get _refList => [...typeParameters, ...parameters];
 
   FunctionElementSerializer({
+    this.context,
     required String source,
     required this.name,
     required this.isPrivate,
@@ -912,6 +960,9 @@ class FunctionElementSerializer with SourceSerializer<String> implements Functio
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class TypeParameterElementSerializer with SourceSerializer<String?> implements TypeParameterElementMetadata {
   @override
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  AnalyzerContext? context;
+  @override
   final String name;
   @override
   final DartTypeRefSerializer? bound;
@@ -923,7 +974,14 @@ class TypeParameterElementSerializer with SourceSerializer<String?> implements T
   @override
   List<SourceSerializer> get _refList => [];
 
-  TypeParameterElementSerializer({required this.name, String? source, required this.isPrivate, required this.isPublic, this.bound}) {
+  TypeParameterElementSerializer({
+    this.context,
+    required this.name,
+    String? source,
+    required this.isPrivate,
+    required this.isPublic,
+    this.bound,
+  }) {
     setSource(source);
   }
 
@@ -937,12 +995,16 @@ class TypeParameterElementSerializer with SourceSerializer<String?> implements T
     );
   }
 
-  factory TypeParameterElementSerializer.fromJson(Map<String, dynamic> json) => _$TypeParameterElementSerializerFromJson(json);
+  factory TypeParameterElementSerializer.fromJson(Map<String, dynamic> json) =>
+      _$TypeParameterElementSerializerFromJson(json);
   Map<String, dynamic> toJson() => _$TypeParameterElementSerializerToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class ParameterElementSerializer with SourceSerializer<String?> implements ParameterElementMetadata {
+  @override
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  AnalyzerContext? context;
   @override
   final String name;
   @override
@@ -1000,6 +1062,7 @@ class ParameterElementSerializer with SourceSerializer<String?> implements Param
   List<SourceSerializer> get _refList => [...parameters, ...typeParameters];
 
   ParameterElementSerializer({
+    this.context,
     required this.name,
     String? source,
     required this.isPrivate,
@@ -1037,6 +1100,7 @@ class ParameterElementSerializer with SourceSerializer<String?> implements Param
       initializer = InitializerSerializer.from(element.constantInitializer!, context);
     }
     return ParameterElementSerializer(
+      context: context,
       name: element.name,
       source: context.getPath(element.source),
       isPrivate: element.isPrivate,
@@ -1073,6 +1137,9 @@ class ParameterElementSerializer with SourceSerializer<String?> implements Param
 
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class PropertyAccessorElementSerializer with SourceSerializer<String> implements PropertyAccessorElementMetadata {
+  @override
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  AnalyzerContext? context;
   @override
   final String name;
   @override
@@ -1116,6 +1183,7 @@ class PropertyAccessorElementSerializer with SourceSerializer<String> implements
   List<SourceSerializer> get _refList => [...typeParameters, ...parameters];
 
   PropertyAccessorElementSerializer({
+    this.context,
     required String source,
     required this.name,
     required this.isPrivate,
@@ -1165,6 +1233,7 @@ class PropertyAccessorElementSerializer with SourceSerializer<String> implements
     );
   }
 
-  factory PropertyAccessorElementSerializer.fromJson(Map<String, dynamic> json) => _$PropertyAccessorElementSerializerFromJson(json);
+  factory PropertyAccessorElementSerializer.fromJson(Map<String, dynamic> json) =>
+      _$PropertyAccessorElementSerializerFromJson(json);
   Map<String, dynamic> toJson() => _$PropertyAccessorElementSerializerToJson(this);
 }

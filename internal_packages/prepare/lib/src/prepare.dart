@@ -64,8 +64,7 @@ Future<String> _getFlutterDirectoryPath() async {
     print(e.toString());
   }
 
-  throw Exception(
-      'Could not determine Flutter SDK path. Ensure Flutter is installed and in your PATH.');
+  throw Exception('Could not determine Flutter SDK path. Ensure Flutter is installed and in your PATH.');
 }
 
 /// Copies required Flutter dependencies to the output directory.
@@ -135,9 +134,8 @@ Future<void> modifyFlutter(Directory flutterDir) async {
   }
 
   // edit dart:ui and dart:ui_web imports
-  final list = flutterDir
-      .list(recursive: true)
-      .where((e) => e is File && path.extension(e.path).toLowerCase() == '.dart');
+  final list =
+      flutterDir.list(recursive: true).where((e) => e is File && path.extension(e.path).toLowerCase() == '.dart');
   await for (final entity in list) {
     // Filter for files only and check if they are dart files
     final file = flutterDir.childFile(entity.path);
@@ -232,24 +230,14 @@ String _replaceFlutterImport(String filePath, String dartCode) {
           }
         }
 
-        final newDirective = makeStatement(
-            'import',
-            ['package:cooked_sky_engine', 'ui', 'ui.dart'].join('/'),
-            directive.deferredKeyword != null,
-            directive.prefix?.toString(),
-            shows,
-            hides);
+        final newDirective = makeStatement('import', ['package:cooked_sky_engine', 'ui', 'ui.dart'].join('/'),
+            directive.deferredKeyword != null, directive.prefix?.toString(), shows, hides);
 
         replacements.add((offset, length, newDirective));
       }
       if (directive.uri.stringValue! == 'dart:ui_web') {
-        final newDirective = makeStatement(
-            'import',
-            ['package:cooked_sky_engine', 'ui_web', 'ui_web.dart'].join('/'),
-            directive.deferredKeyword != null,
-            directive.prefix?.toString(),
-            shows,
-            hides);
+        final newDirective = makeStatement('import', ['package:cooked_sky_engine', 'ui_web', 'ui_web.dart'].join('/'),
+            directive.deferredKeyword != null, directive.prefix?.toString(), shows, hides);
 
         replacements.add((offset, length, newDirective));
       }
@@ -315,9 +303,8 @@ Future<void> modifySkyEngine(Directory skyEngineDir) async {
   await file.writeAsString(json2yaml(mutablePubspec, yamlStyle: YamlStyle.pubspecYaml));
 
   // edit ui
-  final list = skyEngineDir
-      .list(recursive: true)
-      .where((e) => e is File && path.extension(e.path).toLowerCase() == '.dart');
+  final list =
+      skyEngineDir.list(recursive: true).where((e) => e is File && path.extension(e.path).toLowerCase() == '.dart');
 
   await for (final entity in list) {
     // Filter for files only and check if they are dart files
@@ -342,9 +329,8 @@ Future<void> modifySkyEngine(Directory skyEngineDir) async {
         // top-level variables
         builder.body.addAll(visitor.vars.map((e) => Code(e)));
         // Functions
-        builder.body.addAll(visitor.funcs.map((e) => e.external
-            ? Code('${e.declaration};')
-            : Code('${e.declaration}=> throw UnimplementedError();')));
+        builder.body.addAll(visitor.funcs.map(
+            (e) => e.external ? Code('${e.declaration};') : Code('${e.declaration}=> throw UnimplementedError();')));
         // Typedef
         builder.body.addAll(visitor.typeAliases.map((e) => Code(e)));
         // Enums
@@ -376,9 +362,8 @@ Future<void> modifySkyEngine(Directory skyEngineDir) async {
               return code.toString();
             }),
             ...clazz.fieldDeclarations,
-            ...clazz.methods.map((e) => e.external
-                ? Code('${e.declaration};')
-                : Code('${e.declaration}=> throw UnimplementedError();')),
+            ...clazz.methods.map(
+                (e) => e.external ? Code('${e.declaration};') : Code('${e.declaration}=> throw UnimplementedError();')),
             '}',
           ]);
           return Code(code.toString());

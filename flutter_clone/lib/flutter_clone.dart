@@ -53,7 +53,11 @@ void process(FileSystem fileSystem, AnalyzeResult result, String pattern) {
             // match the pattern
             glob.matches(e.name) &&
             // implement Widget
-            e.allSupertypes.map((e) => result.fromTypeRef(e, e.nullabilitySuffix)).nonNulls.whereType<InterfaceTypeSerializer>().any((e) => e.name == 'Widget'),
+            e.allSupertypes
+                .map((e) => result.fromTypeRef(e, e.nullabilitySuffix))
+                .nonNulls
+                .whereType<InterfaceTypeSerializer>()
+                .any((e) => e.name == 'Widget'),
       ),
     );
   }
@@ -70,10 +74,8 @@ void process(FileSystem fileSystem, AnalyzeResult result, String pattern) {
 
 String? _getImportPath(SourceSerializer element) {
   if (element.source case var source?) {
-    print('source: $source');
     if (element is DartTypeSerializer) {
       if (element.isDartCore) return null;
-      if (element.isDartAsync) return 'dart:async';
     }
     final paths = path.split(source);
     if (paths.contains('sky_engine')) {
@@ -152,7 +154,9 @@ void generateWrapper(AnalyzeResult result, FileSystem fileSystem, File file, Cla
                         parameterBuilder.named = parameter.isNamed;
                         if (parameter.initializer case var initializer?) {
                           // parameterBuilder.defaultTo = Code(parameter.defaultValueCode!);
-                          parameterBuilder.defaultTo = Code(_getInitializerCode(initializer, result, (ref) => emitter.allocator.allocate(ref)));
+                          parameterBuilder.defaultTo = Code(
+                            _getInitializerCode(initializer, result, (ref) => emitter.allocator.allocate(ref)),
+                          );
                         }
                         final type = result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
                         parameterBuilder.type = TypeReference((typeBuilder) {
@@ -186,15 +190,24 @@ void generateWrapper(AnalyzeResult result, FileSystem fileSystem, File file, Cla
                                   InvokeExpression.newOf(
                                     refer(clazz.name, _getImportPath(clazz)),
                                     positionalParams.map((parameter) {
-                                      final type = result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
+                                      final type =
+                                          result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
                                       final url = type.source == null ? null : _getImportPath(type);
-                                      return refer('args').call([refer('#${parameter.name}')], {}, [refer(type.name, url)]);
+                                      return refer(
+                                        'args',
+                                      ).call([refer('#${parameter.name}')], {}, [refer(type.name, url)]);
                                     }).toList(),
                                     Map.fromEntries(
                                       namedParams.map((parameter) {
-                                        final type = result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
+                                        final type =
+                                            result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
                                         final url = type.source == null ? null : _getImportPath(type);
-                                        return MapEntry(parameter.name, refer('args').call([refer('#${parameter.name}')], {}, [refer(type.name, url)]));
+                                        return MapEntry(
+                                          parameter.name,
+                                          refer(
+                                            'args',
+                                          ).call([refer('#${parameter.name}')], {}, [refer(type.name, url)]),
+                                        );
                                       }),
                                     ),
                                     [],
@@ -243,7 +256,8 @@ String _getInitializerCode(InitializerSerializer initializer, AnalyzeResult resu
     case InstanceCreationInitializerSerializer():
       final code = StringBuffer();
       if (initializer.isConst) code.write('const ');
-      final type = initializer.type != null ? result.fromTypeRef(initializer.type!, initializer.type?.nullabilitySuffix) : null;
+      final type =
+          initializer.type != null ? result.fromTypeRef(initializer.type!, initializer.type?.nullabilitySuffix) : null;
       code.write(scope(refer(type!.name, _getImportPath(type))));
       if (initializer.constructorName != null) code.write('.${initializer.constructorName}');
       code.write('(');

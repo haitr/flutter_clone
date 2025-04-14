@@ -59,8 +59,11 @@ AnalyzeResult loadFromCache(File cacheFile) {
   return AnalyzeResult.fromJson(jsonDecode(cacheFile.readAsStringSync()) as Map<String, dynamic>);
 }
 
-Future<void> saveToCache(AnalyzeResult result, File cacheFile, {Converter<Object?, String> encoder = const JsonEncoder()}) async =>
-    await cacheFile.writeAsString(encoder.convert(result.toJson()));
+Future<void> saveToCache(
+  AnalyzeResult result,
+  File cacheFile, {
+  Converter<Object?, String> encoder = const JsonEncoder(),
+}) async => await cacheFile.writeAsString(encoder.convert(result.toJson()));
 
 Future<AnalyzeResult> analyzeProjectWithSymbolResolution(FileSystem input) async {
   final localPackages = _getLocalPackages(input);
@@ -76,12 +79,17 @@ Future<AnalyzeResult> analyzeProjectWithSymbolResolution(FileSystem input) async
   SimpleLogger.info('Analysis context created with paths:');
   collection.contexts.map((context) => ' - ${context.contextRoot.root.path}').forEach(SimpleLogger.info);
 
-  final dartFiles = Glob('**/*.dart').listSync(root: includePaths[0]).whereType<File>().map((file) => file.path).toList();
+  final dartFiles =
+      Glob('**/*.dart').listSync(root: includePaths[0]).whereType<File>().map((file) => file.path).toList();
 
   SimpleLogger.info('Found ${dartFiles.length} Dart files');
 
   final results = <FileAnalyzeResult>[];
-  final parsingContext = AnalyzerContext(projectPath: includePaths[0], projectName: _getProjectName(input));
+  final parsingContext = AnalyzerContext(
+    projectPath: includePaths[0],
+    projectName: _getProjectName(input),
+    sdkPath: collection.contexts.first.sdkRoot?.toUri().path ?? '',
+  );
 
   for (final filePath in dartFiles) {
     if (path.basename(filePath) != 'button.dart') {

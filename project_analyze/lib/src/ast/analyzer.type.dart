@@ -6,7 +6,6 @@ abstract class DartTypeMetadata {
   String? get source;
   String? get nullabilitySuffix;
   bool get isDartCore;
-  bool get isDartAsync;
 }
 
 /// See: [FunctionType]
