@@ -12,7 +12,9 @@ class AnalyzerContext {
   AnalyzerContext({required this.projectPath, required this.projectName, required this.sdkPath});
 
   String get currentFilePath =>
-      _currentFilePath.isEmpty ? throw ArgumentError('currentFilePath cannot be empty') : _currentFilePath;
+      _currentFilePath.isEmpty
+          ? throw ArgumentError('currentFilePath cannot be empty')
+          : _currentFilePath;
 
   set currentFilePath(String value) {
     if (value.isEmpty) {
@@ -30,7 +32,8 @@ class AnalyzerContext {
     final ref = element.hashCode;
     // if in project => hashCode
     // if in library => cache and return hashCode
-    if (element.source.uri.scheme == 'package' && path.split(element.source.uri.path).first == projectName) {
+    if (element.source.uri.scheme == 'package' &&
+        path.split(element.source.uri.path).first == projectName) {
       return InterfaceElementRefSerializer(
         ref: '#$ref',
         jsonType: refJsonInternalElement,
@@ -43,22 +46,7 @@ class AnalyzerContext {
       );
     } else {
       // Create a placeholder serializer first
-      final placeholder = InterfaceElementSerializer(
-        context: this,
-        source: getPath(element.source)!,
-        name: element.name,
-        isPrivate: element.isPrivate,
-        isPublic: element.isPublic,
-        fields: [],
-        methods: [],
-        typeParameters: [],
-        isSimplyBounded: false,
-        constructors: [],
-        interfaces: [],
-        mixins: [],
-        supertype: null,
-        allSupertypes: [],
-      );
+      final placeholder = InterfaceElementSerializer._placeholder();
 
       // Add the placeholder to cache immediately
       elementRef[ref] = placeholder;
@@ -86,15 +74,7 @@ class AnalyzerContext {
     final ref = type.hashCode;
     if (!typeRef.containsKey(ref)) {
       // Create a placeholder serializer first
-      final placeholder = DartTypeSerializer(
-        context: this,
-        // ignore: deprecated_member_use
-        name: type.getDisplayString(withNullability: false),
-        source: null,
-        nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
-        isDartCore: type.isDartCore,
-        jsonType: _placeholderJsonType,
-      );
+      final placeholder = DartTypeSerializer._placeholder();
 
       // Add the placeholder to cache immediately
       typeRef[ref] = placeholder;
@@ -117,24 +97,7 @@ class AnalyzerContext {
     final ref = type.hashCode;
     if (!typeRef.containsKey(ref)) {
       // Create a placeholder serializer first
-      final placeholder = InterfaceTypeSerializer(
-        name: '',
-        source: null,
-        typeArguments: [],
-        element: InterfaceElementRefSerializer(
-          ref: '',
-          jsonType: refJsonElement,
-          source: '',
-          name: '',
-          interfaces: [],
-          mixins: [],
-          supertype: null,
-          allSupertypes: [],
-        ),
-        nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
-        isDartCore: type.isDartCore,
-        jsonType: _placeholderJsonType,
-      );
+      final placeholder = InterfaceTypeSerializer._placeholder();
 
       // Add the placeholder to cache immediately
       typeRef[ref] = placeholder;
