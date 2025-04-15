@@ -101,7 +101,6 @@ class AnalyzerContext {
     final refStr = '#$ref';
     return InterfaceTypeRefSerializer(
       ref: refStr,
-      jsonType: refJsonType,
       nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
     );
   }
