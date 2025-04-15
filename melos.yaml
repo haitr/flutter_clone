@@ -17,6 +17,11 @@ scripts:
     description: Run analyzer in all packages.
     run: melos exec -- dart analyze .
 
+  analyze_project:
+    description: Run analyzer in project_analyze.
+    steps:
+      - dart project_analyze/bin/project_analyze.dart --input=generated/flutter
+
   clone:
     description: Clone Flutter.
     steps:

@@ -10,7 +10,7 @@ import 'package:simple_logger/simple_logger.dart';
 import 'package:yaml/yaml.dart';
 
 import 'src/analyze_result.dart';
-import 'src/ast/analyzer.dart';
+import 'src/ast/context.dart';
 
 export 'src/analyze_result.dart';
 export 'src/ast/analyzer.dart';
@@ -92,9 +92,9 @@ Future<AnalyzeResult> analyzeProjectWithSymbolResolution(FileSystem input) async
   );
 
   for (final filePath in dartFiles) {
-    if (path.basename(filePath) != 'button.dart') {
-      continue;
-    }
+    // if (path.basename(filePath) != 'button.dart') {
+    //   continue;
+    // }
 
     // Open the file for analysis first
     final context = collection.contextFor(filePath);

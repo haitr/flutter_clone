@@ -1,4 +1,11 @@
-part of 'analyzer.dart';
+import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
+import 'package:analyzer/source/source.dart';
+import 'package:path/path.dart' as path;
+import 'package:project_analyze/src/extensions/extensions.dart';
+
+import '../utils/json_utils.dart';
+import 'analyzer.dart';
 
 class AnalyzerContext {
   final typeRef = <int, DartTypeSerializer>{};
@@ -9,12 +16,11 @@ class AnalyzerContext {
   final String sdkPath;
   String _currentFilePath = '';
 
-  AnalyzerContext({required this.projectPath, required this.projectName, required this.sdkPath});
+  AnalyzerContext({required this.projectPath, required this.projectName, required String sdkPath})
+    : sdkPath = path.relative(sdkPath, from: projectPath);
 
   String get currentFilePath =>
-      _currentFilePath.isEmpty
-          ? throw ArgumentError('currentFilePath cannot be empty')
-          : _currentFilePath;
+      _currentFilePath.isEmpty ? throw ArgumentError('currentFilePath cannot be empty') : _currentFilePath;
 
   set currentFilePath(String value) {
     if (value.isEmpty) {
@@ -30,51 +36,32 @@ class AnalyzerContext {
 
   InterfaceElementRefSerializer getElementRef(InterfaceElement element) {
     final ref = element.hashCode;
+    var jsonType = refJsonElement;
     // if in project => hashCode
     // if in library => cache and return hashCode
-    if (element.source.uri.scheme == 'package' &&
-        path.split(element.source.uri.path).first == projectName) {
-      return InterfaceElementRefSerializer(
-        ref: '#$ref',
-        jsonType: refJsonInternalElement,
-        source: getPath(element.source)!,
-        name: element.name,
-        interfaces: [],
-        mixins: [],
-        supertype: null,
-        allSupertypes: [],
-      );
+    if (element.source.uri.scheme == 'package' && path.split(element.source.uri.path).first == projectName) {
+      jsonType = refJsonInternalElement;
     } else {
       // Create a placeholder serializer first
-      final placeholder = InterfaceElementSerializer._placeholder();
-
-      // Add the placeholder to cache immediately
+      final placeholder = InterfaceElementSerializer.placeholder();
       elementRef[ref] = placeholder;
-
-      // Now create the full serializer - any recursive calls will find the placeholder
       final fullSerializer = InterfaceElementSerializer.from(element, this);
-
-      // Update the cache with the complete serializer
       elementRef[ref] = fullSerializer;
-
-      return InterfaceElementRefSerializer(
-        ref: '#$ref',
-        jsonType: refJsonElement,
-        source: getPath(element.source)!,
-        name: element.name,
-        interfaces: [],
-        mixins: [],
-        supertype: null,
-        allSupertypes: [],
-      );
     }
+    return InterfaceElementRefSerializer(
+      context: this,
+      ref: '#$ref',
+      jsonType: jsonType,
+      source: getPath(element.source)!,
+      name: element.name,
+    );
   }
 
   DartTypeRefSerializer getTypeRef(DartType type) {
     final ref = type.hashCode;
     if (!typeRef.containsKey(ref)) {
       // Create a placeholder serializer first
-      final placeholder = DartTypeSerializer._placeholder();
+      final placeholder = DartTypeSerializer.placeholder();
 
       // Add the placeholder to cache immediately
       typeRef[ref] = placeholder;
@@ -89,6 +76,9 @@ class AnalyzerContext {
     return DartTypeRefSerializer(
       ref: refStr,
       jsonType: refJsonType,
+      // ignore: deprecated_member_use
+      name: type.getDisplayString(withNullability: false),
+      isDartCore: type.isDartCore,
       nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
     );
   }
@@ -97,7 +87,7 @@ class AnalyzerContext {
     final ref = type.hashCode;
     if (!typeRef.containsKey(ref)) {
       // Create a placeholder serializer first
-      final placeholder = InterfaceTypeSerializer._placeholder();
+      final placeholder = InterfaceTypeSerializer.placeholder();
 
       // Add the placeholder to cache immediately
       typeRef[ref] = placeholder;

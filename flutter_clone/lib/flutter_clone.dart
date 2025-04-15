@@ -150,6 +150,14 @@ void generateWrapper(AnalyzeResult result, FileSystem fileSystem, File file, Cla
                           parameterBuilder.toSuper = true;
                           return;
                         }
+                        if (parameter.name == 'onFocusChange') {
+                          final type = result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
+                          print(type);
+                        }
+                        if (parameter.name == 'animationDuration') {
+                          final type = result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
+                          print(type);
+                        }
                         parameterBuilder.required = parameter.isRequired;
                         parameterBuilder.named = parameter.isNamed;
                         if (parameter.initializer case var initializer?) {
@@ -162,7 +170,7 @@ void generateWrapper(AnalyzeResult result, FileSystem fileSystem, File file, Cla
                         parameterBuilder.type = TypeReference((typeBuilder) {
                           typeBuilder.symbol = type.name;
                           typeBuilder.isNullable = type.nullabilitySuffix == '?';
-                          typeBuilder.url = type.source == null ? null : _getImportPath(type);
+                          typeBuilder.url = type.isInSdk ? null : _getImportPath(type);
                         });
                       }),
                     ),

@@ -23,7 +23,7 @@
             "type": "dart",
             "args": [
                 "--output=../flutter_example/generated",
-                "--widget=CupertinoButton",
+                "--widget=RawMaterialButton",
             ],
         },
         {
