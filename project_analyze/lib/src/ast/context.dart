@@ -20,7 +20,9 @@ class AnalyzerContext {
     : sdkPath = path.relative(sdkPath, from: projectPath);
 
   String get currentFilePath =>
-      _currentFilePath.isEmpty ? throw ArgumentError('currentFilePath cannot be empty') : _currentFilePath;
+      _currentFilePath.isEmpty
+          ? throw ArgumentError('currentFilePath cannot be empty')
+          : _currentFilePath;
 
   set currentFilePath(String value) {
     if (value.isEmpty) {
@@ -37,10 +39,13 @@ class AnalyzerContext {
   InterfaceElementRefSerializer getElementRef(InterfaceElement element) {
     final ref = element.hashCode;
     var jsonType = RefJsonType.element;
+    String? source;
     // if in project => hashCode
     // if in library => cache and return hashCode
-    if (element.source.uri.scheme == 'package' && path.split(element.source.uri.path).first == projectName) {
+    if (element.source.uri.scheme == 'package' &&
+        path.split(element.source.uri.path).first == projectName) {
       jsonType = RefJsonType.internalElement;
+      source = getPath(element.source);
     } else {
       if (!elementRef.containsKey(ref)) {
         // Create a placeholder serializer first
@@ -50,7 +55,12 @@ class AnalyzerContext {
         elementRef[ref] = fullSerializer;
       }
     }
-    return InterfaceElementRefSerializer(ref: '#$ref', jsonType: jsonType, name: element.name);
+    return InterfaceElementRefSerializer(
+      ref: '#$ref',
+      jsonType: jsonType,
+      name: element.name,
+      path: source,
+    );
   }
 
   DartTypeRefSerializer getTypeRef(DartType type) {

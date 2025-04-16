@@ -30,13 +30,17 @@ mixin SourceSerializer<T extends String?> {
   bool _isInSdk = false;
 
   @JsonKey(includeToJson: true, includeFromJson: true)
-  bool get isInSdk => _isInSdk;
+  bool? get isInSdk => _isInSdk;
 
   T? _source;
   var _isSet = false;
 
   @JsonKey(includeToJson: true, includeFromJson: true)
   T get source => _isSet ? _source as T : throw UnimplementedError('source');
+
+  set isInSdk(bool? value) {
+    _isInSdk = value ?? false;
+  }
 
   set source(T newValue) {
     _isSet = true;

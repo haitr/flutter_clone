@@ -33,7 +33,9 @@ Future<String?> getFlutterVersion() async {
     print(e.toString());
   }
 
-  throw Exception('Could not determine Flutter version. Ensure Flutter is installed and in your PATH.');
+  throw Exception(
+    'Could not determine Flutter version. Ensure Flutter is installed and in your PATH.',
+  );
 }
 
 void process(FileSystem fileSystem, AnalyzeResult result, String pattern) {
@@ -75,7 +77,7 @@ void process(FileSystem fileSystem, AnalyzeResult result, String pattern) {
 String? _getImportPath(SourceSerializer element) {
   if (element.source case var source?) {
     // dart:... library
-    if (element.isInSdk) {
+    if (element.isInSdk!) {
       final lib = element.source!;
       if (['dart:core', 'dart:collection', 'dart:internal'].contains(lib)) {
         return null;
@@ -101,8 +103,17 @@ String? _getImportPath(SourceSerializer element) {
 }
 
 // code_builder style is unreadable, I need to refactor it
-void generateWrapper(AnalyzeResult result, FileSystem fileSystem, File file, ClassElementSerializer clazz) {
-  final emitter = DartEmitter(orderDirectives: true, useNullSafetySyntax: true, allocator: Allocator.simplePrefixing());
+void generateWrapper(
+  AnalyzeResult result,
+  FileSystem fileSystem,
+  File file,
+  ClassElementSerializer clazz,
+) {
+  final emitter = DartEmitter(
+    orderDirectives: true,
+    useNullSafetySyntax: true,
+    allocator: Allocator.simplePrefixing(),
+  );
   final library = Library((libraryBuilder) {
     final wrapperFile = fileSystem.file('wrapper.dart');
     final wrapperPath = Uri.file(path.relative(wrapperFile.path, from: file.parent.path)).path;
@@ -127,7 +138,8 @@ void generateWrapper(AnalyzeResult result, FileSystem fileSystem, File file, Cla
               .map(
                 (constructor) => Constructor((constructorBuilder) {
                   final constructorName = constructor.name.isEmpty ? null : constructor.name;
-                  final positionalParams = constructor.parameters.where((e) => e.isPositional).toList();
+                  final positionalParams =
+                      constructor.parameters.where((e) => e.isPositional).toList();
                   final namedParams = constructor.parameters.where((e) => e.isNamed).toList();
                   // Move 'child' parameter to the end of the list if it exists
                   namedParams.sort((a, b) => a.name == 'child' ? 1 : 0);
@@ -142,7 +154,8 @@ void generateWrapper(AnalyzeResult result, FileSystem fileSystem, File file, Cla
                     positionalParams.map(
                       (parameter) => Parameter((parameterBuilder) {
                         parameterBuilder.name = parameter.name;
-                        final type = result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
+                        final type =
+                            result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
                         parameterBuilder.type = TypeReference((typeBuilder) {
                           typeBuilder.symbol = type.name;
                           typeBuilder.isNullable = type.nullabilitySuffix == '?';
@@ -159,12 +172,9 @@ void generateWrapper(AnalyzeResult result, FileSystem fileSystem, File file, Cla
                           parameterBuilder.toSuper = true;
                           return;
                         }
-                        if (parameter.name == 'onFocusChange') {
-                          final type = result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
-                          print(type);
-                        }
-                        if (parameter.name == 'animationDuration') {
-                          final type = result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
+                        if (parameter.name == 'onHighlightChanged') {
+                          final type =
+                              result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
                           print(type);
                         }
                         parameterBuilder.required = parameter.isRequired;
@@ -172,14 +182,19 @@ void generateWrapper(AnalyzeResult result, FileSystem fileSystem, File file, Cla
                         if (parameter.initializer case var initializer?) {
                           // parameterBuilder.defaultTo = Code(parameter.defaultValueCode!);
                           parameterBuilder.defaultTo = Code(
-                            _getInitializerCode(initializer, result, (ref) => emitter.allocator.allocate(ref)),
+                            _getInitializerCode(
+                              initializer,
+                              result,
+                              (ref) => emitter.allocator.allocate(ref),
+                            ),
                           );
                         }
-                        final type = result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
+                        final type =
+                            result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
                         parameterBuilder.type = TypeReference((typeBuilder) {
                           typeBuilder.symbol = type.name;
                           typeBuilder.isNullable = type.nullabilitySuffix == '?';
-                          typeBuilder.url = type.isInSdk ? null : _getImportPath(type);
+                          typeBuilder.url = type.isInSdk! ? null : _getImportPath(type);
                         });
                       }),
                     ),
@@ -190,7 +205,10 @@ void generateWrapper(AnalyzeResult result, FileSystem fileSystem, File file, Cla
                       refer('super'),
                       [
                         InvokeExpression.newOf(refer('Argument', wrapperPath), [
-                          literalMap({for (final p in constructor.parameters) refer('#${p.name}'): refer(p.name)}),
+                          literalMap({
+                            for (final p in constructor.parameters)
+                              refer('#${p.name}'): refer(p.name),
+                          }),
                         ]),
                       ],
                       {
@@ -208,22 +226,33 @@ void generateWrapper(AnalyzeResult result, FileSystem fileSystem, File file, Cla
                                     refer(clazz.name, _getImportPath(clazz)),
                                     positionalParams.map((parameter) {
                                       final type =
-                                          result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
+                                          result.fromTypeRef(
+                                            parameter.type,
+                                            parameter.type.nullabilitySuffix,
+                                          )!;
                                       final url = type.source == null ? null : _getImportPath(type);
-                                      return refer(
-                                        'args',
-                                      ).call([refer('#${parameter.name}')], {}, [refer(type.name, url)]);
+                                      return refer('args').call(
+                                        [refer('#${parameter.name}')],
+                                        {},
+                                        [refer(type.name, url)],
+                                      );
                                     }).toList(),
                                     Map.fromEntries(
                                       namedParams.map((parameter) {
                                         final type =
-                                            result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
-                                        final url = type.source == null ? null : _getImportPath(type);
+                                            result.fromTypeRef(
+                                              parameter.type,
+                                              parameter.type.nullabilitySuffix,
+                                            )!;
+                                        final url =
+                                            type.source == null ? null : _getImportPath(type);
                                         return MapEntry(
                                           parameter.name,
-                                          refer(
-                                            'args',
-                                          ).call([refer('#${parameter.name}')], {}, [refer(type.name, url)]),
+                                          refer('args').call(
+                                            [refer('#${parameter.name}')],
+                                            {},
+                                            [refer(type.name, url)],
+                                          ),
                                         );
                                       }),
                                     ),
@@ -251,7 +280,11 @@ void generateWrapper(AnalyzeResult result, FileSystem fileSystem, File file, Cla
   }
 }
 
-String _getInitializerCode(InitializerSerializer initializer, AnalyzeResult result, String Function(Reference) scope) {
+String _getInitializerCode(
+  InitializerSerializer initializer,
+  AnalyzeResult result,
+  String Function(Reference) scope,
+) {
   switch (initializer) {
     case NamedExpressionInitializerSerializer():
       return '${initializer.name}: ${_getInitializerCode(initializer.value, result, scope)}';
@@ -263,8 +296,10 @@ String _getInitializerCode(InitializerSerializer initializer, AnalyzeResult resu
       }
       return '${initializer.operator}${_getInitializerCode(initializer.operand, result, scope)}';
     case PrefixedIdentifierInitializerSerializer():
+      if (initializer.identifier == 'kThemeChangeDuration') {
+        print(initializer);
+      }
       final target = initializer.prefixElement!;
-      print('--- ${target.ref} ${target.name}');
       final element = result.fromElementRef(target)!;
       final name = scope(refer(target.name, _getImportPath(element)));
       return '$name.${initializer.identifier}';
@@ -276,11 +311,15 @@ String _getInitializerCode(InitializerSerializer initializer, AnalyzeResult resu
       final code = StringBuffer();
       if (initializer.isConst) code.write('const ');
       final type =
-          initializer.type != null ? result.fromTypeRef(initializer.type!, initializer.type?.nullabilitySuffix) : null;
+          initializer.type != null
+              ? result.fromTypeRef(initializer.type!, initializer.type?.nullabilitySuffix)
+              : null;
       code.write(scope(refer(type!.name, _getImportPath(type))));
       if (initializer.constructorName != null) code.write('.${initializer.constructorName}');
       code.write('(');
-      code.write(initializer.arguments.map((e) => _getInitializerCode(e, result, scope)).join(', '));
+      code.write(
+        initializer.arguments.map((e) => _getInitializerCode(e, result, scope)).join(', '),
+      );
       code.write(')');
       return code.toString();
     case ListLiteralInitializerSerializer():

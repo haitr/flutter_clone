@@ -18,6 +18,7 @@ class ElementAnalyzer extends ElementVisitor<void> {
   final topLevelVariables = <TopLevelVariableElementSerializer>[];
   final topLevelFunctions = <FunctionElementSerializer>[];
   final enums = <EnumElementSerializer>[];
+  final extensions = <ExtensionTypeElementSerializer>[];
 
   @override
   void visitClassElement(ClassElement element) {
@@ -32,7 +33,11 @@ class ElementAnalyzer extends ElementVisitor<void> {
   @override
   void visitEnumElement(EnumElement element) {
     enums.add(EnumElementSerializer.from(element, context));
-    element.visitChildren(this);
+  }
+
+  @override
+  void visitExtensionTypeElement(ExtensionTypeElement element) {
+    extensions.add(ExtensionTypeElementSerializer.from(element, context));
   }
 
   @override
@@ -70,13 +75,12 @@ class ElementAnalyzer extends ElementVisitor<void> {
   void visitExtensionElement(ExtensionElement element) => element.visitChildren(this);
 
   @override
-  void visitExtensionTypeElement(ExtensionTypeElement element) => element.visitChildren(this);
+  void visitFieldFormalParameterElement(FieldFormalParameterElement element) =>
+      element.visitChildren(this);
 
   @override
-  void visitFieldFormalParameterElement(FieldFormalParameterElement element) => element.visitChildren(this);
-
-  @override
-  void visitGenericFunctionTypeElement(GenericFunctionTypeElement element) => element.visitChildren(this);
+  void visitGenericFunctionTypeElement(GenericFunctionTypeElement element) =>
+      element.visitChildren(this);
 
   @override
   void visitLabelElement(LabelElement element) => element.visitChildren(this);
@@ -106,7 +110,8 @@ class ElementAnalyzer extends ElementVisitor<void> {
   void visitPrefixElement(PrefixElement element) => element.visitChildren(this);
 
   @override
-  void visitSuperFormalParameterElement(SuperFormalParameterElement element) => element.visitChildren(this);
+  void visitSuperFormalParameterElement(SuperFormalParameterElement element) =>
+      element.visitChildren(this);
 
   @override
   void visitTypeParameterElement(TypeParameterElement element) => element.visitChildren(this);

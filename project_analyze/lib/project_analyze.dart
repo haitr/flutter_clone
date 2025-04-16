@@ -68,7 +68,7 @@ Future<void> saveToCache(
 Future<AnalyzeResult> analyzeProjectWithSymbolResolution(FileSystem input) async {
   final localPackages = _getLocalPackages(input);
 
-  SimpleLogger.info('Analyzing project at: ${input.currentDirectory.path}');
+  SimpleLogger.info('Analyzing project at: ${path.normalize(input.currentDirectory.path)}');
 
   // Find sky_engine path
   final includePaths = [input.currentDirectory.path, ...localPackages].map(path.normalize).toList();
@@ -77,10 +77,14 @@ Future<AnalyzeResult> analyzeProjectWithSymbolResolution(FileSystem input) async
   final collection = AnalysisContextCollection(includedPaths: includePaths);
 
   SimpleLogger.info('Analysis context created with paths:');
-  collection.contexts.map((context) => ' - ${context.contextRoot.root.path}').forEach(SimpleLogger.info);
+  collection.contexts
+      .map((context) => ' - ${context.contextRoot.root.path}')
+      .forEach(SimpleLogger.info);
 
   final dartFiles =
-      Glob('**/*.dart').listSync(root: includePaths[0]).whereType<File>().map((file) => file.path).toList();
+      Glob(
+        '**/*.dart',
+      ).listSync(root: includePaths[0]).whereType<File>().map((file) => file.path).toList();
 
   SimpleLogger.info('Found ${dartFiles.length} Dart files');
 
@@ -103,7 +107,9 @@ Future<AnalyzeResult> analyzeProjectWithSymbolResolution(FileSystem input) async
     if (library is ResolvedLibraryResult) {
       final libraryPath = library.element.source.fullName;
 
-      parsingContext.currentFilePath = path.normalize(path.relative(libraryPath, from: parsingContext.projectPath));
+      parsingContext.currentFilePath = path.normalize(
+        path.relative(libraryPath, from: parsingContext.projectPath),
+      );
 
       // SimpleLogger.progress('\nAnalyzing library: ${path.relative(libraryPath, from: includePaths[0])}');
 
@@ -112,5 +118,9 @@ Future<AnalyzeResult> analyzeProjectWithSymbolResolution(FileSystem input) async
     }
   }
 
-  return AnalyzeResult(files: results, typeRef: parsingContext.typeRef, elementRef: parsingContext.elementRef);
+  return AnalyzeResult(
+    files: results,
+    typeRef: parsingContext.typeRef,
+    elementRef: parsingContext.elementRef,
+  );
 }

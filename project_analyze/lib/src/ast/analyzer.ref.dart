@@ -20,7 +20,11 @@ mixin ReferenceableSerializer {
 }
 
 @JsonSerializable(explicitToJson: true, includeIfNull: false, converters: [BooleanConverter()])
-class InterfaceElementRefSerializer with ReferenceableSerializer implements InterfaceElementMetadata {
+class InterfaceElementRefSerializer
+    with ReferenceableSerializer
+    implements InterfaceElementMetadata {
+  final String? path;
+
   @override
   final String ref;
   @override
@@ -28,9 +32,18 @@ class InterfaceElementRefSerializer with ReferenceableSerializer implements Inte
   @override
   final String name;
 
-  InterfaceElementRefSerializer({required this.ref, required this.jsonType, required this.name});
+  InterfaceElementRefSerializer({
+    required this.ref,
+    required this.jsonType,
+    required this.name,
+    this.path,
+  });
 
-  InterfaceElementRefSerializer.placeholder() : ref = '', jsonType = RefJsonType.placeholder, name = '';
+  InterfaceElementRefSerializer.placeholder()
+    : ref = '',
+      jsonType = RefJsonType.placeholder,
+      name = '',
+      path = null;
 
   factory InterfaceElementRefSerializer.fromJson(Map<String, dynamic> json) =>
       _$InterfaceElementRefSerializerFromJson(json);
@@ -100,7 +113,8 @@ class DartTypeRefSerializer with ReferenceableSerializer implements DartTypeMeta
     required this.isDartCore,
   }) : jsonType = RefJsonType.type;
 
-  factory DartTypeRefSerializer.fromJson(Map<String, dynamic> json) => _$DartTypeRefSerializerFromJson(json);
+  factory DartTypeRefSerializer.fromJson(Map<String, dynamic> json) =>
+      _$DartTypeRefSerializerFromJson(json);
 
   Map<String, dynamic> toJson() => _$DartTypeRefSerializerToJson(this);
 
@@ -135,14 +149,17 @@ class InterfaceTypeRefSerializer with ReferenceableSerializer implements Interfa
   @override
   List<DartTypeMetadata> get typeArguments => throw UnimplementedError();
 
-  InterfaceTypeRefSerializer({required this.ref, required this.nullabilitySuffix}) : jsonType = RefJsonType.type;
+  InterfaceTypeRefSerializer({required this.ref, required this.nullabilitySuffix})
+    : jsonType = RefJsonType.type;
 
-  factory InterfaceTypeRefSerializer.from(InterfaceType type, AnalyzerContext context) => InterfaceTypeRefSerializer(
-    ref: context.getTypeRef(type).ref,
-    nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
-  );
+  factory InterfaceTypeRefSerializer.from(InterfaceType type, AnalyzerContext context) =>
+      InterfaceTypeRefSerializer(
+        ref: context.getTypeRef(type).ref,
+        nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
+      );
 
-  factory InterfaceTypeRefSerializer.fromJson(Map<String, dynamic> json) => _$InterfaceTypeRefSerializerFromJson(json);
+  factory InterfaceTypeRefSerializer.fromJson(Map<String, dynamic> json) =>
+      _$InterfaceTypeRefSerializerFromJson(json);
 
   Map<String, dynamic> toJson() => _$InterfaceTypeRefSerializerToJson(this);
 }
@@ -158,14 +175,17 @@ class FunctionTypeRefSerializer with ReferenceableSerializer implements Function
   @override
   final String? nullabilitySuffix;
 
-  FunctionTypeRefSerializer({required this.ref, required this.nullabilitySuffix}) : jsonType = RefJsonType.type;
+  FunctionTypeRefSerializer({required this.ref, required this.nullabilitySuffix})
+    : jsonType = RefJsonType.type;
 
-  factory FunctionTypeRefSerializer.from(FunctionType type, AnalyzerContext context) => FunctionTypeRefSerializer(
-    ref: context.getTypeRef(type).ref,
-    nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
-  );
+  factory FunctionTypeRefSerializer.from(FunctionType type, AnalyzerContext context) =>
+      FunctionTypeRefSerializer(
+        ref: context.getTypeRef(type).ref,
+        nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
+      );
 
-  factory FunctionTypeRefSerializer.fromJson(Map<String, dynamic> json) => _$FunctionTypeRefSerializerFromJson(json);
+  factory FunctionTypeRefSerializer.fromJson(Map<String, dynamic> json) =>
+      _$FunctionTypeRefSerializerFromJson(json);
 
   Map<String, dynamic> toJson() => _$FunctionTypeRefSerializerToJson(this);
 
