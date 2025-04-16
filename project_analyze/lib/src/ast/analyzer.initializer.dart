@@ -48,7 +48,7 @@ enum InitializerType {
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class InitializerSerializer {
   /// The type classification of this default value.
-  @JsonKey(name: '_t_')
+  @JsonKey(name: _jsonTypeField)
   final InitializerType jsonType;
 
   InitializerSerializer({required this.jsonType});
@@ -90,7 +90,7 @@ class InitializerSerializer {
   }
 
   factory InitializerSerializer.fromJson(Map<String, dynamic> json) {
-    final type = _$InitializerTypeEnumMap.entries.firstWhereOrNull((e) => e.value == json['_t_'])?.key;
+    final type = _$InitializerTypeEnumMap.entries.firstWhereOrNull((e) => e.value == json[_jsonTypeField])?.key;
     switch (type) {
       case InitializerType.prefix:
         return PrefixExpressionInitializerSerializer.fromJson(json);
@@ -113,7 +113,7 @@ class InitializerSerializer {
       case InitializerType.binary:
         return BinaryExpressionInitializerSerializer.fromJson(json);
       default:
-        throw UnimplementedError('--- ${json['_t_']}');
+        throw UnimplementedError('--- ${json[_jsonTypeField]}');
     }
   }
 

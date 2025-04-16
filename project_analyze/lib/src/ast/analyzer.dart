@@ -6,7 +6,6 @@ import 'package:analyzer/src/dart/ast/ast.dart';
 import 'package:analyzer/src/dart/element/element.dart';
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:meta/meta.dart';
 import 'package:path/path.dart' as path;
 import 'package:project_analyze/src/ast/analyzer_map.dart';
 import 'package:project_analyze/src/extensions/extensions.dart';
@@ -22,8 +21,10 @@ part 'analyzer.type.dart';
 
 const _thisRef = '#this';
 
+const _jsonTypeField = '_t_';
+
 mixin SourceSerializer<T extends String?> {
-  @mustBeOverridden
+  // @mustBeOverridden
   AnalyzerContext? get context;
 
   bool _isInSdk = false;
@@ -67,6 +68,6 @@ mixin SourceSerializer<T extends String?> {
 }
 
 mixin _ReferenceableSerializer {
-  @mustBeOverridden
+  // @mustBeOverridden
   String get ref;
 }

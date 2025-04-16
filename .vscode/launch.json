@@ -11,8 +11,8 @@
             "request": "launch",
             "type": "dart",
             "args": [
-                "-i",
-                "../generated/flutter",
+                "--input=../generated/flutter",
+                "--output=../generated",
             ],
         },
         {

@@ -281,6 +281,18 @@ abstract class MixinElementMetadata implements InterfaceElementMetadata {
   List<InterfaceTypeMetadata> get superclassConstraints;
 }
 
+/// See: [ExtensionTypeElement]
+abstract class ExtensionTypeElementMetadata implements InterfaceElementMetadata {
+  /// See: [ExtensionTypeElement.primaryConstructor]
+  ConstructorElementMetadata get primaryConstructor;
+
+  /// See: [ExtensionTypeElement.representation]
+  FieldElementMetadata get representation;
+
+  /// See: [ExtensionTypeElement.typeErasure]
+  DartTypeMetadata get typeErasure;
+}
+
 /// See: [EnumElement]
 abstract class EnumElementMetadata implements InterfaceElementMetadata {}
 

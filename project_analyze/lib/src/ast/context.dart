@@ -42,11 +42,13 @@ class AnalyzerContext {
     if (element.source.uri.scheme == 'package' && path.split(element.source.uri.path).first == projectName) {
       jsonType = RefJsonType.internalElement;
     } else {
-      // Create a placeholder serializer first
-      final placeholder = InterfaceElementSerializer.placeholder();
-      elementRef[ref] = placeholder;
-      final fullSerializer = InterfaceElementSerializer.from(element, this);
-      elementRef[ref] = fullSerializer;
+      if (!elementRef.containsKey(ref)) {
+        // Create a placeholder serializer first
+        final placeholder = InterfaceElementSerializer.placeholder();
+        elementRef[ref] = placeholder;
+        final fullSerializer = InterfaceElementSerializer.from(element, this);
+        elementRef[ref] = fullSerializer;
+      }
     }
     return InterfaceElementRefSerializer(ref: '#$ref', jsonType: jsonType, name: element.name);
   }

@@ -15,7 +15,7 @@ enum RefJsonType {
 mixin ReferenceableSerializer {
   String get ref;
 
-  @JsonKey(name: '_t_')
+  @JsonKey(name: _jsonTypeField)
   RefJsonType get jsonType;
 }
 

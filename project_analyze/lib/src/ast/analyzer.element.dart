@@ -1,13 +1,31 @@
 part of 'analyzer.dart';
 
+enum ElementJsonType {
+  @JsonValue('class')
+  classElement,
+  @JsonValue('mixin')
+  mixinElement,
+  @JsonValue('enum')
+  enumElement,
+  @JsonValue('extension')
+  extensionTypeElement,
+  @JsonValue('interface')
+  interfaceElement,
+}
+
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
-class ClassElementSerializer with SourceSerializer<String>, _ReferenceableSerializer implements ClassElementMetadata {
+class InterfaceElementSerializer
+    with SourceSerializer<String>, _ReferenceableSerializer
+    implements InterfaceElementMetadata {
   @override
   @JsonKey(includeToJson: false, includeFromJson: false)
-  AnalyzerContext? context;
+  final AnalyzerContext? context;
 
   @override
   final String ref;
+
+  @JsonKey(name: _jsonTypeField, includeToJson: true)
+  final ElementJsonType jsonType;
 
   @override
   final String name;
@@ -27,6 +45,90 @@ class ClassElementSerializer with SourceSerializer<String>, _ReferenceableSerial
   final InterfaceTypeRefSerializer? supertype;
   @override
   final List<InterfaceTypeRefSerializer> allSupertypes;
+  @override
+  final bool isPrivate;
+  @override
+  final bool isPublic;
+  @override
+  final bool isSimplyBounded;
+
+  @override
+  List<SourceSerializer> get _refList => [...constructors, ...fields, ...methods, ...typeParameters];
+
+  InterfaceElementSerializer({
+    this.context,
+    required this.jsonType,
+    required String source,
+    required this.ref,
+    required this.name,
+    required this.isPrivate,
+    required this.isPublic,
+    required this.fields,
+    required this.methods,
+    required this.typeParameters,
+    required this.isSimplyBounded,
+    required this.constructors,
+    required this.interfaces,
+    required this.mixins,
+    required this.supertype,
+    required this.allSupertypes,
+  }) {
+    this.source = source;
+  }
+
+  InterfaceElementSerializer.placeholder()
+    : context = null,
+      ref = '',
+      jsonType = ElementJsonType.interfaceElement,
+      name = '',
+      constructors = [],
+      fields = [],
+      methods = [],
+      typeParameters = [],
+      interfaces = [],
+      mixins = [],
+      supertype = null,
+      allSupertypes = [],
+      isPrivate = false,
+      isPublic = false,
+      isSimplyBounded = false;
+
+  factory InterfaceElementSerializer.from(InterfaceElement element, AnalyzerContext context) {
+    switch (element) {
+      case ClassElement():
+        return ClassElementSerializer.from(element, context);
+      case MixinElement():
+        return MixinElementSerializer.from(element, context);
+      case EnumElement():
+        return EnumElementSerializer.from(element, context);
+      case ExtensionTypeElement():
+        return ExtensionTypeElementSerializer.from(element, context);
+      default:
+        throw UnimplementedError('InterfaceElementSerializer.from: $element');
+    }
+  }
+
+  factory InterfaceElementSerializer.fromJson(Map<String, dynamic> json) {
+    final type = _$ElementJsonTypeEnumMap.entries.firstWhereOrNull((e) => e.value == json[_jsonTypeField])?.key;
+    switch (type) {
+      case ElementJsonType.classElement:
+        return ClassElementSerializer.fromJson(json);
+      case ElementJsonType.mixinElement:
+        return MixinElementSerializer.fromJson(json);
+      case ElementJsonType.enumElement:
+        return EnumElementSerializer.fromJson(json);
+      case ElementJsonType.extensionTypeElement:
+        return ExtensionTypeElementSerializer.fromJson(json);
+      default:
+        throw UnimplementedError('InterfaceElementSerializer.fromJson: $json');
+    }
+  }
+
+  Map<String, dynamic> toJson() => _$InterfaceElementSerializerToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
+class ClassElementSerializer extends InterfaceElementSerializer implements ClassElementMetadata {
   @override
   final bool hasNonFinalField;
   @override
@@ -50,27 +152,11 @@ class ClassElementSerializer with SourceSerializer<String>, _ReferenceableSerial
   @override
   final bool isMixinClass;
   @override
-  final bool isPrivate;
-  @override
-  final bool isPublic;
-  @override
   final bool isSealed;
-  @override
-  final bool isSimplyBounded;
   @override
   final bool isValidMixin;
 
-  @override
-  List<SourceSerializer> get _refList => [...constructors, ...fields, ...methods, ...typeParameters];
-
   ClassElementSerializer({
-    this.context,
-    required String source,
-    required this.ref,
-    required this.name,
-    required this.constructors,
-    required this.fields,
-    required this.methods,
     required this.hasNonFinalField,
     required this.isAbstract,
     required this.isBase,
@@ -82,19 +168,24 @@ class ClassElementSerializer with SourceSerializer<String>, _ReferenceableSerial
     required this.isInterface,
     required this.isMixinApplication,
     required this.isMixinClass,
-    required this.isPrivate,
-    required this.isPublic,
     required this.isSealed,
-    required this.isSimplyBounded,
     required this.isValidMixin,
-    required this.typeParameters,
-    required this.interfaces,
-    required this.mixins,
-    required this.supertype,
-    required this.allSupertypes,
-  }) {
-    this.source = source;
-  }
+    super.context,
+    required super.ref,
+    required super.source,
+    required super.name,
+    required super.constructors,
+    required super.fields,
+    required super.methods,
+    required super.isPrivate,
+    required super.isPublic,
+    required super.isSimplyBounded,
+    required super.typeParameters,
+    required super.interfaces,
+    required super.mixins,
+    required super.supertype,
+    required super.allSupertypes,
+  }) : super(jsonType: ElementJsonType.classElement);
 
   factory ClassElementSerializer.from(ClassElement element, AnalyzerContext context) {
     return ClassElementSerializer(
@@ -131,166 +222,36 @@ class ClassElementSerializer with SourceSerializer<String>, _ReferenceableSerial
 
   factory ClassElementSerializer.fromJson(Map<String, dynamic> json) => _$ClassElementSerializerFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    final json = _$ClassElementSerializerToJson(this);
-    // Remove boolean fields that are false
-    // json.removeWhere((key, value) => value is bool && !value);
-    return json;
-  }
+  @override
+  Map<String, dynamic> toJson() => _$ClassElementSerializerToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
-class InterfaceElementSerializer with SourceSerializer<String> implements InterfaceElementMetadata {
-  @override
-  @JsonKey(includeToJson: false, includeFromJson: false)
-  final AnalyzerContext? context;
-
-  @override
-  final String name;
-  @override
-  final List<ConstructorElementSerializer> constructors;
-  @override
-  final List<FieldElementSerializer> fields;
-  @override
-  final List<MethodElementSerializer> methods;
-  @override
-  final List<TypeParameterElementSerializer> typeParameters;
-  @override
-  final List<InterfaceTypeRefSerializer> interfaces;
-  @override
-  final List<InterfaceTypeRefSerializer> mixins;
-  @override
-  final InterfaceTypeRefSerializer? supertype;
-  @override
-  final List<InterfaceTypeRefSerializer> allSupertypes;
-  @override
-  final bool isPrivate;
-  @override
-  final bool isPublic;
-  @override
-  final bool isSimplyBounded;
-
-  @override
-  List<SourceSerializer> get _refList => [...constructors, ...fields, ...methods, ...typeParameters];
-
-  InterfaceElementSerializer({
-    this.context,
-    required String source,
-    required this.name,
-    required this.isPrivate,
-    required this.isPublic,
-    required this.fields,
-    required this.methods,
-    required this.typeParameters,
-    required this.isSimplyBounded,
-    required this.constructors,
-    required this.interfaces,
-    required this.mixins,
-    required this.supertype,
-    required this.allSupertypes,
-  }) {
-    this.source = source;
-  }
-
-  InterfaceElementSerializer.placeholder()
-    : context = null,
-      name = '',
-      constructors = [],
-      fields = [],
-      methods = [],
-      typeParameters = [],
-      interfaces = [],
-      mixins = [],
-      supertype = null,
-      allSupertypes = [],
-      isPrivate = false,
-      isPublic = false,
-      isSimplyBounded = false;
-
-  factory InterfaceElementSerializer.from(InterfaceElement element, AnalyzerContext context) {
-    return InterfaceElementSerializer(
-      context: context,
-      name: element.name,
-      source: context.getPath(element.source)!,
-      isPrivate: element.isPrivate,
-      isPublic: element.isPublic,
-      fields: element.fields.map((e) => FieldElementSerializer.from(e, context)).toList(),
-      methods: element.methods.map((e) => MethodElementSerializer.from(e, context)).toList(),
-      typeParameters: element.typeParameters.map((e) => TypeParameterElementSerializer.from(e, context)).toList(),
-      isSimplyBounded: element.isSimplyBounded,
-      constructors: element.constructors.map((e) => ConstructorElementSerializer.from(e, context)).toList(),
-      interfaces: element.interfaces.map((e) => context.getInterfaceTypeRef(e)).toList(),
-      mixins: element.mixins.map((e) => context.getInterfaceTypeRef(e)).toList(),
-      supertype: element.supertype != null ? context.getInterfaceTypeRef(element.supertype!) : null,
-      allSupertypes: element.allSupertypes.map((e) => context.getInterfaceTypeRef(e)).toList(),
-    );
-  }
-
-  factory InterfaceElementSerializer.fromJson(Map<String, dynamic> json) => _$InterfaceElementSerializerFromJson(json);
-  Map<String, dynamic> toJson() => _$InterfaceElementSerializerToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
-class MixinElementSerializer with SourceSerializer<String>, _ReferenceableSerializer implements MixinElementMetadata {
-  @override
-  @JsonKey(includeToJson: false, includeFromJson: false)
-  AnalyzerContext? context;
-
-  @override
-  final String ref;
-
-  @override
-  final String name;
-  @override
-  final List<FieldElementSerializer> fields;
-  @override
-  final List<MethodElementSerializer> methods;
-  @override
-  final List<TypeParameterElementSerializer> typeParameters;
-  @override
-  final List<ConstructorElementSerializer> constructors;
+class MixinElementSerializer extends InterfaceElementSerializer implements MixinElementMetadata {
   @override
   final List<InterfaceTypeRefSerializer> superclassConstraints;
   @override
-  final List<InterfaceTypeRefSerializer> interfaces;
-  @override
-  final List<InterfaceTypeRefSerializer> mixins;
-  @override
-  final InterfaceTypeRefSerializer? supertype;
-  @override
-  final List<InterfaceTypeRefSerializer> allSupertypes;
-  @override
-  final bool isPrivate;
-  @override
-  final bool isPublic;
-  @override
-  final bool isSimplyBounded;
-  @override
   final bool isBase;
-  @override
-  List<SourceSerializer> get _refList => [...constructors, ...fields, ...methods, ...typeParameters];
 
   MixinElementSerializer({
-    this.context,
-    required this.ref,
-    required String source,
-    required this.name,
-    required this.isPrivate,
-    required this.isPublic,
-    required this.fields,
-    required this.methods,
-    required this.typeParameters,
-    required this.isSimplyBounded,
     required this.isBase,
-    required this.constructors,
-    required this.interfaces,
-    required this.mixins,
-    required this.supertype,
-    required this.allSupertypes,
     required this.superclassConstraints,
-  }) {
-    this.source = source;
-  }
+    super.context,
+    required super.ref,
+    required super.source,
+    required super.name,
+    required super.isPrivate,
+    required super.isPublic,
+    required super.fields,
+    required super.methods,
+    required super.typeParameters,
+    required super.isSimplyBounded,
+    required super.constructors,
+    required super.interfaces,
+    required super.mixins,
+    required super.supertype,
+    required super.allSupertypes,
+  }) : super(jsonType: ElementJsonType.mixinElement);
 
   factory MixinElementSerializer.from(MixinElement element, AnalyzerContext context) {
     return MixinElementSerializer(
@@ -315,65 +276,29 @@ class MixinElementSerializer with SourceSerializer<String>, _ReferenceableSerial
   }
 
   factory MixinElementSerializer.fromJson(Map<String, dynamic> json) => _$MixinElementSerializerFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$MixinElementSerializerToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
-class EnumElementSerializer with SourceSerializer<String>, _ReferenceableSerializer implements EnumElementMetadata {
-  @override
-  @JsonKey(includeToJson: false, includeFromJson: false)
-  AnalyzerContext? context;
-
-  @override
-  final String ref;
-
-  @override
-  final String name;
-  @override
-  final List<FieldElementSerializer> fields;
-  @override
-  final List<MethodElementSerializer> methods;
-  @override
-  final List<TypeParameterElementSerializer> typeParameters;
-  @override
-  final List<ConstructorElementSerializer> constructors;
-  @override
-  final List<InterfaceTypeRefSerializer> interfaces;
-  @override
-  final List<InterfaceTypeRefSerializer> mixins;
-  @override
-  final InterfaceTypeRefSerializer? supertype;
-  @override
-  final List<InterfaceTypeRefSerializer> allSupertypes;
-  @override
-  final bool isPrivate;
-  @override
-  final bool isPublic;
-  @override
-  final bool isSimplyBounded;
-
-  @override
-  List<SourceSerializer> get _refList => [...constructors, ...fields, ...methods, ...typeParameters];
-
+class EnumElementSerializer extends InterfaceElementSerializer implements EnumElementMetadata {
   EnumElementSerializer({
-    this.context,
-    required this.ref,
-    required String source,
-    required this.name,
-    required this.isPrivate,
-    required this.isPublic,
-    required this.fields,
-    required this.methods,
-    required this.typeParameters,
-    required this.isSimplyBounded,
-    required this.constructors,
-    required this.interfaces,
-    required this.mixins,
-    required this.supertype,
-    required this.allSupertypes,
-  }) {
-    this.source = source;
-  }
+    super.context,
+    required super.ref,
+    required super.source,
+    required super.name,
+    required super.isPrivate,
+    required super.isPublic,
+    required super.fields,
+    required super.methods,
+    required super.typeParameters,
+    required super.isSimplyBounded,
+    required super.constructors,
+    required super.interfaces,
+    required super.mixins,
+    required super.supertype,
+    required super.allSupertypes,
+  }) : super(jsonType: ElementJsonType.enumElement);
 
   factory EnumElementSerializer.from(EnumElement element, AnalyzerContext context) {
     return EnumElementSerializer(
@@ -396,8 +321,74 @@ class EnumElementSerializer with SourceSerializer<String>, _ReferenceableSeriali
   }
 
   factory EnumElementSerializer.fromJson(Map<String, dynamic> json) => _$EnumElementSerializerFromJson(json);
+
+  @override
   Map<String, dynamic> toJson() => _$EnumElementSerializerToJson(this);
 }
+
+@JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
+class ExtensionTypeElementSerializer extends InterfaceElementSerializer implements ExtensionTypeElementMetadata {
+  @override
+  final ConstructorElementSerializer primaryConstructor;
+
+  @override
+  final FieldElementSerializer representation;
+
+  @override
+  final DartTypeSerializer typeErasure;
+
+  ExtensionTypeElementSerializer({
+    required this.primaryConstructor,
+    required this.representation,
+    required this.typeErasure,
+    super.context,
+    required super.ref,
+    required super.source,
+    required super.name,
+    required super.isPrivate,
+    required super.isPublic,
+    required super.fields,
+    required super.methods,
+    required super.typeParameters,
+    required super.isSimplyBounded,
+    required super.constructors,
+    required super.interfaces,
+    required super.mixins,
+    required super.supertype,
+    required super.allSupertypes,
+  }) : super(jsonType: ElementJsonType.extensionTypeElement);
+
+  factory ExtensionTypeElementSerializer.from(ExtensionTypeElement element, AnalyzerContext context) {
+    return ExtensionTypeElementSerializer(
+      primaryConstructor: ConstructorElementSerializer.from(element.primaryConstructor, context),
+      representation: FieldElementSerializer.from(element.representation, context),
+      typeErasure: DartTypeSerializer.from(element.typeErasure, context),
+      context: context,
+      ref: context.getElementRef(element).ref,
+      name: element.name,
+      source: context.getPath(element.source)!,
+      isPrivate: element.isPrivate,
+      isPublic: element.isPublic,
+      fields: element.fields.map((e) => FieldElementSerializer.from(e, context)).toList(),
+      methods: element.methods.map((e) => MethodElementSerializer.from(e, context)).toList(),
+      typeParameters: element.typeParameters.map((e) => TypeParameterElementSerializer.from(e, context)).toList(),
+      isSimplyBounded: element.isSimplyBounded,
+      constructors: element.constructors.map((e) => ConstructorElementSerializer.from(e, context)).toList(),
+      interfaces: element.interfaces.map((e) => context.getInterfaceTypeRef(e)).toList(),
+      mixins: element.mixins.map((e) => context.getInterfaceTypeRef(e)).toList(),
+      supertype: element.supertype != null ? context.getInterfaceTypeRef(element.supertype!) : null,
+      allSupertypes: element.allSupertypes.map((e) => context.getInterfaceTypeRef(e)).toList(),
+    );
+  }
+
+  factory ExtensionTypeElementSerializer.fromJson(Map<String, dynamic> json) =>
+      _$ExtensionTypeElementSerializerFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$ExtensionTypeElementSerializerToJson(this);
+}
+
+/// Elements serializer
 
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class TypeAliasElementSerializer with SourceSerializer<String> implements TypeAliasElementMetadata {
