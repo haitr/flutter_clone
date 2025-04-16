@@ -362,18 +362,14 @@ final class SimpleIdentifierInitializerSerializer extends InitializerSerializer 
 
   final String identifier;
 
-  @override
-  final String? source;
-
-  @override
-  final List<SourceSerializer> _refList = [];
-
   SimpleIdentifierInitializerSerializer({
     required this.identifier,
-    required this.source,
+    String? source,
     required super.jsonType,
     this.context,
-  });
+  }) {
+    this.source = source;
+  }
 
   factory SimpleIdentifierInitializerSerializer.fromSimpleIdentifier(
     SimpleIdentifier expression,
@@ -381,10 +377,10 @@ final class SimpleIdentifierInitializerSerializer extends InitializerSerializer 
   ) {
     final source = context.getPath(expression.staticElement?.source);
     return SimpleIdentifierInitializerSerializer(
+      context: context,
       identifier: expression.toSource(),
       source: source,
       jsonType: InitializerType.identifier,
-      context: context,
     );
   }
 
@@ -401,13 +397,13 @@ final class SimpleIdentifierInitializerSerializer extends InitializerSerializer 
       if (uri is DirectiveUriWithUnit) {
         source = 'unit ${uri.unit.source.uri}';
       } else if (uri is DirectiveUriWithSource) {
-        source = 'source ${uri.source}';
+        source = context.getPath(uri.source)!;
       }
       return SimpleIdentifierInitializerSerializer(
+        context: context,
         jsonType: InitializerType.identifier,
         identifier: name,
         source: source,
-        context: context,
       );
     }
     throw ArgumentError('--- ${expression.toSource()}');

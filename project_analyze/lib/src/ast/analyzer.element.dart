@@ -7,6 +7,9 @@ class ClassElementSerializer with SourceSerializer<String>, _ReferenceableSerial
   AnalyzerContext? context;
 
   @override
+  final String ref;
+
+  @override
   final String name;
   @override
   final List<ConstructorElementSerializer> constructors;
@@ -62,8 +65,8 @@ class ClassElementSerializer with SourceSerializer<String>, _ReferenceableSerial
 
   ClassElementSerializer({
     this.context,
-    required String ref,
     required String source,
+    required this.ref,
     required this.name,
     required this.constructors,
     required this.fields,
@@ -90,8 +93,7 @@ class ClassElementSerializer with SourceSerializer<String>, _ReferenceableSerial
     required this.supertype,
     required this.allSupertypes,
   }) {
-    setSource(source);
-    setRef(ref);
+    this.source = source;
   }
 
   factory ClassElementSerializer.from(ClassElement element, AnalyzerContext context) {
@@ -187,7 +189,7 @@ class InterfaceElementSerializer with SourceSerializer<String> implements Interf
     required this.supertype,
     required this.allSupertypes,
   }) {
-    setSource(source);
+    this.source = source;
   }
 
   InterfaceElementSerializer.placeholder()
@@ -235,6 +237,9 @@ class MixinElementSerializer with SourceSerializer<String>, _ReferenceableSerial
   AnalyzerContext? context;
 
   @override
+  final String ref;
+
+  @override
   final String name;
   @override
   final List<FieldElementSerializer> fields;
@@ -267,7 +272,7 @@ class MixinElementSerializer with SourceSerializer<String>, _ReferenceableSerial
 
   MixinElementSerializer({
     this.context,
-    required String ref,
+    required this.ref,
     required String source,
     required this.name,
     required this.isPrivate,
@@ -284,8 +289,7 @@ class MixinElementSerializer with SourceSerializer<String>, _ReferenceableSerial
     required this.allSupertypes,
     required this.superclassConstraints,
   }) {
-    setSource(source);
-    setRef(ref);
+    this.source = source;
   }
 
   factory MixinElementSerializer.from(MixinElement element, AnalyzerContext context) {
@@ -321,6 +325,9 @@ class EnumElementSerializer with SourceSerializer<String>, _ReferenceableSeriali
   AnalyzerContext? context;
 
   @override
+  final String ref;
+
+  @override
   final String name;
   @override
   final List<FieldElementSerializer> fields;
@@ -350,7 +357,7 @@ class EnumElementSerializer with SourceSerializer<String>, _ReferenceableSeriali
 
   EnumElementSerializer({
     this.context,
-    required String ref,
+    required this.ref,
     required String source,
     required this.name,
     required this.isPrivate,
@@ -365,8 +372,7 @@ class EnumElementSerializer with SourceSerializer<String>, _ReferenceableSeriali
     required this.supertype,
     required this.allSupertypes,
   }) {
-    setSource(source);
-    setRef(ref);
+    this.source = source;
   }
 
   factory EnumElementSerializer.from(EnumElement element, AnalyzerContext context) {
@@ -425,14 +431,14 @@ class TypeAliasElementSerializer with SourceSerializer<String> implements TypeAl
     required this.typeParameters,
     required this.aliasedType,
   }) {
-    setSource(source);
+    this.source = source;
   }
 
   factory TypeAliasElementSerializer.from(TypeAliasElement element, AnalyzerContext context) {
     return TypeAliasElementSerializer(
       context: context,
-      name: element.name,
       source: context.getPath(element.source)!,
+      name: element.name,
       isPrivate: element.isPrivate,
       isPublic: element.isPublic,
       isSimplyBounded: element.isSimplyBounded,
@@ -535,7 +541,7 @@ class ConstructorElementSerializer with SourceSerializer<String> implements Cons
     required this.returnType,
     required this.superConstructor,
   }) {
-    setSource(source);
+    this.source = source;
   }
 
   factory ConstructorElementSerializer.from(ConstructorElement element, AnalyzerContext context) {
@@ -649,7 +655,7 @@ class FieldElementSerializer with SourceSerializer<String?> implements FieldElem
     required this.isExternal,
     required this.isPromotable,
   }) {
-    setSource(source);
+    this.source = source;
   }
 
   factory FieldElementSerializer.from(FieldElement element, AnalyzerContext context) {
@@ -746,7 +752,7 @@ class MethodElementSerializer with SourceSerializer<String> implements MethodEle
     required this.isSynchronous,
     required this.returnType,
   }) {
-    setSource(source);
+    this.source = source;
   }
 
   factory MethodElementSerializer.from(MethodElement element, AnalyzerContext context) {
@@ -836,7 +842,7 @@ class TopLevelVariableElementSerializer with SourceSerializer<String?> implement
     this.setter,
     required this.isExternal,
   }) {
-    setSource(source);
+    this.source = source;
   }
 
   factory TopLevelVariableElementSerializer.from(TopLevelVariableElement element, AnalyzerContext context) {
@@ -936,7 +942,7 @@ class FunctionElementSerializer with SourceSerializer<String> implements Functio
     required this.isSynchronous,
     required this.isExtensionTypeMember,
   }) {
-    setSource(source);
+    this.source = source;
   }
 
   factory FunctionElementSerializer.from(FunctionElement element, AnalyzerContext context) {
@@ -982,9 +988,6 @@ class TypeParameterElementSerializer with SourceSerializer<String?> implements T
   @override
   final bool isPublic;
 
-  @override
-  List<SourceSerializer> get _refList => [];
-
   TypeParameterElementSerializer({
     this.context,
     required this.name,
@@ -993,7 +996,7 @@ class TypeParameterElementSerializer with SourceSerializer<String?> implements T
     required this.isPublic,
     this.bound,
   }) {
-    setSource(source);
+    this.source = source;
   }
 
   factory TypeParameterElementSerializer.from(TypeParameterElement element, AnalyzerContext context) {
@@ -1104,7 +1107,7 @@ class ParameterElementSerializer with SourceSerializer<String?> implements Param
     this.defaultValueCode,
     this.initializer,
   }) {
-    setSource(source);
+    this.source = source;
   }
 
   factory ParameterElementSerializer.from(ParameterElement element, AnalyzerContext context) {
@@ -1219,7 +1222,7 @@ class PropertyAccessorElementSerializer with SourceSerializer<String> implements
     required this.isGetter,
     required this.isSetter,
   }) {
-    setSource(source);
+    this.source = source;
   }
 
   factory PropertyAccessorElementSerializer.from(PropertyAccessorElement element, AnalyzerContext context) {

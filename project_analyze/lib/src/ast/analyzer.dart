@@ -26,22 +26,25 @@ mixin SourceSerializer<T extends String?> {
   @mustBeOverridden
   AnalyzerContext? get context;
 
-  T _source = (T == String ? '' : null) as T;
-
-  T get source => _source;
-
   bool _isInSdk = false;
 
-  @JsonKey(includeToJson: true)
+  @JsonKey(includeToJson: true, includeFromJson: true)
   bool get isInSdk => _isInSdk;
 
-  void setSource(T value) {
-    _source = value;
+  T? _source;
+  var _isSet = false;
+
+  @JsonKey(includeToJson: true, includeFromJson: true)
+  T get source => _isSet ? _source as T : throw UnimplementedError('source');
+
+  set source(T newValue) {
+    _isSet = true;
+    _source = newValue;
     if (context case final context?) {
-      if (value != null) {
-        _isInSdk = path.canonicalize(value).startsWith(path.canonicalize(context.sdkPath));
+      if (newValue != null) {
+        _isInSdk = path.canonicalize(newValue).startsWith(path.canonicalize(context.sdkPath));
         if (_isInSdk) {
-          final paths = path.split(value);
+          final paths = path.split(newValue);
           final dartLibName = paths[paths.indexOf('lib') + 1];
           _source = 'dart:$dartLibName' as T;
         }
@@ -64,11 +67,6 @@ mixin SourceSerializer<T extends String?> {
 }
 
 mixin _ReferenceableSerializer {
-  late String _ref;
-
-  String get ref => _ref;
-
-  void setRef(String value) {
-    _ref = value;
-  }
+  @mustBeOverridden
+  String get ref;
 }

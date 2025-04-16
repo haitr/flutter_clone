@@ -74,18 +74,27 @@ void process(FileSystem fileSystem, AnalyzeResult result, String pattern) {
 
 String? _getImportPath(SourceSerializer element) {
   if (element.source case var source?) {
-    if (element is DartTypeSerializer) {
-      if (element.isDartCore) return null;
+    // dart:... library
+    if (element.isInSdk) {
+      final lib = element.source!;
+      if (['dart:core', 'dart:collection', 'dart:internal'].contains(lib)) {
+        return null;
+      }
+      return lib;
     }
+    // dart:ui or dart:ui_web
     final paths = path.split(source);
     if (paths.contains('sky_engine')) {
       final category = paths[paths.indexOf('lib') + 1];
       return 'dart:$category';
     }
+    // package:flutter
     if (path.isRelative(source)) {
       final category = paths[paths.indexOf('src') + 1];
       return 'package:flutter/$category.dart';
     }
+
+    // unknown
     throw ArgumentError('Unknown import path: $source');
   }
   return null;
@@ -255,7 +264,9 @@ String _getInitializerCode(InitializerSerializer initializer, AnalyzeResult resu
       return '${initializer.operator}${_getInitializerCode(initializer.operand, result, scope)}';
     case PrefixedIdentifierInitializerSerializer():
       final target = initializer.prefixElement!;
-      final name = scope(refer(target.name, _getImportPath(target)));
+      print('--- ${target.ref} ${target.name}');
+      final element = result.fromElementRef(target)!;
+      final name = scope(refer(target.name, _getImportPath(element)));
       return '$name.${initializer.identifier}';
     case SimpleIdentifierInitializerSerializer():
       return scope(refer(initializer.identifier, _getImportPath(initializer)));

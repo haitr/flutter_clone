@@ -36,11 +36,11 @@ class AnalyzerContext {
 
   InterfaceElementRefSerializer getElementRef(InterfaceElement element) {
     final ref = element.hashCode;
-    var jsonType = refJsonElement;
+    var jsonType = RefJsonType.element;
     // if in project => hashCode
     // if in library => cache and return hashCode
     if (element.source.uri.scheme == 'package' && path.split(element.source.uri.path).first == projectName) {
-      jsonType = refJsonInternalElement;
+      jsonType = RefJsonType.internalElement;
     } else {
       // Create a placeholder serializer first
       final placeholder = InterfaceElementSerializer.placeholder();
@@ -48,13 +48,7 @@ class AnalyzerContext {
       final fullSerializer = InterfaceElementSerializer.from(element, this);
       elementRef[ref] = fullSerializer;
     }
-    return InterfaceElementRefSerializer(
-      context: this,
-      ref: '#$ref',
-      jsonType: jsonType,
-      source: getPath(element.source)!,
-      name: element.name,
-    );
+    return InterfaceElementRefSerializer(ref: '#$ref', jsonType: jsonType, name: element.name);
   }
 
   DartTypeRefSerializer getTypeRef(DartType type) {
@@ -75,7 +69,6 @@ class AnalyzerContext {
     final refStr = '#$ref';
     return DartTypeRefSerializer(
       ref: refStr,
-      jsonType: refJsonType,
       // ignore: deprecated_member_use
       name: type.getDisplayString(withNullability: false),
       isDartCore: type.isDartCore,

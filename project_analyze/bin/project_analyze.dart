@@ -43,7 +43,7 @@ Future<void> main(List<String> arguments) async {
   final result = await _loadFromScratch(inputFs);
   if (output != null) {
     final outputFs = WorkingDirectoryFileSystem(path.normalize(output));
-    final cacheFile = outputFs.currentDirectory.childFile(output);
+    final cacheFile = outputFs.currentDirectory.childFile('cache.json');
     if (cacheFile.existsSync()) {
       cacheFile.deleteSync();
     } else {
@@ -53,6 +53,8 @@ Future<void> main(List<String> arguments) async {
     await saveToCache(result, cacheFile, encoder: const SelectiveIndentJsonEncoder());
     progress.finish(showTiming: true);
     SimpleLogger.info('Cache size: ${(cacheFile.lengthSync() / 1024 / 1024).toStringAsFixed(2)} MB');
+    final cache = loadFromCache(cacheFile);
+    print(cache.hashCode);
   }
 }
 
