@@ -380,3 +380,9 @@ abstract class PromotableElementMetadata implements LocalElementMetadata, Variab
 
 /// See: [LocalElement]
 abstract class LocalElementMetadata implements ElementMetadata {}
+
+/// See: [InstantiatedTypeAliasElement]
+abstract class InstantiatedTypeAliasElementMetadata {
+  TypeAliasElementMetadata get element;
+  List<DartTypeMetadata> get typeArguments;
+}

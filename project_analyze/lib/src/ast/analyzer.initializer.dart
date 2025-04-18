@@ -213,7 +213,11 @@ final class SetLiteralInitializerSerializer extends InitializerSerializer {
   factory SetLiteralInitializerSerializer.from(SetOrMapLiteral expression, AnalyzerContext context) {
     final isConst = expression.isConst;
     final typeArguments =
-        expression.typeArguments?.arguments.map((e) => e.type).nonNulls.map((e) => context.getTypeRef(e)).toList();
+        expression.typeArguments?.arguments
+            .map((e) => e.type)
+            .nonNulls
+            .map((e) => context.getTypeRef(e) as DartTypeRefSerializer)
+            .toList();
     final elements = expression.elements.map((e) => InitializerSerializer.from(e as Expression, context)).toList();
     return SetLiteralInitializerSerializer(
       jsonType: InitializerType.set,
@@ -247,7 +251,11 @@ final class MapLiteralInitializerSerializer extends InitializerSerializer {
   factory MapLiteralInitializerSerializer.from(SetOrMapLiteral expression, AnalyzerContext context) {
     final isConst = expression.isConst;
     final typeArguments =
-        expression.typeArguments?.arguments.map((e) => e.type).nonNulls.map((e) => context.getTypeRef(e)).toList();
+        expression.typeArguments?.arguments
+            .map((e) => e.type)
+            .nonNulls
+            .map((e) => context.getTypeRef(e) as DartTypeRefSerializer)
+            .toList();
     final elements = expression.elements.map((e) => InitializerSerializer.from(e as Expression, context)).toList();
     return MapLiteralInitializerSerializer(
       typeArguments: typeArguments,
@@ -281,7 +289,11 @@ final class ListLiteralInitializerSerializer extends InitializerSerializer {
   factory ListLiteralInitializerSerializer.from(ListLiteral expression, AnalyzerContext context) {
     final isConst = expression.isConst;
     final typeArguments =
-        expression.typeArguments?.arguments.map((e) => e.type).nonNulls.map((e) => context.getTypeRef(e)).toList();
+        expression.typeArguments?.arguments
+            .map((e) => e.type)
+            .nonNulls
+            .map((e) => context.getTypeRef(e) as DartTypeRefSerializer)
+            .toList();
     final elements = expression.elements.map((e) => InitializerSerializer.from(e as Expression, context)).toList();
     return ListLiteralInitializerSerializer(
       typeArguments: typeArguments,
@@ -333,7 +345,8 @@ final class InstanceCreationInitializerSerializer extends InitializerSerializer 
   });
 
   factory InstanceCreationInitializerSerializer.from(InstanceCreationExpression expression, AnalyzerContext context) {
-    final type = expression.staticType != null ? context.getTypeRef(expression.staticType!) : null;
+    final type =
+        expression.staticType != null ? context.getTypeRef(expression.staticType!) as DartTypeRefSerializer : null;
     final constructorName = expression.constructorName.name?.name;
     final isConst = expression.isConst;
     final arguments = expression.argumentList.arguments.map((e) => InitializerSerializer.from(e, context)).toList();

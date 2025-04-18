@@ -2,6 +2,7 @@ part of 'analyzer_map.dart';
 
 /// See: [DartType]
 abstract class DartTypeMetadata {
+  InstantiatedTypeAliasElementMetadata? get alias;
   String get name;
   String? get source;
   String? get nullabilitySuffix;

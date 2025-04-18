@@ -65,7 +65,7 @@ Future<void> saveToCache(
   Converter<Object?, String> encoder = const JsonEncoder(),
 }) async => await cacheFile.writeAsString(encoder.convert(result.toJson()));
 
-Future<AnalyzeResult> analyzeProjectWithSymbolResolution(FileSystem input) async {
+Future<AnalyzeResult> analyzeProjectWithSymbolResolution(FileSystem input, {String? filter}) async {
   final localPackages = _getLocalPackages(input);
 
   SimpleLogger.info('Analyzing project at: ${path.normalize(input.currentDirectory.path)}');
@@ -77,14 +77,10 @@ Future<AnalyzeResult> analyzeProjectWithSymbolResolution(FileSystem input) async
   final collection = AnalysisContextCollection(includedPaths: includePaths);
 
   SimpleLogger.info('Analysis context created with paths:');
-  collection.contexts
-      .map((context) => ' - ${context.contextRoot.root.path}')
-      .forEach(SimpleLogger.info);
+  collection.contexts.map((context) => ' - ${context.contextRoot.root.path}').forEach(SimpleLogger.info);
 
   final dartFiles =
-      Glob(
-        '**/*.dart',
-      ).listSync(root: includePaths[0]).whereType<File>().map((file) => file.path).toList();
+      Glob(filter ?? '**/*.dart').listSync(root: includePaths[0]).whereType<File>().map((file) => file.path).toList();
 
   SimpleLogger.info('Found ${dartFiles.length} Dart files');
 
@@ -96,10 +92,6 @@ Future<AnalyzeResult> analyzeProjectWithSymbolResolution(FileSystem input) async
   );
 
   for (final filePath in dartFiles) {
-    // if (path.basename(filePath) != 'button.dart') {
-    //   continue;
-    // }
-
     // Open the file for analysis first
     final context = collection.contextFor(filePath);
     final library = await context.currentSession.getResolvedLibrary(filePath);
@@ -107,9 +99,7 @@ Future<AnalyzeResult> analyzeProjectWithSymbolResolution(FileSystem input) async
     if (library is ResolvedLibraryResult) {
       final libraryPath = library.element.source.fullName;
 
-      parsingContext.currentFilePath = path.normalize(
-        path.relative(libraryPath, from: parsingContext.projectPath),
-      );
+      parsingContext.currentFilePath = path.normalize(path.relative(libraryPath, from: parsingContext.projectPath));
 
       // SimpleLogger.progress('\nAnalyzing library: ${path.relative(libraryPath, from: includePaths[0])}');
 
@@ -122,5 +112,6 @@ Future<AnalyzeResult> analyzeProjectWithSymbolResolution(FileSystem input) async
     files: results,
     typeRef: parsingContext.typeRef,
     elementRef: parsingContext.elementRef,
+    aliasRef: parsingContext.typeAliasRef,
   );
 }

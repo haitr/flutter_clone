@@ -10,6 +10,7 @@ import 'analyzer.dart';
 class AnalyzerContext {
   final typeRef = <int, DartTypeSerializer>{};
   final elementRef = <int, InterfaceElementSerializer>{};
+  final typeAliasRef = <int, TypeAliasElementSerializer>{};
 
   final String projectPath;
   final String projectName;
@@ -20,9 +21,7 @@ class AnalyzerContext {
     : sdkPath = path.relative(sdkPath, from: projectPath);
 
   String get currentFilePath =>
-      _currentFilePath.isEmpty
-          ? throw ArgumentError('currentFilePath cannot be empty')
-          : _currentFilePath;
+      _currentFilePath.isEmpty ? throw ArgumentError('currentFilePath cannot be empty') : _currentFilePath;
 
   set currentFilePath(String value) {
     if (value.isEmpty) {
@@ -42,8 +41,7 @@ class AnalyzerContext {
     String? source;
     // if in project => hashCode
     // if in library => cache and return hashCode
-    if (element.source.uri.scheme == 'package' &&
-        path.split(element.source.uri.path).first == projectName) {
+    if (element.source.uri.scheme == 'package' && path.split(element.source.uri.path).first == projectName) {
       jsonType = RefJsonType.internalElement;
       source = getPath(element.source);
     } else {
@@ -55,16 +53,15 @@ class AnalyzerContext {
         elementRef[ref] = fullSerializer;
       }
     }
-    return InterfaceElementRefSerializer(
-      ref: '#$ref',
-      jsonType: jsonType,
-      name: element.name,
-      path: source,
-    );
+    return InterfaceElementRefSerializer(ref: '#$ref', jsonType: jsonType, name: element.name, path: source);
   }
 
-  DartTypeRefSerializer getTypeRef(DartType type) {
+  ReferenceableSerializer getTypeRef(DartType type) {
+    if (type.getDisplayString(withNullability: false).startsWith('void Function(')) {
+      print('${type.getDisplayString(withNullability: false)}: ${type.hashCode}');
+    }
     final ref = type.hashCode;
+    final key = '#$ref';
     if (!typeRef.containsKey(ref)) {
       // Create a placeholder serializer first
       final placeholder = DartTypeSerializer.placeholder();
@@ -78,35 +75,41 @@ class AnalyzerContext {
       // Update the cache with the complete serializer
       typeRef[ref] = fullSerializer;
     }
-    final refStr = '#$ref';
-    return DartTypeRefSerializer(
-      ref: refStr,
-      // ignore: deprecated_member_use
-      name: type.getDisplayString(withNullability: false),
-      isDartCore: type.isDartCore,
-      nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
-    );
+    return switch (type) {
+      FunctionType() => FunctionTypeRefSerializer(
+        ref: key,
+        nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
+      ),
+      InterfaceType() => InterfaceTypeRefSerializer(
+        ref: key,
+        nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
+        typeArguments: type.typeArguments.map((e) => getTypeRef(e) as DartTypeRefSerializer).toList(),
+      ),
+      _ => DartTypeRefSerializer(
+        alias: type.alias != null ? InstantiatedTypeAliasElementSerializer.from(type.alias!, this) : null,
+        ref: key,
+        // ignore: deprecated_member_use
+        name: type.getDisplayString(withNullability: false),
+        isDartCore: type.isDartCore,
+        nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
+      ),
+    };
   }
 
-  InterfaceTypeRefSerializer getInterfaceTypeRef(InterfaceType type) {
-    final ref = type.hashCode;
-    if (!typeRef.containsKey(ref)) {
-      // Create a placeholder serializer first
-      final placeholder = InterfaceTypeSerializer.placeholder();
-
-      // Add the placeholder to cache immediately
-      typeRef[ref] = placeholder;
-
-      // Now create the full serializer - any recursive calls will find the placeholder
-      final fullSerializer = InterfaceTypeSerializer.from(type, this);
-
-      // Update the cache with the complete serializer
-      typeRef[ref] = fullSerializer;
+  TypeAliasElementRefSerializer getTypeAliasRef(TypeAliasElement element) {
+    final ref = element.hashCode;
+    String? source;
+    if (!typeAliasRef.containsKey(ref)) {
+      final fullSerializer = TypeAliasElementSerializer.from(element, this);
+      typeAliasRef[ref] = fullSerializer;
+      source = getPath(element.source);
     }
-    final refStr = '#$ref';
-    return InterfaceTypeRefSerializer(
-      ref: refStr,
-      nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
+    return TypeAliasElementRefSerializer(
+      ref: '#$ref',
+      jsonType: RefJsonType.alias,
+      name: element.name,
+      path: source,
+      typeParameters: element.typeParameters.map((e) => TypeParameterElementSerializer.from(e, this)).toList(),
     );
   }
 }

@@ -21,6 +21,7 @@ Future<void> main(List<String> arguments) async {
         ..addFlag('verbose', abbr: 'v', help: 'Enable verbose output', negatable: false)
         ..addOption('output', abbr: 'o', help: 'Output json file')
         ..addOption('input', abbr: 'i', help: 'Input dependencies', defaultsTo: './dependencies')
+        ..addOption('filter', abbr: 'f', help: 'Filter files pattern', hide: true)
         ..addFlag('help', abbr: 'h', help: 'Help command', negatable: false);
 
   // Parse arguments
@@ -34,13 +35,13 @@ Future<void> main(List<String> arguments) async {
   final bool verbose = cmds['verbose']; // Whether to enable verbose logging
   final String input = cmds['input']; // Input directory path
   final String? output = cmds['output']; // Output directory path
-
+  final String? filter = cmds['filter']; // Filter files pattern
   SimpleLogger.setVerbose(verbose);
 
   final progress = SimpleLogger.progress('Caching Flutter structure...');
 
   final inputFs = WorkingDirectoryFileSystem(path.normalize(input));
-  final result = await _loadFromScratch(inputFs);
+  final result = await _loadFromScratch(inputFs, filter: filter);
   if (output != null) {
     final outputFs = WorkingDirectoryFileSystem(path.normalize(output));
     final cacheFile = outputFs.currentDirectory.childFile('cache.json');
@@ -64,4 +65,5 @@ Future<void> main(List<String> arguments) async {
 ///
 /// Returns a List of [AnalyzeResult] objects containing the analysis results
 /// The results include class declarations and their analyzed structure
-Future<AnalyzeResult> _loadFromScratch(FileSystem input) => analyzeProjectWithSymbolResolution(input);
+Future<AnalyzeResult> _loadFromScratch(FileSystem input, {String? filter}) =>
+    analyzeProjectWithSymbolResolution(input, filter: filter);

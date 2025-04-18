@@ -5,6 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "[root]Analyze all files",
+            "cwd": "project_analyze",
+            "program": "bin/project_analyze.dart",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "--input=../generated/flutter",
+                "--output=../generated",
+            ],
+        },
+        {
             "name": "[root]Analyze only",
             "cwd": "project_analyze",
             "program": "bin/project_analyze.dart",
@@ -13,6 +24,7 @@
             "args": [
                 "--input=../generated/flutter",
                 "--output=../generated",
+                "--filter=**/button.dart",
             ],
         },
         {
