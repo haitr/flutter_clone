@@ -90,7 +90,10 @@ class InitializerSerializer {
   }
 
   factory InitializerSerializer.fromJson(Map<String, dynamic> json) {
-    final type = _$InitializerTypeEnumMap.entries.firstWhereOrNull((e) => e.value == json[_jsonTypeField])?.key;
+    final type =
+        _$InitializerTypeEnumMap.entries
+            .firstWhereOrNull((e) => e.value == json[_jsonTypeField])
+            ?.key;
     switch (type) {
       case InitializerType.prefix:
         return PrefixExpressionInitializerSerializer.fromJson(json);
@@ -126,9 +129,16 @@ final class NamedExpressionInitializerSerializer extends InitializerSerializer {
   final String name;
   final InitializerSerializer value;
 
-  NamedExpressionInitializerSerializer({required this.name, required this.value, required super.jsonType});
+  NamedExpressionInitializerSerializer({
+    required this.name,
+    required this.value,
+    required super.jsonType,
+  });
 
-  factory NamedExpressionInitializerSerializer.from(NamedExpression expression, AnalyzerContext context) {
+  factory NamedExpressionInitializerSerializer.from(
+    NamedExpression expression,
+    AnalyzerContext context,
+  ) {
     return NamedExpressionInitializerSerializer(
       name: expression.name.label.toString(),
       value: InitializerSerializer.from(expression.expression, context),
@@ -157,7 +167,10 @@ final class BinaryExpressionInitializerSerializer extends InitializerSerializer 
     required super.jsonType,
   });
 
-  factory BinaryExpressionInitializerSerializer.from(BinaryExpression expression, AnalyzerContext context) {
+  factory BinaryExpressionInitializerSerializer.from(
+    BinaryExpression expression,
+    AnalyzerContext context,
+  ) {
     return BinaryExpressionInitializerSerializer(
       operator: expression.operator.toString(),
       left: InitializerSerializer.from(expression.leftOperand, context),
@@ -179,9 +192,16 @@ final class PrefixExpressionInitializerSerializer extends InitializerSerializer 
   final String operator;
   final InitializerSerializer operand;
 
-  PrefixExpressionInitializerSerializer({required this.operator, required this.operand, required super.jsonType});
+  PrefixExpressionInitializerSerializer({
+    required this.operator,
+    required this.operand,
+    required super.jsonType,
+  });
 
-  factory PrefixExpressionInitializerSerializer.from(PrefixExpression expression, AnalyzerContext context) {
+  factory PrefixExpressionInitializerSerializer.from(
+    PrefixExpression expression,
+    AnalyzerContext context,
+  ) {
     return PrefixExpressionInitializerSerializer(
       jsonType: InitializerType.prefix,
       operator: expression.operator.toString(),
@@ -210,15 +230,21 @@ final class SetLiteralInitializerSerializer extends InitializerSerializer {
     required super.jsonType,
   });
 
-  factory SetLiteralInitializerSerializer.from(SetOrMapLiteral expression, AnalyzerContext context) {
+  factory SetLiteralInitializerSerializer.from(
+    SetOrMapLiteral expression,
+    AnalyzerContext context,
+  ) {
     final isConst = expression.isConst;
     final typeArguments =
         expression.typeArguments?.arguments
             .map((e) => e.type)
             .nonNulls
-            .map((e) => context.getTypeRef(e) as DartTypeRefSerializer)
+            .map(context.getTypeRef)
             .toList();
-    final elements = expression.elements.map((e) => InitializerSerializer.from(e as Expression, context)).toList();
+    final elements =
+        expression.elements
+            .map((e) => InitializerSerializer.from(e as Expression, context))
+            .toList();
     return SetLiteralInitializerSerializer(
       jsonType: InitializerType.set,
       typeArguments: typeArguments,
@@ -248,15 +274,21 @@ final class MapLiteralInitializerSerializer extends InitializerSerializer {
     required super.jsonType,
   });
 
-  factory MapLiteralInitializerSerializer.from(SetOrMapLiteral expression, AnalyzerContext context) {
+  factory MapLiteralInitializerSerializer.from(
+    SetOrMapLiteral expression,
+    AnalyzerContext context,
+  ) {
     final isConst = expression.isConst;
     final typeArguments =
         expression.typeArguments?.arguments
             .map((e) => e.type)
             .nonNulls
-            .map((e) => context.getTypeRef(e) as DartTypeRefSerializer)
+            .map(context.getTypeRef)
             .toList();
-    final elements = expression.elements.map((e) => InitializerSerializer.from(e as Expression, context)).toList();
+    final elements =
+        expression.elements
+            .map((e) => InitializerSerializer.from(e as Expression, context))
+            .toList();
     return MapLiteralInitializerSerializer(
       typeArguments: typeArguments,
       isConst: isConst,
@@ -292,9 +324,12 @@ final class ListLiteralInitializerSerializer extends InitializerSerializer {
         expression.typeArguments?.arguments
             .map((e) => e.type)
             .nonNulls
-            .map((e) => context.getTypeRef(e) as DartTypeRefSerializer)
+            .map(context.getTypeRef)
             .toList();
-    final elements = expression.elements.map((e) => InitializerSerializer.from(e as Expression, context)).toList();
+    final elements =
+        expression.elements
+            .map((e) => InitializerSerializer.from(e as Expression, context))
+            .toList();
     return ListLiteralInitializerSerializer(
       typeArguments: typeArguments,
       isConst: isConst,
@@ -318,7 +353,10 @@ final class LiteralInitializerSerializer extends InitializerSerializer {
   LiteralInitializerSerializer({required this.value, required super.jsonType});
 
   factory LiteralInitializerSerializer.from(Literal expression) {
-    return LiteralInitializerSerializer(value: expression.toSource(), jsonType: InitializerType.literal);
+    return LiteralInitializerSerializer(
+      value: expression.toSource(),
+      jsonType: InitializerType.literal,
+    );
   }
 
   factory LiteralInitializerSerializer.fromJson(Map<String, dynamic> json) =>
@@ -344,12 +382,17 @@ final class InstanceCreationInitializerSerializer extends InitializerSerializer 
     required super.jsonType,
   });
 
-  factory InstanceCreationInitializerSerializer.from(InstanceCreationExpression expression, AnalyzerContext context) {
-    final type =
-        expression.staticType != null ? context.getTypeRef(expression.staticType!) as DartTypeRefSerializer : null;
+  factory InstanceCreationInitializerSerializer.from(
+    InstanceCreationExpression expression,
+    AnalyzerContext context,
+  ) {
+    final type = expression.staticType != null ? context.getTypeRef(expression.staticType!) : null;
     final constructorName = expression.constructorName.name?.name;
     final isConst = expression.isConst;
-    final arguments = expression.argumentList.arguments.map((e) => InitializerSerializer.from(e, context)).toList();
+    final arguments = expression.argumentList.arguments.mapWithContext(
+      context,
+      InitializerSerializer.from,
+    );
     return InstanceCreationInitializerSerializer(
       type: type,
       constructorName: constructorName,
@@ -368,7 +411,8 @@ final class InstanceCreationInitializerSerializer extends InitializerSerializer 
 
 /// See [SimpleIdentifier]
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
-final class SimpleIdentifierInitializerSerializer extends InitializerSerializer with SourceSerializer<String?> {
+final class SimpleIdentifierInitializerSerializer extends InitializerSerializer
+    with SourceSerializer<String?> {
   @override
   @JsonKey(includeToJson: false, includeFromJson: false)
   AnalyzerContext? context;
@@ -435,7 +479,11 @@ final class PrefixedIdentifierInitializerSerializer extends InitializerSerialize
   final InterfaceElementRefSerializer? prefixElement;
   final String identifier;
 
-  PrefixedIdentifierInitializerSerializer({this.prefixElement, required this.identifier, required super.jsonType});
+  PrefixedIdentifierInitializerSerializer({
+    this.prefixElement,
+    required this.identifier,
+    required super.jsonType,
+  });
 
   factory PrefixedIdentifierInitializerSerializer.fromPrefixedIdentifier(
     PrefixedIdentifier expression,
@@ -460,7 +508,8 @@ final class PrefixedIdentifierInitializerSerializer extends InitializerSerialize
     AnalyzerContext context,
   ) {
     if (expression.realTarget case PrefixedIdentifierImpl(:final staticElement)) {
-      final prefixElement = staticElement != null ? context.getElementRef(staticElement as InterfaceElement) : null;
+      final prefixElement =
+          staticElement != null ? context.getElementRef(staticElement as InterfaceElement) : null;
       final name = expression.propertyName.name;
       return PrefixedIdentifierInitializerSerializer(
         jsonType: InitializerType.prefixIdentifier,

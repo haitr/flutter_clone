@@ -77,10 +77,14 @@ Future<AnalyzeResult> analyzeProjectWithSymbolResolution(FileSystem input, {Stri
   final collection = AnalysisContextCollection(includedPaths: includePaths);
 
   SimpleLogger.info('Analysis context created with paths:');
-  collection.contexts.map((context) => ' - ${context.contextRoot.root.path}').forEach(SimpleLogger.info);
+  collection.contexts
+      .map((context) => ' - ${context.contextRoot.root.path}')
+      .forEach(SimpleLogger.info);
 
   final dartFiles =
-      Glob(filter ?? '**/*.dart').listSync(root: includePaths[0]).whereType<File>().map((file) => file.path).toList();
+      Glob(
+        filter ?? '**/*.dart',
+      ).listSync(root: includePaths[0]).whereType<File>().map((file) => file.path).toList();
 
   SimpleLogger.info('Found ${dartFiles.length} Dart files');
 
@@ -98,10 +102,9 @@ Future<AnalyzeResult> analyzeProjectWithSymbolResolution(FileSystem input, {Stri
 
     if (library is ResolvedLibraryResult) {
       final libraryPath = library.element.source.fullName;
-
-      parsingContext.currentFilePath = path.normalize(path.relative(libraryPath, from: parsingContext.projectPath));
-
-      // SimpleLogger.progress('\nAnalyzing library: ${path.relative(libraryPath, from: includePaths[0])}');
+      parsingContext.currentFilePath = path.normalize(
+        path.relative(libraryPath, from: parsingContext.projectPath),
+      );
 
       // Let the visitor analyze classes and track dependencies
       results.add(FileAnalyzeResult.fromElement(library, parsingContext));

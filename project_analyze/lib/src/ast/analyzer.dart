@@ -75,3 +75,8 @@ mixin _ReferenceableSerializer {
   // @mustBeOverridden
   String get ref;
 }
+
+extension ListExtension<T> on List<T> {
+  List<R> mapWithContext<R>(AnalyzerContext context, R Function(T e, AnalyzerContext context) f) =>
+      map((e) => f(e, context)).toList();
+}

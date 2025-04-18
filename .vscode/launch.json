@@ -39,18 +39,6 @@
             ],
         },
         {
-            "name": "[root]Dry clone",
-            "cwd": "flutter_clone",
-            "program": "bin/flutter_clone.dart",
-            "request": "launch",
-            "type": "dart",
-            "args": [
-                "--dry-run",
-                "--output=../flutter_example/generated",
-                "--widget=CupertinoButton",
-            ],
-        },
-        {
             "name": "[rxflutter] Counter example",
             "cwd": "packages/rxflutter/example/counter",
             "request": "launch",

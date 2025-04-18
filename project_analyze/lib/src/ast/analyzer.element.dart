@@ -109,7 +109,10 @@ class InterfaceElementSerializer
   }
 
   factory InterfaceElementSerializer.fromJson(Map<String, dynamic> json) {
-    final type = _$ElementJsonTypeEnumMap.entries.firstWhereOrNull((e) => e.value == json[_jsonTypeField])?.key;
+    final type =
+        _$ElementJsonTypeEnumMap.entries
+            .firstWhereOrNull((e) => e.value == json[_jsonTypeField])
+            ?.key;
     switch (type) {
       case ElementJsonType.classElement:
         return ClassElementSerializer.fromJson(json);
@@ -191,8 +194,8 @@ class ClassElementSerializer extends InterfaceElementSerializer implements Class
     return ClassElementSerializer(
       context: context,
       ref: context.getElementRef(element).ref,
-      constructors: element.constructors.map((e) => ConstructorElementSerializer.from(e, context)).toList(),
-      fields: element.fields.map((e) => FieldElementSerializer.from(e, context)).toList(),
+      constructors: element.constructors.mapWithContext(context, ConstructorElementSerializer.from),
+      fields: element.fields.mapWithContext(context, FieldElementSerializer.from),
       hasNonFinalField: element.hasNonFinalField,
       isAbstract: element.isAbstract,
       isBase: element.isBase,
@@ -209,19 +212,26 @@ class ClassElementSerializer extends InterfaceElementSerializer implements Class
       isSealed: element.isSealed,
       isSimplyBounded: element.isSimplyBounded,
       isValidMixin: element.isValidMixin,
-      methods: element.methods.map((e) => MethodElementSerializer.from(e, context)).toList(),
+      methods: element.methods.mapWithContext(context, MethodElementSerializer.from),
       name: element.name,
       source: context.getPath(element.source)!,
-      typeParameters: element.typeParameters.map((e) => TypeParameterElementSerializer.from(e, context)).toList(),
-      interfaces: element.interfaces.map((e) => context.getTypeRef(e) as InterfaceTypeRefSerializer).toList(),
-      mixins: element.mixins.map((e) => context.getTypeRef(e) as InterfaceTypeRefSerializer).toList(),
+      typeParameters: element.typeParameters.mapWithContext(
+        context,
+        TypeParameterElementSerializer.from,
+      ),
+      interfaces: element.interfaces.map(context.getTypeRef<InterfaceTypeRefSerializer>).toList(),
+      mixins: element.mixins.map(context.getTypeRef<InterfaceTypeRefSerializer>).toList(),
       supertype:
-          element.supertype != null ? context.getTypeRef(element.supertype!) as InterfaceTypeRefSerializer : null,
-      allSupertypes: element.allSupertypes.map((e) => context.getTypeRef(e) as InterfaceTypeRefSerializer).toList(),
+          element.supertype != null
+              ? context.getTypeRef<InterfaceTypeRefSerializer>(element.supertype!)
+              : null,
+      allSupertypes:
+          element.allSupertypes.map(context.getTypeRef<InterfaceTypeRefSerializer>).toList(),
     );
   }
 
-  factory ClassElementSerializer.fromJson(Map<String, dynamic> json) => _$ClassElementSerializerFromJson(json);
+  factory ClassElementSerializer.fromJson(Map<String, dynamic> json) =>
+      _$ClassElementSerializerFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$ClassElementSerializerToJson(this);
@@ -262,23 +272,32 @@ class MixinElementSerializer extends InterfaceElementSerializer implements Mixin
       source: context.getPath(element.source)!,
       isPrivate: element.isPrivate,
       isPublic: element.isPublic,
-      fields: element.fields.map((e) => FieldElementSerializer.from(e, context)).toList(),
-      methods: element.methods.map((e) => MethodElementSerializer.from(e, context)).toList(),
-      typeParameters: element.typeParameters.map((e) => TypeParameterElementSerializer.from(e, context)).toList(),
+      fields: element.fields.mapWithContext(context, FieldElementSerializer.from),
+      methods: element.methods.mapWithContext(context, MethodElementSerializer.from),
+      typeParameters: element.typeParameters.mapWithContext(
+        context,
+        TypeParameterElementSerializer.from,
+      ),
       isSimplyBounded: element.isSimplyBounded,
       isBase: element.isBase,
       superclassConstraints:
-          element.superclassConstraints.map((e) => context.getTypeRef(e) as InterfaceTypeRefSerializer).toList(),
-      constructors: element.constructors.map((e) => ConstructorElementSerializer.from(e, context)).toList(),
-      interfaces: element.interfaces.map((e) => context.getTypeRef(e) as InterfaceTypeRefSerializer).toList(),
-      mixins: element.mixins.map((e) => context.getTypeRef(e) as InterfaceTypeRefSerializer).toList(),
+          element.superclassConstraints
+              .map(context.getTypeRef<InterfaceTypeRefSerializer>)
+              .toList(),
+      constructors: element.constructors.mapWithContext(context, ConstructorElementSerializer.from),
+      interfaces: element.interfaces.map(context.getTypeRef<InterfaceTypeRefSerializer>).toList(),
+      mixins: element.mixins.map(context.getTypeRef<InterfaceTypeRefSerializer>).toList(),
       supertype:
-          element.supertype != null ? context.getTypeRef(element.supertype!) as InterfaceTypeRefSerializer : null,
-      allSupertypes: element.allSupertypes.map((e) => context.getTypeRef(e) as InterfaceTypeRefSerializer).toList(),
+          element.supertype != null
+              ? context.getTypeRef<InterfaceTypeRefSerializer>(element.supertype!)
+              : null,
+      allSupertypes:
+          element.allSupertypes.map(context.getTypeRef<InterfaceTypeRefSerializer>).toList(),
     );
   }
 
-  factory MixinElementSerializer.fromJson(Map<String, dynamic> json) => _$MixinElementSerializerFromJson(json);
+  factory MixinElementSerializer.fromJson(Map<String, dynamic> json) =>
+      _$MixinElementSerializerFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$MixinElementSerializerToJson(this);
 }
@@ -311,27 +330,35 @@ class EnumElementSerializer extends InterfaceElementSerializer implements EnumEl
       source: context.getPath(element.source)!,
       isPrivate: element.isPrivate,
       isPublic: element.isPublic,
-      fields: element.fields.map((e) => FieldElementSerializer.from(e, context)).toList(),
-      methods: element.methods.map((e) => MethodElementSerializer.from(e, context)).toList(),
-      typeParameters: element.typeParameters.map((e) => TypeParameterElementSerializer.from(e, context)).toList(),
+      fields: element.fields.mapWithContext(context, FieldElementSerializer.from),
+      methods: element.methods.mapWithContext(context, MethodElementSerializer.from),
+      typeParameters: element.typeParameters.mapWithContext(
+        context,
+        TypeParameterElementSerializer.from,
+      ),
       isSimplyBounded: element.isSimplyBounded,
-      constructors: element.constructors.map((e) => ConstructorElementSerializer.from(e, context)).toList(),
-      interfaces: element.interfaces.map((e) => context.getTypeRef(e) as InterfaceTypeRefSerializer).toList(),
-      mixins: element.mixins.map((e) => context.getTypeRef(e) as InterfaceTypeRefSerializer).toList(),
+      constructors: element.constructors.mapWithContext(context, ConstructorElementSerializer.from),
+      interfaces: element.interfaces.map(context.getTypeRef<InterfaceTypeRefSerializer>).toList(),
+      mixins: element.mixins.map(context.getTypeRef<InterfaceTypeRefSerializer>).toList(),
       supertype:
-          element.supertype != null ? context.getTypeRef(element.supertype!) as InterfaceTypeRefSerializer : null,
-      allSupertypes: element.allSupertypes.map((e) => context.getTypeRef(e) as InterfaceTypeRefSerializer).toList(),
+          element.supertype != null
+              ? context.getTypeRef<InterfaceTypeRefSerializer>(element.supertype!)
+              : null,
+      allSupertypes:
+          element.allSupertypes.map(context.getTypeRef<InterfaceTypeRefSerializer>).toList(),
     );
   }
 
-  factory EnumElementSerializer.fromJson(Map<String, dynamic> json) => _$EnumElementSerializerFromJson(json);
+  factory EnumElementSerializer.fromJson(Map<String, dynamic> json) =>
+      _$EnumElementSerializerFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$EnumElementSerializerToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
-class ExtensionTypeElementSerializer extends InterfaceElementSerializer implements ExtensionTypeElementMetadata {
+class ExtensionTypeElementSerializer extends InterfaceElementSerializer
+    implements ExtensionTypeElementMetadata {
   @override
   final ConstructorElementSerializer primaryConstructor;
 
@@ -362,27 +389,36 @@ class ExtensionTypeElementSerializer extends InterfaceElementSerializer implemen
     required super.allSupertypes,
   }) : super(jsonType: ElementJsonType.extensionTypeElement);
 
-  factory ExtensionTypeElementSerializer.from(ExtensionTypeElement element, AnalyzerContext context) {
+  factory ExtensionTypeElementSerializer.from(
+    ExtensionTypeElement element,
+    AnalyzerContext context,
+  ) {
     return ExtensionTypeElementSerializer(
       primaryConstructor: ConstructorElementSerializer.from(element.primaryConstructor, context),
       representation: FieldElementSerializer.from(element.representation, context),
-      typeErasure: context.getTypeRef(element.typeErasure) as DartTypeRefSerializer,
+      typeErasure: context.getTypeRef(element.typeErasure),
       context: context,
       ref: context.getElementRef(element).ref,
       name: element.name,
       source: context.getPath(element.source)!,
       isPrivate: element.isPrivate,
       isPublic: element.isPublic,
-      fields: element.fields.map((e) => FieldElementSerializer.from(e, context)).toList(),
-      methods: element.methods.map((e) => MethodElementSerializer.from(e, context)).toList(),
-      typeParameters: element.typeParameters.map((e) => TypeParameterElementSerializer.from(e, context)).toList(),
+      fields: element.fields.mapWithContext(context, FieldElementSerializer.from),
+      methods: element.methods.mapWithContext(context, MethodElementSerializer.from),
+      typeParameters: element.typeParameters.mapWithContext(
+        context,
+        TypeParameterElementSerializer.from,
+      ),
       isSimplyBounded: element.isSimplyBounded,
-      constructors: element.constructors.map((e) => ConstructorElementSerializer.from(e, context)).toList(),
-      interfaces: element.interfaces.map((e) => context.getTypeRef(e) as InterfaceTypeRefSerializer).toList(),
-      mixins: element.mixins.map((e) => context.getTypeRef(e) as InterfaceTypeRefSerializer).toList(),
+      constructors: element.constructors.mapWithContext(context, ConstructorElementSerializer.from),
+      interfaces: element.interfaces.map(context.getTypeRef<InterfaceTypeRefSerializer>).toList(),
+      mixins: element.mixins.map(context.getTypeRef<InterfaceTypeRefSerializer>).toList(),
       supertype:
-          element.supertype != null ? context.getTypeRef(element.supertype!) as InterfaceTypeRefSerializer : null,
-      allSupertypes: element.allSupertypes.map((e) => context.getTypeRef(e) as InterfaceTypeRefSerializer).toList(),
+          element.supertype != null
+              ? context.getTypeRef<InterfaceTypeRefSerializer>(element.supertype!)
+              : null,
+      allSupertypes:
+          element.allSupertypes.map(context.getTypeRef<InterfaceTypeRefSerializer>).toList(),
     );
   }
 
@@ -438,12 +474,16 @@ class TypeAliasElementSerializer with SourceSerializer<String> implements TypeAl
       isPrivate: element.isPrivate,
       isPublic: element.isPublic,
       isSimplyBounded: element.isSimplyBounded,
-      typeParameters: element.typeParameters.map((e) => TypeParameterElementSerializer.from(e, context)).toList(),
-      aliasedType: context.getTypeRef(element.aliasedType) as DartTypeRefSerializer,
+      typeParameters: element.typeParameters.mapWithContext(
+        context,
+        TypeParameterElementSerializer.from,
+      ),
+      aliasedType: context.getTypeRef(element.aliasedType),
     );
   }
 
-  factory TypeAliasElementSerializer.fromJson(Map<String, dynamic> json) => _$TypeAliasElementSerializerFromJson(json);
+  factory TypeAliasElementSerializer.fromJson(Map<String, dynamic> json) =>
+      _$TypeAliasElementSerializerFromJson(json);
   Map<String, dynamic> toJson() => _$TypeAliasElementSerializerToJson(this);
 }
 
@@ -537,8 +577,11 @@ class ConstructorElementSerializer implements ConstructorElementMetadata {
       isConstantEvaluated: element.isConstantEvaluated,
       isSimplyBounded: element.isSimplyBounded,
       type: FunctionTypeRefSerializer.from(element.type, context),
-      typeParameters: element.typeParameters.map((e) => TypeParameterElementSerializer.from(e, context)).toList(),
-      parameters: element.parameters.map((e) => ParameterElementSerializer.from(e, context)).toList(),
+      typeParameters: element.typeParameters.mapWithContext(
+        context,
+        TypeParameterElementSerializer.from,
+      ),
+      parameters: element.parameters.mapWithContext(context, ParameterElementSerializer.from),
       returnType: InterfaceTypeRefSerializer.from(element.returnType, context),
       hasImplicitReturnType: element.hasImplicitReturnType,
       isAbstract: element.isAbstract,
@@ -653,10 +696,16 @@ class FieldElementSerializer with SourceSerializer<String?> implements FieldElem
       isConst: element.isConst,
       isFinal: element.isFinal,
       isLate: element.isLate,
-      type: context.getTypeRef(element.type) as DartTypeRefSerializer,
+      type: context.getTypeRef(element.type),
       hasInitializer: element.hasInitializer,
-      getter: element.getter != null ? PropertyAccessorElementSerializer.from(element.getter!, context) : null,
-      setter: element.setter != null ? PropertyAccessorElementSerializer.from(element.setter!, context) : null,
+      getter:
+          element.getter != null
+              ? PropertyAccessorElementSerializer.from(element.getter!, context)
+              : null,
+      setter:
+          element.setter != null
+              ? PropertyAccessorElementSerializer.from(element.setter!, context)
+              : null,
       isAbstract: element.isAbstract,
       isCovariant: element.isCovariant,
       isEnumConstant: element.isEnumConstant,
@@ -665,7 +714,8 @@ class FieldElementSerializer with SourceSerializer<String?> implements FieldElem
     );
   }
 
-  factory FieldElementSerializer.fromJson(Map<String, dynamic> json) => _$FieldElementSerializerFromJson(json);
+  factory FieldElementSerializer.fromJson(Map<String, dynamic> json) =>
+      _$FieldElementSerializerFromJson(json);
   Map<String, dynamic> toJson() => _$FieldElementSerializerToJson(this);
 }
 
@@ -746,9 +796,12 @@ class MethodElementSerializer with SourceSerializer<String> implements MethodEle
       isPublic: element.isPublic,
       isStatic: element.isStatic,
       isSimplyBounded: element.isSimplyBounded,
-      typeParameters: element.typeParameters.map((e) => TypeParameterElementSerializer.from(e, context)).toList(),
-      parameters: element.parameters.map((e) => ParameterElementSerializer.from(e, context)).toList(),
-      returnType: context.getTypeRef(element.returnType) as DartTypeRefSerializer,
+      typeParameters: element.typeParameters.mapWithContext(
+        context,
+        TypeParameterElementSerializer.from,
+      ),
+      parameters: element.parameters.mapWithContext(context, ParameterElementSerializer.from),
+      returnType: context.getTypeRef(element.returnType),
       type: FunctionTypeRefSerializer.from(element.type, context),
       hasImplicitReturnType: element.hasImplicitReturnType,
       isAbstract: element.isAbstract,
@@ -761,12 +814,15 @@ class MethodElementSerializer with SourceSerializer<String> implements MethodEle
     );
   }
 
-  factory MethodElementSerializer.fromJson(Map<String, dynamic> json) => _$MethodElementSerializerFromJson(json);
+  factory MethodElementSerializer.fromJson(Map<String, dynamic> json) =>
+      _$MethodElementSerializerFromJson(json);
   Map<String, dynamic> toJson() => _$MethodElementSerializerToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
-class TopLevelVariableElementSerializer with SourceSerializer<String?> implements TopLevelVariableElementMetadata {
+class TopLevelVariableElementSerializer
+    with SourceSerializer<String?>
+    implements TopLevelVariableElementMetadata {
   @override
   @JsonKey(includeToJson: false, includeFromJson: false)
   AnalyzerContext? context;
@@ -827,7 +883,10 @@ class TopLevelVariableElementSerializer with SourceSerializer<String?> implement
     this.source = source;
   }
 
-  factory TopLevelVariableElementSerializer.from(TopLevelVariableElement element, AnalyzerContext context) {
+  factory TopLevelVariableElementSerializer.from(
+    TopLevelVariableElement element,
+    AnalyzerContext context,
+  ) {
     return TopLevelVariableElementSerializer(
       context: context,
       name: element.name,
@@ -840,10 +899,16 @@ class TopLevelVariableElementSerializer with SourceSerializer<String?> implement
       isConst: element.isConst,
       isFinal: element.isFinal,
       isLate: element.isLate,
-      type: context.getTypeRef(element.type) as DartTypeRefSerializer,
+      type: context.getTypeRef(element.type),
       hasInitializer: element.hasInitializer,
-      getter: element.getter != null ? PropertyAccessorElementSerializer.from(element.getter!, context) : null,
-      setter: element.setter != null ? PropertyAccessorElementSerializer.from(element.setter!, context) : null,
+      getter:
+          element.getter != null
+              ? PropertyAccessorElementSerializer.from(element.getter!, context)
+              : null,
+      setter:
+          element.setter != null
+              ? PropertyAccessorElementSerializer.from(element.setter!, context)
+              : null,
       isExternal: element.isExternal,
     );
   }
@@ -936,9 +1001,12 @@ class FunctionElementSerializer with SourceSerializer<String> implements Functio
       isPublic: element.isPublic,
       isStatic: element.isStatic,
       isSimplyBounded: element.isSimplyBounded,
-      typeParameters: element.typeParameters.map((e) => TypeParameterElementSerializer.from(e, context)).toList(),
-      parameters: element.parameters.map((e) => ParameterElementSerializer.from(e, context)).toList(),
-      returnType: context.getTypeRef(element.returnType) as DartTypeRefSerializer,
+      typeParameters: element.typeParameters.mapWithContext(
+        context,
+        TypeParameterElementSerializer.from,
+      ),
+      parameters: element.parameters.mapWithContext(context, ParameterElementSerializer.from),
+      returnType: context.getTypeRef(element.returnType),
       type: FunctionTypeRefSerializer.from(element.type, context),
       hasImplicitReturnType: element.hasImplicitReturnType,
       isAbstract: element.isAbstract,
@@ -951,12 +1019,15 @@ class FunctionElementSerializer with SourceSerializer<String> implements Functio
     );
   }
 
-  factory FunctionElementSerializer.fromJson(Map<String, dynamic> json) => _$FunctionElementSerializerFromJson(json);
+  factory FunctionElementSerializer.fromJson(Map<String, dynamic> json) =>
+      _$FunctionElementSerializerFromJson(json);
   Map<String, dynamic> toJson() => _$FunctionElementSerializerToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
-class TypeParameterElementSerializer with SourceSerializer<String?> implements TypeParameterElementMetadata {
+class TypeParameterElementSerializer
+    with SourceSerializer<String?>
+    implements TypeParameterElementMetadata {
   @override
   @JsonKey(includeToJson: false, includeFromJson: false)
   AnalyzerContext? context;
@@ -981,14 +1052,17 @@ class TypeParameterElementSerializer with SourceSerializer<String?> implements T
     this.source = source;
   }
 
-  factory TypeParameterElementSerializer.from(TypeParameterElement element, AnalyzerContext context) {
+  factory TypeParameterElementSerializer.from(
+    TypeParameterElement element,
+    AnalyzerContext context,
+  ) {
     return TypeParameterElementSerializer(
       context: context,
       name: element.name,
       source: context.getPath(element.source),
       isPrivate: element.isPrivate,
       isPublic: element.isPublic,
-      bound: element.bound != null ? context.getTypeRef(element.bound!) as DartTypeRefSerializer : null,
+      bound: element.bound != null ? context.getTypeRef(element.bound!) : null,
     );
   }
 
@@ -1085,10 +1159,6 @@ class ParameterElementSerializer implements ParameterElementMetadata {
   });
 
   factory ParameterElementSerializer.from(ParameterElement element, AnalyzerContext context) {
-    if (context.getPath(element.source) == 'lib/src/material/button.dart' && element.name == 'onHighlightChanged') {
-      final type = FunctionTypeSerializer.from(element.type as FunctionType, context);
-      print('${element.name}: $type');
-    }
     InitializerSerializer? initializer;
     if (element is DefaultFieldFormalParameterElementImpl && element.constantInitializer != null) {
       initializer = InitializerSerializer.from(element.constantInitializer!, context);
@@ -1103,7 +1173,7 @@ class ParameterElementSerializer implements ParameterElementMetadata {
       isFinal: element.isFinal,
       isLate: element.isLate,
       isStatic: element.isStatic,
-      type: context.getTypeRef(element.type) as DartTypeRefSerializer,
+      type: context.getTypeRef(element.type),
       hasDefaultValue: element.hasDefaultValue,
       isCovariant: element.isCovariant,
       isInitializingFormal: element.isInitializingFormal,
@@ -1116,19 +1186,25 @@ class ParameterElementSerializer implements ParameterElementMetadata {
       isRequiredNamed: element.isRequiredNamed,
       isRequiredPositional: element.isRequiredPositional,
       isSuperFormal: element.isSuperFormal,
-      parameters: element.parameters.map((e) => ParameterElementSerializer.from(e, context)).toList(),
-      typeParameters: element.typeParameters.map((e) => TypeParameterElementSerializer.from(e, context)).toList(),
+      parameters: element.parameters.mapWithContext(context, ParameterElementSerializer.from),
+      typeParameters: element.typeParameters.mapWithContext(
+        context,
+        TypeParameterElementSerializer.from,
+      ),
       defaultValueCode: element.defaultValueCode,
       initializer: initializer,
     );
   }
 
-  factory ParameterElementSerializer.fromJson(Map<String, dynamic> json) => _$ParameterElementSerializerFromJson(json);
+  factory ParameterElementSerializer.fromJson(Map<String, dynamic> json) =>
+      _$ParameterElementSerializerFromJson(json);
   Map<String, dynamic> toJson() => _$ParameterElementSerializerToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
-class PropertyAccessorElementSerializer with SourceSerializer<String> implements PropertyAccessorElementMetadata {
+class PropertyAccessorElementSerializer
+    with SourceSerializer<String>
+    implements PropertyAccessorElementMetadata {
   @override
   @JsonKey(includeToJson: false, includeFromJson: false)
   AnalyzerContext? context;
@@ -1201,7 +1277,10 @@ class PropertyAccessorElementSerializer with SourceSerializer<String> implements
     this.source = source;
   }
 
-  factory PropertyAccessorElementSerializer.from(PropertyAccessorElement element, AnalyzerContext context) {
+  factory PropertyAccessorElementSerializer.from(
+    PropertyAccessorElement element,
+    AnalyzerContext context,
+  ) {
     return PropertyAccessorElementSerializer(
       context: context,
       name: element.name,
@@ -1210,9 +1289,12 @@ class PropertyAccessorElementSerializer with SourceSerializer<String> implements
       isPublic: element.isPublic,
       isStatic: element.isStatic,
       isSimplyBounded: element.isSimplyBounded,
-      typeParameters: element.typeParameters.map((e) => TypeParameterElementSerializer.from(e, context)).toList(),
-      parameters: element.parameters.map((e) => ParameterElementSerializer.from(e, context)).toList(),
-      returnType: context.getTypeRef(element.returnType) as DartTypeRefSerializer,
+      typeParameters: element.typeParameters.mapWithContext(
+        context,
+        TypeParameterElementSerializer.from,
+      ),
+      parameters: element.parameters.mapWithContext(context, ParameterElementSerializer.from),
+      returnType: context.getTypeRef(element.returnType),
       type: FunctionTypeRefSerializer.from(element.type, context),
       hasImplicitReturnType: element.hasImplicitReturnType,
       isAbstract: element.isAbstract,
@@ -1242,10 +1324,13 @@ class InstantiatedTypeAliasElementSerializer implements InstantiatedTypeAliasEle
 
   InstantiatedTypeAliasElementSerializer({required this.element, required this.typeArguments});
 
-  factory InstantiatedTypeAliasElementSerializer.from(InstantiatedTypeAliasElement element, AnalyzerContext context) {
+  factory InstantiatedTypeAliasElementSerializer.from(
+    InstantiatedTypeAliasElement element,
+    AnalyzerContext context,
+  ) {
     return InstantiatedTypeAliasElementSerializer(
       element: context.getTypeAliasRef(element.element),
-      typeArguments: element.typeArguments.map((e) => context.getTypeRef(e) as DartTypeRefSerializer).toList(),
+      typeArguments: element.typeArguments.map(context.getTypeRef).toList(),
     );
   }
 

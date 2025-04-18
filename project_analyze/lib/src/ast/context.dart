@@ -2,9 +2,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/source/source.dart';
 import 'package:path/path.dart' as path;
-import 'package:project_analyze/src/extensions/extensions.dart';
 
-import '../utils/json_utils.dart';
 import 'analyzer.dart';
 
 class AnalyzerContext {
@@ -21,7 +19,9 @@ class AnalyzerContext {
     : sdkPath = path.relative(sdkPath, from: projectPath);
 
   String get currentFilePath =>
-      _currentFilePath.isEmpty ? throw ArgumentError('currentFilePath cannot be empty') : _currentFilePath;
+      _currentFilePath.isEmpty
+          ? throw ArgumentError('currentFilePath cannot be empty')
+          : _currentFilePath;
 
   set currentFilePath(String value) {
     if (value.isEmpty) {
@@ -41,7 +41,8 @@ class AnalyzerContext {
     String? source;
     // if in project => hashCode
     // if in library => cache and return hashCode
-    if (element.source.uri.scheme == 'package' && path.split(element.source.uri.path).first == projectName) {
+    if (element.source.uri.scheme == 'package' &&
+        path.split(element.source.uri.path).first == projectName) {
       jsonType = RefJsonType.internalElement;
       source = getPath(element.source);
     } else {
@@ -53,13 +54,18 @@ class AnalyzerContext {
         elementRef[ref] = fullSerializer;
       }
     }
-    return InterfaceElementRefSerializer(ref: '#$ref', jsonType: jsonType, name: element.name, path: source);
+    return InterfaceElementRefSerializer(
+      ref: '#$ref',
+      jsonType: jsonType,
+      name: element.name,
+      path: source,
+    );
   }
 
-  ReferenceableSerializer getTypeRef(DartType type) {
-    if (type.getDisplayString(withNullability: false).startsWith('void Function(')) {
-      print('${type.getDisplayString(withNullability: false)}: ${type.hashCode}');
-    }
+  R getTypeRef<R extends DartTypeRefSerializer>(DartType type) {
+    // if (type.getDisplayString(withNullability: false).startsWith('void Function(')) {
+    //   print('${type.getDisplayString(withNullability: false)}: ${type.hashCode}');
+    // }
     final ref = type.hashCode;
     final key = '#$ref';
     if (!typeRef.containsKey(ref)) {
@@ -76,24 +82,11 @@ class AnalyzerContext {
       typeRef[ref] = fullSerializer;
     }
     return switch (type) {
-      FunctionType() => FunctionTypeRefSerializer(
-        ref: key,
-        nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
-      ),
-      InterfaceType() => InterfaceTypeRefSerializer(
-        ref: key,
-        nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
-        typeArguments: type.typeArguments.map((e) => getTypeRef(e) as DartTypeRefSerializer).toList(),
-      ),
-      _ => DartTypeRefSerializer(
-        alias: type.alias != null ? InstantiatedTypeAliasElementSerializer.from(type.alias!, this) : null,
-        ref: key,
-        // ignore: deprecated_member_use
-        name: type.getDisplayString(withNullability: false),
-        isDartCore: type.isDartCore,
-        nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
-      ),
-    };
+          FunctionType() => FunctionTypeRefSerializer.from(type, this, ref: key),
+          InterfaceType() => InterfaceTypeRefSerializer.from(type, this, ref: key),
+          _ => DartTypeRefSerializer.from(type, this, ref: key),
+        }
+        as R;
   }
 
   TypeAliasElementRefSerializer getTypeAliasRef(TypeAliasElement element) {
@@ -109,7 +102,8 @@ class AnalyzerContext {
       jsonType: RefJsonType.alias,
       name: element.name,
       path: source,
-      typeParameters: element.typeParameters.map((e) => TypeParameterElementSerializer.from(e, this)).toList(),
+      typeParameters:
+          element.typeParameters.map((e) => TypeParameterElementSerializer.from(e, this)).toList(),
     );
   }
 }
