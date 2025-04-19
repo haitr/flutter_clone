@@ -3,10 +3,14 @@ part of 'analyzer.dart';
 enum RefJsonType {
   @JsonValue('__element_ref__')
   element,
-  @JsonValue('__type_ref__')
-  type,
   @JsonValue('__internal_element_ref__')
   internalElement,
+  @JsonValue('__type_ref__')
+  type,
+  @JsonValue('__interface_type_ref__')
+  interfaceType,
+  @JsonValue('__function_type_ref__')
+  functionType,
   @JsonValue('__alias_ref__')
   alias,
   // internal use only
@@ -88,6 +92,65 @@ class InterfaceElementRefSerializer
   String get source => throw UnimplementedError();
 }
 
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
+class TypeAliasElementRefSerializer
+    with ReferenceableSerializer
+    implements TypeAliasElementMetadata {
+  final String? path;
+
+  @override
+  final RefJsonType jsonType;
+
+  @override
+  final String name;
+
+  @override
+  final String ref;
+
+  @override
+  final List<TypeParameterElementSerializer> typeParameters;
+
+  TypeAliasElementRefSerializer({
+    this.path,
+    required this.jsonType,
+    required this.name,
+    required this.ref,
+    required this.typeParameters,
+  });
+
+  factory TypeAliasElementRefSerializer.from(TypeAliasElement element, AnalyzerContext context) =>
+      TypeAliasElementRefSerializer(
+        path: context.getPath(element.source),
+        jsonType: RefJsonType.alias,
+        name: element.name,
+        ref: context.getTypeAliasRef(element).ref,
+        typeParameters: element.typeParameters.mapWithContext(
+          context,
+          TypeParameterElementSerializer.from,
+        ),
+      );
+
+  factory TypeAliasElementRefSerializer.fromJson(Map<String, dynamic> json) =>
+      _$TypeAliasElementRefSerializerFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TypeAliasElementRefSerializerToJson(this);
+
+  @override
+  bool get isPrivate => throw UnimplementedError();
+
+  @override
+  bool get isPublic => throw UnimplementedError();
+
+  @override
+  bool get isSimplyBounded => throw UnimplementedError();
+
+  @override
+  String get source => throw UnimplementedError();
+
+  @override
+  DartTypeMetadata get aliasedType => throw UnimplementedError();
+}
+
 /// Note: in analyzer 7.3.0,
 /// [DartType]s with different nullability suffixes are same hash code.
 /// So we need to explicitly specify the nullability suffix in the serializer.
@@ -97,7 +160,8 @@ class DartTypeRefSerializer with ReferenceableSerializer implements DartTypeMeta
   final InstantiatedTypeAliasElementSerializer? alias;
 
   @override
-  final RefJsonType jsonType;
+  @JsonKey(name: _jsonTypeField, includeToJson: true)
+  RefJsonType get jsonType => RefJsonType.type;
 
   @override
   final String ref;
@@ -117,7 +181,7 @@ class DartTypeRefSerializer with ReferenceableSerializer implements DartTypeMeta
     required this.name,
     required this.isDartCore,
     this.alias,
-  }) : jsonType = RefJsonType.type;
+  });
 
   factory DartTypeRefSerializer.from(DartType type, AnalyzerContext context, {String? ref}) =>
       DartTypeRefSerializer(
@@ -132,8 +196,15 @@ class DartTypeRefSerializer with ReferenceableSerializer implements DartTypeMeta
                 : null,
       );
 
-  factory DartTypeRefSerializer.fromJson(Map<String, dynamic> json) =>
-      _$DartTypeRefSerializerFromJson(json);
+  factory DartTypeRefSerializer.fromJson(Map<String, dynamic> json) {
+    final type =
+        _$RefJsonTypeEnumMap.entries.firstWhere((e) => e.value == json[_jsonTypeField]).key;
+    return switch (type) {
+      RefJsonType.interfaceType => _$InterfaceTypeRefSerializerFromJson(json),
+      RefJsonType.functionType => _$FunctionTypeRefSerializerFromJson(json),
+      _ => _$DartTypeRefSerializerFromJson(json),
+    };
+  }
 
   Map<String, dynamic> toJson() => _$DartTypeRefSerializerToJson(this);
 
@@ -151,6 +222,9 @@ class DartTypeRefSerializer with ReferenceableSerializer implements DartTypeMeta
 class InterfaceTypeRefSerializer extends DartTypeRefSerializer
     with ReferenceableSerializer
     implements InterfaceTypeMetadata {
+  @override
+  RefJsonType get jsonType => RefJsonType.interfaceType;
+
   @override
   final List<DartTypeRefSerializer> typeArguments;
 
@@ -194,6 +268,9 @@ class InterfaceTypeRefSerializer extends DartTypeRefSerializer
 class FunctionTypeRefSerializer extends DartTypeRefSerializer
     with ReferenceableSerializer
     implements FunctionTypeMetadata {
+  @override
+  RefJsonType get jsonType => RefJsonType.functionType;
+
   @override
   final Map<String, DartTypeRefSerializer> namedParameterTypes;
   @override
@@ -258,63 +335,4 @@ class FunctionTypeRefSerializer extends DartTypeRefSerializer
   String toString() {
     return '(function)$ref: $name|$nullabilitySuffix';
   }
-}
-
-@JsonSerializable(explicitToJson: true, includeIfNull: false)
-class TypeAliasElementRefSerializer
-    with ReferenceableSerializer
-    implements TypeAliasElementMetadata {
-  final String? path;
-
-  @override
-  final RefJsonType jsonType;
-
-  @override
-  final String name;
-
-  @override
-  final String ref;
-
-  @override
-  final List<TypeParameterElementSerializer> typeParameters;
-
-  TypeAliasElementRefSerializer({
-    this.path,
-    required this.jsonType,
-    required this.name,
-    required this.ref,
-    required this.typeParameters,
-  });
-
-  factory TypeAliasElementRefSerializer.from(TypeAliasElement element, AnalyzerContext context) =>
-      TypeAliasElementRefSerializer(
-        path: context.getPath(element.source),
-        jsonType: RefJsonType.alias,
-        name: element.name,
-        ref: context.getTypeAliasRef(element).ref,
-        typeParameters: element.typeParameters.mapWithContext(
-          context,
-          TypeParameterElementSerializer.from,
-        ),
-      );
-
-  factory TypeAliasElementRefSerializer.fromJson(Map<String, dynamic> json) =>
-      _$TypeAliasElementRefSerializerFromJson(json);
-
-  Map<String, dynamic> toJson() => _$TypeAliasElementRefSerializerToJson(this);
-
-  @override
-  bool get isPrivate => throw UnimplementedError();
-
-  @override
-  bool get isPublic => throw UnimplementedError();
-
-  @override
-  bool get isSimplyBounded => throw UnimplementedError();
-
-  @override
-  String get source => throw UnimplementedError();
-
-  @override
-  DartTypeMetadata get aliasedType => throw UnimplementedError();
 }

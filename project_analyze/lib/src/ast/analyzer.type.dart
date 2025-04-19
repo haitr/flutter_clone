@@ -229,7 +229,7 @@ class FunctionTypeSerializer extends DartTypeSerializer implements FunctionTypeM
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
 class InterfaceTypeSerializer extends DartTypeSerializer implements InterfaceTypeMetadata {
   @override
-  final List<DartTypeSerializer> typeArguments;
+  final List<DartTypeRefSerializer> typeArguments;
   @override
   final InterfaceElementRefSerializer element;
 
@@ -267,7 +267,7 @@ class InterfaceTypeSerializer extends DartTypeSerializer implements InterfaceTyp
       source: context.getPath(type.element.source),
       nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
       isDartCore: type.isDartCore,
-      typeArguments: type.typeArguments.mapWithContext(context, DartTypeSerializer.from),
+      typeArguments: type.typeArguments.map(context.getTypeRef).toList(),
       element: context.getElementRef(type.element),
     );
   }
