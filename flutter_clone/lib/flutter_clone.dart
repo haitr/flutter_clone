@@ -230,7 +230,8 @@ void generateWrapper(
                         parameterBuilder.named = parameter.isNamed;
                         if (parameter.initializer case var initializer?) {
                           parameterBuilder.defaultTo = Code(
-                            getInitializerCode(
+                            _getInitializerCode(
+                              clazz,
                               initializer,
                               result,
                               (ref) => emitter.allocator.allocate(ref),
@@ -311,30 +312,36 @@ void generateWrapper(
   }
 }
 
-String getInitializerCode(
+String _getInitializerCode(
+  ClassElementSerializer clazz,
   InitializerSerializer initializer,
   AnalyzeResult result,
   String Function(Reference) scope,
 ) {
   switch (initializer) {
     case NamedExpressionInitializerSerializer():
-      return '${initializer.name}: ${getInitializerCode(initializer.value, result, scope)}';
+      return '${initializer.name}: ${_getInitializerCode(clazz, initializer.value, result, scope)}';
     case LiteralInitializerSerializer():
       return initializer.value;
     case PrefixExpressionInitializerSerializer():
       if (initializer.operand is BinaryExpressionInitializerSerializer) {
-        return '${initializer.operator}(${getInitializerCode(initializer.operand, result, scope)})';
+        return '${initializer.operator}(${_getInitializerCode(clazz, initializer.operand, result, scope)})';
       }
-      return '${initializer.operator}${getInitializerCode(initializer.operand, result, scope)}';
+      return '${initializer.operator}${_getInitializerCode(clazz, initializer.operand, result, scope)}';
     case PrefixedIdentifierInitializerSerializer():
       final target = initializer.prefixElement!;
       final element = result.fromElementRef(target)!;
       final name = scope(refer(target.name, _getImportPath(element)));
       return '$name.${initializer.identifier}';
     case SimpleIdentifierInitializerSerializer():
+      if (clazz.fields.any((e) => e.isStatic && e.name == initializer.identifier) ||
+          clazz.methods.any((e) => e.isStatic && e.name == initializer.identifier)) {
+        final name = scope(refer(clazz.name, _getImportPath(clazz)));
+        return '$name.${initializer.identifier}';
+      }
       return scope(refer(initializer.identifier, _getImportPath(initializer)));
     case BinaryExpressionInitializerSerializer():
-      return '${getInitializerCode(initializer.left, result, scope)} ${initializer.operator} ${getInitializerCode(initializer.right, result, scope)}';
+      return '${_getInitializerCode(clazz, initializer.left, result, scope)} ${initializer.operator} ${_getInitializerCode(clazz, initializer.right, result, scope)}';
     case InstanceCreationInitializerSerializer():
       final code = StringBuffer();
       if (initializer.isConst) code.write('const ');
@@ -345,28 +352,36 @@ String getInitializerCode(
       code.write(scope(refer(type!.name!, _getImportPath(type))));
       if (initializer.constructorName != null) code.write('.${initializer.constructorName}');
       code.write('(');
-      code.write(initializer.arguments.map((e) => getInitializerCode(e, result, scope)).join(', '));
+      code.write(
+        initializer.arguments.map((e) => _getInitializerCode(clazz, e, result, scope)).join(', '),
+      );
       code.write(')');
       return code.toString();
     case ListLiteralInitializerSerializer():
       final code = StringBuffer();
       if (initializer.isConst) code.write('const ');
       code.write('[');
-      code.write(initializer.elements.map((e) => getInitializerCode(e, result, scope)).join(', '));
+      code.write(
+        initializer.elements.map((e) => _getInitializerCode(clazz, e, result, scope)).join(', '),
+      );
       code.write(']');
       return code.toString();
     case SetLiteralInitializerSerializer():
       final code = StringBuffer();
       if (initializer.isConst) code.write('const ');
       code.write('{');
-      code.write(initializer.elements.map((e) => getInitializerCode(e, result, scope)).join(', '));
+      code.write(
+        initializer.elements.map((e) => _getInitializerCode(clazz, e, result, scope)).join(', '),
+      );
       code.write('}');
       return code.toString();
     case MapLiteralInitializerSerializer():
       final code = StringBuffer();
       if (initializer.isConst) code.write('const ');
       code.write('{');
-      code.write(initializer.elements.map((e) => getInitializerCode(e, result, scope)).join(', '));
+      code.write(
+        initializer.elements.map((e) => _getInitializerCode(clazz, e, result, scope)).join(', '),
+      );
       code.write('}');
       return code.toString();
     default:
