@@ -170,7 +170,7 @@ class DartTypeRefSerializer with ReferenceableSerializer implements DartTypeMeta
   final bool isDartCore;
 
   @override
-  final String name;
+  final String? name;
 
   @override
   final String? nullabilitySuffix;
@@ -188,7 +188,7 @@ class DartTypeRefSerializer with ReferenceableSerializer implements DartTypeMeta
         ref: ref ?? context.getTypeRef(type).ref,
         nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
         // ignore: deprecated_member_use
-        name: type.getDisplayString(withNullability: false),
+        name: type.name,
         isDartCore: type.isDartCore,
         alias:
             type.alias != null
@@ -248,7 +248,7 @@ class InterfaceTypeRefSerializer extends DartTypeRefSerializer
     ref: ref ?? context.getTypeRef(type).ref,
     nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
     // ignore: deprecated_member_use
-    name: type.getDisplayString(withNullability: false),
+    name: type.name!,
     isDartCore: type.isDartCore,
     alias:
         type.alias != null

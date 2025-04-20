@@ -35,7 +35,8 @@
             "type": "dart",
             "args": [
                 "--output=../flutter_example/generated",
-                "--widget=RawMaterialButton",
+                // "--widget=*Button",
+                "--widget=DropdownButton",
             ],
         },
         {

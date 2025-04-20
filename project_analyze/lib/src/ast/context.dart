@@ -63,12 +63,11 @@ class AnalyzerContext {
   }
 
   R getTypeRef<R extends DartTypeRefSerializer>(DartType type) {
-    // if (type.getDisplayString(withNullability: false).startsWith('void Function(')) {
-    //   print('${type.getDisplayString(withNullability: false)}: ${type.hashCode}');
-    // }
     final ref = type.hashCode;
     final key = '#$ref';
-    if (!typeRef.containsKey(ref)) {
+
+    // FunctionType is not cached due to weired behavior
+    if (type is! FunctionType && !typeRef.containsKey(ref)) {
       // Create a placeholder serializer first
       final placeholder = DartTypeSerializer.placeholder();
 

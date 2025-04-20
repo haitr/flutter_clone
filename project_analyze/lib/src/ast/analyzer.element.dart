@@ -1159,9 +1159,12 @@ class ParameterElementSerializer implements ParameterElementMetadata {
   });
 
   factory ParameterElementSerializer.from(ParameterElement element, AnalyzerContext context) {
+    // if (element.name == 'autofocus') {
+    //   print(element.type);
+    // }
     InitializerSerializer? initializer;
-    if (element is DefaultFieldFormalParameterElementImpl && element.constantInitializer != null) {
-      initializer = InitializerSerializer.from(element.constantInitializer!, context);
+    if (element case ConstVariableElement e when e.constantInitializer != null) {
+      initializer = InitializerSerializer.from(e.constantInitializer!, context);
     }
     return ParameterElementSerializer(
       name: element.name,

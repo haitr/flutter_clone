@@ -54,6 +54,8 @@ void process(FileSystem fileSystem, AnalyzeResult result, String pattern) {
             !e.name.startsWith('_') &&
             // match the pattern
             glob.matches(e.name) &&
+            // ignore abstract classes or abstract classes with no factory constructor
+            (!e.isAbstract || (e.isAbstract && e.constructors.any((c) => c.isFactory))) &&
             // implement Widget
             e.allSupertypes
                 .map((e) => result.fromTypeRef(e, e.nullabilitySuffix))
@@ -105,7 +107,6 @@ String? _getImportPath(SourceSerializer element) {
 // DartTypeRefSerializer -> InterfaceTypeRefSerializer -> FunctionTypeRefSerializer
 Reference _buildTypeReference(AnalyzeResult result, DartTypeRefSerializer typeRef) {
   final suffix = typeRef.nullabilitySuffix;
-  final type = result.fromTypeRef(typeRef, suffix)!;
   // if alias type, build type reference from type alias
   if (typeRef.alias case var alias?) {
     final typeElement = result.fromTypeAliasRef(alias.element)!;
@@ -121,20 +122,31 @@ Reference _buildTypeReference(AnalyzeResult result, DartTypeRefSerializer typeRe
     return FunctionType((typeBuilder) {
       typeBuilder.isNullable = suffix == '?';
       typeBuilder.returnType = _buildTypeReference(result, typeRef.returnType);
-      typeBuilder.types.addAll(
-        typeRef.namedParameterTypes.values.map((e) => _buildTypeReference(result, e)),
-      );
-      typeBuilder.types.addAll(
+      typeBuilder.requiredParameters.addAll(
         typeRef.normalParameterTypes.map((e) => _buildTypeReference(result, e)),
+      );
+      typeBuilder.namedParameters.addAll(
+        typeRef.namedParameterTypes.map(
+          (key, value) => MapEntry(key, _buildTypeReference(result, value)),
+        ),
+      );
+      typeBuilder.optionalParameters.addAll(
+        typeRef.optionalParameterTypes.map((e) => _buildTypeReference(result, e)),
       );
     });
   }
+
   return TypeReference((typeBuilder) {
+    final type = result.fromTypeRef(typeRef, suffix)!;
     typeBuilder.symbol = type.name;
-    typeBuilder.isNullable = type.nullabilitySuffix == '?';
+    typeBuilder.isNullable = typeRef.nullabilitySuffix == '?';
     typeBuilder.url = type.isInSdk! ? null : _getImportPath(type);
     if (type is InterfaceTypeSerializer) {
-      typeBuilder.types.addAll(type.typeArguments.map((e) => _buildTypeReference(result, e)));
+      typeBuilder.types.addAll(
+        (typeRef as InterfaceTypeRefSerializer).typeArguments.map(
+          (e) => _buildTypeReference(result, e),
+        ),
+      );
     }
   });
 }
@@ -162,6 +174,17 @@ void generateWrapper(
         classBuilder.docs.add('/// See [$classRef]');
         // Add generated class name
         classBuilder.name = '\$${clazz.name}';
+        // add generic parameters
+        classBuilder.types.addAll(
+          clazz.typeParameters.map(
+            (e) => TypeReference((typeParameterBuilder) {
+              typeParameterBuilder.symbol = e.name;
+              if (e.bound case var bound?) {
+                typeParameterBuilder.bound = _buildTypeReference(result, bound);
+              }
+            }),
+          ),
+        );
         // extend from Wrapper
         classBuilder.extend = TypeReference((typeBuilder) {
           typeBuilder.symbol = 'Wrapper';
@@ -206,7 +229,6 @@ void generateWrapper(
                         parameterBuilder.required = parameter.isRequired;
                         parameterBuilder.named = parameter.isNamed;
                         if (parameter.initializer case var initializer?) {
-                          // parameterBuilder.defaultTo = Code(parameter.defaultValueCode!);
                           parameterBuilder.defaultTo = Code(
                             getInitializerCode(
                               initializer,
@@ -214,11 +236,6 @@ void generateWrapper(
                               (ref) => emitter.allocator.allocate(ref),
                             ),
                           );
-                        }
-                        if (parameter.name == 'onHighlightChanged') {
-                          final type =
-                              result.fromTypeRef(parameter.type, parameter.type.nullabilitySuffix)!;
-                          print(type);
                         }
                         parameterBuilder.type = _buildTypeReference(result, parameter.type);
                       }),
@@ -325,7 +342,7 @@ String getInitializerCode(
           initializer.type != null
               ? result.fromTypeRef(initializer.type!, initializer.type?.nullabilitySuffix)
               : null;
-      code.write(scope(refer(type!.name, _getImportPath(type))));
+      code.write(scope(refer(type!.name!, _getImportPath(type))));
       if (initializer.constructorName != null) code.write('.${initializer.constructorName}');
       code.write('(');
       code.write(initializer.arguments.map((e) => getInitializerCode(e, result, scope)).join(', '));

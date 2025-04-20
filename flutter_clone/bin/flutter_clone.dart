@@ -62,7 +62,9 @@ void main(List<String> arguments) async {
       await cloneFlutter(tempFs);
 
       // Retrieve Flutter version from the input directory
-      final flutterFs = WorkingDirectoryFileSystem(path.normalize(path.join(tempFs.currentDirectory.path, 'flutter')));
+      final flutterFs = WorkingDirectoryFileSystem(
+        path.normalize(path.join(tempFs.currentDirectory.path, 'flutter')),
+      );
 
       result = await _loadFromScratch(flutterFs);
 
@@ -119,4 +121,5 @@ Future<AnalyzeResult> _loadFromCache(File cacheFile) async => loadFromCache(cach
 ///
 /// Returns a List of [FileAnalyzeResult] objects containing the analysis results
 /// The results include class declarations and their analyzed structure
-Future<AnalyzeResult> _loadFromScratch(FileSystem input) => analyzeProjectWithSymbolResolution(input);
+Future<AnalyzeResult> _loadFromScratch(FileSystem input) =>
+    analyzeProjectWithSymbolResolution(input);

@@ -29,7 +29,7 @@ class DartTypeSerializer with SourceSerializer<String?> implements DartTypeMetad
   final AnalyzerContext? context;
 
   @override
-  final String name;
+  final String? name;
 
   /// why not final? See [DartTypeRefSerializer] note
   @override
@@ -84,11 +84,10 @@ class DartTypeSerializer with SourceSerializer<String?> implements DartTypeMetad
         return DartTypeSerializer(
           context: context,
           // ignore: deprecated_member_use
-          name: type.getDisplayString(withNullability: false),
+          name: type.name,
           source: context.getPath(type.element?.source),
           nullabilitySuffix: nullabilitySuffixToString(type.nullabilitySuffix),
           isDartCore: type.isDartCore,
-          // ignore: deprecated_member_use
           jsonType: TypeJsonType.$type,
         );
     }
@@ -259,7 +258,7 @@ class InterfaceTypeSerializer extends DartTypeSerializer implements InterfaceTyp
     return InterfaceTypeSerializer(
       context: context,
       // ignore: deprecated_member_use
-      name: type.getDisplayString(withNullability: false),
+      name: type.name,
       alias:
           type.alias != null
               ? InstantiatedTypeAliasElementSerializer.from(type.alias!, context)
