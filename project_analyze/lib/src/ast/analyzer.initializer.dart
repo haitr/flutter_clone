@@ -47,6 +47,10 @@ enum InitializerType {
   /// A parenthesized expression (e.g., (a + b)).
   @JsonValue('parenthesized')
   parenthesized,
+
+  /// A conditional expression (e.g., a ? b : c).
+  @JsonValue('conditional')
+  conditional,
 }
 
 @JsonSerializable(explicitToJson: true, converters: [BooleanConverter()], includeIfNull: false)
@@ -87,6 +91,8 @@ class InitializerSerializer {
         return PrefixedIdentifierInitializerSerializer.fromPropertyAccess(expression, context);
       case ParenthesizedExpression():
         return ParenthesizedInitializerSerializer.from(expression, context);
+      case ConditionalExpression():
+        return ConditionalInitializerSerializer.from(expression, context);
       // internal use only
       case NamedExpression():
         return NamedExpressionInitializerSerializer.from(expression, context);
@@ -120,6 +126,8 @@ class InitializerSerializer {
         return BinaryExpressionInitializerSerializer.fromJson(json);
       case InitializerType.parenthesized:
         return ParenthesizedInitializerSerializer.fromJson(json);
+      case InitializerType.conditional:
+        return ConditionalInitializerSerializer.fromJson(json);
       default:
         throw UnimplementedError('--- ${json[_jsonTypeField]}');
     }
@@ -243,7 +251,7 @@ final class SetLiteralInitializerSerializer extends InitializerSerializer {
 final class MapLiteralInitializerSerializer extends InitializerSerializer {
   final List<DartTypeRefSerializer>? typeArguments;
   final bool isConst;
-  final List<InitializerSerializer> elements;
+  final List<(InitializerSerializer, InitializerSerializer)> elements;
 
   MapLiteralInitializerSerializer({
     required this.typeArguments,
@@ -256,7 +264,11 @@ final class MapLiteralInitializerSerializer extends InitializerSerializer {
     final isConst = expression.isConst;
     final typeArguments =
         expression.typeArguments?.arguments.map((e) => e.type).nonNulls.map(context.getTypeRef).toList();
-    final elements = expression.elements.map((e) => InitializerSerializer.from(e as Expression, context)).toList();
+    final elements =
+        expression.elements
+            .whereType<MapLiteralEntry>()
+            .map((e) => (InitializerSerializer.from(e.key, context), InitializerSerializer.from(e.value, context)))
+            .toList();
     return MapLiteralInitializerSerializer(
       typeArguments: typeArguments,
       isConst: isConst,
@@ -462,6 +474,7 @@ final class PrefixedIdentifierInitializerSerializer extends InitializerSerialize
   Map<String, dynamic> toJson() => _$PrefixedIdentifierInitializerSerializerToJson(this);
 }
 
+// See [ParenthesizedExpression]
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 final class ParenthesizedInitializerSerializer extends InitializerSerializer {
   final InitializerSerializer initializer;
@@ -480,4 +493,34 @@ final class ParenthesizedInitializerSerializer extends InitializerSerializer {
 
   @override
   Map<String, dynamic> toJson() => _$ParenthesizedInitializerSerializerToJson(this);
+}
+
+// See [ConditionalExpression]
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
+final class ConditionalInitializerSerializer extends InitializerSerializer {
+  final InitializerSerializer condition;
+  final InitializerSerializer thenInitializer;
+  final InitializerSerializer? elseInitializer;
+
+  ConditionalInitializerSerializer({
+    required this.condition,
+    required this.thenInitializer,
+    this.elseInitializer,
+    required super.jsonType,
+  });
+
+  factory ConditionalInitializerSerializer.from(ConditionalExpression expression, AnalyzerContext context) {
+    return ConditionalInitializerSerializer(
+      condition: InitializerSerializer.from(expression.condition, context),
+      thenInitializer: InitializerSerializer.from(expression.thenExpression, context),
+      elseInitializer: InitializerSerializer.from(expression.elseExpression, context),
+      jsonType: InitializerType.conditional,
+    );
+  }
+
+  factory ConditionalInitializerSerializer.fromJson(Map<String, dynamic> json) =>
+      _$ConditionalInitializerSerializerFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$ConditionalInitializerSerializerToJson(this);
 }

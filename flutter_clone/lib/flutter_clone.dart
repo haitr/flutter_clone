@@ -361,7 +361,14 @@ String _getInitializerCode(
       final code = StringBuffer();
       if (initializer.isConst) code.write('const ');
       code.write('{');
-      code.write(initializer.elements.map((e) => _getInitializerCode(clazz, e, result, scope)).join(', '));
+      code.write(
+        initializer.elements
+            .map(
+              (e) =>
+                  '${_getInitializerCode(clazz, e.$1, result, scope)}: ${_getInitializerCode(clazz, e.$2, result, scope)}',
+            )
+            .join(', '),
+      );
       code.write('}');
       return code.toString();
     default:
