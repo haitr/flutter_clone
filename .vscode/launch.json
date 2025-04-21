@@ -24,7 +24,10 @@
             "args": [
                 "--input=../generated/flutter",
                 "--output=../generated",
-                "--filter=**/button.dart",
+                "--filter=**/interactive_viewer.dart",
+                // "--filter=**/container.dart",
+                // "--filter=**/tween_animation_builder.dart",
+                // "--filter=**/implicit_animations.dart",
             ],
         },
         {
@@ -36,7 +39,8 @@
             "args": [
                 "--output=../flutter_example/generated",
                 // "--widget=*Button",
-                "--widget=DropdownButton",
+                // "--widget=Container",
+                "--widget=InteractiveViewer",
             ],
         },
         {

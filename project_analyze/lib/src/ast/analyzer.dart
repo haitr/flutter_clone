@@ -6,7 +6,6 @@ import 'package:analyzer/src/dart/ast/ast.dart';
 import 'package:analyzer/src/dart/element/element.dart';
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:path/path.dart' as path;
 import 'package:project_analyze/src/ast/analyzer_map.dart';
 import 'package:project_analyze/src/extensions/extensions.dart';
 
@@ -24,38 +23,12 @@ const _thisRef = '#this';
 const _jsonTypeField = '_t_';
 
 mixin SourceSerializer<T extends String?> {
-  // @mustBeOverridden
-  AnalyzerContext? get context;
-
-  bool _isInSdk = false;
+  late T _source;
 
   @JsonKey(includeToJson: true, includeFromJson: true)
-  bool? get isInSdk => _isInSdk;
+  T get source => _source;
 
-  T? _source;
-  var _isSet = false;
-
-  @JsonKey(includeToJson: true, includeFromJson: true)
-  T get source => _isSet ? _source as T : throw UnimplementedError('source');
-
-  set isInSdk(bool? value) {
-    _isInSdk = value ?? false;
-  }
-
-  set source(T newValue) {
-    _isSet = true;
-    _source = newValue;
-    if (context case final context?) {
-      if (newValue != null) {
-        _isInSdk = path.canonicalize(newValue).startsWith(path.canonicalize(context.sdkPath));
-        if (_isInSdk) {
-          final paths = path.split(newValue);
-          final dartLibName = paths[paths.indexOf('lib') + 1];
-          _source = 'dart:$dartLibName' as T;
-        }
-      }
-    }
-  }
+  set source(T newValue) => _source = newValue;
 
   void setSourceRef(String currentFileRef) {
     if (_source == currentFileRef) {
@@ -79,4 +52,11 @@ mixin _ReferenceableSerializer {
 extension ListExtension<T> on List<T> {
   List<R> mapWithContext<R>(AnalyzerContext context, R Function(T e, AnalyzerContext context) f) =>
       map((e) => f(e, context)).toList();
+}
+
+InitializerSerializer? _getInitializer(AnalyzerContext context, Element element) {
+  if (element case ConstVariableElement e) {
+    return e.constantInitializer != null ? InitializerSerializer.from(e.constantInitializer!, context) : null;
+  }
+  return null;
 }

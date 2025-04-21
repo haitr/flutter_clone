@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io' as io;
 
 import 'package:code_builder/code_builder.dart';
+import 'package:collection/collection.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:file_system/file_system.dart';
 import 'package:glob/glob.dart';
@@ -33,9 +34,7 @@ Future<String?> getFlutterVersion() async {
     print(e.toString());
   }
 
-  throw Exception(
-    'Could not determine Flutter version. Ensure Flutter is installed and in your PATH.',
-  );
+  throw Exception('Could not determine Flutter version. Ensure Flutter is installed and in your PATH.');
 }
 
 void process(FileSystem fileSystem, AnalyzeResult result, String pattern) {
@@ -78,28 +77,32 @@ void process(FileSystem fileSystem, AnalyzeResult result, String pattern) {
 
 String? _getImportPath(SourceSerializer element) {
   if (element.source case var source?) {
+    final uri = Uri.parse(source);
     // dart:... library
-    if (element.isInSdk!) {
-      final lib = element.source!;
-      if (['dart:core', 'dart:collection', 'dart:internal'].contains(lib)) {
-        return null;
-      }
-      return lib;
+    if (uri.scheme == 'dart') {
+      final lib = uri.pathSegments.first;
+      if (['core', 'collection', 'internal', '_internal'].contains(lib)) return null;
+      return 'dart:$lib';
     }
-    // dart:ui or dart:ui_web
-    final paths = path.split(source);
-    if (paths.contains('sky_engine')) {
-      final category = paths[paths.indexOf('lib') + 1];
-      return 'dart:$category';
+
+    if (uri.scheme == 'package') {
+      // dart:ui or dart:ui_web
+      if (uri.pathSegments.first == 'cooked_sky_engine') return 'dart:${uri.pathSegments[1]}';
+      // package:vector_math
+      if (uri.pathSegments.first == 'vector_math') return 'package:vector_math/${uri.pathSegments[2]}.dart';
+      // package:flutter
+      if (uri.pathSegments.first == 'flutter') return 'package:flutter/${uri.pathSegments[2]}.dart';
+      return source;
     }
+
     // package:flutter
     if (path.isRelative(source)) {
-      final category = paths[paths.indexOf('src') + 1];
+      final pathSegments = path.split(source);
+      final category = pathSegments[pathSegments.indexOf('src') + 1];
       return 'package:flutter/$category.dart';
     }
 
-    // unknown
-    throw ArgumentError('Unknown import path: $source');
+    return source;
   }
   return null;
 }
@@ -113,7 +116,7 @@ Reference _buildTypeReference(AnalyzeResult result, DartTypeRefSerializer typeRe
     return TypeReference((typeBuilder) {
       typeBuilder.symbol = typeElement.name;
       typeBuilder.isNullable = suffix == '?';
-      typeBuilder.url = typeElement.isInSdk! ? null : _getImportPath(typeElement);
+      typeBuilder.url = _getImportPath(typeElement);
       typeBuilder.types.addAll(alias.typeArguments.map((e) => _buildTypeReference(result, e)));
     });
   }
@@ -122,17 +125,11 @@ Reference _buildTypeReference(AnalyzeResult result, DartTypeRefSerializer typeRe
     return FunctionType((typeBuilder) {
       typeBuilder.isNullable = suffix == '?';
       typeBuilder.returnType = _buildTypeReference(result, typeRef.returnType);
-      typeBuilder.requiredParameters.addAll(
-        typeRef.normalParameterTypes.map((e) => _buildTypeReference(result, e)),
-      );
+      typeBuilder.requiredParameters.addAll(typeRef.normalParameterTypes.map((e) => _buildTypeReference(result, e)));
       typeBuilder.namedParameters.addAll(
-        typeRef.namedParameterTypes.map(
-          (key, value) => MapEntry(key, _buildTypeReference(result, value)),
-        ),
+        typeRef.namedParameterTypes.map((key, value) => MapEntry(key, _buildTypeReference(result, value))),
       );
-      typeBuilder.optionalParameters.addAll(
-        typeRef.optionalParameterTypes.map((e) => _buildTypeReference(result, e)),
-      );
+      typeBuilder.optionalParameters.addAll(typeRef.optionalParameterTypes.map((e) => _buildTypeReference(result, e)));
     });
   }
 
@@ -140,29 +137,18 @@ Reference _buildTypeReference(AnalyzeResult result, DartTypeRefSerializer typeRe
     final type = result.fromTypeRef(typeRef, suffix)!;
     typeBuilder.symbol = type.name;
     typeBuilder.isNullable = typeRef.nullabilitySuffix == '?';
-    typeBuilder.url = type.isInSdk! ? null : _getImportPath(type);
+    typeBuilder.url = _getImportPath(type);
     if (type is InterfaceTypeSerializer) {
       typeBuilder.types.addAll(
-        (typeRef as InterfaceTypeRefSerializer).typeArguments.map(
-          (e) => _buildTypeReference(result, e),
-        ),
+        (typeRef as InterfaceTypeRefSerializer).typeArguments.map((e) => _buildTypeReference(result, e)),
       );
     }
   });
 }
 
 // code_builder style is unreadable, I need to refactor it
-void generateWrapper(
-  AnalyzeResult result,
-  FileSystem fileSystem,
-  File file,
-  ClassElementSerializer clazz,
-) {
-  final emitter = DartEmitter(
-    orderDirectives: true,
-    useNullSafetySyntax: true,
-    allocator: Allocator.simplePrefixing(),
-  );
+void generateWrapper(AnalyzeResult result, FileSystem fileSystem, File file, ClassElementSerializer clazz) {
+  final emitter = DartEmitter(orderDirectives: true, useNullSafetySyntax: true, allocator: Allocator.simplePrefixing());
   final library = Library((libraryBuilder) {
     final wrapperFile = fileSystem.file('wrapper.dart');
     final wrapperPath = Uri.file(path.relative(wrapperFile.path, from: file.parent.path)).path;
@@ -198,8 +184,7 @@ void generateWrapper(
               .map(
                 (constructor) => Constructor((constructorBuilder) {
                   final constructorName = constructor.name.isEmpty ? null : constructor.name;
-                  final positionalParams =
-                      constructor.parameters.where((e) => e.isPositional).toList();
+                  final positionalParams = constructor.parameters.where((e) => e.isPositional).toList();
                   final namedParams = constructor.parameters.where((e) => e.isNamed).toList();
                   // Move 'child' parameter to the end of the list if it exists
                   namedParams.sort((a, b) => a.name == 'child' ? 1 : 0);
@@ -222,20 +207,18 @@ void generateWrapper(
                     namedParams.map(
                       (parameter) => Parameter((parameterBuilder) {
                         parameterBuilder.name = parameter.name;
+                        parameterBuilder.named = parameter.isNamed;
                         if (parameter.name == 'key') {
                           parameterBuilder.toSuper = true;
                           return;
                         }
                         parameterBuilder.required = parameter.isRequired;
-                        parameterBuilder.named = parameter.isNamed;
+                        if (parameter.name == 'interactionEndFrictionCoefficient') {
+                          print('...');
+                        }
                         if (parameter.initializer case var initializer?) {
                           parameterBuilder.defaultTo = Code(
-                            _getInitializerCode(
-                              clazz,
-                              initializer,
-                              result,
-                              (ref) => emitter.allocator.allocate(ref),
-                            ),
+                            _getInitializerCode(clazz, initializer, result, (ref) => emitter.allocator.allocate(ref)),
                           );
                         }
                         parameterBuilder.type = _buildTypeReference(result, parameter.type);
@@ -248,10 +231,7 @@ void generateWrapper(
                       refer('super'),
                       [
                         InvokeExpression.newOf(refer('Argument', wrapperPath), [
-                          literalMap({
-                            for (final p in constructor.parameters)
-                              refer('#${p.name}'): refer(p.name),
-                          }),
+                          literalMap({for (final p in constructor.parameters) refer('#${p.name}'): refer(p.name)}),
                         ]),
                       ],
                       {
@@ -334,8 +314,18 @@ String _getInitializerCode(
       final name = scope(refer(target.name, _getImportPath(element)));
       return '$name.${initializer.identifier}';
     case SimpleIdentifierInitializerSerializer():
-      if (clazz.fields.any((e) => e.isStatic && e.name == initializer.identifier) ||
-          clazz.methods.any((e) => e.isStatic && e.name == initializer.identifier)) {
+      //TODO add more comments
+      if (clazz.fields.firstWhereOrNull((e) => e.isStatic && e.name == initializer.identifier) case final field?) {
+        if (field.isPublic) {
+          final name = scope(refer(clazz.name, _getImportPath(clazz)));
+          return '$name.${initializer.identifier}';
+        }
+        if (field.initializer != null) {
+          return _getInitializerCode(clazz, field.initializer!, result, scope);
+        }
+        throw UnimplementedError();
+      }
+      if (clazz.methods.firstWhereOrNull((e) => e.isStatic && e.name == initializer.identifier) case final method?) {
         final name = scope(refer(clazz.name, _getImportPath(clazz)));
         return '$name.${initializer.identifier}';
       }
@@ -346,42 +336,32 @@ String _getInitializerCode(
       final code = StringBuffer();
       if (initializer.isConst) code.write('const ');
       final type =
-          initializer.type != null
-              ? result.fromTypeRef(initializer.type!, initializer.type?.nullabilitySuffix)
-              : null;
+          initializer.type != null ? result.fromTypeRef(initializer.type!, initializer.type?.nullabilitySuffix) : null;
       code.write(scope(refer(type!.name!, _getImportPath(type))));
       if (initializer.constructorName != null) code.write('.${initializer.constructorName}');
       code.write('(');
-      code.write(
-        initializer.arguments.map((e) => _getInitializerCode(clazz, e, result, scope)).join(', '),
-      );
+      code.write(initializer.arguments.map((e) => _getInitializerCode(clazz, e, result, scope)).join(', '));
       code.write(')');
       return code.toString();
     case ListLiteralInitializerSerializer():
       final code = StringBuffer();
       if (initializer.isConst) code.write('const ');
       code.write('[');
-      code.write(
-        initializer.elements.map((e) => _getInitializerCode(clazz, e, result, scope)).join(', '),
-      );
+      code.write(initializer.elements.map((e) => _getInitializerCode(clazz, e, result, scope)).join(', '));
       code.write(']');
       return code.toString();
     case SetLiteralInitializerSerializer():
       final code = StringBuffer();
       if (initializer.isConst) code.write('const ');
       code.write('{');
-      code.write(
-        initializer.elements.map((e) => _getInitializerCode(clazz, e, result, scope)).join(', '),
-      );
+      code.write(initializer.elements.map((e) => _getInitializerCode(clazz, e, result, scope)).join(', '));
       code.write('}');
       return code.toString();
     case MapLiteralInitializerSerializer():
       final code = StringBuffer();
       if (initializer.isConst) code.write('const ');
       code.write('{');
-      code.write(
-        initializer.elements.map((e) => _getInitializerCode(clazz, e, result, scope)).join(', '),
-      );
+      code.write(initializer.elements.map((e) => _getInitializerCode(clazz, e, result, scope)).join(', '));
       code.write('}');
       return code.toString();
     default:

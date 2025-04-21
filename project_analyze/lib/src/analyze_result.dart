@@ -72,8 +72,7 @@ class FileAnalyzeResult {
     if (fileData['class'] case Map<String, dynamic> classData) {
       classes.addAll(
         classData.entries.map(
-          (e) =>
-              ClassElementSerializer.fromJson({...e.value, 'name': e.key})..setSourceRef(filePath),
+          (e) => ClassElementSerializer.fromJson({...e.value, 'name': e.key})..setSourceRef(filePath),
         ),
       );
     }
@@ -82,8 +81,7 @@ class FileAnalyzeResult {
     if (fileData['mixin'] case Map<String, dynamic> mixinData) {
       mixins.addAll(
         mixinData.entries.map(
-          (e) =>
-              MixinElementSerializer.fromJson({...e.value, 'name': e.key})..setSourceRef(filePath),
+          (e) => MixinElementSerializer.fromJson({...e.value, 'name': e.key})..setSourceRef(filePath),
         ),
       );
     }
@@ -92,9 +90,7 @@ class FileAnalyzeResult {
     if (fileData['alias'] case Map<String, dynamic> aliasData) {
       typeAliases.addAll(
         aliasData.entries.map(
-          (e) =>
-              TypeAliasElementSerializer.fromJson({...e.value, 'name': e.key})
-                ..setSourceRef(filePath),
+          (e) => TypeAliasElementSerializer.fromJson({...e.value, 'name': e.key})..setSourceRef(filePath),
         ),
       );
     }
@@ -103,9 +99,7 @@ class FileAnalyzeResult {
     if (fileData['top-level-variable'] case Map<String, dynamic> topLevelData) {
       topLevelVariables.addAll(
         topLevelData.entries.map(
-          (e) =>
-              TopLevelVariableElementSerializer.fromJson({...e.value, 'name': e.key})
-                ..setSourceRef(filePath),
+          (e) => TopLevelVariableElementSerializer.fromJson({...e.value, 'name': e.key})..setSourceRef(filePath),
         ),
       );
     }
@@ -114,9 +108,7 @@ class FileAnalyzeResult {
     if (fileData['top-level-function'] case Map<String, dynamic> topLevelData) {
       topLevelFunctions.addAll(
         topLevelData.entries.map(
-          (e) =>
-              FunctionElementSerializer.fromJson({...e.value, 'name': e.key})
-                ..setSourceRef(filePath),
+          (e) => FunctionElementSerializer.fromJson({...e.value, 'name': e.key})..setSourceRef(filePath),
         ),
       );
     }
@@ -125,8 +117,7 @@ class FileAnalyzeResult {
     if (fileData['enum'] case Map<String, dynamic> enumData) {
       enums.addAll(
         enumData.entries.map(
-          (e) =>
-              EnumElementSerializer.fromJson({...e.value, 'name': e.key})..setSourceRef(filePath),
+          (e) => EnumElementSerializer.fromJson({...e.value, 'name': e.key})..setSourceRef(filePath),
         ),
       );
     }
@@ -135,9 +126,7 @@ class FileAnalyzeResult {
     if (fileData['extension'] case Map<String, dynamic> extensionData) {
       extensions.addAll(
         extensionData.entries.map(
-          (e) =>
-              ExtensionTypeElementSerializer.fromJson({...e.value, 'name': e.key})
-                ..setSourceRef(filePath),
+          (e) => ExtensionTypeElementSerializer.fromJson({...e.value, 'name': e.key})..setSourceRef(filePath),
         ),
       );
     }
@@ -151,32 +140,21 @@ class FileAnalyzeResult {
     return {
       key: {
         if (classes.isNotEmpty)
-          'class': {
-            for (final e in classes) e.name: (e..setSourceRef(key)).toJson()..remove('name'),
-          },
+          'class': {for (final e in classes) e.name: (e..setSourceRef(key)).toJson()..remove('name')},
         if (mixins.isNotEmpty)
-          'mixin': {
-            for (final e in mixins) e.name: (e..setSourceRef(key)).toJson()..remove('name'),
-          },
-        if (enums.isNotEmpty)
-          'enum': {for (final e in enums) e.name: (e..setSourceRef(key)).toJson()..remove('name')},
+          'mixin': {for (final e in mixins) e.name: (e..setSourceRef(key)).toJson()..remove('name')},
+        if (enums.isNotEmpty) 'enum': {for (final e in enums) e.name: (e..setSourceRef(key)).toJson()..remove('name')},
         if (extensions.isNotEmpty)
-          'extension': {
-            for (final e in extensions) e.name: (e..setSourceRef(key)).toJson()..remove('name'),
-          },
+          'extension': {for (final e in extensions) e.name: (e..setSourceRef(key)).toJson()..remove('name')},
         if (typeAliases.isNotEmpty)
-          'alias': {
-            for (final e in typeAliases) e.name: (e..setSourceRef(key)).toJson()..remove('name'),
-          },
+          'alias': {for (final e in typeAliases) e.name: (e..setSourceRef(key)).toJson()..remove('name')},
         if (topLevelVariables.isNotEmpty)
           'top-level-variable': {
-            for (var e in topLevelVariables)
-              e.name: (e..setSourceRef(key)).toJson()..remove('name'),
+            for (var e in topLevelVariables) e.name: (e..setSourceRef(key)).toJson()..remove('name'),
           },
         if (topLevelFunctions.isNotEmpty)
           'top-level-function': {
-            for (var e in topLevelFunctions)
-              e.name: (e..setSourceRef(key)).toJson()..remove('name'),
+            for (var e in topLevelFunctions) e.name: (e..setSourceRef(key)).toJson()..remove('name'),
           },
       },
     };
@@ -188,12 +166,7 @@ class AnalyzeResult {
   final Map<int, DartTypeSerializer> typeRef;
   final Map<int, InterfaceElementSerializer> elementRef;
   final Map<int, TypeAliasElementSerializer> aliasRef;
-  AnalyzeResult({
-    required this.files,
-    required this.typeRef,
-    required this.elementRef,
-    required this.aliasRef,
-  });
+  AnalyzeResult({required this.files, required this.typeRef, required this.elementRef, required this.aliasRef});
 
   factory AnalyzeResult.fromJson(Map<String, dynamic> data) {
     return AnalyzeResult(
@@ -214,9 +187,7 @@ class AnalyzeResult {
     return {
       'files': files.map((e) => e.toJson()).toList(),
       'type_ref': {for (var entry in typeRef.entries) entry.key.toString(): entry.value.toJson()},
-      'element_ref': {
-        for (var entry in elementRef.entries) entry.key.toString(): entry.value.toJson(),
-      },
+      'element_ref': {for (var entry in elementRef.entries) entry.key.toString(): entry.value.toJson()},
       'alias_ref': {for (var entry in aliasRef.entries) entry.key.toString(): entry.value.toJson()},
     };
   }
@@ -232,7 +203,7 @@ class AnalyzeResult {
   InterfaceElementSerializer? fromElementRef(InterfaceElementRefSerializer fromRef) {
     InterfaceElementSerializer? element;
     if (fromRef.jsonType == RefJsonType.internalElement) {
-      final fileResult = files.firstWhere((e) => e.filePath == fromRef.path);
+      final fileResult = files.firstWhere((e) => e.filePath == fromRef.source);
       element =
           fileResult.classes.firstWhereOrNull((e) => e.ref == fromRef.ref) ??
           fileResult.mixins.firstWhereOrNull((e) => e.ref == fromRef.ref) ??
